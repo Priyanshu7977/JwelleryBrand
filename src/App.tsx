@@ -40,6 +40,7 @@ import { OrderTrackingPage } from './pages/OrderTrackingPage';
 import { ShippingReturnsPage } from './pages/ShippingReturnsPage';
 import { TermsPage } from './pages/TermsPage';
 import { PrivacyPage } from './pages/PrivacyPage';
+import { CheckoutPage } from './pages/CheckoutPage';
 
 const ToastNotification: React.FC = () => {
   const { toastMessage } = useCart();
@@ -114,6 +115,7 @@ const AppShell: React.FC = () => {
             <Route path="/contact" element={<ContactPage />} />
             <Route path="/search" element={<SearchPage />} />
             <Route path="/cart" element={<CartPage />} />
+            <Route path="/checkout" element={<CheckoutPage />} />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/register" element={<RegisterPage />} />
             <Route path="/signup" element={<RegisterPage />} />

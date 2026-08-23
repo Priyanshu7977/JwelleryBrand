@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
 import { BRAND_INFO } from '../data/shopify-data';
 import { MagneticButton } from '../components/ui/MagneticButton';
@@ -17,6 +17,7 @@ import {
 } from 'lucide-react';
 
 export const CartPage: React.FC = () => {
+  const navigate = useNavigate();
   const {
     cart,
     removeFromCart,
@@ -254,7 +255,7 @@ export const CartPage: React.FC = () => {
                 </button>
 
                 <button
-                  onClick={() => alert("Redirecting to Shopify Online Store 2.0 Secure Checkout...")}
+                  onClick={() => navigate('/checkout')}
                   className="w-full h-12 flex items-center justify-center gap-2 px-6 rounded-full bg-obsidian text-pearl-100 text-xs uppercase tracking-widest font-semibold hover:bg-obsidian-200 transition-all shadow-sm"
                 >
                   <span>Proceed to Online Checkout</span>

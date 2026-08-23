@@ -284,14 +284,17 @@ export const Navigation: React.FC = () => {
                 )}
               </Link>
 
-              {/* Account Icon (Desktop Only - In mobile drawer on mobile) */}
+              {/* Account Icon (Visible on all screens) */}
               <Link
                 to="/account"
-                className="hidden lg:flex p-2 text-obsidian/80 hover:text-obsidian hover:bg-champagne-100/60 rounded-full transition-all"
+                className="relative p-1.5 sm:p-2 text-obsidian/80 hover:text-obsidian hover:bg-champagne-100/60 rounded-full transition-all"
                 aria-label="Customer Account Portal"
                 title={isAuthenticated ? `Account: ${user?.name}` : 'Sign In / Account'}
               >
                 <User className="w-4 h-4" />
+                {isAuthenticated && (
+                  <span className="absolute top-1 right-1 w-2 h-2 rounded-full bg-emerald-500 ring-2 ring-pearl-50" />
+                )}
               </Link>
 
               {/* WhatsApp Concierge (Desktop Only - In mobile drawer on mobile) */}

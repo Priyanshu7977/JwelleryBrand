@@ -1,9 +1,9 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowLeft, Package, Truck, CheckCircle2, ArrowRight } from 'lucide-react';
 
 export const OrdersPage: React.FC = () => {
-  const orders = [
+  const [orders, setOrders] = useState<any[]>([
     {
       id: 'ORD-2026-8941',
       date: '21 Aug 2026',
@@ -34,7 +34,29 @@ export const OrdersPage: React.FC = () => {
       trackingId: 'BLR-PAN-4412',
       destination: 'Indiranagar, Bengaluru'
     }
-  ];
+  ]);
+
+  useEffect(() => {
+    try {
+      const savedOrdersRaw = localStorage.getItem('celestia_user_orders');
+      if (savedOrdersRaw) {
+        const savedOrders = JSON.parse(savedOrdersRaw);
+        if (Array.isArray(savedOrders) && savedOrders.length > 0) {
+          const formattedSaved = savedOrders.map((o: any) => ({
+            id: o.orderId || `ORD-${Date.now()}`,
+            date: o.date || 'Today',
+            total: o.total,
+            status: 'Processing in Atelier',
+            itemsCount: o.items?.length || 1,
+            summary: o.items?.map((i: any) => i.product?.title || i.title).join(', ') || 'Celestia Fine Jewellery',
+            trackingId: `MUM-LIVE-${Math.floor(1000 + Math.random() * 9000)}`,
+            destination: o.customer?.address || 'Mumbai, Maharashtra'
+          }));
+          setOrders(prev => [...formattedSaved, ...prev]);
+        }
+      }
+    } catch {}
+  }, []);
 
   return (
     <div className="w-full min-h-screen bg-pearl-100 pt-36 sm:pt-40 md:pt-44 pb-32 px-4 sm:px-8 md:px-12">

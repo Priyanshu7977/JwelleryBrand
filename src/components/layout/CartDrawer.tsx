@@ -1,9 +1,11 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { X, Plus, Minus, Trash2, ShoppingBag, ArrowRight, MessageCircle, Truck, Sparkles } from 'lucide-react';
 import { useCart } from '../../context/CartContext';
 import { BRAND_INFO } from '../../data/shopify-data';
 
 export const CartDrawer: React.FC = () => {
+  const navigate = useNavigate();
   const {
     cart,
     isCartOpen,
@@ -201,10 +203,11 @@ export const CartDrawer: React.FC = () => {
                 <span>Instant WhatsApp Checkout</span>
               </button>
 
-              {/* Standard Shopify Checkout */}
+              {/* Standard Secure Checkout */}
               <button
                 onClick={() => {
-                  alert("Redirecting to Shopify Online Store 2.0 Secure Checkout...");
+                  setIsCartOpen(false);
+                  navigate('/checkout');
                 }}
                 className="w-full h-12 flex items-center justify-center gap-2 px-6 rounded-full bg-obsidian text-pearl-100 hover:bg-obsidian-200 transition-all font-sans text-xs uppercase tracking-widest font-semibold shadow-sm"
               >
