@@ -57,13 +57,20 @@ export const Section01Arrival: React.FC = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Automatically start music as soon as user scrolls past the film sequence
+  const hasTriggeredVideoEnd = useRef<boolean>(false);
+
+  // Automatically start music and trigger post-video login as soon as user scrolls past the film sequence
   useEffect(() => {
-    if (scrollFraction > 0.30 && !hasAutoStartedAudio.current && !isAudioActive) {
-      hasAutoStartedAudio.current = true;
-      atelierSound.start().then((started) => {
-        setIsAudioActive(started);
-      });
+    if (scrollFraction >= 0.32 && !hasTriggeredVideoEnd.current) {
+      hasTriggeredVideoEnd.current = true;
+      window.dispatchEvent(new CustomEvent('celestia:video-ended'));
+
+      if (!hasAutoStartedAudio.current && !isAudioActive) {
+        hasAutoStartedAudio.current = true;
+        atelierSound.start().then((started) => {
+          setIsAudioActive(started);
+        });
+      }
     }
   }, [scrollFraction, isAudioActive]);
 
@@ -100,12 +107,12 @@ export const Section01Arrival: React.FC = () => {
   };
 
   // Phase Calculations:
-  // Phase 1 (0.00 - 0.32): Fullscreen Fashion Video Intro
-  // Phase 2 (0.32 - 0.42): Smooth Dissolve Transition
-  // Phase 3 (0.42 - 1.00): Spatial 3D Kinetic Universe ("WEAR" -> "YOUR" -> "WORLD.")
+  // Phase 1 (0.00 - 0.34): Pure Fullscreen Fashion Video Intro (Only Video + Celestia Logo)
+  // Phase 2 (0.34 - 0.44): Smooth Dissolve Transition
+  // Phase 3 (0.44 - 1.00): Spatial 3D Kinetic Universe & Main Home Screen Reveal
   const isVideoPhase = scrollFraction < 0.40;
   const videoOpacity = Math.max(0, Math.min(1, 1 - (scrollFraction - 0.28) * 8.0));
-  const videoScale = 1 + scrollFraction * 0.12;
+  const videoScale = 1 + scrollFraction * 0.10;
 
   // 3D progress for WebGL canvas
   const threeDProgress = Math.max(0, Math.min(1, (scrollFraction - 0.38) / 0.62));
@@ -139,9 +146,9 @@ export const Section01Arrival: React.FC = () => {
       {/* Fixed Fullscreen Viewport (100vw x 100vh) */}
       <div className="sticky top-0 left-0 w-full h-screen overflow-hidden">
         
-        {/* ======================================================== */}
-        {/* LAYER 1: CINEMATIC FULLSCREEN FASHION FILM (0.00 - 0.38) */}
-        {/* ======================================================== */}
+        {/* ========================================================================= */}
+        {/* LAYER 1: PURE CINEMATIC FULLSCREEN VIDEO INTRO (ONLY VIDEO + LOGO) (0-38%) */}
+        {/* ========================================================================= */}
         <div
           style={{
             opacity: videoOpacity,
@@ -162,73 +169,42 @@ export const Section01Arrival: React.FC = () => {
             className="w-full h-full object-cover"
           />
 
-          {/* Luxury Video Fallback / Animated Fashion Stage (if video file pending upload) */}
+          {/* Luxury Video Fallback / Animated Stage (if video file is pending upload) */}
           {(videoError || !videoLoaded) && (
             <div className="absolute inset-0 bg-gradient-to-b from-[#181411] via-[#241E1A] to-[#120F0D] flex items-center justify-center overflow-hidden">
               <div className="absolute inset-0 bg-noise opacity-25" />
               <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-[#D8C39A]/15 rounded-full blur-3xl animate-pulse" />
-              
-              <div className="relative z-10 text-center space-y-6 max-w-xl px-6">
-                <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#28231F]/90 border border-[#D8C39A]/40 text-xs font-mono uppercase tracking-widest text-[#D8C39A]">
-                  <Film className="w-3.5 h-3.5 text-[#D8C39A]" />
-                  <span>Fashion Film Opening MMXXVI</span>
-                </div>
-
-                <h1 className="font-serif-luxury text-6xl sm:text-8xl md:text-9xl text-[#FAF7F0] uppercase tracking-tight leading-[0.88]">
-                  CEL<span className="italic font-light lowercase text-[#D8C39A]">estia</span>
-                </h1>
-
-                <p className="text-sm font-sans tracking-[0.34em] uppercase text-[#D8C39A] font-bold">
-                  redefined for all.
-                </p>
-
-                <p className="font-serif italic text-lg sm:text-xl text-[#FAF7F0]/80">
-                  "Scroll down to scrub the film sequence."
-                </p>
-              </div>
             </div>
           )}
 
-          {/* Editorial Film HUD Overlay */}
-          <div className="absolute inset-0 z-10 bg-gradient-to-t from-black/80 via-transparent to-black/60 flex flex-col justify-between p-6 md:p-12 lg:p-16 pointer-events-none">
-            {/* Top Film Header */}
-            <div className="flex items-center justify-between w-full max-w-[1500px] mx-auto pt-16 md:pt-10">
-              <div className="flex items-center gap-3">
-                <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-                <span className="text-xs uppercase font-mono tracking-widest text-pearl-50 font-bold">
-                  Cinematic Opening Film • Mumbai Atelier
-                </span>
-              </div>
+          {/* ONLY CELESTIA LOGO + VIDEO CENTER OVERLAY */}
+          <div className="absolute inset-0 z-10 flex flex-col justify-between items-center p-6 md:p-12 pointer-events-none">
+            
+            {/* Top Empty Spacing */}
+            <div className="h-10" />
 
-              <div className="flex items-center gap-3">
-                <span className="text-xs font-mono text-champagne-300 font-bold bg-black/40 px-3.5 py-1 rounded-full border border-champagne-300/30">
-                  Film Progress: {filmProgressPercent}%
-                </span>
-              </div>
+            {/* Pure Center Celestia Logo */}
+            <div className="text-center space-y-4 max-w-xl px-6">
+              <h1 className="font-serif-luxury text-6xl sm:text-8xl md:text-9xl text-[#FAF7F0] uppercase tracking-tight leading-[0.88] drop-shadow-2xl">
+                CEL<span className="italic font-light lowercase text-[#D8C39A]">estia</span>
+              </h1>
+
+              <p className="text-xs sm:text-sm font-sans tracking-[0.38em] uppercase text-[#D8C39A] font-bold drop-shadow-md">
+                redefined for all.
+              </p>
             </div>
 
-            {/* Bottom Film Scroll Trigger Callout */}
-            <div className="flex items-end justify-between w-full max-w-[1500px] mx-auto pb-4">
-              <div className="space-y-1">
-                <p className="font-serif italic text-xl md:text-2xl text-pearl-50">
-                  Wear your world in light and gold.
-                </p>
-                <p className="text-xs uppercase font-mono tracking-wider text-champagne-300 font-bold">
-                  Scroll down to scrub the film sequence
-                </p>
-              </div>
-
-              <div className="flex items-center gap-2 px-5 py-2.5 rounded-full bg-pearl-50/10 backdrop-blur-md border border-champagne-300/40 text-xs font-mono uppercase tracking-widest text-pearl-50 font-bold shadow-lg">
-                <span>Scroll To Reveal Atelier</span>
-                <ArrowDown className="w-4 h-4 text-champagne-300 animate-bounce" />
-              </div>
+            {/* Bottom Minimal Scroll Callout */}
+            <div className="flex items-center gap-2.5 px-6 py-2.5 rounded-full bg-black/40 backdrop-blur-md border border-[#D8C39A]/40 text-xs font-mono uppercase tracking-widest text-[#FAF7F0] font-bold shadow-2xl mb-4">
+              <span>Scroll To Play Film</span>
+              <ArrowDown className="w-4 h-4 text-[#D8C39A] animate-bounce" />
             </div>
           </div>
         </div>
 
-        {/* ======================================================== */}
-        {/* LAYER 2: ANIMATED 3D KINETIC HERO STAGE (0.35 - 1.00)   */}
-        {/* ======================================================== */}
+        {/* ========================================================================= */}
+        {/* LAYER 2: ANIMATED 3D KINETIC HERO & MAIN HOME SCREEN (38% - 100%)         */}
+        {/* ========================================================================= */}
         <div className="absolute inset-0 z-10 flex flex-col justify-between p-6 sm:p-10 md:p-14 lg:p-16 bg-pearl-100">
           
           {/* Soft Ambient Background Radiance */}

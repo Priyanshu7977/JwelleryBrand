@@ -26,11 +26,16 @@ export const Navigation: React.FC = () => {
     }
   };
 
+  const [scrollY, setScrollY] = useState(0);
+
   useEffect(() => {
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 30);
+      const y = window.scrollY;
+      setScrollY(y);
+      setIsScrolled(y > 30);
     };
     window.addEventListener('scroll', handleScroll, { passive: true });
+    handleScroll();
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
@@ -39,6 +44,10 @@ export const Navigation: React.FC = () => {
     setMobileMenuOpen(false);
     setHoveredMenu(null);
   }, [location.pathname]);
+
+  const isHomePage = location.pathname === '/';
+  // On homepage, keep navigation hidden during the pure film scrub until user completes the film
+  const isFilmOpening = isHomePage && scrollY < (window.innerHeight * 1.1);
 
   const megaCategories = [
     {
@@ -90,7 +99,11 @@ export const Navigation: React.FC = () => {
   return (
     <>
       {/* Top Mumbai Studio Announcement Bar */}
-      <div className="w-full bg-champagne-200 text-obsidian py-1.5 px-4 text-center text-[10px] tracking-widest uppercase font-mono font-semibold flex items-center justify-center gap-3 border-b border-champagne-300">
+      <div
+        className={`w-full bg-champagne-200 text-obsidian py-1.5 px-4 text-center text-[10px] tracking-widest uppercase font-mono font-semibold flex items-center justify-center gap-3 border-b border-champagne-300 transition-all duration-700 ${
+          isFilmOpening ? '-translate-y-full opacity-0 pointer-events-none' : 'translate-y-0 opacity-100'
+        }`}
+      >
         <span className="flex items-center gap-1">
           <Sparkles className="w-3 h-3 text-gold-dark" />
           <span>MUMBAI ATELIER • SAME-DAY HAND DELIVERY DISPATCH AVAILABLE</span>
@@ -101,7 +114,11 @@ export const Navigation: React.FC = () => {
 
       {/* Floating Main Header */}
       <header
-        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 mt-7 ${
+        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-700 ${
+          isFilmOpening
+            ? '-translate-y-28 opacity-0 pointer-events-none'
+            : 'translate-y-0 opacity-100'
+        } mt-7 ${
           isScrolled ? 'py-2.5 px-4 md:px-8' : 'py-5 px-6 md:px-12'
         }`}
         onMouseLeave={() => setHoveredMenu(null)}
