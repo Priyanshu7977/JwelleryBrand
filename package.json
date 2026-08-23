@@ -23,7 +23,6 @@
     "three": "^0.170.0"
   },
   "devDependencies": {
-    "@rollup/rollup-win32-x64-msvc": "^4.62.5",
     "@types/canvas-confetti": "^1.9.0",
     "@types/node": "^22.10.1",
     "@types/react": "^18.3.18",
