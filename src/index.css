@@ -42,6 +42,14 @@
   }
 }
 
+/* Hardware Acceleration & Butter-smooth 60-120fps Rendering */
+.hardware-accelerated, .transform-gpu {
+  transform: translateZ(0);
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  perspective: 1000px;
+}
+
 /* ==========================================================================
    GLOBAL DESIGN SYSTEM UTILITIES
    ========================================================================== */

@@ -1,12 +1,34 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
-import { Float, Environment } from '@react-three/drei';
+import { Float } from '@react-three/drei';
 import * as THREE from 'three';
 import { FEATURED_PRODUCTS } from '../../data/shopify-data';
 
 interface ProductMesh3DProps {
   scrollProgress: number;
 }
+
+// Global Texture Cache to prevent garbage collection and reload pauses
+const textureCache = new Map<string, THREE.Texture>();
+const textureLoader = new THREE.TextureLoader();
+
+const loadCachedTexture = (url: string, callback: (t: THREE.Texture) => void) => {
+  if (textureCache.has(url)) {
+    callback(textureCache.get(url)!);
+    return;
+  }
+  textureLoader.load(
+    url,
+    (tex) => {
+      tex.minFilter = THREE.LinearFilter;
+      tex.magFilter = THREE.LinearFilter;
+      textureCache.set(url, tex);
+      callback(tex);
+    },
+    undefined,
+    () => {}
+  );
+};
 
 // Error Boundary for WebGL safety
 class WebGLErrorBoundary extends React.Component<{ children: React.ReactNode; fallback: React.ReactNode }, { hasError: boolean }> {
@@ -34,73 +56,59 @@ const ProductPhysicalCard: React.FC<{
   rotation?: [number, number, number];
   scale?: [number, number, number];
 }> = ({ imageUrl, position, rotation = [0, 0, 0], scale = [1, 1, 1] }) => {
-  const [texture, setTexture] = useState<THREE.Texture | null>(null);
+  const [texture, setTexture] = useState<THREE.Texture | null>(() => textureCache.get(imageUrl) || null);
 
   useEffect(() => {
-    const loader = new THREE.TextureLoader();
-    loader.load(
-      imageUrl,
-      (tex) => {
-        tex.generateMipmaps = true;
-        tex.minFilter = THREE.LinearMipmapLinearFilter;
-        setTexture(tex);
-      },
-      undefined,
-      (err) => {
-        console.warn("Failed to load texture for 3D card, using pearl finish", err);
-      }
-    );
-  }, [imageUrl]);
+    if (!texture) {
+      loadCachedTexture(imageUrl, setTexture);
+    }
+  }, [imageUrl, texture]);
 
   return (
     <group position={position} rotation={rotation} scale={scale}>
       {/* Front Bevel Frame in Warm Champagne Gold */}
-      <mesh position={[0, 0, -0.04]} castShadow receiveShadow>
+      <mesh position={[0, 0, -0.04]}>
         <boxGeometry args={[2.5, 3.2, 0.06]} />
         <meshStandardMaterial
           color="#DFC392"
-          metalness={0.88}
-          roughness={0.22}
-          envMapIntensity={1.5}
+          metalness={0.85}
+          roughness={0.25}
         />
       </mesh>
 
       {/* Pearl Inset Casing */}
       <mesh position={[0, 0, -0.01]}>
         <boxGeometry args={[2.42, 3.12, 0.05]} />
-        <meshPhysicalMaterial
+        <meshStandardMaterial
           color="#FAF8F5"
-          roughness={0.15}
-          clearcoat={0.9}
+          roughness={0.2}
         />
       </mesh>
 
       {/* Main Real Product Image Texture Surface */}
-      <mesh position={[0, 0, 0.025]} castShadow>
+      <mesh position={[0, 0, 0.025]}>
         <planeGeometry args={[2.3, 3.0]} />
         {texture ? (
           <meshStandardMaterial
             map={texture}
             roughness={0.3}
             metalness={0.05}
-            side={THREE.DoubleSide}
           />
         ) : (
-          <meshPhysicalMaterial
+          <meshStandardMaterial
             color="#FAF8F5"
             roughness={0.2}
-            clearcoat={1.0}
           />
         )}
       </mesh>
 
-      {/* Floating Gold Halo Ring around the Product */}
+      {/* Floating Gold Halo Ring */}
       <mesh position={[0, 0, -0.1]} rotation={[Math.PI / 4, Math.PI / 6, 0]}>
-        <torusGeometry args={[2.2, 0.025, 16, 64]} />
+        <torusGeometry args={[2.2, 0.02, 12, 36]} />
         <meshStandardMaterial
           color="#C8AD7F"
-          metalness={0.95}
-          roughness={0.2}
+          metalness={0.9}
+          roughness={0.25}
         />
       </mesh>
     </group>
@@ -117,8 +125,8 @@ const ProductsScene: React.FC<ProductMesh3DProps> = ({ scrollProgress }) => {
 
   useFrame((state) => {
     const t = state.clock.getElapsedTime();
-    const pointerX = state.pointer.x * 0.35;
-    const pointerY = state.pointer.y * 0.35;
+    const pointerX = state.pointer.x * 0.25;
+    const pointerY = state.pointer.y * 0.25;
 
     if (masterGroupRef.current) {
       masterGroupRef.current.position.x = pointerX;
@@ -160,9 +168,8 @@ const ProductsScene: React.FC<ProductMesh3DProps> = ({ scrollProgress }) => {
 
   return (
     <group ref={masterGroupRef}>
-      {/* Real Product 01: pink and blue bangle set of 2 (₹500) */}
       <group ref={group1Ref} position={[0, 0, -2.5]}>
-        <Float speed={1.8} rotationIntensity={0.3} floatIntensity={0.4}>
+        <Float speed={1.5} rotationIntensity={0.2} floatIntensity={0.3}>
           <ProductPhysicalCard
             imageUrl={product1.images.hero}
             position={[0, 0, 0]}
@@ -170,9 +177,8 @@ const ProductsScene: React.FC<ProductMesh3DProps> = ({ scrollProgress }) => {
         </Float>
       </group>
 
-      {/* Real Product 02: Desi Barbie Hamper (₹999) */}
       <group ref={group2Ref} position={[2, 0, -6]}>
-        <Float speed={1.6} rotationIntensity={0.3} floatIntensity={0.4}>
+        <Float speed={1.3} rotationIntensity={0.2} floatIntensity={0.3}>
           <ProductPhysicalCard
             imageUrl={product2.images.hero}
             position={[0, 0, 0]}
@@ -193,7 +199,6 @@ const CSS3DFallbackStage: React.FC<{ scrollProgress: number }> = ({ scrollProgre
 
   return (
     <div className="w-full h-full flex items-center justify-center relative overflow-hidden pointer-events-none">
-      {/* Product 01 Card */}
       <div
         style={{
           opacity: p1Opacity,
@@ -206,7 +211,6 @@ const CSS3DFallbackStage: React.FC<{ scrollProgress: number }> = ({ scrollProgre
         </div>
       </div>
 
-      {/* Product 02 Card */}
       <div
         style={{
           opacity: p2Opacity,
@@ -228,7 +232,7 @@ export const ProductStage3D: React.FC<{ scrollProgress?: number }> = ({ scrollPr
       <div className="w-full h-full relative pointer-events-auto">
         <Canvas
           camera={{ position: [0, 0, 5.8], fov: 45 }}
-          dpr={[1, 2]}
+          dpr={[1, 1.25]}
           gl={{
             antialias: true,
             alpha: true,
@@ -236,26 +240,20 @@ export const ProductStage3D: React.FC<{ scrollProgress?: number }> = ({ scrollPr
           }}
           className="w-full h-full"
         >
-          <ambientLight intensity={1.1} color="#FAF8F5" />
-          
+          <ambientLight intensity={1.2} color="#FAF8F5" />
           <directionalLight
             position={[4, 6, 6]}
-            intensity={1.8}
+            intensity={1.6}
             color="#FFF9F0"
-            castShadow
           />
-
           <directionalLight
             position={[-5, -3, -2]}
-            intensity={0.9}
+            intensity={0.8}
             color="#DFCCA9"
           />
 
-          <pointLight position={[0, 5, 2]} intensity={1.4} color="#FFFFFF" />
-
           <React.Suspense fallback={null}>
             <ProductsScene scrollProgress={scrollProgress} />
-            <Environment preset="studio" />
           </React.Suspense>
         </Canvas>
       </div>

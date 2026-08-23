@@ -11,6 +11,7 @@ export const Section01Arrival: React.FC = () => {
   const videoRef = useRef<HTMLVideoElement>(null);
   const targetTimeRef = useRef<number>(0);
   const rafRef = useRef<number | null>(null);
+  const scrollTicking = useRef<boolean>(false);
   const hasAutoStartedAudio = useRef<boolean>(false);
   const hasTriggeredVideoEnd = useRef<boolean>(false);
 
@@ -42,15 +43,22 @@ export const Section01Arrival: React.FC = () => {
   const product1 = FEATURED_PRODUCTS[0]; // pink and blue bangle set of 2 (₹500)
   const product2 = FEATURED_PRODUCTS[1]; // Desi Barbie Hamper (₹999)
 
-  // Track scroll position across the 320vh track
+  // Performant rAF-throttled scroll listener
   useEffect(() => {
     const handleScroll = () => {
-      if (!containerRef.current) return;
-      const rect = containerRef.current.getBoundingClientRect();
-      const windowHeight = window.innerHeight;
-      const totalScrollable = rect.height - windowHeight;
-      const progress = totalScrollable > 0 ? Math.min(1, Math.max(0, -rect.top / totalScrollable)) : 0;
-      setScrollFraction(progress);
+      if (!scrollTicking.current) {
+        requestAnimationFrame(() => {
+          if (containerRef.current) {
+            const rect = containerRef.current.getBoundingClientRect();
+            const windowHeight = window.innerHeight;
+            const totalScrollable = rect.height - windowHeight;
+            const progress = totalScrollable > 0 ? Math.min(1, Math.max(0, -rect.top / totalScrollable)) : 0;
+            setScrollFraction(progress);
+          }
+          scrollTicking.current = false;
+        });
+        scrollTicking.current = true;
+      }
     };
 
     window.addEventListener('scroll', handleScroll, { passive: true });
@@ -73,8 +81,13 @@ export const Section01Arrival: React.FC = () => {
     }
   }, [scrollFraction, isAudioActive]);
 
-  // Video scrubber lerp loop (0.00 - 0.30)
+  // Video scrubber lerp loop (active only during film phase 0.00 - 0.35)
   useEffect(() => {
+    if (scrollFraction > 0.38) {
+      if (rafRef.current) cancelAnimationFrame(rafRef.current);
+      return;
+    }
+
     const videoPhaseProgress = Math.min(1, Math.max(0, scrollFraction / 0.30));
     if (videoDuration > 0) {
       targetTimeRef.current = videoPhaseProgress * videoDuration;
@@ -85,7 +98,7 @@ export const Section01Arrival: React.FC = () => {
       if (vid && !isNaN(vid.duration) && vid.duration > 0 && vid.readyState >= 2) {
         const diff = targetTimeRef.current - vid.currentTime;
         if (Math.abs(diff) > 0.01) {
-          vid.currentTime += diff * 0.25;
+          vid.currentTime += diff * 0.30;
         }
       }
       rafRef.current = requestAnimationFrame(renderLoop);
@@ -107,39 +120,39 @@ export const Section01Arrival: React.FC = () => {
 
   // Phase Calculations:
   // Phase 1 (0.00 - 0.32): Pure Fullscreen Fashion Video Intro
-  // Phase 2 (0.32 - 0.55): Grand Pristine Celestia Main Screen (Clean Monument, Center Focus)
+  // Phase 2 (0.32 - 0.55): Grand Pristine Celestia Main Screen
   // Phase 3 (0.55 - 0.78): Crazy 3D Spatial Scroll & Piece 01 Kinetic Glide-in
   // Phase 4 (0.78 - 1.00): Piece 02 Kinetic Glide-in + Finale Collection Portal
   const isVideoPhase = scrollFraction < 0.34;
   const videoOpacity = Math.max(0, Math.min(1, 1 - (scrollFraction - 0.24) * 8.0));
   const heroOpacity = Math.min(1, Math.max(0, (scrollFraction - 0.26) * 5.0));
 
-  // 3D WebGL camera & object progress
+  // 3D WebGL progress
   const threeDProgress = Math.max(0, Math.min(1, (scrollFraction - 0.30) / 0.70));
 
-  // Center Brand Monument transforms: Scales elegantly and lifts slightly as user scrolls
+  // Center Brand Monument transforms
   const monumentProgress = Math.max(0, Math.min(1, (scrollFraction - 0.32) / 0.68));
-  const monumentScale = 1 - monumentProgress * 0.08;
-  const monumentTranslateY = -monumentProgress * 30;
+  const monumentScale = 1 - monumentProgress * 0.06;
+  const monumentTranslateY = -monumentProgress * 25;
 
-  // Kinetic Piece 01 Card (Glides in from Left with 3D depth between 0.50 and 1.00)
+  // Kinetic Piece 01 Card
   const p1Opacity = Math.max(0, Math.min(1, (scrollFraction - 0.48) * 5.0));
-  const p1TranslateX = Math.max(0, (0.70 - scrollFraction) * 120);
-  const p1Rotate = Math.max(0, (0.70 - scrollFraction) * 12);
+  const p1TranslateX = Math.max(0, (0.70 - scrollFraction) * 100);
+  const p1Rotate = Math.max(0, (0.70 - scrollFraction) * 8);
 
-  // Kinetic Piece 02 Card (Glides in from Right with 3D depth between 0.70 and 1.00)
+  // Kinetic Piece 02 Card
   const p2Opacity = Math.max(0, Math.min(1, (scrollFraction - 0.68) * 5.0));
-  const p2TranslateX = Math.max(0, (0.90 - scrollFraction) * 120);
-  const p2Rotate = Math.max(0, (0.90 - scrollFraction) * -12);
+  const p2TranslateX = Math.max(0, (0.90 - scrollFraction) * 100);
+  const p2Rotate = Math.max(0, (0.90 - scrollFraction) * -8);
 
   return (
     <section
       ref={containerRef}
-      className="relative w-full h-[320vh] bg-pearl-100 selection:bg-champagne-300"
+      className="relative w-full h-[320vh] bg-pearl-100 selection:bg-champagne-300 transform-gpu"
       id="section-arrival"
     >
       {/* Fixed Fullscreen Viewport (100vw x 100vh) */}
-      <div className="sticky top-0 left-0 w-full h-screen overflow-hidden">
+      <div className="sticky top-0 left-0 w-full h-screen overflow-hidden transform-gpu">
         
         {/* ========================================================================= */}
         {/* LAYER 1: PURE CINEMATIC FULLSCREEN VIDEO INTRO (ONLY VIDEO + LOGO) (0-32%) */}
@@ -149,7 +162,7 @@ export const Section01Arrival: React.FC = () => {
             opacity: videoOpacity,
             pointerEvents: isVideoPhase ? 'auto' : 'none',
           }}
-          className="absolute inset-0 z-20 bg-espresso-deep overflow-hidden transition-opacity duration-500"
+          className="absolute inset-0 z-20 bg-espresso-deep overflow-hidden transition-opacity duration-300 transform-gpu"
         >
           {/* Video Element */}
           <video
@@ -166,8 +179,7 @@ export const Section01Arrival: React.FC = () => {
           {/* Luxury Video Fallback */}
           {(videoError || !videoLoaded) && (
             <div className="absolute inset-0 bg-gradient-to-b from-[#181411] via-[#241E1A] to-[#120F0D] flex items-center justify-center overflow-hidden">
-              <div className="absolute inset-0 bg-noise opacity-25" />
-              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-[#D8C39A]/15 rounded-full blur-3xl animate-pulse" />
+              <div className="absolute inset-0 bg-noise opacity-20" />
             </div>
           )}
 
@@ -200,22 +212,17 @@ export const Section01Arrival: React.FC = () => {
             opacity: heroOpacity,
             pointerEvents: heroOpacity > 0.4 ? 'auto' : 'none',
           }}
-          className="absolute inset-0 z-10 flex flex-col justify-between p-6 sm:p-10 md:p-12 lg:p-14 bg-pearl-100 transition-opacity duration-500"
+          className="absolute inset-0 z-10 flex flex-col justify-between p-6 sm:p-10 md:p-12 lg:p-14 bg-pearl-100 transition-opacity duration-300 transform-gpu"
         >
-          {/* Dynamic Ambient Radiance */}
-          <div className="absolute inset-0 pointer-events-none">
-            <div
-              style={{
-                transform: `scale(${1 + scrollFraction * 0.3}) rotate(${scrollFraction * 45}deg)`,
-              }}
-              className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[900px] h-[900px] bg-champagne-200/45 rounded-full blur-3xl transition-transform duration-300"
-            />
-            <div className="absolute bottom-10 right-10 w-[700px] h-[700px] bg-blush-100/50 rounded-full blur-3xl" />
-            <div className="absolute inset-0 bg-noise opacity-30" />
+          {/* Ambient Lighting Background */}
+          <div className="absolute inset-0 pointer-events-none overflow-hidden">
+            <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[700px] bg-gradient-radial from-champagne-200/35 to-transparent rounded-full" />
+            <div className="absolute bottom-10 right-10 w-[500px] h-[500px] bg-gradient-radial from-blush-100/40 to-transparent rounded-full" />
+            <div className="absolute inset-0 bg-noise opacity-20" />
           </div>
 
-          {/* 3D WebGL Real Product Stage (Interactive 3D Rotation as user scrolls) */}
-          <div className="absolute inset-0 z-0 pointer-events-auto opacity-75">
+          {/* 3D WebGL Real Product Stage (Lightweight GPU execution) */}
+          <div className="absolute inset-0 z-0 pointer-events-auto opacity-75 transform-gpu">
             <ProductStage3D scrollProgress={threeDProgress} />
           </div>
 
@@ -261,7 +268,7 @@ export const Section01Arrival: React.FC = () => {
                   transform: `translateX(-${p1TranslateX}px) rotate(${p1Rotate}deg)`,
                   pointerEvents: p1Opacity > 0.4 ? 'auto' : 'none',
                 }}
-                className="w-full max-w-[280px] p-5 bg-pearl-50/95 backdrop-blur-md rounded-3xl border border-champagne-300/80 shadow-luxury-soft transition-all duration-300 space-y-3"
+                className="w-full max-w-[280px] p-5 bg-pearl-50/95 backdrop-blur-md rounded-3xl border border-champagne-300/80 shadow-luxury-soft transition-all duration-200 space-y-3 hardware-accelerated"
               >
                 <div className="flex items-center justify-between">
                   <LuxuryBadge variant="gold">Real Piece 01</LuxuryBadge>
@@ -270,7 +277,7 @@ export const Section01Arrival: React.FC = () => {
                   </span>
                 </div>
                 <div className="aspect-[4/3] rounded-2xl overflow-hidden bg-sand">
-                  <img src={product1.images.hero} alt={product1.title} className="w-full h-full object-cover" />
+                  <img src={product1.images.hero} alt={product1.title} className="w-full h-full object-cover" loading="eager" />
                 </div>
                 <div>
                   <h3 className="font-serif-luxury text-base text-obsidian font-bold truncate">
@@ -297,12 +304,12 @@ export const Section01Arrival: React.FC = () => {
               </div>
             </div>
 
-            {/* CENTER COLUMN: Pristine Celestia Monument & Core Experience */}
+            {/* CENTER COLUMN: Pristine Celestia Monument */}
             <div
               style={{
                 transform: `scale(${monumentScale}) translateY(${monumentTranslateY}px)`,
               }}
-              className="col-span-1 lg:col-span-6 text-center space-y-5 px-4 transition-transform duration-300"
+              className="col-span-1 lg:col-span-6 text-center space-y-5 px-4 transition-transform duration-200 hardware-accelerated"
             >
               <div className="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-champagne-100/95 border border-champagne-300/80 backdrop-blur-sm text-xs uppercase font-mono tracking-widest text-obsidian font-bold shadow-sm">
                 <Sparkles className="w-4 h-4 text-gold-dark" />
@@ -340,7 +347,7 @@ export const Section01Arrival: React.FC = () => {
                   transform: `translateX(${p2TranslateX}px) rotate(${p2Rotate}deg)`,
                   pointerEvents: p2Opacity > 0.4 ? 'auto' : 'none',
                 }}
-                className="w-full max-w-[280px] p-5 bg-pearl-50/95 backdrop-blur-md rounded-3xl border border-champagne-300/80 shadow-luxury-soft transition-all duration-300 space-y-3"
+                className="w-full max-w-[280px] p-5 bg-pearl-50/95 backdrop-blur-md rounded-3xl border border-champagne-300/80 shadow-luxury-soft transition-all duration-200 space-y-3 hardware-accelerated"
               >
                 <div className="flex items-center justify-between">
                   <LuxuryBadge variant="blush">Real Piece 02</LuxuryBadge>
@@ -349,7 +356,7 @@ export const Section01Arrival: React.FC = () => {
                   </span>
                 </div>
                 <div className="aspect-[4/3] rounded-2xl overflow-hidden bg-sand">
-                  <img src={product2.images.hero} alt={product2.title} className="w-full h-full object-cover" />
+                  <img src={product2.images.hero} alt={product2.title} className="w-full h-full object-cover" loading="eager" />
                 </div>
                 <div>
                   <h3 className="font-serif-luxury text-base text-obsidian font-bold truncate">
