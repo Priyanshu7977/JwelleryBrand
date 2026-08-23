@@ -1,0 +1,125 @@
+import React, { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { useCart } from '../context/CartContext';
+import { useAuth } from '../context/AuthContext';
+import { Eye, EyeOff, Lock, Mail, ArrowRight, Sparkles } from 'lucide-react';
+
+export const LoginPage: React.FC = () => {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const { showToast } = useCart();
+  const { login } = useAuth();
+  const navigate = useNavigate();
+
+  const handleLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!email || !password) {
+      showToast("Please enter both email and password.");
+      return;
+    }
+    setIsLoading(true);
+    const res = await login(email, password);
+    setIsLoading(false);
+    if (res.success) {
+      showToast("Welcome back to Celestia Atelier ✨");
+      navigate('/account');
+    } else {
+      showToast(res.error || "Login failed.");
+    }
+  };
+
+  return (
+    <div className="w-full min-h-screen bg-pearl-100 pt-32 pb-32 px-6 flex items-center justify-center">
+      <div className="w-full max-w-md bg-pearl-50/95 p-8 md:p-10 rounded-3xl border border-champagne-300/60 shadow-luxury-soft space-y-8">
+        
+        {/* Header */}
+        <div className="text-center space-y-2">
+          <span className="text-[10px] uppercase tracking-monumental text-gold-dark font-semibold">
+            Atelier Portal
+          </span>
+          <h1 className="font-serif-luxury text-3xl md:text-4xl text-obsidian uppercase">
+            SIGN <span className="italic font-light text-gold-dark">In</span>.
+          </h1>
+          <p className="text-xs text-obsidian/60 font-sans">
+            Access your order tracking, custom polaroid history, and saved address.
+          </p>
+        </div>
+
+        <form onSubmit={handleLogin} className="space-y-4">
+          <div className="space-y-1.5">
+            <label className="text-[11px] uppercase tracking-wider text-obsidian/70 font-semibold block">
+              Email Address
+            </label>
+            <div className="flex items-center gap-2 px-4 h-12 bg-white rounded-xl border border-champagne-300/70 focus-within:border-gold-dark">
+              <Mail className="w-4 h-4 text-obsidian/40" />
+              <input
+                type="email"
+                required
+                placeholder="you@email.com"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="w-full bg-transparent text-xs sm:text-sm font-sans text-obsidian focus:outline-none placeholder:text-obsidian/40"
+              />
+            </div>
+          </div>
+
+          <div className="space-y-1.5">
+            <div className="flex justify-between items-center">
+              <label className="text-[11px] uppercase tracking-wider text-obsidian/70 font-semibold block">
+                Password
+              </label>
+              <Link to="/forgot-password" className="text-[11px] text-gold-dark hover:underline font-sans">
+                Forgot?
+              </Link>
+            </div>
+            <div className="flex items-center gap-2 px-4 h-12 bg-white rounded-xl border border-champagne-300/70 focus-within:border-gold-dark">
+              <Lock className="w-4 h-4 text-obsidian/40" />
+              <input
+                type={showPassword ? 'text' : 'password'}
+                required
+                placeholder="••••••••"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="w-full bg-transparent text-xs sm:text-sm font-sans text-obsidian focus:outline-none placeholder:text-obsidian/40"
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="text-obsidian/40 hover:text-obsidian"
+              >
+                {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+              </button>
+            </div>
+          </div>
+
+          <div className="pt-2">
+            <button
+              type="submit"
+              disabled={isLoading}
+              className="w-full h-12 px-6 rounded-full bg-obsidian text-pearl-100 text-xs uppercase tracking-widest font-semibold hover:bg-obsidian-200 transition-all flex items-center justify-center gap-2 shadow-sm"
+            >
+              {isLoading ? (
+                <span>Signing In...</span>
+              ) : (
+                <>
+                  <span>Sign In</span>
+                  <ArrowRight className="w-4 h-4" />
+                </>
+              )}
+            </button>
+          </div>
+        </form>
+
+        <div className="text-center text-xs text-obsidian/70 pt-2 border-t border-champagne-300/30">
+          <span>New to Celestia? </span>
+          <Link to="/register" className="font-semibold text-obsidian underline hover:text-gold-dark">
+            Create an Account
+          </Link>
+        </div>
+
+      </div>
+    </div>
+  );
+};

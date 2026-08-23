@@ -1,0 +1,66 @@
+<svg width="800" height="1000" viewBox="0 0 800 1000" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FAF7F2" />
+      <stop offset="50%" stop-color="#F2EBE0" />
+      <stop offset="100%" stop-color="#E5D9C8" />
+    </linearGradient>
+    <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#DFC392" />
+      <stop offset="100%" stop-color="#A88448" />
+    </linearGradient>
+    <filter id="softShadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="12" stdDeviation="20" flood-color="#1A1815" flood-opacity="0.06" />
+    </filter>
+  </defs>
+
+  <!-- Background Base -->
+  <rect width="800" height="1000" fill="url(#bgGrad)" />
+  
+  <!-- Outer Gold Dashed Atelier Frame -->
+  <rect x="36" y="36" width="728" height="928" rx="28" stroke="url(#goldGrad)" stroke-width="1.5" stroke-dasharray="8 6" fill="none" opacity="0.8" />
+  
+  <!-- Subtle Inner Solid Ring -->
+  <rect x="52" y="52" width="696" height="896" rx="20" stroke="#DFCCA9" stroke-width="0.75" fill="none" opacity="0.5" />
+
+  <!-- Elegant Editorial Silhouette Motif -->
+  <g transform="translate(400, 380)" filter="url(#softShadow)">
+    <!-- Golden Halo Ring -->
+    <circle cx="0" cy="-60" r="110" stroke="url(#goldGrad)" stroke-width="1.5" fill="none" opacity="0.6" stroke-dasharray="4 4" />
+    
+    <!-- Head Silhouette in Warm Pearl Beige -->
+    <circle cx="0" cy="-60" r="72" fill="#D6C4AD" />
+    
+    <!-- Shoulders / Bust Contour -->
+    <path d="M -130 90 C -130 -10 -60 -20 0 -20 C 60 -20 130 -10 130 90 Z" fill="#D6C4AD" />
+    
+    <!-- Subtle Golden Pendant Accent -->
+    <circle cx="0" cy="15" r="5" fill="url(#goldGrad)" />
+    <line x1="0" y1="-15" x2="0" y2="15" stroke="url(#goldGrad)" stroke-width="1" />
+  </g>
+
+  <!-- Editorial Typography -->
+  <text x="400" y="590" font-family="Playfair Display, Georgia, serif" font-size="30" fill="#1A1815" text-anchor="middle" font-weight="400" letter-spacing="3">
+    FOUNDER PORTRAIT
+  </text>
+  
+  <text x="400" y="630" font-family="Montserrat, -apple-system, sans-serif" font-size="12" fill="#8A7967" text-anchor="middle" letter-spacing="4" font-weight="600">
+    MUMBAI ATELIER MMXXVI
+  </text>
+
+  <line x1="320" y1="660" x2="480" y2="660" stroke="url(#goldGrad)" stroke-width="1" opacity="0.7" />
+
+  <text x="400" y="700" font-family="Playfair Display, Georgia, serif" font-style="italic" font-size="16" fill="#4A3F33" text-anchor="middle">
+    &ldquo;Every parcel we pack is a tiny fragment of our heart.&rdquo;
+  </text>
+
+  <!-- Asset Location Directive -->
+  <rect x="220" y="750" width="360" height="44" rx="22" fill="#FFFFFF" stroke="#DFCCA9" stroke-width="1" />
+  <text x="400" y="777" font-family="monospace, Courier, sans-serif" font-size="11" fill="#7A6856" text-anchor="middle" letter-spacing="0.5">
+    /assets/founder/founder-portrait.webp
+  </text>
+
+  <text x="400" y="830" font-family="Montserrat, -apple-system, sans-serif" font-size="10" fill="#A0907F" text-anchor="middle" letter-spacing="2">
+    AWAITING APPROVED CLIENT PORTRAIT
+  </text>
+</svg>
