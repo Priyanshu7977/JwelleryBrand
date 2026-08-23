@@ -312,9 +312,11 @@ export const Navigation: React.FC = () => {
               >
                 <ShoppingBag className="w-3.5 h-3.5" />
                 <span className="hidden sm:inline">Bag</span>
-                <span className="inline-flex items-center justify-center w-4 h-4 rounded-full bg-champagne-300 text-obsidian text-[10px] font-bold">
-                  {totalItems}
-                </span>
+                {totalItems > 0 && (
+                  <span className="inline-flex items-center justify-center w-4 h-4 rounded-full bg-champagne-300 text-obsidian text-[10px] font-bold">
+                    {totalItems}
+                  </span>
+                )}
               </button>
 
             </div>

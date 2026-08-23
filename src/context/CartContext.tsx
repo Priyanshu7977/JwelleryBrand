@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useContext, useState, useEffect } from 'react';
 import { Product, CartItem, HamperBoxOption } from '../types/shopify';
 import { BRAND_INFO, FEATURED_PRODUCTS, HAMPER_BOX_OPTIONS } from '../data/shopify-data';
 import { atelierSound } from '../utils/audioAtelier';
@@ -32,15 +32,20 @@ interface CartContextType {
   setPolaroidNote: (note: string) => void;
 }
 
+const CART_STORAGE_KEY = 'celestia_cart_items';
+
 const CartContext = createContext<CartContextType | undefined>(undefined);
 
 export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [cart, setCart] = useState<CartItem[]>([
-    {
-      product: FEATURED_PRODUCTS[0],
-      quantity: 1,
-    }
-  ]);
+  // Real empty initial cart state (only loads items user actually added)
+  const [cart, setCart] = useState<CartItem[]>(() => {
+    try {
+      const saved = localStorage.getItem(CART_STORAGE_KEY);
+      if (saved) return JSON.parse(saved);
+    } catch {}
+    return []; // Clean empty baseline
+  });
+
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [quickViewProduct, setQuickViewProduct] = useState<Product | null>(null);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
@@ -49,8 +54,15 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   // Hamper Builder state
   const [selectedHamperBox, setSelectedHamperBox] = useState<HamperBoxOption>(HAMPER_BOX_OPTIONS[0]);
-  const [hamperItems, setHamperItems] = useState<Product[]>([FEATURED_PRODUCTS[0], FEATURED_PRODUCTS[1]]);
+  const [hamperItems, setHamperItems] = useState<Product[]>([]);
   const [polaroidNote, setPolaroidNote] = useState<string>("To my favourite person, shining always ✨");
+
+  // Persist cart to localStorage
+  useEffect(() => {
+    try {
+      localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(cart));
+    } catch {}
+  }, [cart]);
 
   const showToast = (msg: string) => {
     setToastMessage(msg);
@@ -98,13 +110,12 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
         scalar: 0.7,
         shapes: ['circle']
       });
-    } catch {
-      // Fallback silently
-    }
+    } catch {}
   };
 
   const removeFromCart = (productId: string) => {
     setCart((prev) => prev.filter((item) => item.product.id !== productId));
+    showToast("Item removed from bag");
   };
 
   const updateQuantity = (productId: string, quantity: number) => {
@@ -119,22 +130,26 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
     );
   };
 
-  const clearCart = () => setCart([]);
+  const clearCart = () => {
+    setCart([]);
+    try {
+      localStorage.removeItem(CART_STORAGE_KEY);
+    } catch {}
+  };
 
-  const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
-  const subtotal = cart.reduce((sum, item) => sum + item.product.price * item.quantity, 0);
+  const totalItems = cart.reduce((total, item) => total + item.quantity, 0);
+  const subtotal = cart.reduce(
+    (total, item) => total + item.product.price * item.quantity,
+    0
+  );
 
   const addHamperItem = (product: Product) => {
-    if (hamperItems.length >= 4) {
-      showToast("Maximum 4 pieces per hamper box reached");
-      return;
-    }
-    if (hamperItems.some(i => i.id === product.id)) {
-      showToast("Item already inside this bespoke hamper");
+    if (hamperItems.length >= 6) {
+      showToast("Maximum 6 items per bespoke hamper box");
       return;
     }
     setHamperItems(prev => [...prev, product]);
-    showToast(`Added "${product.title}" to Hamper`);
+    showToast(`Added ${product.title} to hamper`);
   };
 
   const removeHamperItem = (productId: string) => {
@@ -142,6 +157,10 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const checkoutViaWhatsApp = () => {
+    if (cart.length === 0) {
+      showToast("Your bag is currently empty");
+      return;
+    }
     const itemList = cart.map(i => `• ${i.product.title} (x${i.quantity}) - ₹${i.product.price * i.quantity}`).join('%0A');
     const msg = `Hello%20Celestia%20Team!%20✨%0A%0AI%20would%20like%20to%20place%20an%20order%20for:%0A${itemList}%0A%0A*Total%20Order%20Value:*%20₹${subtotal}%0A*Shipping:*%20${subtotal >= BRAND_INFO.freeShippingThreshold ? 'FREE%20Express' : '₹99'}%0A%0APlease%20confirm%20availability%20for%20Same-Day%20Mumbai%20/%20Pan-India%20dispatch.`;
     window.open(`https://wa.me/917718825792?text=${msg}`, '_blank');
