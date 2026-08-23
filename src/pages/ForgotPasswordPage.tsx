@@ -19,7 +19,7 @@ export const ForgotPasswordPage: React.FC = () => {
   };
 
   return (
-    <div className="w-full min-h-screen bg-pearl-100 pt-32 pb-32 px-6 flex items-center justify-center">
+    <div className="w-full min-h-screen bg-pearl-100 pt-36 sm:pt-40 md:pt-44 pb-32 px-4 sm:px-6 flex items-center justify-center">
       <div className="w-full max-w-md bg-pearl-50/95 p-8 md:p-10 rounded-3xl border border-champagne-300/60 shadow-luxury-soft space-y-6">
         
         <Link to="/login" className="inline-flex items-center gap-1.5 text-xs uppercase tracking-widest text-obsidian/60 hover:text-obsidian">

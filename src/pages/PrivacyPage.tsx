@@ -3,7 +3,7 @@ import { BRAND_INFO } from '../data/shopify-data';
 
 export const PrivacyPage: React.FC = () => {
   return (
-    <div className="w-full min-h-screen bg-pearl-100 pt-28 pb-32 px-6 md:px-12">
+    <div className="w-full min-h-screen bg-pearl-100 pt-36 sm:pt-40 md:pt-44 pb-32 px-4 sm:px-8 md:px-12">
       <div className="max-w-4xl mx-auto space-y-12">
         
         <div className="space-y-4 border-b border-champagne-300/40 pb-8">

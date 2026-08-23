@@ -37,7 +37,7 @@ export const OrdersPage: React.FC = () => {
   ];
 
   return (
-    <div className="w-full min-h-screen bg-pearl-100 pt-28 pb-32 px-6 md:px-12">
+    <div className="w-full min-h-screen bg-pearl-100 pt-36 sm:pt-40 md:pt-44 pb-32 px-4 sm:px-8 md:px-12">
       <div className="max-w-7xl mx-auto space-y-12">
         
         <Link

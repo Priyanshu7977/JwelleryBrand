@@ -76,7 +76,7 @@ export const AccountPage: React.FC = () => {
   // IF NOT AUTHENTICATED: Display Luxury Auth Gateway
   if (!isAuthenticated || !user) {
     return (
-      <div className="w-full min-h-screen bg-pearl-100 pt-32 pb-32 px-6 md:px-12 lg:px-20 selection:bg-champagne-300">
+      <div className="w-full min-h-screen bg-pearl-100 pt-36 sm:pt-40 md:pt-44 pb-32 px-4 sm:px-8 md:px-12 lg:px-20 selection:bg-champagne-300">
         <div className="max-w-2xl mx-auto space-y-10 text-center">
           
           <div className="w-16 h-16 rounded-full bg-champagne-100 flex items-center justify-center mx-auto text-gold-dark shadow-sm">
@@ -134,7 +134,7 @@ export const AccountPage: React.FC = () => {
 
   // AUTHENTICATED USER PORTAL
   return (
-    <div className="w-full min-h-screen bg-pearl-100 pt-28 pb-32 px-6 md:px-12 lg:px-20 selection:bg-champagne-300">
+    <div className="w-full min-h-screen bg-pearl-100 pt-36 sm:pt-40 md:pt-44 pb-32 px-4 sm:px-8 md:px-12 lg:px-20 selection:bg-champagne-300">
       <div className="max-w-[1500px] mx-auto space-y-12">
         
         {/* Header */}

@@ -227,9 +227,9 @@ export const Section01Arrival: React.FC = () => {
           </div>
 
           {/* Top Subheader Identity & Audio Toggle */}
-          <div className="relative z-10 flex items-center justify-between w-full max-w-[1500px] mx-auto pt-20 md:pt-14">
-            <div className="space-y-1">
-              <span className="text-xs uppercase font-mono tracking-widest text-gold-dark font-bold flex items-center gap-1.5">
+          <div className="relative z-10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 w-full max-w-[1500px] mx-auto pt-28 sm:pt-28 md:pt-24">
+            <div className="space-y-0.5 sm:space-y-1">
+              <span className="text-[11px] sm:text-xs uppercase font-mono tracking-widest text-gold-dark font-bold flex items-center gap-1.5">
                 <Sparkles className="w-3.5 h-3.5 text-gold-dark" />
                 <span>Live Runway Campaign MMXXVI</span>
               </span>
@@ -241,7 +241,7 @@ export const Section01Arrival: React.FC = () => {
             {/* Sound Micro-toggle */}
             <button
               onClick={toggleAudio}
-              className={`flex items-center gap-2.5 px-5 h-11 rounded-full border transition-all text-xs font-mono font-bold uppercase tracking-wider backdrop-blur-md shadow-md ${
+              className={`flex items-center gap-2 px-4 sm:px-5 h-9 sm:h-11 rounded-full border transition-all text-[11px] sm:text-xs font-mono font-bold uppercase tracking-wider backdrop-blur-md shadow-md ${
                 isAudioActive
                   ? 'bg-champagne-300 border-gold-dark text-obsidian shadow-gold-dark/20'
                   : 'border-champagne-300/80 bg-pearl-50/90 hover:bg-white text-obsidian'
@@ -249,9 +249,9 @@ export const Section01Arrival: React.FC = () => {
               aria-label="Toggle atmospheric sound"
             >
               {isAudioActive ? (
-                <Volume2 className="w-4 h-4 text-gold-dark animate-pulse" />
+                <Volume2 className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-gold-dark animate-pulse" />
               ) : (
-                <VolumeX className="w-4 h-4 text-obsidian" />
+                <VolumeX className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-obsidian" />
               )}
               <span>{isAudioActive ? 'Atelier Sound: ON' : 'Atelier Sound: OFF'}</span>
             </button>

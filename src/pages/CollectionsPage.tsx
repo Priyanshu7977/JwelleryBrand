@@ -6,7 +6,7 @@ import { Sparkles, ArrowRight, Compass } from 'lucide-react';
 
 export const CollectionsPage: React.FC = () => {
   return (
-    <div className="w-full min-h-screen bg-pearl-100 pt-28 pb-32 px-6 md:px-12 lg:px-20 selection:bg-champagne-300">
+    <div className="w-full min-h-screen bg-pearl-100 pt-36 sm:pt-40 md:pt-44 pb-32 px-4 sm:px-8 md:px-12 lg:px-20 selection:bg-champagne-300">
       {/* Background Ambience */}
       <div className="absolute top-1/4 left-10 w-96 h-96 bg-champagne-200/20 rounded-full blur-3xl pointer-events-none" />
 
