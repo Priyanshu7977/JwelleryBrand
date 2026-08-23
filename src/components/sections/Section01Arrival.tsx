@@ -42,7 +42,7 @@ export const Section01Arrival: React.FC = () => {
   const product1 = FEATURED_PRODUCTS[0]; // pink and blue bangle set of 2 (₹500)
   const product2 = FEATURED_PRODUCTS[1]; // Desi Barbie Hamper (₹999)
 
-  // Track scroll position across the track
+  // Track scroll position across the 320vh track
   useEffect(() => {
     const handleScroll = () => {
       if (!containerRef.current) return;
@@ -60,7 +60,7 @@ export const Section01Arrival: React.FC = () => {
 
   // Automatically start music and trigger post-video login as soon as user scrolls past the film sequence
   useEffect(() => {
-    if (scrollFraction >= 0.32 && !hasTriggeredVideoEnd.current) {
+    if (scrollFraction >= 0.30 && !hasTriggeredVideoEnd.current) {
       hasTriggeredVideoEnd.current = true;
       window.dispatchEvent(new CustomEvent('celestia:video-ended'));
 
@@ -73,9 +73,9 @@ export const Section01Arrival: React.FC = () => {
     }
   }, [scrollFraction, isAudioActive]);
 
-  // Update target time and lerp video playback frame smoothly (0.00 - 0.32)
+  // Video scrubber lerp loop (0.00 - 0.30)
   useEffect(() => {
-    const videoPhaseProgress = Math.min(1, Math.max(0, scrollFraction / 0.32));
+    const videoPhaseProgress = Math.min(1, Math.max(0, scrollFraction / 0.30));
     if (videoDuration > 0) {
       targetTimeRef.current = videoPhaseProgress * videoDuration;
     }
@@ -106,26 +106,43 @@ export const Section01Arrival: React.FC = () => {
   };
 
   // Phase Calculations:
-  // Phase 1 (0.00 - 0.35): Pure Fullscreen Fashion Video Intro
-  // Phase 2 (0.35 - 1.00): Clean Spacious Luxury 3-Column Hero
-  const isVideoPhase = scrollFraction < 0.38;
-  const videoOpacity = Math.max(0, Math.min(1, 1 - (scrollFraction - 0.28) * 8.0));
-  const heroOpacity = Math.min(1, Math.max(0, (scrollFraction - 0.30) * 5.0));
+  // Phase 1 (0.00 - 0.32): Pure Fullscreen Fashion Video Intro
+  // Phase 2 (0.32 - 0.55): Grand Pristine Celestia Main Screen (Clean Monument, Center Focus)
+  // Phase 3 (0.55 - 0.78): Crazy 3D Spatial Scroll & Piece 01 Kinetic Glide-in
+  // Phase 4 (0.78 - 1.00): Piece 02 Kinetic Glide-in + Finale Collection Portal
+  const isVideoPhase = scrollFraction < 0.34;
+  const videoOpacity = Math.max(0, Math.min(1, 1 - (scrollFraction - 0.24) * 8.0));
+  const heroOpacity = Math.min(1, Math.max(0, (scrollFraction - 0.26) * 5.0));
 
-  // 3D progress for WebGL canvas
-  const threeDProgress = Math.max(0, Math.min(1, (scrollFraction - 0.32) / 0.68));
+  // 3D WebGL camera & object progress
+  const threeDProgress = Math.max(0, Math.min(1, (scrollFraction - 0.30) / 0.70));
+
+  // Center Brand Monument transforms: Scales elegantly and lifts slightly as user scrolls
+  const monumentProgress = Math.max(0, Math.min(1, (scrollFraction - 0.32) / 0.68));
+  const monumentScale = 1 - monumentProgress * 0.08;
+  const monumentTranslateY = -monumentProgress * 30;
+
+  // Kinetic Piece 01 Card (Glides in from Left with 3D depth between 0.50 and 1.00)
+  const p1Opacity = Math.max(0, Math.min(1, (scrollFraction - 0.48) * 5.0));
+  const p1TranslateX = Math.max(0, (0.70 - scrollFraction) * 120);
+  const p1Rotate = Math.max(0, (0.70 - scrollFraction) * 12);
+
+  // Kinetic Piece 02 Card (Glides in from Right with 3D depth between 0.70 and 1.00)
+  const p2Opacity = Math.max(0, Math.min(1, (scrollFraction - 0.68) * 5.0));
+  const p2TranslateX = Math.max(0, (0.90 - scrollFraction) * 120);
+  const p2Rotate = Math.max(0, (0.90 - scrollFraction) * -12);
 
   return (
     <section
       ref={containerRef}
-      className="relative w-full h-[280vh] bg-pearl-100 selection:bg-champagne-300"
+      className="relative w-full h-[320vh] bg-pearl-100 selection:bg-champagne-300"
       id="section-arrival"
     >
       {/* Fixed Fullscreen Viewport (100vw x 100vh) */}
       <div className="sticky top-0 left-0 w-full h-screen overflow-hidden">
         
         {/* ========================================================================= */}
-        {/* LAYER 1: PURE CINEMATIC FULLSCREEN VIDEO INTRO (ONLY VIDEO + LOGO) (0-35%) */}
+        {/* LAYER 1: PURE CINEMATIC FULLSCREEN VIDEO INTRO (ONLY VIDEO + LOGO) (0-32%) */}
         {/* ========================================================================= */}
         <div
           style={{
@@ -134,7 +151,7 @@ export const Section01Arrival: React.FC = () => {
           }}
           className="absolute inset-0 z-20 bg-espresso-deep overflow-hidden transition-opacity duration-500"
         >
-          {/* Real Video Element */}
+          {/* Video Element */}
           <video
             ref={videoRef}
             src="/videos/celestia-opening.mp4"
@@ -146,7 +163,7 @@ export const Section01Arrival: React.FC = () => {
             className="w-full h-full object-cover"
           />
 
-          {/* Luxury Video Fallback / Animated Stage */}
+          {/* Luxury Video Fallback */}
           {(videoError || !videoLoaded) && (
             <div className="absolute inset-0 bg-gradient-to-b from-[#181411] via-[#241E1A] to-[#120F0D] flex items-center justify-center overflow-hidden">
               <div className="absolute inset-0 bg-noise opacity-25" />
@@ -176,7 +193,7 @@ export const Section01Arrival: React.FC = () => {
         </div>
 
         {/* ========================================================================= */}
-        {/* LAYER 2: CLEAN LUXURY HERO STAGE (NO OVERLAPPING TEXT, CLEAN 3-COLUMN)    */}
+        {/* LAYER 2: CRAZY 3D KINETIC SPATIAL SCROLL & PRISTINE CELESTIA HERO STAGE   */}
         {/* ========================================================================= */}
         <div
           style={{
@@ -185,15 +202,20 @@ export const Section01Arrival: React.FC = () => {
           }}
           className="absolute inset-0 z-10 flex flex-col justify-between p-6 sm:p-10 md:p-12 lg:p-14 bg-pearl-100 transition-opacity duration-500"
         >
-          {/* Ambient Lighting Background */}
+          {/* Dynamic Ambient Radiance */}
           <div className="absolute inset-0 pointer-events-none">
-            <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[900px] h-[900px] bg-champagne-200/40 rounded-full blur-3xl" />
+            <div
+              style={{
+                transform: `scale(${1 + scrollFraction * 0.3}) rotate(${scrollFraction * 45}deg)`,
+              }}
+              className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[900px] h-[900px] bg-champagne-200/45 rounded-full blur-3xl transition-transform duration-300"
+            />
             <div className="absolute bottom-10 right-10 w-[700px] h-[700px] bg-blush-100/50 rounded-full blur-3xl" />
             <div className="absolute inset-0 bg-noise opacity-30" />
           </div>
 
-          {/* 3D WebGL Product Stage Layer */}
-          <div className="absolute inset-0 z-0 pointer-events-auto opacity-70">
+          {/* 3D WebGL Real Product Stage (Interactive 3D Rotation as user scrolls) */}
+          <div className="absolute inset-0 z-0 pointer-events-auto opacity-75">
             <ProductStage3D scrollProgress={threeDProgress} />
           </div>
 
@@ -209,7 +231,7 @@ export const Section01Arrival: React.FC = () => {
               </p>
             </div>
 
-            {/* Sound Toggle */}
+            {/* Sound Micro-toggle */}
             <button
               onClick={toggleAudio}
               className={`flex items-center gap-2.5 px-5 h-11 rounded-full border transition-all text-xs font-mono font-bold uppercase tracking-wider backdrop-blur-md shadow-md ${
@@ -228,12 +250,19 @@ export const Section01Arrival: React.FC = () => {
             </button>
           </div>
 
-          {/* Clean 3-Column Luxury Hero Grid (Zero text collision, perfectly spaced) */}
+          {/* Clean Spatial 3-Column Arena */}
           <div className="relative z-10 flex-1 max-w-[1500px] w-full mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8 items-center py-4">
             
-            {/* LEFT COLUMN: Real Piece 01 Card */}
+            {/* LEFT COLUMN: Real Piece 01 Kinetic Glide Card */}
             <div className="hidden lg:flex lg:col-span-3 justify-start">
-              <div className="w-full max-w-[280px] p-5 bg-pearl-50/95 backdrop-blur-md rounded-3xl border border-champagne-300/80 shadow-luxury-soft space-y-3">
+              <div
+                style={{
+                  opacity: p1Opacity,
+                  transform: `translateX(-${p1TranslateX}px) rotate(${p1Rotate}deg)`,
+                  pointerEvents: p1Opacity > 0.4 ? 'auto' : 'none',
+                }}
+                className="w-full max-w-[280px] p-5 bg-pearl-50/95 backdrop-blur-md rounded-3xl border border-champagne-300/80 shadow-luxury-soft transition-all duration-300 space-y-3"
+              >
                 <div className="flex items-center justify-between">
                   <LuxuryBadge variant="gold">Real Piece 01</LuxuryBadge>
                   <span className="text-[10px] font-mono font-bold text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded-full">
@@ -268,8 +297,13 @@ export const Section01Arrival: React.FC = () => {
               </div>
             </div>
 
-            {/* CENTER COLUMN: Grand Brand Monument & Core Action */}
-            <div className="col-span-1 lg:col-span-6 text-center space-y-5 px-4">
+            {/* CENTER COLUMN: Pristine Celestia Monument & Core Experience */}
+            <div
+              style={{
+                transform: `scale(${monumentScale}) translateY(${monumentTranslateY}px)`,
+              }}
+              className="col-span-1 lg:col-span-6 text-center space-y-5 px-4 transition-transform duration-300"
+            >
               <div className="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-champagne-100/95 border border-champagne-300/80 backdrop-blur-sm text-xs uppercase font-mono tracking-widest text-obsidian font-bold shadow-sm">
                 <Sparkles className="w-4 h-4 text-gold-dark" />
                 <span>400+ Handcrafted Pieces • Mumbai Studio</span>
@@ -288,7 +322,7 @@ export const Section01Arrival: React.FC = () => {
               </p>
 
               <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-2">
-                <a href="#section-reveal" className="btn-primary w-full sm:w-auto">
+                <a href="#section-reveal" className="btn-primary w-full sm:w-auto shadow-md">
                   <span>Explore The Collection</span>
                   <ArrowRight className="w-4 h-4" />
                 </a>
@@ -298,9 +332,16 @@ export const Section01Arrival: React.FC = () => {
               </div>
             </div>
 
-            {/* RIGHT COLUMN: Real Piece 02 Card */}
+            {/* RIGHT COLUMN: Real Piece 02 Kinetic Glide Card */}
             <div className="hidden lg:flex lg:col-span-3 justify-end">
-              <div className="w-full max-w-[280px] p-5 bg-pearl-50/95 backdrop-blur-md rounded-3xl border border-champagne-300/80 shadow-luxury-soft space-y-3">
+              <div
+                style={{
+                  opacity: p2Opacity,
+                  transform: `translateX(${p2TranslateX}px) rotate(${p2Rotate}deg)`,
+                  pointerEvents: p2Opacity > 0.4 ? 'auto' : 'none',
+                }}
+                className="w-full max-w-[280px] p-5 bg-pearl-50/95 backdrop-blur-md rounded-3xl border border-champagne-300/80 shadow-luxury-soft transition-all duration-300 space-y-3"
+              >
                 <div className="flex items-center justify-between">
                   <LuxuryBadge variant="blush">Real Piece 02</LuxuryBadge>
                   <span className="text-[10px] font-mono font-bold text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded-full">
