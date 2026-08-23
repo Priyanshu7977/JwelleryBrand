@@ -20,6 +20,10 @@ export interface UserProfile {
   wishlist: string[];
 }
 
+export interface RegisteredAccount extends UserProfile {
+  password?: string;
+}
+
 interface AuthContextType {
   user: UserProfile | null;
   isAuthenticated: boolean;
@@ -77,74 +81,108 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     } catch {}
   }, [wishlist]);
 
-  const login = async (email: string, _password?: string) => {
-    if (!email || !email.includes('@')) {
-      return { success: false, error: 'Please enter a valid email address.' };
-    }
+  // Register: Stores credentials in registry, BUT DOES NOT LOG IN (User must log in separately)
+  const register = async (name: string, email: string, phone: string, password?: string) => {
+    const cleanEmail = email.trim().toLowerCase();
+    const cleanName = name.trim();
+    const cleanPassword = password ? password.trim() : '';
 
-    try {
-      const registryRaw = localStorage.getItem(USERS_REGISTRY_KEY);
-      const registry: UserProfile[] = registryRaw ? JSON.parse(registryRaw) : [];
-      const matched = registry.find((u) => u.email.toLowerCase() === email.toLowerCase());
-
-      if (matched) {
-        // Log in existing registered user
-        setUser(matched);
-        if (matched.wishlist && matched.wishlist.length > 0) {
-          setWishlist(Array.from(new Set([...wishlist, ...matched.wishlist])));
-        }
-        return { success: true };
-      }
-    } catch {}
-
-    // Dynamic user session creation for newly entered credentials
-    const formattedName = email
-      .split('@')[0]
-      .replace(/[._]/g, ' ')
-      .replace(/\b\w/g, (c) => c.toUpperCase());
-
-    const loggedUser: UserProfile = {
-      id: `usr-${Date.now()}`,
-      name: formattedName || 'Celestia Member',
-      email,
-      phone: '+91 98200 00000',
-      memberSince: new Date().toLocaleDateString('en-US', { month: 'short', year: 'numeric' }),
-      tier: 'Circle Member',
-      ordersCount: 0,
-      savedAddresses: [],
-      wishlist: wishlist,
-    };
-
-    setUser(loggedUser);
-    return { success: true };
-  };
-
-  const register = async (name: string, email: string, phone: string, _password?: string) => {
-    if (!name.trim() || !email.trim()) {
+    if (!cleanName || !cleanEmail) {
       return { success: false, error: 'Name and email are required.' };
     }
-
-    const newUser: UserProfile = {
-      id: `usr-${Date.now()}`,
-      name: name.trim(),
-      email: email.trim(),
-      phone: phone.trim() || '+91 98200 00000',
-      memberSince: new Date().toLocaleDateString('en-US', { month: 'short', year: 'numeric' }),
-      tier: 'Circle Member',
-      ordersCount: 0,
-      savedAddresses: [],
-      wishlist: wishlist,
-    };
+    if (!cleanEmail.includes('@')) {
+      return { success: false, error: 'Please enter a valid email address.' };
+    }
+    if (!cleanPassword || cleanPassword.length < 4) {
+      return { success: false, error: 'Password must be at least 4 characters.' };
+    }
 
     try {
       const registryRaw = localStorage.getItem(USERS_REGISTRY_KEY);
-      const registry: UserProfile[] = registryRaw ? JSON.parse(registryRaw) : [];
-      const updatedRegistry = [...registry.filter((u) => u.email !== email), newUser];
-      localStorage.setItem(USERS_REGISTRY_KEY, JSON.stringify(updatedRegistry));
-    } catch {}
+      const registry: RegisteredAccount[] = registryRaw ? JSON.parse(registryRaw) : [];
+      
+      // Check if user already exists
+      const existingUser = registry.find((u) => u.email.toLowerCase() === cleanEmail);
+      if (existingUser) {
+        return { success: false, error: 'An account with this email already exists. Please sign in.' };
+      }
 
-    setUser(newUser);
-    return { success: true };
+      const newAccount: RegisteredAccount = {
+        id: `usr-${Date.now()}`,
+        name: cleanName,
+        email: cleanEmail,
+        phone: phone.trim() || '+91 98200 00000',
+        password: cleanPassword,
+        memberSince: new Date().toLocaleDateString('en-US', { month: 'short', year: 'numeric' }),
+        tier: 'Circle Member',
+        ordersCount: 0,
+        savedAddresses: [],
+        wishlist: wishlist,
+      };
+
+      const updatedRegistry = [...registry, newAccount];
+      localStorage.setItem(USERS_REGISTRY_KEY, JSON.stringify(updatedRegistry));
+
+      // Strictly DO NOT set user session here! User must log in with their credentials.
+      return { success: true };
+    } catch (err) {
+      return { success: false, error: 'Registration failed. Please try again.' };
+    }
+  };
+
+  // Login: Validates against registered account registry and checks password match
+  const login = async (email: string, password?: string) => {
+    const cleanEmail = email.trim().toLowerCase();
+    const cleanPassword = password ? password.trim() : '';
+
+    if (!cleanEmail || !cleanEmail.includes('@')) {
+      return { success: false, error: 'Please enter a valid email address.' };
+    }
+    if (!cleanPassword) {
+      return { success: false, error: 'Please enter your password.' };
+    }
+
+    try {
+      const registryRaw = localStorage.getItem(USERS_REGISTRY_KEY);
+      const registry: RegisteredAccount[] = registryRaw ? JSON.parse(registryRaw) : [];
+      const matched = registry.find((u) => u.email.toLowerCase() === cleanEmail);
+
+      if (!matched) {
+        return {
+          success: false,
+          error: 'No registered account found with this email. Please register first.'
+        };
+      }
+
+      // Verify password
+      if (matched.password && matched.password !== cleanPassword) {
+        return {
+          success: false,
+          error: 'Incorrect password. Please verify your credentials and try again.'
+        };
+      }
+
+      // Authentication Successful -> Create user profile session (without exposing raw password)
+      const userProfile: UserProfile = {
+        id: matched.id,
+        name: matched.name,
+        email: matched.email,
+        phone: matched.phone,
+        memberSince: matched.memberSince,
+        tier: matched.tier,
+        ordersCount: matched.ordersCount,
+        savedAddresses: matched.savedAddresses || [],
+        wishlist: matched.wishlist || wishlist,
+      };
+
+      setUser(userProfile);
+      if (matched.wishlist && matched.wishlist.length > 0) {
+        setWishlist(Array.from(new Set([...wishlist, ...matched.wishlist])));
+      }
+      return { success: true };
+    } catch (err) {
+      return { success: false, error: 'Login failed. Please try again.' };
+    }
   };
 
   const forgotPassword = async (email: string) => {
@@ -165,8 +203,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     try {
       const registryRaw = localStorage.getItem(USERS_REGISTRY_KEY);
       if (registryRaw) {
-        const registry: UserProfile[] = JSON.parse(registryRaw);
-        const updatedRegistry = registry.map((u) => (u.id === user.id ? updated : u));
+        const registry: RegisteredAccount[] = JSON.parse(registryRaw);
+        const updatedRegistry = registry.map((u) => (u.id === user.id ? { ...u, ...data } : u));
         localStorage.setItem(USERS_REGISTRY_KEY, JSON.stringify(updatedRegistry));
       }
     } catch {}

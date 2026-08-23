@@ -31,8 +31,8 @@ export const RegisterPage: React.FC = () => {
     const res = await register(formData.name, formData.email, formData.phone, formData.password);
     setIsLoading(false);
     if (res.success) {
-      showToast("Account created successfully! Welcome to Celestia ✨");
-      navigate('/account');
+      showToast("Account created! Please sign in with your password ✨");
+      navigate('/login', { state: { email: formData.email } });
     } else {
       showToast(res.error || "Registration failed.");
     }

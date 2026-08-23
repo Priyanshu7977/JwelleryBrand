@@ -63,9 +63,9 @@ export const CelestiaEntranceModal: React.FC = () => {
     const res = await register(name, email, phone, password);
     setIsLoading(false);
     if (res.success) {
-      sessionStorage.setItem('celestia_post_video_login_shown', 'true');
-      setIsOpen(false);
-      showToast(`Welcome to Celestia Circle, ${name} ✨`);
+      setMode('login');
+      setPassword('');
+      showToast(`Account created for ${name}! Please sign in with your password to enter ✨`);
     } else {
       showToast(res.error || "Registration failed");
     }
