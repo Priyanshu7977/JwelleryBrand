@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { useCart } from '../../context/CartContext';
-import { Sparkles, ArrowRight, Lock, Mail, User, Eye, EyeOff, X, Film } from 'lucide-react';
+import { Sparkles, ArrowRight, Lock, Mail, User, Eye, EyeOff, X, Film, Phone } from 'lucide-react';
 
 export const CelestiaEntranceModal: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -28,6 +28,28 @@ export const CelestiaEntranceModal: React.FC = () => {
     window.addEventListener('celestia:video-ended', handleVideoEnded);
     return () => window.removeEventListener('celestia:video-ended', handleVideoEnded);
   }, [isAuthenticated]);
+
+  // Lock background body scroll completely while modal is open
+  useEffect(() => {
+    if (isOpen) {
+      const originalOverflow = document.body.style.overflow;
+      const originalPosition = document.body.style.position;
+      const originalWidth = document.body.style.width;
+
+      document.body.style.overflow = 'hidden';
+      document.documentElement.style.overflow = 'hidden';
+      document.body.style.position = 'relative';
+      document.body.style.touchAction = 'none';
+
+      return () => {
+        document.body.style.overflow = originalOverflow;
+        document.documentElement.style.overflow = '';
+        document.body.style.position = originalPosition;
+        document.body.style.width = originalWidth;
+        document.body.style.touchAction = '';
+      };
+    }
+  }, [isOpen]);
 
   const handleCloseAndExplore = () => {
     sessionStorage.setItem('celestia_post_video_login_shown', 'true');
@@ -74,21 +96,21 @@ export const CelestiaEntranceModal: React.FC = () => {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-black/85 backdrop-blur-xl animate-fade-in selection:bg-champagne-300">
+    <div className="fixed inset-0 z-[200] flex items-center justify-center p-3 sm:p-6 bg-black/85 backdrop-blur-xl animate-fade-in selection:bg-champagne-300 overflow-hidden">
       
-      {/* Ambient lighting */}
+      {/* Background ambient lighting */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden">
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[700px] bg-[#D8C39A]/15 rounded-full blur-3xl animate-pulse" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] sm:w-[700px] h-[600px] sm:h-[700px] bg-[#D8C39A]/15 rounded-full blur-3xl animate-pulse" />
         <div className="absolute inset-0 bg-noise opacity-20" />
       </div>
 
-      {/* Main Card */}
-      <div className="relative z-10 w-full max-w-lg bg-[#181411]/95 border border-[#D8C39A]/40 rounded-3xl p-8 sm:p-10 shadow-2xl space-y-8 text-center text-[#FAF7F0]">
+      {/* Main Glass Card (Mobile-Optimized with internal scroll) */}
+      <div className="relative z-10 w-full max-w-lg max-h-[92vh] overflow-y-auto bg-[#181411]/98 border border-[#D8C39A]/40 rounded-3xl p-5 sm:p-8 md:p-10 shadow-2xl space-y-6 text-center text-[#FAF7F0] overscroll-contain scrollbar-thin">
         
         {/* Close / Skip button */}
         <button
           onClick={handleCloseAndExplore}
-          className="absolute top-5 right-5 p-2 text-[#FAF7F0]/60 hover:text-[#FAF7F0] hover:bg-[#28231F] rounded-full transition-colors"
+          className="absolute top-4 right-4 sm:top-5 sm:right-5 p-2 text-[#FAF7F0]/60 hover:text-[#FAF7F0] hover:bg-[#28231F] rounded-full transition-colors"
           title="Continue to Homepage"
           aria-label="Close and continue"
         >
@@ -96,21 +118,21 @@ export const CelestiaEntranceModal: React.FC = () => {
         </button>
 
         {/* Header */}
-        <div className="space-y-3">
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#28231F] border border-[#D8C39A]/40 text-xs font-mono uppercase tracking-widest text-[#D8C39A]">
-            <Film className="w-3.5 h-3.5 text-[#D8C39A]" />
+        <div className="space-y-2 sm:space-y-3 pt-2">
+          <div className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-[#28231F] border border-[#D8C39A]/40 text-[10px] sm:text-xs font-mono uppercase tracking-widest text-[#D8C39A]">
+            <Film className="w-3 h-3 text-[#D8C39A]" />
             <span>Film Complete • Atelier Unveiled</span>
           </div>
 
-          <h1 className="font-serif-luxury text-5xl sm:text-6xl text-[#FAF7F0] tracking-tight uppercase leading-none">
+          <h1 className="font-serif-luxury text-4xl sm:text-5xl md:text-6xl text-[#FAF7F0] tracking-tight uppercase leading-none">
             CEL<span className="italic font-light lowercase text-[#D8C39A]">estia</span>
           </h1>
 
-          <p className="text-xs font-sans tracking-[0.34em] uppercase text-[#D8C39A] font-bold">
+          <p className="text-[10px] sm:text-xs font-sans tracking-[0.34em] uppercase text-[#D8C39A] font-bold">
             redefined for all.
           </p>
 
-          <p className="text-xs sm:text-sm text-[#FAF7F0]/70 font-sans max-w-sm mx-auto">
+          <p className="text-xs sm:text-sm text-[#FAF7F0]/70 font-sans max-w-xs sm:max-w-sm mx-auto leading-relaxed">
             {mode === 'login'
               ? 'Sign in to access your private vault, custom polaroid archives, and express checkout.'
               : 'Create an account for early collection drops, member privileges, and order tracking.'}
@@ -139,42 +161,42 @@ export const CelestiaEntranceModal: React.FC = () => {
 
         {/* Login Form */}
         {mode === 'login' ? (
-          <form onSubmit={handleLoginSubmit} className="space-y-4 text-left">
-            <div className="space-y-1.5">
-              <label className="text-[11px] uppercase font-mono tracking-wider text-[#FAF7F0]/70 font-bold block">
+          <form onSubmit={handleLoginSubmit} className="space-y-3.5 sm:space-y-4 text-left">
+            <div className="space-y-1">
+              <label className="text-[10px] sm:text-[11px] uppercase font-mono tracking-wider text-[#FAF7F0]/70 font-bold block">
                 Email Address
               </label>
-              <div className="flex items-center gap-2 px-4 h-12 bg-[#28231F] rounded-xl border border-[#D8C39A]/30 focus-within:border-[#D8C39A]">
-                <Mail className="w-4 h-4 text-[#D8C39A]" />
+              <div className="flex items-center gap-2 px-3.5 sm:px-4 h-11 sm:h-12 bg-[#28231F] rounded-xl border border-[#D8C39A]/30 focus-within:border-[#D8C39A]">
+                <Mail className="w-4 h-4 text-[#D8C39A] shrink-0" />
                 <input
                   type="email"
                   required
                   placeholder="name@email.com"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="w-full bg-transparent text-xs sm:text-sm font-sans text-[#FAF7F0] focus:outline-none placeholder:text-[#FAF7F0]/40"
+                  className="w-full bg-transparent text-sm font-sans text-[#FAF7F0] focus:outline-none placeholder:text-[#FAF7F0]/40"
                 />
               </div>
             </div>
 
-            <div className="space-y-1.5">
-              <label className="text-[11px] uppercase font-mono tracking-wider text-[#FAF7F0]/70 font-bold block">
+            <div className="space-y-1">
+              <label className="text-[10px] sm:text-[11px] uppercase font-mono tracking-wider text-[#FAF7F0]/70 font-bold block">
                 Password
               </label>
-              <div className="flex items-center gap-2 px-4 h-12 bg-[#28231F] rounded-xl border border-[#D8C39A]/30 focus-within:border-[#D8C39A]">
-                <Lock className="w-4 h-4 text-[#D8C39A]" />
+              <div className="flex items-center gap-2 px-3.5 sm:px-4 h-11 sm:h-12 bg-[#28231F] rounded-xl border border-[#D8C39A]/30 focus-within:border-[#D8C39A]">
+                <Lock className="w-4 h-4 text-[#D8C39A] shrink-0" />
                 <input
                   type={showPassword ? 'text' : 'password'}
                   required
                   placeholder="••••••••"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="w-full bg-transparent text-xs sm:text-sm font-sans text-[#FAF7F0] focus:outline-none placeholder:text-[#FAF7F0]/40"
+                  className="w-full bg-transparent text-sm font-sans text-[#FAF7F0] focus:outline-none placeholder:text-[#FAF7F0]/40"
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="text-[#FAF7F0]/50 hover:text-[#FAF7F0]"
+                  className="p-1 text-[#FAF7F0]/50 hover:text-[#FAF7F0] shrink-0"
                 >
                   {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                 </button>
@@ -184,61 +206,61 @@ export const CelestiaEntranceModal: React.FC = () => {
             <button
               type="submit"
               disabled={isLoading}
-              className="w-full h-12 bg-[#D8C39A] text-[#181411] rounded-full text-xs uppercase font-mono tracking-widest font-bold hover:bg-[#E5D4B2] transition-colors flex items-center justify-center gap-2 shadow-lg"
+              className="w-full h-11 sm:h-12 bg-[#D8C39A] text-[#181411] rounded-full text-xs uppercase font-mono tracking-widest font-bold hover:bg-[#E5D4B2] transition-colors flex items-center justify-center gap-2 shadow-lg mt-2"
             >
               <span>{isLoading ? 'Signing In...' : 'Sign In & Enter Homepage'}</span>
               <ArrowRight className="w-4 h-4" />
             </button>
           </form>
         ) : (
-          <form onSubmit={handleRegisterSubmit} className="space-y-4 text-left">
-            <div className="space-y-1.5">
-              <label className="text-[11px] uppercase font-mono tracking-wider text-[#FAF7F0]/70 font-bold block">
+          <form onSubmit={handleRegisterSubmit} className="space-y-3.5 sm:space-y-4 text-left">
+            <div className="space-y-1">
+              <label className="text-[10px] sm:text-[11px] uppercase font-mono tracking-wider text-[#FAF7F0]/70 font-bold block">
                 Full Name
               </label>
-              <div className="flex items-center gap-2 px-4 h-12 bg-[#28231F] rounded-xl border border-[#D8C39A]/30 focus-within:border-[#D8C39A]">
-                <User className="w-4 h-4 text-[#D8C39A]" />
+              <div className="flex items-center gap-2 px-3.5 sm:px-4 h-11 sm:h-12 bg-[#28231F] rounded-xl border border-[#D8C39A]/30 focus-within:border-[#D8C39A]">
+                <User className="w-4 h-4 text-[#D8C39A] shrink-0" />
                 <input
                   type="text"
                   required
                   placeholder="Enter your name"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
-                  className="w-full bg-transparent text-xs sm:text-sm font-sans text-[#FAF7F0] focus:outline-none placeholder:text-[#FAF7F0]/40"
+                  className="w-full bg-transparent text-sm font-sans text-[#FAF7F0] focus:outline-none placeholder:text-[#FAF7F0]/40"
                 />
               </div>
             </div>
 
-            <div className="space-y-1.5">
-              <label className="text-[11px] uppercase font-mono tracking-wider text-[#FAF7F0]/70 font-bold block">
+            <div className="space-y-1">
+              <label className="text-[10px] sm:text-[11px] uppercase font-mono tracking-wider text-[#FAF7F0]/70 font-bold block">
                 Email Address
               </label>
-              <div className="flex items-center gap-2 px-4 h-12 bg-[#28231F] rounded-xl border border-[#D8C39A]/30 focus-within:border-[#D8C39A]">
-                <Mail className="w-4 h-4 text-[#D8C39A]" />
+              <div className="flex items-center gap-2 px-3.5 sm:px-4 h-11 sm:h-12 bg-[#28231F] rounded-xl border border-[#D8C39A]/30 focus-within:border-[#D8C39A]">
+                <Mail className="w-4 h-4 text-[#D8C39A] shrink-0" />
                 <input
                   type="email"
                   required
                   placeholder="name@email.com"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="w-full bg-transparent text-xs sm:text-sm font-sans text-[#FAF7F0] focus:outline-none placeholder:text-[#FAF7F0]/40"
+                  className="w-full bg-transparent text-sm font-sans text-[#FAF7F0] focus:outline-none placeholder:text-[#FAF7F0]/40"
                 />
               </div>
             </div>
 
-            <div className="space-y-1.5">
-              <label className="text-[11px] uppercase font-mono tracking-wider text-[#FAF7F0]/70 font-bold block">
+            <div className="space-y-1">
+              <label className="text-[10px] sm:text-[11px] uppercase font-mono tracking-wider text-[#FAF7F0]/70 font-bold block">
                 Password
               </label>
-              <div className="flex items-center gap-2 px-4 h-12 bg-[#28231F] rounded-xl border border-[#D8C39A]/30 focus-within:border-[#D8C39A]">
-                <Lock className="w-4 h-4 text-[#D8C39A]" />
+              <div className="flex items-center gap-2 px-3.5 sm:px-4 h-11 sm:h-12 bg-[#28231F] rounded-xl border border-[#D8C39A]/30 focus-within:border-[#D8C39A]">
+                <Lock className="w-4 h-4 text-[#D8C39A] shrink-0" />
                 <input
                   type="password"
                   required
-                  placeholder="Create password"
+                  placeholder="Create password (min 4 chars)"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="w-full bg-transparent text-xs sm:text-sm font-sans text-[#FAF7F0] focus:outline-none placeholder:text-[#FAF7F0]/40"
+                  className="w-full bg-transparent text-sm font-sans text-[#FAF7F0] focus:outline-none placeholder:text-[#FAF7F0]/40"
                 />
               </div>
             </div>
@@ -246,7 +268,7 @@ export const CelestiaEntranceModal: React.FC = () => {
             <button
               type="submit"
               disabled={isLoading}
-              className="w-full h-12 bg-[#D8C39A] text-[#181411] rounded-full text-xs uppercase font-mono tracking-widest font-bold hover:bg-[#E5D4B2] transition-colors flex items-center justify-center gap-2 shadow-lg"
+              className="w-full h-11 sm:h-12 bg-[#D8C39A] text-[#181411] rounded-full text-xs uppercase font-mono tracking-widest font-bold hover:bg-[#E5D4B2] transition-colors flex items-center justify-center gap-2 shadow-lg mt-2"
             >
               <span>{isLoading ? 'Creating Account...' : 'Create Account & Enter'}</span>
               <ArrowRight className="w-4 h-4" />
@@ -258,7 +280,7 @@ export const CelestiaEntranceModal: React.FC = () => {
         <div className="pt-2 border-t border-[#D8C39A]/20">
           <button
             onClick={handleCloseAndExplore}
-            className="text-xs uppercase font-mono tracking-widest text-[#FAF7F0]/80 hover:text-[#D8C39A] transition-colors underline font-bold"
+            className="text-[11px] sm:text-xs uppercase font-mono tracking-widest text-[#FAF7F0]/80 hover:text-[#D8C39A] transition-colors underline font-bold"
           >
             Or Continue to Explore Homepage as Guest →
           </button>
