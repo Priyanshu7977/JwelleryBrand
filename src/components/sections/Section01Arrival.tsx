@@ -60,7 +60,7 @@ export const Section01Arrival: React.FC = () => {
       id="section-arrival"
     >
       {/* ===================================================================== */}
-      {/* CLEAR, VIBRANT OPEN-SOURCE JEWELLERY BACKGROUND VIDEO                 */}
+      {/* HIGH-DEFINITION USER JEWELLERY BACKGROUND VIDEO                      */}
       {/* ===================================================================== */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden select-none z-0">
         <video
@@ -70,16 +70,16 @@ export const Section01Arrival: React.FC = () => {
           muted
           playsInline
           preload="auto"
-          className="absolute inset-0 w-full h-full object-cover object-center scale-105 transition-all duration-700 opacity-60 filter contrast-105 brightness-100"
+          className="absolute inset-0 w-full h-full object-cover object-center scale-105 transition-all duration-700 opacity-85 filter brightness-95 contrast-105"
         >
+          <source src="/assets/videos/hero-jewelry.mp4" type="video/mp4" />
           <source src="/assets/videos/hero-jewelry.webm" type="video/webm" />
           <source src="https://upload.wikimedia.org/wikipedia/commons/4/47/Jewellery_Maker.webm" type="video/webm" />
-          <source src="https://upload.wikimedia.org/wikipedia/commons/7/7c/Making_a_silver_chain.webm" type="video/webm" />
         </video>
 
-        {/* Soft, Minimal Ambient Vignette (Keeps Video Fully Visible While Making Text Pop) */}
-        <div className="absolute inset-0 bg-gradient-to-r from-pearl-100/80 via-pearl-100/40 to-pearl-100/30" />
-        <div className="absolute inset-0 bg-gradient-to-t from-pearl-100/90 via-transparent to-pearl-100/60" />
+        {/* Minimal Soft Vignette: Keeps video 100% visible while preserving text legibility */}
+        <div className="absolute inset-0 bg-gradient-to-r from-pearl-100/75 via-pearl-100/30 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-pearl-100/90 via-transparent to-pearl-100/40" />
       </div>
 
       {/* ===================================================================== */}
@@ -122,7 +122,7 @@ export const Section01Arrival: React.FC = () => {
               transform: isLoaded ? 'translateY(0)' : 'translateY(14px)',
               transition: 'opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1) 300ms, transform 0.7s cubic-bezier(0.16, 1, 0.3, 1) 300ms',
             }}
-            className="text-base sm:text-lg md:text-xl text-obsidian/85 max-w-xl leading-relaxed font-normal bg-white/40 backdrop-blur-xs p-2 rounded-2xl"
+            className="text-base sm:text-lg md:text-xl text-obsidian font-medium max-w-xl leading-relaxed bg-white/60 backdrop-blur-md p-3 rounded-2xl border border-white/80 shadow-xs"
           >
             Discover artisanal bangles, 18k gold dipped jewellery suites, and bespoke velvet celebration hampers handcrafted with love in Mumbai.
           </p>
@@ -146,7 +146,7 @@ export const Section01Arrival: React.FC = () => {
 
             <a
               href="/gifting"
-              className="btn-secondary group flex items-center justify-center gap-2 px-8 py-4 text-xs sm:text-sm uppercase font-bold tracking-widest text-center w-full sm:w-auto transition-all bg-white/80 backdrop-blur-md"
+              className="btn-secondary group flex items-center justify-center gap-2 px-8 py-4 text-xs sm:text-sm uppercase font-bold tracking-widest text-center w-full sm:w-auto transition-all bg-white/90 backdrop-blur-md shadow-xs"
             >
               <span>Gifting Atelier</span>
               <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform duration-300 opacity-70" />
@@ -160,7 +160,7 @@ export const Section01Arrival: React.FC = () => {
               transform: isLoaded ? 'translateY(0)' : 'translateY(12px)',
               transition: 'opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1) 500ms, transform 0.7s cubic-bezier(0.16, 1, 0.3, 1) 500ms',
             }}
-            className="pt-4 border-t border-champagne-300/80 flex flex-wrap items-center gap-5 sm:gap-8 text-xs text-obsidian font-bold uppercase tracking-wider"
+            className="pt-4 border-t border-champagne-300/80 flex flex-wrap items-center gap-5 sm:gap-8 text-xs text-obsidian font-bold uppercase tracking-wider bg-white/40 backdrop-blur-xs p-2 rounded-xl"
           >
             <div className="flex items-center gap-2">
               <Award className="w-4 h-4 text-gold-dark shrink-0" />
@@ -189,7 +189,7 @@ export const Section01Arrival: React.FC = () => {
         }}
         className="relative z-10 flex flex-col sm:flex-row items-center justify-between gap-4 w-full max-w-7xl mx-auto pt-6 border-t border-champagne-300/60"
       >
-        <div className="flex items-center gap-2 sm:gap-3 text-center sm:text-left">
+        <div className="flex items-center gap-2 sm:gap-3 text-center sm:text-left bg-white/70 backdrop-blur-xs px-3 py-1.5 rounded-full">
           <span className="hidden sm:inline w-8 sm:w-10 h-0.5 bg-gold-dark" />
           <span className="text-[10px] sm:text-xs uppercase font-mono tracking-widest text-obsidian font-bold">
             1,000+ Journeys Dispatched • Pan-India Free Express Delivery
@@ -201,7 +201,7 @@ export const Section01Arrival: React.FC = () => {
           {/* Video Play/Pause Micro-Toggle */}
           <button
             onClick={toggleVideoPlayback}
-            className="p-2 rounded-full border border-champagne-300/80 bg-white/90 hover:bg-champagne-100 text-obsidian transition-all shadow-xs shrink-0"
+            className="p-2.5 rounded-full border border-champagne-300/80 bg-white/95 hover:bg-champagne-100 text-obsidian transition-all shadow-xs shrink-0"
             title={isVideoPlaying ? 'Pause Background Video' : 'Play Background Video'}
             aria-label="Toggle Background Video"
           >
@@ -211,10 +211,10 @@ export const Section01Arrival: React.FC = () => {
           {/* Atmospheric Sound Toggle */}
           <button
             onClick={toggleAudio}
-            className={`p-2 rounded-full border transition-all shadow-xs shrink-0 ${
+            className={`p-2.5 rounded-full border transition-all shadow-xs shrink-0 ${
               isAudioActive
                 ? 'bg-champagne-300 border-gold-dark text-obsidian'
-                : 'border-champagne-300/80 bg-white/90 hover:bg-champagne-100 text-obsidian'
+                : 'border-champagne-300/80 bg-white/95 hover:bg-champagne-100 text-obsidian'
             }`}
             title={isAudioActive ? 'Sound: ON' : 'Sound: OFF'}
             aria-label="Toggle Atmosphere Sound"
@@ -228,7 +228,7 @@ export const Section01Arrival: React.FC = () => {
 
           <a
             href="#section-reveal"
-            className="flex items-center gap-2 text-[11px] sm:text-xs uppercase font-mono tracking-widest text-obsidian hover:text-gold-dark transition-all group cursor-pointer font-bold px-4 py-2 rounded-full bg-white/90 border border-champagne-300/80 shadow-xs hover:shadow-md"
+            className="flex items-center gap-2 text-[11px] sm:text-xs uppercase font-mono tracking-widest text-obsidian hover:text-gold-dark transition-all group cursor-pointer font-bold px-4 py-2 rounded-full bg-white/95 border border-champagne-300/80 shadow-xs hover:shadow-md"
           >
             <span>Explore Pieces</span>
             <ArrowDown className="w-3.5 h-3.5 text-gold-dark group-hover:translate-y-1 transition-transform duration-300" />
