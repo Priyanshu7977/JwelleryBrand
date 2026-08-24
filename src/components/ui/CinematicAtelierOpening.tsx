@@ -32,39 +32,39 @@ export const CinematicAtelierOpening: React.FC = () => {
     document.body.style.overflow = 'hidden';
 
     // Timeline Sequence
-    // 0.3s: Center light leak begins
+    // 0.2s: Center light leak begins
     const t0 = setTimeout(() => {
       setLightLeak(true);
-    }, 300);
+    }, 200);
 
-    // 0.6s: Atelier doors begin opening outward
+    // 0.5s: Atelier doors begin opening outward
     const t1 = setTimeout(() => {
       setDoorsOpen(true);
-    }, 600);
+    }, 500);
 
-    // 1.1s: Celestia logo gently scales & fades in
+    // 1.0s: Celestia logo gently scales & fades in
     const t2 = setTimeout(() => {
       setLogoVisible(true);
-    }, 1100);
+    }, 1000);
 
-    // 1.8s: "REDEFINED FOR ALL." appears
+    // 1.6s: "REDEFINED FOR ALL." appears
     const t3 = setTimeout(() => {
       setTaglineVisible(true);
-    }, 1800);
+    }, 1600);
 
-    // 3.4s: Entire overlay fades out into homepage
+    // 2.9s: Entire overlay fades out into homepage
     const t4 = setTimeout(() => {
       setFadeOut(true);
-    }, 3400);
+    }, 2900);
 
-    // 4.2s: Complete unmount and unlock page scroll
+    // 3.6s: Complete unmount and unlock page scroll
     const t5 = setTimeout(() => {
       setShouldRender(false);
       document.body.style.overflow = originalOverflow;
       try {
         sessionStorage.setItem(SESSION_KEY, 'true');
       } catch {}
-    }, 4200);
+    }, 3600);
 
     return () => {
       clearTimeout(t0);
@@ -83,7 +83,7 @@ export const CinematicAtelierOpening: React.FC = () => {
     <aside
       role="status"
       aria-label="Atelier Entrance Ceremony"
-      className={`fixed inset-0 z-[99999] pointer-events-none flex items-center justify-center overflow-hidden transition-opacity duration-800 ease-out bg-[#0B0908] ${
+      className={`fixed inset-0 z-[99999] pointer-events-none flex items-center justify-center overflow-hidden transition-opacity duration-700 ease-out bg-[#0B0908] ${
         fadeOut ? 'opacity-0' : 'opacity-100'
       }`}
     >
@@ -133,7 +133,7 @@ export const CinematicAtelierOpening: React.FC = () => {
 
         {/* CELESTIA Main Logo */}
         <div
-          className={`transition-all duration-1200 ease-out transform ${
+          className={`transition-all duration-1000 ease-out transform ${
             logoVisible
               ? 'opacity-100 translate-y-0 scale-100'
               : 'opacity-0 translate-y-6 scale-90'
@@ -146,7 +146,7 @@ export const CinematicAtelierOpening: React.FC = () => {
 
         {/* “REDEFINED FOR ALL.” Subtitle */}
         <div
-          className={`transition-all duration-1000 ease-out transform delay-200 ${
+          className={`transition-all duration-1000 ease-out transform delay-150 ${
             taglineVisible
               ? 'opacity-100 translate-y-0'
               : 'opacity-0 translate-y-4'
@@ -173,7 +173,7 @@ export const CinematicAtelierOpening: React.FC = () => {
       
       {/* LEFT DOOR PANEL */}
       <div
-        className="absolute top-0 bottom-0 left-0 w-1/2 z-20 overflow-hidden shadow-2xl transition-transform duration-[2000ms]"
+        className="absolute top-0 bottom-0 left-0 w-1/2 z-20 overflow-hidden shadow-2xl transition-transform duration-[1800ms]"
         style={{
           transform: doorsOpen ? 'translateX(-100%)' : 'translateX(0%)',
           transitionTimingFunction: 'cubic-bezier(0.77, 0, 0.175, 1)',
@@ -193,7 +193,7 @@ export const CinematicAtelierOpening: React.FC = () => {
 
       {/* RIGHT DOOR PANEL */}
       <div
-        className="absolute top-0 bottom-0 right-0 w-1/2 z-20 overflow-hidden shadow-2xl transition-transform duration-[2000ms]"
+        className="absolute top-0 bottom-0 right-0 w-1/2 z-20 overflow-hidden shadow-2xl transition-transform duration-[1800ms]"
         style={{
           transform: doorsOpen ? 'translateX(100%)' : 'translateX(0%)',
           transitionTimingFunction: 'cubic-bezier(0.77, 0, 0.175, 1)',
@@ -224,3 +224,5 @@ export const CinematicAtelierOpening: React.FC = () => {
     </aside>
   );
 };
+
+export default CinematicAtelierOpening;
