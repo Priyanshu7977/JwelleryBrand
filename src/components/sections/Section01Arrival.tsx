@@ -18,7 +18,7 @@ export const Section01Arrival: React.FC = () => {
   return (
     <section
       ref={containerRef}
-      className="relative w-full h-[100dvh] min-h-[580px] max-h-[1080px] bg-pearl-100 selection:bg-champagne-300 flex flex-col justify-end pb-10 sm:pb-14 md:pb-16 px-4 sm:px-6 md:px-10 lg:px-14 overflow-hidden"
+      className="relative w-full h-[100dvh] min-h-[580px] max-h-[1080px] bg-obsidian selection:bg-champagne-300 flex flex-col justify-end pb-10 sm:pb-14 md:pb-16 px-4 sm:px-6 md:px-10 lg:px-14 overflow-hidden"
       id="section-arrival"
     >
       {/* ===================================================================== */}
@@ -32,50 +32,53 @@ export const Section01Arrival: React.FC = () => {
           muted
           playsInline
           preload="auto"
-          className="absolute inset-0 w-full h-full object-cover object-center scale-100 opacity-100 transition-opacity duration-500"
+          className="absolute inset-0 w-full h-full object-cover object-center scale-100 opacity-90 transition-opacity duration-500"
         >
           <source src="/assets/videos/hero-jewelry.mp4" type="video/mp4" />
           <source src="/assets/videos/hero-jewelry.webm" type="video/webm" />
           <source src="https://upload.wikimedia.org/wikipedia/commons/4/47/Jewellery_Maker.webm" type="video/webm" />
         </video>
+
+        {/* Cinematic contrast overlay for maximum text legibility */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/40 to-black/25" />
       </div>
 
       {/* ===================================================================== */}
-      {/* CONCISE TITLE, DESCRIPTION & 2 ACTION BUTTONS                         */}
+      {/* CONCISE TITLE, DESCRIPTION & 2 ACTION BUTTONS (Crisp White & Gold)    */}
       {/* ===================================================================== */}
       <div className="relative z-10 w-full max-w-7xl mx-auto space-y-3.5 sm:space-y-4">
         
         {/* Concise Luxury Headline & Description */}
-        <div className="max-w-xl lg:max-w-2xl space-y-2 text-left">
-          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-5xl font-bold uppercase tracking-tight text-obsidian leading-[1.08] drop-shadow-xs">
+        <div className="max-w-xl lg:max-w-2xl space-y-2.5 text-left">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-5xl font-bold uppercase tracking-tight text-white leading-[1.08] drop-shadow-md">
             Handcrafted <br />
-            <span className="text-gold-dark font-semibold">Fine Jewellery</span> <br />
+            <span className="text-[#E5D2A8] font-semibold">Fine Jewellery</span> <br />
             Redefined For All.
           </h1>
 
-          <p className="text-xs sm:text-sm md:text-base text-obsidian font-semibold max-w-lg leading-relaxed drop-shadow-xs">
+          <p className="text-xs sm:text-sm md:text-base text-pearl-100/90 font-medium max-w-lg leading-relaxed drop-shadow-sm">
             Discover artisanal bangles, 18k gold dipped jewellery suites, and bespoke celebration hampers handcrafted with love in Mumbai.
           </p>
         </div>
 
         {/* 2 Floating Action Buttons */}
-        <div className="flex flex-col sm:flex-row items-center justify-start gap-3 pt-1">
+        <div className="flex flex-col sm:flex-row items-center justify-start gap-3 pt-2">
           {/* Button 1: Explore Collection */}
           <Link
             to="/shop"
-            className="w-full sm:w-auto px-7 sm:px-9 py-3.5 rounded-full bg-obsidian/95 hover:bg-obsidian text-pearl-100 text-xs sm:text-sm uppercase font-mono tracking-widest font-bold shadow-2xl hover:scale-105 active:scale-[0.98] transition-all flex items-center justify-center gap-2.5 border border-white/20"
+            className="w-full sm:w-auto px-7 sm:px-9 py-3.5 rounded-full bg-white hover:bg-pearl-100 text-obsidian text-xs sm:text-sm uppercase font-mono tracking-widest font-bold shadow-2xl hover:scale-105 active:scale-[0.98] transition-all flex items-center justify-center gap-2.5 border border-white/60"
           >
             <span>Explore Collection</span>
-            <ArrowRight className="w-4 h-4" />
+            <ArrowRight className="w-4 h-4 text-obsidian" />
           </Link>
 
           {/* Button 2: Bespoke Gifting */}
           <Link
             to="/gifting"
-            className="w-full sm:w-auto px-7 sm:px-9 py-3.5 rounded-full bg-white/95 hover:bg-white text-obsidian text-xs sm:text-sm uppercase font-mono tracking-widest font-bold shadow-2xl hover:scale-105 active:scale-[0.98] transition-all flex items-center justify-center gap-2.5 backdrop-blur-md border border-champagne-300/80"
+            className="w-full sm:w-auto px-7 sm:px-9 py-3.5 rounded-full bg-black/45 hover:bg-black/65 text-white text-xs sm:text-sm uppercase font-mono tracking-widest font-bold shadow-2xl hover:scale-105 active:scale-[0.98] transition-all flex items-center justify-center gap-2.5 backdrop-blur-md border border-white/40"
           >
             <span>Bespoke Gifting</span>
-            <Sparkles className="w-4 h-4 text-gold-dark" />
+            <Sparkles className="w-4 h-4 text-[#E5D2A8]" />
           </Link>
         </div>
 
