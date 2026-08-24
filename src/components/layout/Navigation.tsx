@@ -180,7 +180,7 @@ export const Navigation: React.FC = () => {
                     isScrolled ? 'text-lg sm:text-2xl' : 'text-xl sm:text-2xl md:text-3xl'
                   }`}
                 >
-                  CEL<span className="italic font-light lowercase">estia</span>
+                  CEL<span className="font-light lowercase text-gold-dark">estia</span>
                 </span>
               </div>
               <span className="text-[7px] sm:text-[8px] tracking-[0.32em] text-obsidian-soft uppercase font-sans font-medium -mt-0.5 whitespace-nowrap">
@@ -480,7 +480,7 @@ export const Navigation: React.FC = () => {
             <div className="space-y-8 pt-12">
               <div className="flex flex-col border-b border-champagne-300/50 pb-4">
                 <span className="font-serif-luxury text-2xl uppercase font-bold text-obsidian">
-                  CEL<span className="italic font-light lowercase">estia</span>
+                  CEL<span className="font-light lowercase text-gold-dark">estia</span>
                 </span>
                 <span className="text-[9px] tracking-widest text-obsidian-soft uppercase font-sans">
                   redefined for all.

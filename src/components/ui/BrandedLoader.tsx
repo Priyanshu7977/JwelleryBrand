@@ -34,7 +34,7 @@ export const BrandedLoader: React.FC = () => {
         </div>
 
         <h1 className="font-serif-luxury text-4xl sm:text-6xl text-obsidian uppercase tracking-[0.16em]">
-          CEL<span className="italic font-light lowercase">estia</span>
+          CEL<span className="font-light lowercase text-gold-dark">estia</span>
         </h1>
 
         <p className="text-[10px] tracking-[0.38em] text-obsidian/60 uppercase font-sans">

@@ -38,12 +38,12 @@ export const Section02Reveal: React.FC = () => {
                   Act 02 — The Reveal
                 </span>
                 <span className="w-1.5 h-1.5 rounded-full bg-gold-dark" />
-                <span className="text-xs sm:text-sm italic text-obsidian-soft font-medium">
+                <span className="text-xs sm:text-sm text-obsidian-soft font-medium">
                   Fine Jewellery & Gemstones
                 </span>
               </div>
               <h2 className="text-3xl sm:text-5xl md:text-6xl text-obsidian font-bold uppercase leading-[1.05]">
-                Sculpted in <span className="italic font-normal text-gold-dark">Gold</span> & Light.
+                Sculpted in <span className="font-semibold text-gold-dark">Gold</span> & Light.
               </h2>
             </div>
 
@@ -155,7 +155,7 @@ export const Section02Reveal: React.FC = () => {
               {heroProduct.description}
             </p>
 
-            <blockquote className="border-l-2 border-gold-dark pl-4 italic text-sm text-obsidian/85">
+            <blockquote className="border-l-2 border-gold-dark pl-4 text-sm text-obsidian/85 font-serif font-medium">
               "{heroProduct.editorialNote}"
             </blockquote>
 

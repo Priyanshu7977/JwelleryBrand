@@ -11,7 +11,7 @@ export const PrivacyPage: React.FC = () => {
             Data Integrity
           </span>
           <h1 className="font-serif-luxury text-4xl sm:text-6xl text-obsidian uppercase">
-            PRIVACY <span className="italic font-light text-gold-dark">Policy</span>.
+            PRIVACY <span className="font-semibold text-gold-dark">POLICY</span>.
           </h1>
           <p className="text-xs text-obsidian/60 font-sans">
             Your trust is our foremost priority.

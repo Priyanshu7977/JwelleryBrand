@@ -22,7 +22,8 @@ export const CartPage: React.FC = () => {
     updateQuantity,
     subtotal,
     totalItems,
-    checkoutViaWhatsApp
+    checkoutViaWhatsApp,
+    showToast
   } = useCart();
 
   const [promoCode, setPromoCode] = useState('');
@@ -39,8 +40,9 @@ export const CartPage: React.FC = () => {
     e.preventDefault();
     if (promoCode.trim().toUpperCase() === 'CELESTIA10' || promoCode.trim().toUpperCase() === 'FIRST10') {
       setDiscountApplied(true);
+      showToast('10% VIP Atelier discount applied! ✨');
     } else {
-      alert("Invalid code. Try 'CELESTIA10' for 10% off your curated bag!");
+      showToast("Invalid code. Try 'CELESTIA10' for 10% off");
     }
   };
 
@@ -55,7 +57,7 @@ export const CartPage: React.FC = () => {
               Curated Bag ({totalItems} {totalItems === 1 ? 'item' : 'items'})
             </span>
             <h1 className="text-3xl sm:text-5xl md:text-6xl text-obsidian font-bold uppercase leading-[1.05]">
-              YOUR <span className="italic font-normal text-gold-dark">Bag</span>.
+              YOUR <span className="font-semibold text-gold-dark">Bag</span>.
             </h1>
           </div>
 

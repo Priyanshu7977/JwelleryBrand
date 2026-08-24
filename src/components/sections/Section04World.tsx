@@ -21,12 +21,12 @@ export const Section04World: React.FC = () => {
               Act 04 — The Celestia World
             </span>
             <span className="w-1.5 h-1.5 rounded-full bg-gold-dark" />
-            <span className="text-xs font-serif italic text-obsidian/60">Philosophy & Origin</span>
+            <span className="text-xs font-serif text-obsidian/60">Philosophy & Origin</span>
           </div>
 
           <h2 className="font-serif-luxury text-4xl sm:text-6xl md:text-8xl text-obsidian font-normal leading-[0.92] uppercase">
             little things <br />
-            <span className="italic font-light lowercase text-gold-dark">that become</span> <br />
+            <span className="font-semibold text-gold-dark">THAT BECOME</span> <br />
             your moments.
           </h2>
         </div>

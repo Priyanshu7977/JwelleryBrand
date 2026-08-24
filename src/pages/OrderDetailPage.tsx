@@ -249,7 +249,7 @@ export const OrderDetailPage: React.FC = () => {
                         Quantity: <span className="font-mono font-bold text-obsidian">{item.quantity}</span> {item.boxType && `• ${item.boxType}`}
                       </p>
                       {item.customNotes && (
-                        <p className="text-[11px] italic text-obsidian/60 font-sans mt-0.5">
+                        <p className="text-[11px] text-obsidian/60 font-sans font-medium mt-0.5">
                           Note: "{item.customNotes}"
                         </p>
                       )}

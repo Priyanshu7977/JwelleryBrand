@@ -152,7 +152,7 @@ export const CinematicAtelierOpening: React.FC = () => {
               : 'opacity-0 translate-y-4'
           }`}
         >
-          <p className="font-serif italic text-xs sm:text-sm md:text-base tracking-[0.35em] sm:tracking-[0.42em] text-champagne-300 font-light uppercase">
+          <p className="font-serif text-xs sm:text-sm md:text-base tracking-[0.35em] sm:tracking-[0.42em] text-champagne-300 font-light uppercase">
             REDEFINED FOR ALL.
           </p>
 

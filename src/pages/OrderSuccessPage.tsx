@@ -97,8 +97,8 @@ export const OrderSuccessPage: React.FC = () => {
       <div className="w-full min-h-screen bg-pearl-100 pt-36 pb-32 px-4 flex items-center justify-center">
         <div className="text-center space-y-4">
           <div className="w-12 h-12 rounded-full border-2 border-gold-dark border-t-transparent animate-spin mx-auto" />
-          <p className="font-serif italic text-sm text-obsidian/70">
-            Retrieving Atelier Order Confirmation...
+          <p className="font-serif text-sm text-obsidian/70">
+            A copy of your parcel confirmation has been dispatched to your email.
           </p>
         </div>
       </div>
@@ -193,7 +193,7 @@ export const OrderSuccessPage: React.FC = () => {
             </div>
 
             <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-obsidian uppercase leading-tight">
-              Thank You, <span className="italic font-normal text-gold-dark">{order.customer.name.split(' ')[0]}</span>.
+              Thank You, <span className="font-semibold text-gold-dark">{order.customer.name.split(' ')[0]}</span>.
             </h1>
 
             <p className="text-xs sm:text-sm text-obsidian/75 leading-relaxed">
@@ -303,7 +303,7 @@ export const OrderSuccessPage: React.FC = () => {
                           )}
                         </div>
                         {item.customNotes && (
-                          <p className="text-[10px] italic text-obsidian/75 bg-pearl-50 px-2 py-0.5 rounded border border-champagne-200 inline-block">
+                          <p className="text-[10px] text-obsidian/75 bg-pearl-50 px-2 py-0.5 rounded border border-champagne-200 inline-block font-serif font-medium">
                             "{item.customNotes}"
                           </p>
                         )}

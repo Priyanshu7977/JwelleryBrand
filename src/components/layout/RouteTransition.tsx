@@ -35,7 +35,7 @@ export const RouteTransition: React.FC = () => {
           </div>
 
           <p className="font-serif-luxury text-2xl sm:text-3xl text-obsidian tracking-[0.14em] uppercase">
-            CEL<span className="italic font-light lowercase">estia</span>
+            CEL<span className="font-light lowercase text-gold-dark">estia</span>
           </p>
         </div>
       </div>

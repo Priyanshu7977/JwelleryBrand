@@ -45,7 +45,7 @@ export const Footer: React.FC = () => {
             </div>
 
             <h2 className="text-3xl sm:text-5xl md:text-6xl text-[#FAF7F0] tracking-[0.05em] uppercase font-normal leading-tight max-w-4xl mx-auto">
-              WHERE TIMELESS <span className="italic font-light text-[#D8C39A]">Charm</span> MEETS EVERYDAY <span className="italic font-light text-[#D8C39A]">Grace</span>.
+              WHERE TIMELESS <span className="font-semibold text-[#D8C39A]">CHARM</span> MEETS EVERYDAY <span className="font-semibold text-[#D8C39A]">GRACE</span>.
             </h2>
           </div>
         </RevealOnScroll>
@@ -58,7 +58,7 @@ export const Footer: React.FC = () => {
             <div className="lg:col-span-4 space-y-5">
               <div className="space-y-1.5">
                 <Link to="/" className="text-4xl sm:text-5xl text-[#FAF7F0] tracking-wider uppercase block hover:text-[#D8C39A] transition-colors font-bold">
-                  CEL<span className="italic font-light lowercase">estia</span>
+                  CEL<span className="font-light lowercase text-[#D8C39A]">estia</span>
                 </Link>
                 <p className="text-xs uppercase tracking-[0.32em] text-[#D8C39A] font-mono font-bold">
                   redefined for all.

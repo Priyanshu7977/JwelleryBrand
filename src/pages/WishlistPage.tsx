@@ -29,13 +29,13 @@ export const WishlistPage: React.FC = () => {
                 Private Curation
               </span>
               <span className="w-1.5 h-1.5 rounded-full bg-gold-dark" />
-              <span className="text-xs sm:text-sm italic text-obsidian-soft font-medium">
+              <span className="text-xs sm:text-sm text-obsidian-soft font-medium">
                 {wishlistedItems.length} {wishlistedItems.length === 1 ? 'Piece' : 'Pieces'} Saved
               </span>
             </div>
 
             <h1 className="text-3xl sm:text-5xl md:text-6xl text-obsidian font-bold uppercase leading-[1.05]">
-              YOUR <span className="italic font-normal text-gold-dark">Wishlist</span>.
+              YOUR <span className="font-semibold text-gold-dark">Wishlist</span>.
             </h1>
 
             <p className="text-xs sm:text-sm text-obsidian-soft leading-relaxed max-w-xl">

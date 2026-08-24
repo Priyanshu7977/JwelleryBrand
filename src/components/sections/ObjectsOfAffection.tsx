@@ -86,7 +86,7 @@ export const ObjectsOfAffection: React.FC = () => {
                 <span>Act 04 — The Celestia Edit</span>
               </div>
               <h2 className="text-3xl sm:text-5xl md:text-6xl text-obsidian font-bold uppercase leading-[1.05]">
-                OBJECTS OF <span className="italic font-normal text-gold-dark">Affection</span>.
+                OBJECTS OF <span className="font-semibold text-gold-dark">Affection</span>.
               </h2>
             </div>
 
@@ -207,7 +207,7 @@ export const ObjectsOfAffection: React.FC = () => {
                 {currentProduct.description}
               </p>
 
-              <blockquote className="border-l-2 border-gold-dark pl-4 italic text-sm text-obsidian/85">
+              <blockquote className="border-l-2 border-gold-dark pl-4 text-sm text-obsidian/85 font-serif font-medium">
                 "{currentProduct.editorialNote}"
               </blockquote>
 

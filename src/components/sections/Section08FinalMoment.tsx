@@ -26,10 +26,10 @@ export const Section08FinalMoment: React.FC = () => {
           <div className="space-y-3">
             <h2 className="text-4xl sm:text-6xl md:text-7xl lg:text-8xl text-obsidian font-bold leading-[0.95] tracking-tight uppercase">
               redefined <br />
-              <span className="italic font-light lowercase text-gold-dark">for all.</span>
+              <span className="font-semibold text-gold-dark">FOR ALL.</span>
             </h2>
 
-            <p className="italic text-xl sm:text-2xl md:text-3xl text-obsidian/80 max-w-xl mx-auto pt-2">
+            <p className="text-xl sm:text-2xl md:text-3xl text-obsidian/80 font-serif max-w-xl mx-auto pt-2 font-medium">
               Find something that feels like you.
             </p>
           </div>

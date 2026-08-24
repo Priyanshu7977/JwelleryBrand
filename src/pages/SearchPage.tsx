@@ -41,7 +41,7 @@ export const SearchPage: React.FC = () => {
               Live Search
             </span>
             <h1 className="text-3xl sm:text-5xl md:text-6xl text-obsidian font-bold uppercase leading-[1.05]">
-              SEARCH <span className="italic font-normal text-gold-dark">Catalogue</span>.
+              SEARCH <span className="font-semibold text-gold-dark">CATALOGUE</span>.
             </h1>
           </div>
 

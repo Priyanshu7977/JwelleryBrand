@@ -27,16 +27,16 @@ export const ThePersonBehindCelestia: React.FC = () => {
                 The Human Touch
               </span>
               <span className="w-1.5 h-1.5 rounded-full bg-champagne-300" />
-              <span className="text-xs sm:text-sm italic text-pearl-200 font-medium">
+              <span className="text-xs sm:text-sm text-pearl-200 font-medium">
                 Mumbai Studio Origins
               </span>
             </div>
 
             <h2 className="text-3xl sm:text-5xl md:text-6xl text-pearl-50 uppercase font-bold leading-[1.05]">
-              FROM THE <span className="italic font-normal text-champagne-200">Atelier</span>.
+              FROM THE <span className="font-semibold text-champagne-200">Atelier</span>.
             </h2>
 
-            <p className="italic text-base sm:text-xl text-pearl-100 leading-relaxed max-w-2xl">
+            <p className="text-base sm:text-xl text-pearl-100 leading-relaxed max-w-2xl font-serif">
               "I wanted to build a world where jewellery is never intimidating—where every package you receive feels like a warm embrace from a friend."
             </p>
           </div>

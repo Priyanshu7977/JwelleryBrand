@@ -71,13 +71,13 @@ export const ShopPage: React.FC = () => {
                   The Discovery Room
                 </span>
                 <span className="w-1.5 h-1.5 rounded-full bg-gold-dark" />
-                <span className="text-xs italic text-obsidian-soft font-medium">
+                <span className="text-xs text-obsidian-soft font-medium">
                   400+ Handcrafted Creations
                 </span>
               </div>
 
               <h1 className="text-3xl sm:text-5xl md:text-6xl text-obsidian font-bold uppercase leading-tight">
-                THE <span className="italic font-normal text-gold-dark">Collection</span>.
+                THE <span className="font-semibold text-gold-dark">Collection</span>.
               </h1>
 
               <p className="text-xs sm:text-sm text-obsidian/75 leading-relaxed max-w-lg">

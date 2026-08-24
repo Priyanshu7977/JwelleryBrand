@@ -41,7 +41,7 @@ export const LoginPage: React.FC = () => {
             Atelier Portal
           </span>
           <h1 className="font-serif-luxury text-3xl md:text-4xl text-obsidian uppercase">
-            SIGN <span className="italic font-light text-gold-dark">In</span>.
+            SIGN <span className="font-semibold text-gold-dark">IN</span>.
           </h1>
           <p className="text-xs text-obsidian/60 font-sans max-w-xs mx-auto">
             Access your order tracking, custom polaroid history, and saved address.

@@ -63,7 +63,7 @@ export const OrderTrackingPage: React.FC = () => {
           </div>
 
           <h1 className="text-3xl sm:text-5xl md:text-6xl text-obsidian font-bold uppercase leading-[1.05]">
-            TRACK YOUR <span className="italic font-normal text-gold-dark">Parcel</span>.
+            TRACK YOUR <span className="font-semibold text-gold-dark">PARCEL</span>.
           </h1>
 
           <p className="text-xs sm:text-sm text-obsidian/70">

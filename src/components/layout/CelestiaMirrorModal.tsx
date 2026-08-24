@@ -28,7 +28,7 @@ export const CelestiaMirrorModal: React.FC<{ isOpen: boolean; onClose: () => voi
             AR Atelier Innovation
           </span>
           <h3 className="font-serif-luxury text-3xl text-obsidian uppercase">
-            CELESTIA <span className="italic font-light text-gold-dark">Mirror</span>.
+            CELESTIA <span className="font-semibold text-gold-dark">MIRROR</span>.
           </h3>
           <p className="text-xs text-obsidian/70 font-sans leading-relaxed">
             Real-time Augmented Reality try-on for <strong className="text-obsidian">{pieceName}</strong> is currently being calibrated in our Mumbai lab for mobile safari and chrome.

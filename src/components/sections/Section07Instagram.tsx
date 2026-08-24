@@ -34,10 +34,10 @@ export const Section07Instagram: React.FC = () => {
                   Act 07 — Instagram Atelier
                 </span>
                 <span className="w-1.5 h-1.5 rounded-full bg-gold-dark" />
-                <span className="text-xs italic text-obsidian/60 font-medium">@celestiaamor.in</span>
+                <span className="text-xs text-obsidian/60 font-medium font-mono">@celestiaamor.in</span>
               </div>
               <h2 className="text-3xl sm:text-5xl md:text-6xl text-obsidian font-bold uppercase leading-tight">
-                The Live <span className="italic font-normal text-gold-dark">Community Lookbook</span>.
+                The Live <span className="font-semibold text-gold-dark">Community Lookbook</span>.
               </h2>
             </div>
 

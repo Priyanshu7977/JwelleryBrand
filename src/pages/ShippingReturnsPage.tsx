@@ -14,13 +14,13 @@ export const ShippingReturnsPage: React.FC = () => {
               Atelier Policies
             </span>
             <span className="w-1.5 h-1.5 rounded-full bg-gold-dark" />
-            <span className="text-xs font-serif italic text-obsidian/60">
+            <span className="text-xs font-serif text-obsidian/60">
               Clear & Transparent
             </span>
           </div>
 
           <h1 className="font-serif-luxury text-4xl sm:text-6xl text-obsidian uppercase">
-            SHIPPING & <span className="italic font-light text-gold-dark">Returns</span>.
+            SHIPPING & <span className="font-semibold text-gold-dark">RETURNS</span>.
           </h1>
 
           <p className="text-xs sm:text-sm text-obsidian/75 font-sans leading-relaxed">

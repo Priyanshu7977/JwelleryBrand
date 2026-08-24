@@ -62,7 +62,7 @@ export const FindYourCelestia: React.FC = () => {
           </div>
 
           <h2 className="font-serif-luxury text-4xl sm:text-6xl text-obsidian uppercase leading-tight">
-            FIND YOUR <span className="italic font-light text-gold-dark">CELestia</span>.
+            FIND YOUR <span className="font-semibold text-gold-dark">CELESTIA</span>.
           </h2>
 
           <p className="text-xs sm:text-sm text-obsidian/70 font-sans max-w-lg mx-auto">
@@ -203,7 +203,7 @@ export const FindYourCelestia: React.FC = () => {
                 />
               </div>
 
-              <p className="font-serif italic text-sm text-obsidian/85 max-w-md mx-auto leading-relaxed">
+              <p className="font-serif text-sm text-obsidian/85 max-w-md mx-auto leading-relaxed font-medium">
                 "{matchedProduct.editorialNote}"
               </p>
 

@@ -49,7 +49,7 @@ export const Section01Arrival: React.FC = () => {
         <div className="max-w-xl lg:max-w-2xl space-y-2 text-left">
           <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-5xl font-bold uppercase tracking-tight text-obsidian leading-[1.08] drop-shadow-xs">
             Handcrafted <br />
-            <span className="text-gold-dark font-normal italic">Fine Jewellery</span> <br />
+            <span className="text-gold-dark font-semibold">Fine Jewellery</span> <br />
             Redefined For All.
           </h1>
 

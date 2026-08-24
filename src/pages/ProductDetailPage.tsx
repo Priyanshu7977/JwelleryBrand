@@ -178,7 +178,7 @@ export const ProductDetailPage: React.FC = () => {
                   </tbody>
                 </table>
               </div>
-              <p className="text-[11px] italic text-obsidian/70">
+              <p className="text-[11px] text-obsidian/70 font-medium">
                 ✨ Free size exchange supported within 7 days across India.
               </p>
             </div>
@@ -478,7 +478,7 @@ export const ProductDetailPage: React.FC = () => {
                 {product.description}
               </p>
               {product.editorialNote && (
-                <blockquote className="border-l-2 border-gold-dark pl-3 italic text-xs text-obsidian/85">
+                <blockquote className="border-l-2 border-gold-dark pl-3 text-xs text-obsidian/85 font-serif font-medium">
                   "{product.editorialNote}"
                 </blockquote>
               )}
@@ -600,7 +600,7 @@ export const ProductDetailPage: React.FC = () => {
                   Verified Atelier Experiences
                 </span>
                 <h3 className="text-2xl sm:text-3xl font-bold text-obsidian uppercase">
-                  CLIENT <span className="italic font-normal text-gold-dark">Reflections</span>.
+                  CLIENT <span className="font-semibold text-gold-dark">Reflections</span>.
                 </h3>
               </div>
 
@@ -646,7 +646,7 @@ export const ProductDetailPage: React.FC = () => {
                         <Star key={i} className="w-3 h-3 fill-amber-400 text-amber-400" />
                       ))}
                     </div>
-                    <p className="text-xs text-obsidian/85 italic leading-relaxed">
+                    <p className="text-xs text-obsidian/85 font-serif leading-relaxed">
                       "{rev.comment}"
                     </p>
                   </div>
@@ -671,7 +671,7 @@ export const ProductDetailPage: React.FC = () => {
                   Curated Companions
                 </span>
                 <h3 className="text-2xl sm:text-3xl font-bold text-obsidian uppercase">
-                  COMPLETE THE <span className="italic font-normal text-gold-dark">Suite</span>.
+                  COMPLETE THE <span className="font-semibold text-gold-dark">Suite</span>.
                 </h3>
               </div>
               <Link to="/shop" className="text-xs font-bold uppercase tracking-widest text-obsidian hover:text-gold-dark transition-colors flex items-center gap-1">

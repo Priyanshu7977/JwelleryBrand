@@ -18,13 +18,13 @@ export const CollectionsPage: React.FC = () => {
                 The Five Realms
               </span>
               <span className="w-1.5 h-1.5 rounded-full bg-gold-dark" />
-              <span className="text-xs italic text-obsidian/60 font-medium">
+              <span className="text-xs text-obsidian/60 font-medium">
                 Curated Universes
               </span>
             </div>
 
             <h1 className="text-3xl sm:text-5xl md:text-6xl text-obsidian font-bold uppercase leading-tight">
-              CURATED <span className="italic font-normal text-gold-dark">Collections</span>.
+              CURATED <span className="font-semibold text-gold-dark">Collections</span>.
             </h1>
 
             <p className="text-xs sm:text-sm text-obsidian/75 leading-relaxed">
@@ -76,7 +76,7 @@ export const CollectionsPage: React.FC = () => {
                     {col.editorialNarrative}
                   </p>
 
-                  <blockquote className="border-l-2 border-gold-dark pl-3 italic text-xs text-obsidian/85">
+                  <blockquote className="border-l-2 border-gold-dark pl-3 text-xs text-obsidian/85 font-serif font-medium">
                     "{col.accentQuote}"
                   </blockquote>
 

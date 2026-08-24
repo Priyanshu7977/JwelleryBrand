@@ -80,7 +80,7 @@ export const SearchModal: React.FC = () => {
               Results ({filteredProducts.length})
             </p>
             {filteredProducts.length === 0 ? (
-              <p className="text-sm text-obsidian/60 py-6 text-center italic font-serif">
+              <p className="text-sm text-obsidian/60 py-6 text-center font-serif">
                 No matching pieces found for "{query}". Explore our full collections below.
               </p>
             ) : (

@@ -69,7 +69,7 @@ export const GiftingPage: React.FC = () => {
           </div>
 
           <h1 className="text-2xl sm:text-4xl md:text-5xl text-obsidian font-bold uppercase leading-tight">
-            FOR SOMEONE <span className="italic font-normal text-gold-dark lowercase">special.</span>
+            FOR SOMEONE <span className="font-semibold text-gold-dark">SPECIAL.</span>
           </h1>
 
           <p className="text-xs text-obsidian/75 leading-relaxed">
@@ -184,7 +184,7 @@ export const GiftingPage: React.FC = () => {
                 <Gift className="w-3 h-3 text-gold-dark" />
                 <span>Includes Custom Retro Polaroid Print</span>
               </div>
-              <p className="text-[11px] text-obsidian-soft italic line-clamp-1">
+              <p className="text-[11px] text-obsidian-soft font-serif font-medium line-clamp-1">
                 "{polaroidNote || 'To my favourite person, shining always ✨'}"
               </p>
             </div>

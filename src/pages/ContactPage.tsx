@@ -118,7 +118,7 @@ export const ContactPage: React.FC = () => {
                   <span>Physical Atelier Location • Mumbai MMXXVI</span>
                 </div>
                 <h1 className="text-2xl sm:text-4xl font-bold text-obsidian uppercase">
-                  Bandra West Studio, <span className="italic font-normal text-gold-dark">Mumbai</span>
+                  Bandra West Studio, <span className="font-semibold text-gold-dark">Mumbai</span>
                 </h1>
                 <p className="text-xs text-obsidian-soft">
                   Bandra West, Mumbai, Maharashtra 400050, India • Open Daily: 10:00 AM – 8:00 PM IST
@@ -248,7 +248,7 @@ export const ContactPage: React.FC = () => {
               </div>
 
               <h2 className="text-2xl sm:text-4xl font-bold text-obsidian uppercase leading-tight">
-                SEND A <span className="italic font-normal text-gold-dark">Message</span>.
+                SEND A <span className="font-semibold text-gold-dark">MESSAGE</span>.
               </h2>
 
               <p className="text-xs sm:text-sm text-obsidian-soft leading-relaxed">
@@ -355,7 +355,7 @@ export const ContactPage: React.FC = () => {
                   <span>Frequently Asked Questions</span>
                 </div>
                 <h3 className="text-2xl sm:text-3xl font-bold text-obsidian uppercase">
-                  ATELIER <span className="italic font-normal text-gold-dark">Knowledge & Help</span>.
+                  ATELIER <span className="font-semibold text-gold-dark">KNOWLEDGE & HELP</span>.
                 </h3>
               </div>
               <p className="text-xs text-obsidian-soft max-w-md">

@@ -44,7 +44,7 @@ export const BehindCelestiaModal: React.FC<{ isOpen: boolean; onClose: () => voi
             <span>Secret Archive Unlocked</span>
           </div>
           <h2 className="font-serif-luxury text-3xl sm:text-4xl text-obsidian uppercase">
-            BEHIND <span className="italic font-light text-gold-dark">CELestia</span>.
+            BEHIND <span className="font-semibold text-gold-dark">CELESTIA</span>.
           </h2>
           <p className="text-xs text-obsidian/65 font-sans">
             A glimpse into the tactile craftsmanship inside our Mumbai atelier.

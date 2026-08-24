@@ -19,16 +19,16 @@ export const AboutPage: React.FC = () => {
               The Atelier Story
             </span>
             <span className="w-1.5 h-1.5 rounded-full bg-gold-dark" />
-            <span className="text-xs font-serif italic text-obsidian/60">
+            <span className="text-xs font-serif text-obsidian/60">
               Mumbai Roots • Pan-India Reach
             </span>
           </div>
 
           <h1 className="font-serif-luxury text-5xl sm:text-7xl md:text-8xl text-obsidian font-normal uppercase leading-[0.92]">
-            THE SOUL OF <span className="italic font-light text-gold-dark">CELestia</span>.
+            THE SOUL OF <span className="font-semibold text-gold-dark">CELESTIA</span>.
           </h1>
 
-          <p className="font-serif italic text-xl sm:text-2xl text-obsidian/85 leading-relaxed">
+          <p className="font-serif text-xl sm:text-2xl text-obsidian/85 leading-relaxed">
             "We believe fine jewellery and emotional gifting should not be reserved for rare occasions. It should belong to every day you choose to feel extraordinary."
           </p>
         </div>

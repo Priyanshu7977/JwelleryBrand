@@ -45,7 +45,7 @@ export const CollectionDetailPage: React.FC = () => {
                 Curated Realm
               </span>
               <span className="w-1.5 h-1.5 rounded-full bg-gold-dark" />
-              <span className="text-xs italic text-obsidian/60 font-medium">{collection.subtitle}</span>
+              <span className="text-xs text-obsidian/60 font-medium font-sans">{collection.subtitle}</span>
             </div>
 
             <h1 className="text-3xl sm:text-5xl md:text-6xl text-obsidian font-bold uppercase leading-tight">
@@ -56,7 +56,7 @@ export const CollectionDetailPage: React.FC = () => {
               {collection.editorialNarrative}
             </p>
 
-            <blockquote className="border-l-2 border-gold-dark pl-4 italic text-xs sm:text-sm text-obsidian/85">
+            <blockquote className="border-l-2 border-gold-dark pl-4 text-xs sm:text-sm text-obsidian/85 font-serif font-medium">
               "{collection.accentQuote}"
             </blockquote>
 

@@ -35,10 +35,10 @@ export const Section03Collections: React.FC = () => {
                   Act 03 — Collection Journey
                 </span>
                 <span className="w-1.5 h-1.5 rounded-full bg-gold-dark" />
-                <span className="text-xs sm:text-sm italic text-obsidian/60 font-medium">The Five Realms</span>
+                <span className="text-xs sm:text-sm text-obsidian/60 font-medium">The Five Realms</span>
               </div>
               <h2 className="text-3xl sm:text-5xl md:text-6xl text-obsidian font-bold uppercase leading-[1.05]">
-                Curated for <span className="italic font-normal text-gold-dark">Every Mood</span>.
+                Curated for <span className="font-semibold text-gold-dark">Every Mood</span>.
               </h2>
             </div>
 
@@ -105,7 +105,7 @@ export const Section03Collections: React.FC = () => {
                 {activeCollection.editorialNarrative}
               </p>
 
-              <blockquote className="border-l-2 border-gold-dark pl-4 italic text-xs sm:text-sm text-obsidian/90">
+              <blockquote className="border-l-2 border-gold-dark pl-4 text-xs sm:text-sm text-obsidian/90 font-serif font-medium">
                 "{activeCollection.accentQuote}"
               </blockquote>
 

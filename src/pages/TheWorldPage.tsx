@@ -56,10 +56,10 @@ export const TheWorldPage: React.FC = () => {
           </div>
 
           <h1 className="text-3xl sm:text-5xl md:text-6xl text-obsidian font-bold uppercase leading-tight">
-            THE <span className="italic font-normal text-gold-dark">World</span>.
+            THE <span className="font-semibold text-gold-dark">World</span>.
           </h1>
 
-          <p className="italic text-sm sm:text-base text-obsidian-soft max-w-lg mx-auto leading-relaxed">
+          <p className="text-sm sm:text-base text-obsidian-soft max-w-lg mx-auto leading-relaxed font-serif">
             "A tactile world where modern jewellery meets vintage emotion."
           </p>
         </div>
@@ -104,15 +104,15 @@ export const TheWorldPage: React.FC = () => {
                     About The Founder
                   </span>
                   <span className="w-1.5 h-1.5 rounded-full bg-gold-dark" />
-                  <span className="text-xs italic text-obsidian/60 font-medium">Mumbai Studio Origins</span>
+                  <span className="text-xs text-obsidian/60 font-medium">Mumbai Studio Origins</span>
                 </div>
 
                 <h2 className="text-xl sm:text-3xl font-bold text-obsidian uppercase leading-snug">
-                  The Person Behind <span className="italic font-normal text-gold-dark">Celestia</span>.
+                  The Person Behind <span className="font-semibold text-gold-dark">Celestia</span>.
                 </h2>
               </div>
 
-              <blockquote className="border-l-2 border-gold-dark pl-3 italic text-xs sm:text-sm text-obsidian/90 font-medium">
+              <blockquote className="border-l-2 border-gold-dark pl-3 text-xs sm:text-sm text-obsidian/90 font-serif font-medium">
                 "{cleanedQuote}"
               </blockquote>
 
@@ -187,7 +187,7 @@ export const TheWorldPage: React.FC = () => {
                 </div>
 
                 <div className="pt-3 mt-3 border-t border-champagne-300/40">
-                  <blockquote className="border-l-2 border-gold-dark pl-2.5 italic text-xs text-obsidian/90">
+                  <blockquote className="border-l-2 border-gold-dark pl-2.5 text-xs text-obsidian/90 font-serif font-medium">
                     "{ch.accent}"
                   </blockquote>
                 </div>

@@ -130,12 +130,12 @@ export const CartDrawer: React.FC = () => {
                       ₹{item.product.price}
                     </p>
                     {item.selectedPersonalisation?.boxType && (
-                      <p className="text-[10px] text-obsidian/60 italic mt-0.5 line-clamp-1">
+                      <p className="text-[10px] text-obsidian/60 font-medium mt-0.5 line-clamp-1">
                         Box: {item.selectedPersonalisation.boxType}
                       </p>
                     )}
                     {item.selectedPersonalisation?.customNote && (
-                      <p className="text-[10px] text-gold-dark italic mt-0.5 line-clamp-1">
+                      <p className="text-[10px] text-gold-dark font-medium mt-0.5 line-clamp-1">
                         Note: "{item.selectedPersonalisation.customNote}"
                       </p>
                     )}

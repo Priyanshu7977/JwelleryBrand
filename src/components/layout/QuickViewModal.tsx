@@ -108,7 +108,7 @@ export const QuickViewModal: React.FC = () => {
             </p>
 
             {/* Editorial Note Quote */}
-            <div className="p-3.5 bg-champagne-100/50 rounded-xl border-l-2 border-gold-dark italic text-xs text-obsidian/85 font-serif">
+            <div className="p-3.5 bg-champagne-100/50 rounded-xl border-l-2 border-gold-dark text-xs text-obsidian/85 font-serif font-medium">
               "{quickViewProduct.editorialNote}"
             </div>
 

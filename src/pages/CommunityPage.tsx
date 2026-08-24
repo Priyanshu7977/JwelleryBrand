@@ -28,11 +28,11 @@ export const CommunityPage: React.FC = () => {
                   Community & Lookbook
                 </span>
                 <span className="w-1.5 h-1.5 rounded-full bg-gold-dark" />
-                <span className="text-xs italic text-obsidian/60 font-medium">@celestiaamor.in</span>
+                <span className="text-xs text-obsidian/60 font-medium font-mono">@celestiaamor.in</span>
               </div>
 
               <h1 className="text-3xl sm:text-5xl md:text-6xl text-obsidian font-bold uppercase leading-tight">
-                THE LIVE <span className="italic font-normal text-gold-dark">Circle</span>.
+                THE LIVE <span className="font-semibold text-gold-dark">Circle</span>.
               </h1>
 
               <p className="text-xs sm:text-sm text-obsidian/75 leading-relaxed max-w-lg">

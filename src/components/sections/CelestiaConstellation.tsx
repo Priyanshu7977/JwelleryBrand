@@ -50,13 +50,13 @@ export const CelestiaConstellation: React.FC = () => {
                 Interactive Universe
               </span>
               <span className="w-1.5 h-1.5 rounded-full bg-gold-dark" />
-              <span className="text-xs font-serif italic text-obsidian/60">
+              <span className="text-xs font-serif text-obsidian/60">
                 Spatial Catalogue Map
               </span>
             </div>
 
             <h2 className="font-serif-luxury text-4xl sm:text-6xl md:text-7xl text-obsidian uppercase font-normal leading-[0.95]">
-              THE CELESTIA <span className="italic font-light text-gold-dark">Constellation</span>.
+              THE CELESTIA <span className="font-semibold text-gold-dark">CONSTELLATION</span>.
             </h2>
 
             <p className="text-xs sm:text-sm text-obsidian/75 font-sans leading-relaxed max-w-xl">

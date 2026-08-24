@@ -63,10 +63,10 @@ export const Section06SocialProof: React.FC = () => {
                 Act 06 — Authentic Trust
               </span>
               <span className="w-1.5 h-1.5 rounded-full bg-gold-dark" />
-              <span className="text-xs font-serif italic text-obsidian/60">Reviews 🧿✨</span>
+              <span className="text-xs font-serif text-obsidian/60">Reviews 🧿✨</span>
             </div>
             <h2 className="font-serif-luxury text-4xl sm:text-6xl md:text-7xl text-obsidian uppercase font-normal leading-[0.95]">
-              Praised by <span className="italic font-light">Those Who Wear It</span>.
+              Praised by <span className="font-semibold text-gold-dark">Those Who Wear It</span>.
             </h2>
           </div>
 
@@ -96,7 +96,7 @@ export const Section06SocialProof: React.FC = () => {
                 </div>
 
                 {/* Review Text */}
-                <blockquote className="font-serif italic text-sm sm:text-base text-obsidian/90 leading-relaxed">
+                <blockquote className="font-serif text-sm sm:text-base text-obsidian/90 leading-relaxed font-medium">
                   "{rev.comment}"
                 </blockquote>
               </div>
