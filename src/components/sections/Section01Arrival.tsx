@@ -56,7 +56,7 @@ export const Section01Arrival: React.FC = () => {
   return (
     <section
       ref={containerRef}
-      className="relative w-full min-h-[92vh] lg:min-h-screen bg-pearl-100 selection:bg-champagne-300 flex flex-col justify-between pt-36 sm:pt-40 md:pt-44 pb-8 sm:pb-10 px-4 sm:px-6 md:px-10 lg:px-14 overflow-hidden"
+      className="relative w-full h-[100dvh] min-h-[580px] max-h-[960px] bg-pearl-100 selection:bg-champagne-300 flex flex-col justify-between pt-24 sm:pt-28 lg:pt-32 pb-4 sm:pb-6 px-4 sm:px-6 md:px-10 lg:px-14 overflow-hidden"
       id="section-arrival"
     >
       {/* ===================================================================== */}
@@ -70,45 +70,45 @@ export const Section01Arrival: React.FC = () => {
           muted
           playsInline
           preload="auto"
-          className="absolute inset-0 w-full h-full object-cover object-center scale-105 transition-all duration-700 opacity-85 filter brightness-95 contrast-105"
+          className="absolute inset-0 w-full h-full object-cover object-center scale-105 transition-all duration-700 opacity-80 filter brightness-95 contrast-105"
         >
           <source src="/assets/videos/hero-jewelry.mp4" type="video/mp4" />
           <source src="/assets/videos/hero-jewelry.webm" type="video/webm" />
           <source src="https://upload.wikimedia.org/wikipedia/commons/4/47/Jewellery_Maker.webm" type="video/webm" />
         </video>
 
-        {/* Minimal Soft Vignette: Keeps video 100% visible while preserving text legibility */}
-        <div className="absolute inset-0 bg-gradient-to-r from-pearl-100/75 via-pearl-100/30 to-transparent" />
-        <div className="absolute inset-0 bg-gradient-to-t from-pearl-100/90 via-transparent to-pearl-100/40" />
+        {/* Minimal Soft Vignette */}
+        <div className="absolute inset-0 bg-gradient-to-r from-pearl-100/80 via-pearl-100/35 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-pearl-100/85 via-transparent to-pearl-100/40" />
       </div>
 
       {/* ===================================================================== */}
-      {/* MAIN HERO CONTENT (Spacious, Luxury Full-Width Typography)            */}
+      {/* MAIN HERO CONTENT (Properly Scaled & Fitted to 100vh)                 */}
       {/* ===================================================================== */}
-      <div className="relative z-10 w-full max-w-7xl mx-auto flex-1 flex flex-col justify-center py-6 sm:py-10">
-        <div className="max-w-3xl space-y-6 text-left">
+      <div className="relative z-10 w-full max-w-7xl mx-auto flex-1 flex flex-col justify-center py-2 sm:py-4">
+        <div className="max-w-2xl lg:max-w-3xl space-y-3.5 sm:space-y-4 md:space-y-5 text-left">
           
           {/* Top Identity Tag */}
           <div
             style={{
               opacity: isLoaded ? 1 : 0,
-              transform: isLoaded ? 'translateY(0)' : 'translateY(12px)',
+              transform: isLoaded ? 'translateY(0)' : 'translateY(10px)',
               transition: 'opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1) 100ms, transform 0.6s cubic-bezier(0.16, 1, 0.3, 1) 100ms',
             }}
-            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/90 backdrop-blur-md border border-champagne-300/80 text-[10px] sm:text-xs uppercase font-mono tracking-widest text-gold-dark font-bold shadow-xs"
+            className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-white/90 backdrop-blur-md border border-champagne-300/80 text-[10px] sm:text-xs uppercase font-mono tracking-widest text-gold-dark font-bold shadow-xs"
           >
             <Sparkles className="w-3.5 h-3.5 text-gold-dark" />
-            <span>Mumbai Atelier MMXXVI • 1,000+ Journeys Dispatched</span>
+            <span>Mumbai Atelier MMXXVI • 1,000+ Journeys</span>
           </div>
 
           {/* Main Luxury Headline */}
           <h1
             style={{
               opacity: isLoaded ? 1 : 0,
-              transform: isLoaded ? 'translateY(0)' : 'translateY(16px)',
+              transform: isLoaded ? 'translateY(0)' : 'translateY(14px)',
               transition: 'opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1) 200ms, transform 0.7s cubic-bezier(0.16, 1, 0.3, 1) 200ms',
             }}
-            className="text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-bold uppercase tracking-tight text-obsidian leading-[1.04]"
+            className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold uppercase tracking-tight text-obsidian leading-[1.08]"
           >
             Handcrafted <br />
             <span className="text-gold-dark font-normal italic">Fine Jewellery</span> <br />
@@ -119,10 +119,10 @@ export const Section01Arrival: React.FC = () => {
           <p
             style={{
               opacity: isLoaded ? 1 : 0,
-              transform: isLoaded ? 'translateY(0)' : 'translateY(14px)',
+              transform: isLoaded ? 'translateY(0)' : 'translateY(12px)',
               transition: 'opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1) 300ms, transform 0.7s cubic-bezier(0.16, 1, 0.3, 1) 300ms',
             }}
-            className="text-base sm:text-lg md:text-xl text-obsidian font-medium max-w-xl leading-relaxed bg-white/60 backdrop-blur-md p-3 rounded-2xl border border-white/80 shadow-xs"
+            className="text-xs sm:text-sm md:text-base text-obsidian/90 max-w-lg leading-relaxed font-normal"
           >
             Discover artisanal bangles, 18k gold dipped jewellery suites, and bespoke velvet celebration hampers handcrafted with love in Mumbai.
           </p>
@@ -131,14 +131,14 @@ export const Section01Arrival: React.FC = () => {
           <div
             style={{
               opacity: isLoaded ? 1 : 0,
-              transform: isLoaded ? 'translateY(0)' : 'translateY(14px)',
+              transform: isLoaded ? 'translateY(0)' : 'translateY(12px)',
               transition: 'opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1) 400ms, transform 0.7s cubic-bezier(0.16, 1, 0.3, 1) 400ms',
             }}
-            className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 pt-2"
+            className="flex flex-row items-center gap-3 pt-1"
           >
             <a
               href="#section-reveal"
-              className="btn-primary group shadow-md hover:shadow-xl flex items-center justify-center gap-2 px-8 py-4 text-xs sm:text-sm uppercase font-bold tracking-widest text-center w-full sm:w-auto transition-all"
+              className="btn-primary group shadow-md hover:shadow-xl flex items-center justify-center gap-2 px-5 sm:px-7 py-3 text-xs sm:text-sm uppercase font-bold tracking-widest text-center transition-all"
             >
               <span>Explore The Collection</span>
               <ArrowRight className="w-4 h-4 group-hover:translate-x-1.5 transition-transform duration-300" />
@@ -146,7 +146,7 @@ export const Section01Arrival: React.FC = () => {
 
             <a
               href="/gifting"
-              className="btn-secondary group flex items-center justify-center gap-2 px-8 py-4 text-xs sm:text-sm uppercase font-bold tracking-widest text-center w-full sm:w-auto transition-all bg-white/90 backdrop-blur-md shadow-xs"
+              className="btn-secondary group flex items-center justify-center gap-2 px-5 sm:px-7 py-3 text-xs sm:text-sm uppercase font-bold tracking-widest text-center transition-all bg-white/90 backdrop-blur-md shadow-xs"
             >
               <span>Gifting Atelier</span>
               <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform duration-300 opacity-70" />
@@ -157,22 +157,22 @@ export const Section01Arrival: React.FC = () => {
           <div
             style={{
               opacity: isLoaded ? 1 : 0,
-              transform: isLoaded ? 'translateY(0)' : 'translateY(12px)',
+              transform: isLoaded ? 'translateY(0)' : 'translateY(10px)',
               transition: 'opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1) 500ms, transform 0.7s cubic-bezier(0.16, 1, 0.3, 1) 500ms',
             }}
-            className="pt-4 border-t border-champagne-300/80 flex flex-wrap items-center gap-5 sm:gap-8 text-xs text-obsidian font-bold uppercase tracking-wider bg-white/40 backdrop-blur-xs p-2 rounded-xl"
+            className="pt-2 sm:pt-3 border-t border-champagne-300/70 flex flex-wrap items-center gap-4 sm:gap-6 text-xs text-obsidian font-bold uppercase tracking-wider"
           >
-            <div className="flex items-center gap-2">
-              <Award className="w-4 h-4 text-gold-dark shrink-0" />
-              <span className="text-[11px] sm:text-xs">100% Handcrafted</span>
+            <div className="flex items-center gap-1.5">
+              <Award className="w-3.5 h-3.5 text-gold-dark shrink-0" />
+              <span className="text-[10px] sm:text-xs">100% Handcrafted</span>
             </div>
-            <div className="flex items-center gap-2">
-              <Truck className="w-4 h-4 text-gold-dark shrink-0" />
-              <span className="text-[11px] sm:text-xs">Pan-India Express</span>
+            <div className="flex items-center gap-1.5">
+              <Truck className="w-3.5 h-3.5 text-gold-dark shrink-0" />
+              <span className="text-[10px] sm:text-xs">Pan-India Express</span>
             </div>
-            <div className="flex items-center gap-2">
-              <ShieldCheck className="w-4 h-4 text-gold-dark shrink-0" />
-              <span className="text-[11px] sm:text-xs">Secure Payment</span>
+            <div className="flex items-center gap-1.5">
+              <ShieldCheck className="w-3.5 h-3.5 text-gold-dark shrink-0" />
+              <span className="text-[10px] sm:text-xs">Secure Payment</span>
             </div>
           </div>
 
@@ -180,58 +180,58 @@ export const Section01Arrival: React.FC = () => {
       </div>
 
       {/* ===================================================================== */}
-      {/* BOTTOM CONTROLLER BAR & STATS                                         */}
+      {/* BOTTOM CONTROLLER BAR & STATS (Compact & Flush)                       */}
       {/* ===================================================================== */}
       <div
         style={{
           opacity: isLoaded ? 1 : 0,
           transition: 'opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1) 600ms',
         }}
-        className="relative z-10 flex flex-col sm:flex-row items-center justify-between gap-4 w-full max-w-7xl mx-auto pt-6 border-t border-champagne-300/60"
+        className="relative z-10 flex flex-row items-center justify-between gap-3 w-full max-w-7xl mx-auto pt-3 border-t border-champagne-300/40"
       >
-        <div className="flex items-center gap-2 sm:gap-3 text-center sm:text-left bg-white/70 backdrop-blur-xs px-3 py-1.5 rounded-full">
-          <span className="hidden sm:inline w-8 sm:w-10 h-0.5 bg-gold-dark" />
+        <div className="flex items-center gap-2 text-left">
+          <span className="hidden sm:inline w-6 h-0.5 bg-gold-dark" />
           <span className="text-[10px] sm:text-xs uppercase font-mono tracking-widest text-obsidian font-bold">
-            1,000+ Journeys Dispatched • Pan-India Free Express Delivery
+            1,000+ Journeys • Pan-India Free Express
           </span>
         </div>
 
         {/* Media Controls & Scroll CTA */}
-        <div className="flex items-center gap-2.5">
-          {/* Video Play/Pause Micro-Toggle */}
+        <div className="flex items-center gap-2">
+          {/* Video Play/Pause */}
           <button
             onClick={toggleVideoPlayback}
-            className="p-2.5 rounded-full border border-champagne-300/80 bg-white/95 hover:bg-champagne-100 text-obsidian transition-all shadow-xs shrink-0"
+            className="p-2 rounded-full border border-champagne-300/80 bg-white/90 hover:bg-champagne-100 text-obsidian transition-all shadow-xs shrink-0"
             title={isVideoPlaying ? 'Pause Background Video' : 'Play Background Video'}
             aria-label="Toggle Background Video"
           >
-            {isVideoPlaying ? <Pause className="w-3.5 h-3.5" /> : <Play className="w-3.5 h-3.5" />}
+            {isVideoPlaying ? <Pause className="w-3 h-3" /> : <Play className="w-3 h-3" />}
           </button>
 
-          {/* Atmospheric Sound Toggle */}
+          {/* Atmospheric Sound */}
           <button
             onClick={toggleAudio}
-            className={`p-2.5 rounded-full border transition-all shadow-xs shrink-0 ${
+            className={`p-2 rounded-full border transition-all shadow-xs shrink-0 ${
               isAudioActive
                 ? 'bg-champagne-300 border-gold-dark text-obsidian'
-                : 'border-champagne-300/80 bg-white/95 hover:bg-champagne-100 text-obsidian'
+                : 'border-champagne-300/80 bg-white/90 hover:bg-champagne-100 text-obsidian'
             }`}
             title={isAudioActive ? 'Sound: ON' : 'Sound: OFF'}
             aria-label="Toggle Atmosphere Sound"
           >
             {isAudioActive ? (
-              <Volume2 className="w-4 h-4 text-gold-dark animate-pulse" />
+              <Volume2 className="w-3 h-3 text-gold-dark animate-pulse" />
             ) : (
-              <VolumeX className="w-4 h-4 text-obsidian" />
+              <VolumeX className="w-3 h-3 text-obsidian" />
             )}
           </button>
 
           <a
             href="#section-reveal"
-            className="flex items-center gap-2 text-[11px] sm:text-xs uppercase font-mono tracking-widest text-obsidian hover:text-gold-dark transition-all group cursor-pointer font-bold px-4 py-2 rounded-full bg-white/95 border border-champagne-300/80 shadow-xs hover:shadow-md"
+            className="flex items-center gap-1.5 text-[10px] sm:text-xs uppercase font-mono tracking-widest text-obsidian hover:text-gold-dark transition-all group font-bold px-3.5 py-1.5 rounded-full bg-white/90 border border-champagne-300/80 shadow-xs"
           >
-            <span>Explore Pieces</span>
-            <ArrowDown className="w-3.5 h-3.5 text-gold-dark group-hover:translate-y-1 transition-transform duration-300" />
+            <span>Explore</span>
+            <ArrowDown className="w-3 h-3 text-gold-dark group-hover:translate-y-0.5 transition-transform" />
           </a>
         </div>
       </div>
