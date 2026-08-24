@@ -169,6 +169,9 @@ export const Section01Arrival: React.FC = () => {
             ref={videoRef}
             src="/videos/celestia-opening.mp4"
             onLoadedMetadata={onLoadedMetadata}
+            onEnded={() => {
+              window.dispatchEvent(new CustomEvent('celestia:video-ended'));
+            }}
             onError={() => setVideoError(true)}
             muted
             playsInline

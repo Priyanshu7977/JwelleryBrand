@@ -1,26 +1,48 @@
 import React, { useState, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { useCart } from '../../context/CartContext';
-import { Sparkles, ArrowRight, Lock, Mail, User, Eye, EyeOff, X, Film, Phone } from 'lucide-react';
+import { Sparkles, ArrowRight, Lock, Mail, User, Eye, EyeOff, Film, Phone, AlertCircle, ShieldCheck } from 'lucide-react';
 
 export const CelestiaEntranceModal: React.FC = () => {
-  const [isOpen, setIsOpen] = useState(false);
+  const { login, register, isAuthenticated } = useAuth();
+  const { showToast } = useCart();
+  const location = useLocation();
+
+  const isHomePage = location.pathname === '/';
+
+  // Modal open state: On subroutes, immediately open if unauthenticated; on homepage, open when film finishes
+  const [isOpen, setIsOpen] = useState(() => !isHomePage && !isAuthenticated);
   const [mode, setMode] = useState<'login' | 'register'>('login');
+  
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [name, setName] = useState('');
   const [phone, setPhone] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
-  const { login, register, isAuthenticated } = useAuth();
-  const { showToast } = useCart();
-
+  // If unauthenticated on any page other than homepage, lock immediately
   useEffect(() => {
-    // Listen for when video ends
+    if (!isAuthenticated) {
+      if (!isHomePage) {
+        setIsOpen(true);
+      }
+    } else {
+      setIsOpen(false);
+    }
+  }, [location.pathname, isAuthenticated, isHomePage]);
+
+  // On homepage, listen for when video ends or when user scrolls past film
+  useEffect(() => {
+    if (isAuthenticated) {
+      setIsOpen(false);
+      return;
+    }
+
     const handleVideoEnded = () => {
-      const hasDismissed = sessionStorage.getItem('celestia_post_video_login_shown');
-      if (!hasDismissed && !isAuthenticated) {
+      if (!isAuthenticated) {
         setIsOpen(true);
       }
     };
@@ -31,7 +53,7 @@ export const CelestiaEntranceModal: React.FC = () => {
 
   // Lock background body scroll completely while modal is open
   useEffect(() => {
-    if (isOpen) {
+    if (isOpen && !isAuthenticated) {
       const originalOverflow = document.body.style.overflow;
       const originalPosition = document.body.style.position;
       const originalWidth = document.body.style.width;
@@ -49,82 +71,78 @@ export const CelestiaEntranceModal: React.FC = () => {
         document.body.style.touchAction = '';
       };
     }
-  }, [isOpen]);
-
-  const handleCloseAndExplore = () => {
-    sessionStorage.setItem('celestia_post_video_login_shown', 'true');
-    setIsOpen(false);
-    showToast("Welcome to Celestia Atelier ✨");
-  };
+  }, [isOpen, isAuthenticated]);
 
   const handleLoginSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!email || !password) {
-      showToast("Please enter your email and password.");
+    setErrorMessage(null);
+
+    if (!email.trim() || !password.trim()) {
+      setErrorMessage("Please enter both email and password.");
+      showToast("Please enter both email and password.");
       return;
     }
+
     setIsLoading(true);
     const res = await login(email, password);
     setIsLoading(false);
+
     if (res.success) {
-      sessionStorage.setItem('celestia_post_video_login_shown', 'true');
       setIsOpen(false);
-      showToast(`Welcome back, ${email.split('@')[0]} ✨`);
+      showToast(`Welcome to Celestia, ${email.split('@')[0]} ✨`);
     } else {
+      setErrorMessage(res.error || "Authentication failed. Please verify your credentials.");
       showToast(res.error || "Login failed");
     }
   };
 
   const handleRegisterSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!name || !email || !password) {
-      showToast("Please fill in required fields.");
+    setErrorMessage(null);
+
+    if (!name.trim() || !email.trim() || !password.trim()) {
+      setErrorMessage("Please fill in all required fields.");
+      showToast("Please fill in all required fields.");
       return;
     }
+
     setIsLoading(true);
     const res = await register(name, email, phone, password);
     setIsLoading(false);
+
     if (res.success) {
-      setMode('login');
-      setPassword('');
-      showToast(`Account created for ${name}! Please sign in with your password to enter ✨`);
+      // register automatically logs the user in
+      setIsOpen(false);
+      showToast(`Welcome to the Celestia Family, ${name}! ✨`);
     } else {
+      setErrorMessage(res.error || "Registration failed. Please try again.");
       showToast(res.error || "Registration failed");
     }
   };
 
-  if (!isOpen) return null;
+  // If already authenticated, do not render modal
+  if (isAuthenticated || !isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-[200] flex items-center justify-center p-3 sm:p-6 bg-black/85 backdrop-blur-xl animate-fade-in selection:bg-champagne-300 overflow-hidden">
+    <div className="fixed inset-0 z-[200] flex items-center justify-center p-3 sm:p-6 bg-black/90 backdrop-blur-2xl animate-fade-in selection:bg-champagne-300 overflow-hidden">
       
       {/* Background ambient lighting */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden">
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] sm:w-[700px] h-[600px] sm:h-[700px] bg-[#D8C39A]/15 rounded-full blur-3xl animate-pulse" />
-        <div className="absolute inset-0 bg-noise opacity-20" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] sm:w-[750px] h-[600px] sm:h-[750px] bg-[#D8C39A]/20 rounded-full blur-3xl animate-pulse" />
+        <div className="absolute inset-0 bg-noise opacity-25" />
       </div>
 
-      {/* Main Glass Card (Mobile-Optimized with internal scroll) */}
-      <div className="relative z-10 w-full max-w-lg max-h-[92vh] overflow-y-auto bg-[#181411]/98 border border-[#D8C39A]/40 rounded-3xl p-5 sm:p-8 md:p-10 shadow-2xl space-y-6 text-center text-[#FAF7F0] overscroll-contain scrollbar-thin">
+      {/* Main Glass Card (Mandatory Authentication Gate - No Close / No Guest bypass) */}
+      <div className="relative z-10 w-full max-w-lg max-h-[94vh] overflow-y-auto bg-[#16120F]/98 border border-[#D8C39A]/40 rounded-3xl p-6 sm:p-8 md:p-10 shadow-2xl space-y-5 sm:space-y-6 text-center text-[#FAF7F0] overscroll-contain scrollbar-thin">
         
-        {/* Close / Skip button */}
-        <button
-          onClick={handleCloseAndExplore}
-          className="absolute top-4 right-4 sm:top-5 sm:right-5 p-2 text-[#FAF7F0]/60 hover:text-[#FAF7F0] hover:bg-[#28231F] rounded-full transition-colors"
-          title="Continue to Homepage"
-          aria-label="Close and continue"
-        >
-          <X className="w-5 h-5" />
-        </button>
-
         {/* Header */}
-        <div className="space-y-2 sm:space-y-3 pt-2">
-          <div className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-[#28231F] border border-[#D8C39A]/40 text-[10px] sm:text-xs font-mono uppercase tracking-widest text-[#D8C39A]">
-            <Film className="w-3 h-3 text-[#D8C39A]" />
-            <span>Film Complete • Atelier Unveiled</span>
+        <div className="space-y-2 pt-1">
+          <div className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-[#251F1B] border border-[#D8C39A]/40 text-[10px] sm:text-xs font-mono uppercase tracking-widest text-[#D8C39A]">
+            <Lock className="w-3 h-3 text-[#D8C39A]" />
+            <span>Private Atelier Access • Member Gate</span>
           </div>
 
-          <h1 className="font-serif-luxury text-4xl sm:text-5xl md:text-6xl text-[#FAF7F0] tracking-tight uppercase leading-none">
+          <h1 className="font-serif-luxury text-4xl sm:text-5xl md:text-6xl text-[#FAF7F0] tracking-tight uppercase leading-none pt-1">
             CEL<span className="italic font-light lowercase text-[#D8C39A]">estia</span>
           </h1>
 
@@ -132,17 +150,28 @@ export const CelestiaEntranceModal: React.FC = () => {
             redefined for all.
           </p>
 
-          <p className="text-xs sm:text-sm text-[#FAF7F0]/70 font-sans max-w-xs sm:max-w-sm mx-auto leading-relaxed">
+          <p className="text-xs sm:text-sm text-[#FAF7F0]/75 font-sans max-w-xs sm:max-w-sm mx-auto leading-relaxed pt-1">
             {mode === 'login'
-              ? 'Sign in to access your private vault, custom polaroid archives, and express checkout.'
-              : 'Create an account for early collection drops, member privileges, and order tracking.'}
+              ? 'Please sign in with your credentials to access the Celestia universe, custom hampers, and private runway.'
+              : 'Create your private account to unlock exclusive collections, personalized polaroids, and member privileges.'}
           </p>
         </div>
 
-        {/* Mode Switcher */}
-        <div className="flex rounded-full bg-[#28231F] p-1 border border-[#D8C39A]/30 max-w-xs mx-auto">
+        {/* Error Banner */}
+        {errorMessage && (
+          <div className="p-3 bg-red-950/80 border border-red-500/50 rounded-2xl flex items-start gap-2.5 text-left text-xs text-red-200 animate-shake">
+            <AlertCircle className="w-4 h-4 text-red-400 shrink-0 mt-0.5" />
+            <p className="leading-relaxed font-sans">{errorMessage}</p>
+          </div>
+        )}
+
+        {/* Mode Switcher Tabs */}
+        <div className="flex rounded-full bg-[#251F1B] p-1 border border-[#D8C39A]/30 max-w-xs mx-auto">
           <button
-            onClick={() => setMode('login')}
+            onClick={() => {
+              setMode('login');
+              setErrorMessage(null);
+            }}
             className={`flex-1 py-2 text-xs uppercase font-mono tracking-wider font-bold rounded-full transition-all ${
               mode === 'login' ? 'bg-[#D8C39A] text-[#181411] shadow-md' : 'text-[#FAF7F0]/70 hover:text-[#FAF7F0]'
             }`}
@@ -150,12 +179,15 @@ export const CelestiaEntranceModal: React.FC = () => {
             Sign In
           </button>
           <button
-            onClick={() => setMode('register')}
+            onClick={() => {
+              setMode('register');
+              setErrorMessage(null);
+            }}
             className={`flex-1 py-2 text-xs uppercase font-mono tracking-wider font-bold rounded-full transition-all ${
               mode === 'register' ? 'bg-[#D8C39A] text-[#181411] shadow-md' : 'text-[#FAF7F0]/70 hover:text-[#FAF7F0]'
             }`}
           >
-            Register
+            Create Account
           </button>
         </div>
 
@@ -164,16 +196,19 @@ export const CelestiaEntranceModal: React.FC = () => {
           <form onSubmit={handleLoginSubmit} className="space-y-3.5 sm:space-y-4 text-left">
             <div className="space-y-1">
               <label className="text-[10px] sm:text-[11px] uppercase font-mono tracking-wider text-[#FAF7F0]/70 font-bold block">
-                Email Address
+                Email Address *
               </label>
-              <div className="flex items-center gap-2 px-3.5 sm:px-4 h-11 sm:h-12 bg-[#28231F] rounded-xl border border-[#D8C39A]/30 focus-within:border-[#D8C39A]">
+              <div className="flex items-center gap-2 px-3.5 sm:px-4 h-11 sm:h-12 bg-[#251F1B] rounded-xl border border-[#D8C39A]/30 focus-within:border-[#D8C39A]">
                 <Mail className="w-4 h-4 text-[#D8C39A] shrink-0" />
                 <input
                   type="email"
                   required
                   placeholder="name@email.com"
                   value={email}
-                  onChange={(e) => setEmail(e.target.value)}
+                  onChange={(e) => {
+                    setEmail(e.target.value);
+                    if (errorMessage) setErrorMessage(null);
+                  }}
                   className="w-full bg-transparent text-sm font-sans text-[#FAF7F0] focus:outline-none placeholder:text-[#FAF7F0]/40"
                 />
               </div>
@@ -181,16 +216,19 @@ export const CelestiaEntranceModal: React.FC = () => {
 
             <div className="space-y-1">
               <label className="text-[10px] sm:text-[11px] uppercase font-mono tracking-wider text-[#FAF7F0]/70 font-bold block">
-                Password
+                Password *
               </label>
-              <div className="flex items-center gap-2 px-3.5 sm:px-4 h-11 sm:h-12 bg-[#28231F] rounded-xl border border-[#D8C39A]/30 focus-within:border-[#D8C39A]">
+              <div className="flex items-center gap-2 px-3.5 sm:px-4 h-11 sm:h-12 bg-[#251F1B] rounded-xl border border-[#D8C39A]/30 focus-within:border-[#D8C39A]">
                 <Lock className="w-4 h-4 text-[#D8C39A] shrink-0" />
                 <input
                   type={showPassword ? 'text' : 'password'}
                   required
                   placeholder="••••••••"
                   value={password}
-                  onChange={(e) => setPassword(e.target.value)}
+                  onChange={(e) => {
+                    setPassword(e.target.value);
+                    if (errorMessage) setErrorMessage(null);
+                  }}
                   className="w-full bg-transparent text-sm font-sans text-[#FAF7F0] focus:outline-none placeholder:text-[#FAF7F0]/40"
                 />
                 <button
@@ -206,26 +244,35 @@ export const CelestiaEntranceModal: React.FC = () => {
             <button
               type="submit"
               disabled={isLoading}
-              className="w-full h-11 sm:h-12 bg-[#D8C39A] text-[#181411] rounded-full text-xs uppercase font-mono tracking-widest font-bold hover:bg-[#E5D4B2] transition-colors flex items-center justify-center gap-2 shadow-lg mt-2"
+              className="w-full h-11 sm:h-12 bg-[#D8C39A] hover:bg-[#E5D4B2] text-[#181411] rounded-full text-xs uppercase font-mono tracking-widest font-bold transition-all flex items-center justify-center gap-2 shadow-lg mt-3 cursor-pointer"
             >
-              <span>{isLoading ? 'Signing In...' : 'Sign In & Enter Homepage'}</span>
-              <ArrowRight className="w-4 h-4" />
+              {isLoading ? (
+                <span>Authenticating Credentials...</span>
+              ) : (
+                <>
+                  <span>Sign In & Enter Celestia</span>
+                  <ArrowRight className="w-4 h-4" />
+                </>
+              )}
             </button>
           </form>
         ) : (
           <form onSubmit={handleRegisterSubmit} className="space-y-3.5 sm:space-y-4 text-left">
             <div className="space-y-1">
               <label className="text-[10px] sm:text-[11px] uppercase font-mono tracking-wider text-[#FAF7F0]/70 font-bold block">
-                Full Name
+                Full Name *
               </label>
-              <div className="flex items-center gap-2 px-3.5 sm:px-4 h-11 sm:h-12 bg-[#28231F] rounded-xl border border-[#D8C39A]/30 focus-within:border-[#D8C39A]">
+              <div className="flex items-center gap-2 px-3.5 sm:px-4 h-11 sm:h-12 bg-[#251F1B] rounded-xl border border-[#D8C39A]/30 focus-within:border-[#D8C39A]">
                 <User className="w-4 h-4 text-[#D8C39A] shrink-0" />
                 <input
                   type="text"
                   required
-                  placeholder="Enter your name"
+                  placeholder="e.g. Radhika Sharma"
                   value={name}
-                  onChange={(e) => setName(e.target.value)}
+                  onChange={(e) => {
+                    setName(e.target.value);
+                    if (errorMessage) setErrorMessage(null);
+                  }}
                   className="w-full bg-transparent text-sm font-sans text-[#FAF7F0] focus:outline-none placeholder:text-[#FAF7F0]/40"
                 />
               </div>
@@ -233,16 +280,19 @@ export const CelestiaEntranceModal: React.FC = () => {
 
             <div className="space-y-1">
               <label className="text-[10px] sm:text-[11px] uppercase font-mono tracking-wider text-[#FAF7F0]/70 font-bold block">
-                Email Address
+                Email Address *
               </label>
-              <div className="flex items-center gap-2 px-3.5 sm:px-4 h-11 sm:h-12 bg-[#28231F] rounded-xl border border-[#D8C39A]/30 focus-within:border-[#D8C39A]">
+              <div className="flex items-center gap-2 px-3.5 sm:px-4 h-11 sm:h-12 bg-[#251F1B] rounded-xl border border-[#D8C39A]/30 focus-within:border-[#D8C39A]">
                 <Mail className="w-4 h-4 text-[#D8C39A] shrink-0" />
                 <input
                   type="email"
                   required
                   placeholder="name@email.com"
                   value={email}
-                  onChange={(e) => setEmail(e.target.value)}
+                  onChange={(e) => {
+                    setEmail(e.target.value);
+                    if (errorMessage) setErrorMessage(null);
+                  }}
                   className="w-full bg-transparent text-sm font-sans text-[#FAF7F0] focus:outline-none placeholder:text-[#FAF7F0]/40"
                 />
               </div>
@@ -250,16 +300,35 @@ export const CelestiaEntranceModal: React.FC = () => {
 
             <div className="space-y-1">
               <label className="text-[10px] sm:text-[11px] uppercase font-mono tracking-wider text-[#FAF7F0]/70 font-bold block">
-                Password
+                Phone / WhatsApp Number
               </label>
-              <div className="flex items-center gap-2 px-3.5 sm:px-4 h-11 sm:h-12 bg-[#28231F] rounded-xl border border-[#D8C39A]/30 focus-within:border-[#D8C39A]">
+              <div className="flex items-center gap-2 px-3.5 sm:px-4 h-11 sm:h-12 bg-[#251F1B] rounded-xl border border-[#D8C39A]/30 focus-within:border-[#D8C39A]">
+                <Phone className="w-4 h-4 text-[#D8C39A] shrink-0" />
+                <input
+                  type="tel"
+                  placeholder="+91 98765 43210"
+                  value={phone}
+                  onChange={(e) => setPhone(e.target.value)}
+                  className="w-full bg-transparent text-sm font-sans text-[#FAF7F0] focus:outline-none placeholder:text-[#FAF7F0]/40"
+                />
+              </div>
+            </div>
+
+            <div className="space-y-1">
+              <label className="text-[10px] sm:text-[11px] uppercase font-mono tracking-wider text-[#FAF7F0]/70 font-bold block">
+                Create Password *
+              </label>
+              <div className="flex items-center gap-2 px-3.5 sm:px-4 h-11 sm:h-12 bg-[#251F1B] rounded-xl border border-[#D8C39A]/30 focus-within:border-[#D8C39A]">
                 <Lock className="w-4 h-4 text-[#D8C39A] shrink-0" />
                 <input
                   type="password"
                   required
-                  placeholder="Create password (min 4 chars)"
+                  placeholder="Minimum 4 characters"
                   value={password}
-                  onChange={(e) => setPassword(e.target.value)}
+                  onChange={(e) => {
+                    setPassword(e.target.value);
+                    if (errorMessage) setErrorMessage(null);
+                  }}
                   className="w-full bg-transparent text-sm font-sans text-[#FAF7F0] focus:outline-none placeholder:text-[#FAF7F0]/40"
                 />
               </div>
@@ -268,22 +337,24 @@ export const CelestiaEntranceModal: React.FC = () => {
             <button
               type="submit"
               disabled={isLoading}
-              className="w-full h-11 sm:h-12 bg-[#D8C39A] text-[#181411] rounded-full text-xs uppercase font-mono tracking-widest font-bold hover:bg-[#E5D4B2] transition-colors flex items-center justify-center gap-2 shadow-lg mt-2"
+              className="w-full h-11 sm:h-12 bg-[#D8C39A] hover:bg-[#E5D4B2] text-[#181411] rounded-full text-xs uppercase font-mono tracking-widest font-bold transition-all flex items-center justify-center gap-2 shadow-lg mt-3 cursor-pointer"
             >
-              <span>{isLoading ? 'Creating Account...' : 'Create Account & Enter'}</span>
-              <ArrowRight className="w-4 h-4" />
+              {isLoading ? (
+                <span>Creating Account & Unlocking...</span>
+              ) : (
+                <>
+                  <span>Create Account & Enter Celestia</span>
+                  <ArrowRight className="w-4 h-4" />
+                </>
+              )}
             </button>
           </form>
         )}
 
-        {/* Continue to Homepage as Guest */}
-        <div className="pt-2 border-t border-[#D8C39A]/20">
-          <button
-            onClick={handleCloseAndExplore}
-            className="text-[11px] sm:text-xs uppercase font-mono tracking-widest text-[#FAF7F0]/80 hover:text-[#D8C39A] transition-colors underline font-bold"
-          >
-            Or Continue to Explore Homepage as Guest →
-          </button>
+        {/* Security & Authenticity Trust Assurance */}
+        <div className="pt-2 border-t border-[#D8C39A]/20 flex items-center justify-center gap-2 text-[10px] font-mono text-[#D8C39A]/80 uppercase tracking-widest">
+          <ShieldCheck className="w-3.5 h-3.5 text-[#D8C39A]" />
+          <span>Encrypted Atelier Member Vault</span>
         </div>
 
       </div>

@@ -42,9 +42,44 @@ const STORAGE_KEY = 'celestia_authenticated_user';
 const USERS_REGISTRY_KEY = 'celestia_registered_accounts';
 const WISHLIST_STORAGE_KEY = 'celestia_user_wishlist';
 
+const DEFAULT_ACCOUNTS: RegisteredAccount[] = [
+  {
+    id: 'usr-demo-01',
+    name: 'Celestia Patron',
+    email: 'demo@celestia.com',
+    phone: '+91 98200 12345',
+    password: 'celestia123',
+    memberSince: 'Jan 2026',
+    tier: 'VIP Atelier',
+    ordersCount: 3,
+    savedAddresses: [
+      {
+        id: 'addr-01',
+        label: 'Mumbai Atelier / Residence',
+        street: '14 Coastal Villa, Bandra West',
+        city: 'Mumbai',
+        state: 'Maharashtra',
+        pincode: '400050',
+        isDefault: true,
+      }
+    ],
+    wishlist: ['pink-blue-bangles', 'desi-barbie-hamper', 'red-emerald-set']
+  }
+];
+
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  // Ensure registry has seed accounts if first time loading
+  useEffect(() => {
+    try {
+      const existing = localStorage.getItem(USERS_REGISTRY_KEY);
+      if (!existing) {
+        localStorage.setItem(USERS_REGISTRY_KEY, JSON.stringify(DEFAULT_ACCOUNTS));
+      }
+    } catch {}
+  }, []);
+
   // Real authenticated user state (starts null if not logged in)
   const [user, setUser] = useState<UserProfile | null>(() => {
     try {
@@ -81,7 +116,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     } catch {}
   }, [wishlist]);
 
-  // Register: Stores credentials in registry, BUT DOES NOT LOG IN (User must log in separately)
+  // Register: Stores credentials in registry AND automatically logs the new user in
   const register = async (name: string, email: string, phone: string, password?: string) => {
     const cleanEmail = email.trim().toLowerCase();
     const cleanName = name.trim();
@@ -123,7 +158,22 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       const updatedRegistry = [...registry, newAccount];
       localStorage.setItem(USERS_REGISTRY_KEY, JSON.stringify(updatedRegistry));
 
-      // Strictly DO NOT set user session here! User must log in with their credentials.
+      // Automatically authenticate the new user immediately!
+      const userProfile: UserProfile = {
+        id: newAccount.id,
+        name: newAccount.name,
+        email: newAccount.email,
+        phone: newAccount.phone,
+        memberSince: newAccount.memberSince,
+        tier: newAccount.tier,
+        ordersCount: newAccount.ordersCount,
+        savedAddresses: newAccount.savedAddresses,
+        wishlist: newAccount.wishlist,
+      };
+
+      setUser(userProfile);
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(userProfile));
+
       return { success: true };
     } catch (err) {
       return { success: false, error: 'Registration failed. Please try again.' };
