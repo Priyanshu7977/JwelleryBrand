@@ -155,7 +155,7 @@ export const Navigation: React.FC = () => {
           {/* ================================================================= */}
           {/* 2. DESKTOP LEFT: Navigation Links (Shop, Collections, Gifting)   */}
           {/* ================================================================= */}
-          <nav className="hidden lg:flex items-center gap-7">
+          <nav className="hidden lg:flex items-center gap-4 xl:gap-6">
             {/* SHOP with Mega Menu */}
             <div
               className="relative py-2"
@@ -164,7 +164,7 @@ export const Navigation: React.FC = () => {
               <NavLink
                 to="/shop"
                 className={({ isActive }) =>
-                  `text-[11px] uppercase tracking-widest-luxury transition-colors font-semibold ${
+                  `text-[11px] uppercase tracking-widest-luxury transition-colors font-semibold whitespace-nowrap ${
                     isActive ? 'text-gold-dark font-bold' : 'text-obsidian hover:text-gold-dark'
                   }`
                 }
@@ -181,7 +181,7 @@ export const Navigation: React.FC = () => {
               <NavLink
                 to="/collections"
                 className={({ isActive }) =>
-                  `text-[11px] uppercase tracking-widest-luxury transition-colors font-semibold ${
+                  `text-[11px] uppercase tracking-widest-luxury transition-colors font-semibold whitespace-nowrap ${
                     isActive ? 'text-gold-dark font-bold' : 'text-obsidian hover:text-gold-dark'
                   }`
                 }
@@ -194,7 +194,7 @@ export const Navigation: React.FC = () => {
             <NavLink
               to="/gifting"
               className={({ isActive }) =>
-                `text-[11px] uppercase tracking-widest-luxury transition-colors font-semibold ${
+                `text-[11px] uppercase tracking-widest-luxury transition-colors font-semibold whitespace-nowrap ${
                   isActive ? 'text-gold-dark font-bold' : 'text-obsidian hover:text-gold-dark'
                 }`
               }
@@ -231,12 +231,12 @@ export const Navigation: React.FC = () => {
           {/* ================================================================= */}
           <div className="flex items-center gap-2 sm:gap-4 md:gap-6">
             
-            {/* Desktop Navigation (The World, Community) */}
-            <nav className="hidden lg:flex items-center gap-7">
+            {/* Desktop Navigation (The World, Community, Contact Us) */}
+            <nav className="hidden lg:flex items-center gap-4 xl:gap-6">
               <NavLink
                 to="/the-world"
                 className={({ isActive }) =>
-                  `text-[11px] uppercase tracking-widest-luxury transition-colors font-medium ${
+                  `text-[11px] uppercase tracking-widest-luxury transition-colors font-medium whitespace-nowrap ${
                     isActive ? 'text-gold-dark font-semibold' : 'text-obsidian/85 hover:text-obsidian'
                   }`
                 }
@@ -247,12 +247,23 @@ export const Navigation: React.FC = () => {
               <NavLink
                 to="/community"
                 className={({ isActive }) =>
-                  `text-[11px] uppercase tracking-widest-luxury transition-colors font-medium ${
+                  `text-[11px] uppercase tracking-widest-luxury transition-colors font-medium whitespace-nowrap ${
                     isActive ? 'text-gold-dark font-semibold' : 'text-obsidian/85 hover:text-obsidian'
                   }`
                 }
               >
                 Community
+              </NavLink>
+
+              <NavLink
+                to="/contact"
+                className={({ isActive }) =>
+                  `text-[11px] uppercase tracking-widest-luxury transition-colors font-medium whitespace-nowrap ${
+                    isActive ? 'text-gold-dark font-semibold' : 'text-obsidian/85 hover:text-obsidian'
+                  }`
+                }
+              >
+                Contact Us
               </NavLink>
             </nav>
 
@@ -469,9 +480,10 @@ export const Navigation: React.FC = () => {
               { label: 'Shop', href: '/shop', count: '400+ Pieces' },
               { label: 'Collections', href: '/collections', count: '5 Realms' },
               { label: 'Gifting Atelier', href: '/gifting', count: 'Bespoke Hampers' },
-              { label: 'Private Wishlist', href: '/wishlist', count: `${wishlistCount} Saved` },
               { label: 'The World', href: '/the-world', count: 'Brand Story' },
               { label: 'Community', href: '/community', count: 'Seen On You' },
+              { label: 'Contact Us', href: '/contact', count: 'Mumbai Atelier' },
+              { label: 'Private Wishlist', href: '/wishlist', count: `${wishlistCount} Saved` },
               { label: 'My Celestia Account', href: '/account', count: isAuthenticated ? (user?.name || 'Member') : 'Sign In' },
               { label: 'Search Catalogue', href: '/search', count: 'Live Search' },
             ].map((link) => (
