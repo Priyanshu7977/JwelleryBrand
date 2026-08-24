@@ -11,10 +11,12 @@ import {
   Clock,
   MapPin,
   Sparkles,
+  Check,
 } from 'lucide-react';
 import { BRAND_INFO } from '../data/shopify-data';
 import { getOrderById } from '../services/orderService';
 import { OrderMetadata } from '../types/backend';
+import { formatOrderDateIST, formatOrderTimeIST, formatTimelineStampIST } from '../utils/dateIST';
 
 export const OrderDetailPage: React.FC = () => {
   const { orderId } = useParams<{ orderId: string }>();
@@ -65,6 +67,48 @@ export const OrderDetailPage: React.FC = () => {
     );
   }
 
+  const orderDate = new Date(order.createdAt);
+  const formattedDate = formatOrderDateIST(orderDate);
+  const formattedTime = formatOrderTimeIST(orderDate);
+
+  const packDate = new Date(orderDate.getTime() + 2.5 * 3600 * 1000);
+  const shipDate = new Date(orderDate.getTime() + 5.5 * 3600 * 1000);
+  const outDeliveryDate = new Date(orderDate.getTime() + 48 * 3600 * 1000);
+  const deliveredDate = new Date(orderDate.getTime() + 54 * 3600 * 1000);
+
+  const timelineSteps = [
+    {
+      title: 'Order Confirmed',
+      timestamp: formatTimelineStampIST(orderDate),
+      description: 'Order placed & payment verified in Mumbai Atelier queue.',
+      status: 'completed',
+    },
+    {
+      title: 'Order Packed',
+      timestamp: `${formatOrderDateIST(packDate)} • Estimated by ${formatOrderTimeIST(packDate)}`,
+      description: 'Anti-tarnish wax seal applied with custom velvet box packaging.',
+      status: ['packed', 'shipped', 'out_for_delivery', 'delivered'].includes(order.fulfillmentStatus) ? 'completed' : 'pending',
+    },
+    {
+      title: 'Order Shipped',
+      timestamp: `${formatOrderDateIST(shipDate)} • Estimated by ${formatOrderTimeIST(shipDate)}`,
+      description: 'Airway bill generated and handed over to express delivery network.',
+      status: ['shipped', 'out_for_delivery', 'delivered'].includes(order.fulfillmentStatus) ? 'completed' : 'pending',
+    },
+    {
+      title: 'Out for Delivery',
+      timestamp: `${formatOrderDateIST(outDeliveryDate)} • Expected between 10:00 AM – 1:00 PM`,
+      description: 'Courier specialist dispatched for contactless doorstep handover.',
+      status: ['out_for_delivery', 'delivered'].includes(order.fulfillmentStatus) ? 'completed' : 'pending',
+    },
+    {
+      title: 'Delivered',
+      timestamp: `${order.estimatedDelivery?.estimatedDateFormatted || formatOrderDateIST(deliveredDate)} • Expected between 10:00 AM – 8:00 PM IST`,
+      description: 'Safely delivered with contactless signature verification.',
+      status: order.fulfillmentStatus === 'delivered' ? 'completed' : 'pending',
+    },
+  ];
+
   return (
     <div className="w-full min-h-screen bg-pearl-100 pt-36 sm:pt-40 md:pt-44 pb-32 px-4 sm:px-8 md:px-12 selection:bg-champagne-300">
       <div className="max-w-4xl mx-auto space-y-8">
@@ -89,25 +133,27 @@ export const OrderDetailPage: React.FC = () => {
                 {order.orderNumber}
               </h1>
               <p className="text-xs text-obsidian/60 font-sans mt-0.5">
-                Dispatched from Mumbai Atelier • Placed on {new Date(order.createdAt).toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' })}
+                Placed on {formattedDate} at {formattedTime} • Payment: {order.financialStatus.toUpperCase()}
               </p>
             </div>
 
             <span className="flex items-center gap-1.5 px-4 py-1.5 bg-emerald-100 text-emerald-900 border border-emerald-300 rounded-full text-xs font-mono font-bold uppercase tracking-wider">
-              <CheckCircle2 className="w-4 h-4 text-emerald-700" />
+              <Check className="w-3.5 h-3.5 text-emerald-700 stroke-[3]" />
               <span>{order.fulfillmentStatus.replace('_', ' ')}</span>
             </span>
           </div>
 
-          {/* Quick Tracking Bar */}
-          <div className="p-4 bg-white/90 rounded-2xl border border-champagne-300/60 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          {/* Quick Tracking & Estimated Delivery Bar */}
+          <div className="p-5 bg-gradient-to-r from-champagne-100/90 to-pearl-50 rounded-2xl border border-champagne-300/80 flex flex-col sm:flex-row sm:items-center justify-between gap-4 shadow-sm">
             <div className="space-y-1">
-              <span className="text-[10px] font-mono uppercase text-obsidian/50 block">Carrier & Tracking</span>
-              <p className="font-serif text-base text-obsidian font-bold">
-                {order.carrier} • <span className="font-mono text-gold-dark">{order.trackingNumber}</span>
+              <span className="text-[10px] font-mono uppercase text-gold-dark font-bold block">
+                Estimated Delivery Window
+              </span>
+              <p className="font-serif-luxury text-xl sm:text-2xl text-obsidian font-bold">
+                {order.estimatedDelivery?.estimatedDateFormatted || formattedDate}
               </p>
-              <p className="text-xs text-obsidian/60 font-sans">
-                Estimated Delivery: {order.estimatedDelivery?.formattedRange}
+              <p className="text-xs font-mono text-gold-dark font-medium">
+                {order.estimatedDelivery?.expectedTimeWindow || 'Expected between 10:00 AM – 8:00 PM IST'}
               </p>
             </div>
 
@@ -120,9 +166,64 @@ export const OrderDetailPage: React.FC = () => {
             </Link>
           </div>
 
+          {/* Timeline Milestones */}
+          <div className="p-6 bg-white/95 rounded-2xl border border-champagne-300/60 shadow-sm space-y-6">
+            <div className="flex items-center justify-between border-b border-champagne-300/40 pb-3">
+              <h3 className="font-serif-luxury text-lg text-obsidian font-bold">
+                Delivery Timeline
+              </h3>
+              <span className="text-xs font-mono text-gold-dark font-semibold">
+                Airway Bill: {order.trackingNumber}
+              </span>
+            </div>
+
+            <div className="relative pl-7 space-y-6 before:absolute before:left-3 before:top-2 before:bottom-2 before:w-0.5 before:bg-champagne-300">
+              {timelineSteps.map((step, idx) => {
+                const isCompleted = step.status === 'completed';
+                return (
+                  <div key={idx} className="relative flex items-start gap-4">
+                    <div
+                      className={`absolute -left-7 top-0.5 w-6 h-6 rounded-full flex items-center justify-center text-xs font-mono font-bold ring-4 ring-pearl-50 ${
+                        isCompleted
+                          ? 'bg-emerald-700 text-white shadow-sm'
+                          : 'bg-pearl-100 text-obsidian/40 border border-champagne-300'
+                      }`}
+                    >
+                      {isCompleted ? '✓' : '○'}
+                    </div>
+
+                    <div className="space-y-0.5 flex-1">
+                      <div className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-1">
+                        <h4
+                          className={`font-serif text-base ${
+                            isCompleted ? 'text-obsidian font-bold' : 'text-obsidian/60'
+                          }`}
+                        >
+                          {isCompleted ? `✓ ${step.title}` : `○ ${step.title}`}
+                        </h4>
+                        <span
+                          className={`font-mono text-xs ${
+                            isCompleted ? 'text-emerald-800 font-bold' : 'text-gold-dark font-medium'
+                          }`}
+                        >
+                          {step.timestamp}
+                        </span>
+                      </div>
+                      <p className="text-xs text-obsidian/65 font-sans">
+                        {step.description}
+                      </p>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+
           {/* Order Items Summary */}
           <div className="space-y-4 pt-4 border-t border-champagne-300/30">
-            <h3 className="font-serif-luxury text-xl text-obsidian">Pieces Inside ({order.items.length})</h3>
+            <h3 className="font-serif-luxury text-xl text-obsidian font-bold">
+              Pieces Inside ({order.items.reduce((acc, i) => acc + i.quantity, 0)} items)
+            </h3>
             
             <div className="space-y-3">
               {order.items.map((item, idx) => (
@@ -145,7 +246,7 @@ export const OrderDetailPage: React.FC = () => {
                     <div>
                       <h4 className="font-serif text-base text-obsidian font-semibold">{item.title}</h4>
                       <p className="text-xs text-obsidian/60">
-                        Qty: {item.quantity} {item.boxType && `• ${item.boxType}`}
+                        Quantity: <span className="font-mono font-bold text-obsidian">{item.quantity}</span> {item.boxType && `• ${item.boxType}`}
                       </p>
                       {item.customNotes && (
                         <p className="text-[11px] italic text-obsidian/60 font-sans mt-0.5">
@@ -168,11 +269,11 @@ export const OrderDetailPage: React.FC = () => {
                 <span className="font-mono">₹{order.subtotal}</span>
               </div>
               <div className="flex justify-between text-obsidian/70">
-                <span>Shipping</span>
+                <span>Shipping ({order.shippingMethod.split(' ')[0]})</span>
                 <span className="font-mono">{order.shippingCost === 0 ? 'FREE' : `₹${order.shippingCost}`}</span>
               </div>
               <div className="flex justify-between text-obsidian font-bold text-sm pt-2 border-t border-champagne-200">
-                <span>Total</span>
+                <span>Total Paid</span>
                 <span className="font-mono text-gold-dark">₹{order.total}</span>
               </div>
             </div>
@@ -182,7 +283,7 @@ export const OrderDetailPage: React.FC = () => {
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs font-sans pt-4 border-t border-champagne-300/30">
             <div className="p-4 bg-white rounded-2xl border border-champagne-300/50 space-y-1">
               <span className="text-[10px] uppercase font-mono text-gold-dark font-bold flex items-center gap-1">
-                <MapPin className="w-3.5 h-3.5" /> Delivered To
+                <MapPin className="w-3.5 h-3.5" /> Destination Address
               </span>
               <p className="font-semibold text-obsidian">{order.customer.name}</p>
               <p className="text-obsidian/70">{order.customer.address}</p>
@@ -192,7 +293,7 @@ export const OrderDetailPage: React.FC = () => {
             <div className="p-4 bg-champagne-100/60 rounded-2xl border border-champagne-300/50 space-y-1.5 text-obsidian/80">
               <p className="flex items-center gap-1.5 font-bold text-obsidian">
                 <Video className="w-4 h-4 text-gold-dark" />
-                <span>Unboxing Policy Reminder</span>
+                <span>Unboxing Video Policy</span>
               </p>
               <p className="leading-relaxed text-[11px]">
                 All parcels are sealed with signature gold wax. Please record an uncut unboxing video for transit warranty.

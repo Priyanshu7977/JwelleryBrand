@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowLeft, Package, Truck, CheckCircle2, ArrowRight, Clock } from 'lucide-react';
+import { ArrowLeft, Package, Truck, CheckCircle2, ArrowRight, Clock, MapPin, Check } from 'lucide-react';
 import { getUserOrders } from '../services/orderService';
 import { OrderMetadata } from '../types/backend';
 import { useAuth } from '../context/AuthContext';
+import { formatOrderDateIST, formatOrderTimeIST } from '../utils/dateIST';
 
 export const OrdersPage: React.FC = () => {
   const { user } = useAuth();
@@ -27,7 +28,7 @@ export const OrdersPage: React.FC = () => {
         
         <Link
           to="/account"
-          className="inline-flex items-center gap-2 text-xs uppercase tracking-widest text-obsidian/70 hover:text-obsidian transition-colors"
+          className="inline-flex items-center gap-2 text-xs uppercase font-mono tracking-widest text-obsidian/70 hover:text-obsidian transition-colors"
         >
           <ArrowLeft className="w-3.5 h-3.5" />
           <span>Back to Account</span>
@@ -64,48 +65,103 @@ export const OrdersPage: React.FC = () => {
           </div>
         ) : (
           <div className="space-y-6">
-            {orders.map((ord) => (
-              <div
-                key={ord.id || ord.orderNumber}
-                className="p-6 md:p-8 bg-pearl-50/90 rounded-3xl border border-champagne-300/50 shadow-sm hover:border-champagne-300 transition-all flex flex-col md:flex-row justify-between items-start md:items-center gap-6"
-              >
-                <div className="space-y-2">
-                  <div className="flex flex-wrap items-center gap-3">
-                    <span className="font-mono text-base font-bold text-obsidian">{ord.orderNumber}</span>
-                    <span className="text-[10px] uppercase font-mono tracking-wider bg-emerald-100 text-emerald-900 border border-emerald-300 px-2.5 py-0.5 rounded-full font-bold flex items-center gap-1">
-                      <CheckCircle2 className="w-3 h-3 text-emerald-700" />
-                      <span>{ord.fulfillmentStatus.replace('_', ' ')}</span>
-                    </span>
-                    <span className="text-xs text-obsidian/50 font-mono">
-                      Tracking: {ord.trackingNumber}
-                    </span>
+            {orders.map((ord) => {
+              const orderDate = new Date(ord.createdAt);
+              const formattedDate = formatOrderDateIST(orderDate);
+              const formattedTime = formatOrderTimeIST(orderDate);
+              const totalItemsCount = ord.items.reduce((acc, i) => acc + i.quantity, 0);
+
+              return (
+                <div
+                  key={ord.id || ord.orderNumber}
+                  className="p-6 md:p-8 bg-pearl-50/95 rounded-3xl border border-champagne-300/60 shadow-luxury-soft hover:border-champagne-300 transition-all space-y-6"
+                >
+                  {/* Order Top Bar */}
+                  <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-champagne-300/40 pb-4">
+                    <div className="flex flex-wrap items-center gap-3">
+                      <span className="font-mono text-lg font-bold text-obsidian">{ord.orderNumber}</span>
+                      <span className="text-[10px] uppercase font-mono bg-emerald-100 text-emerald-900 border border-emerald-300 px-3 py-0.5 rounded-full font-bold flex items-center gap-1">
+                        <Check className="w-3 h-3 text-emerald-700 stroke-[3]" />
+                        <span>{ord.fulfillmentStatus.replace('_', ' ')}</span>
+                      </span>
+                      <span className="text-xs text-obsidian/50 font-mono">
+                        Tracking: {ord.trackingNumber}
+                      </span>
+                    </div>
+
+                    <div className="flex items-center gap-3 text-xs font-mono">
+                      <span className="bg-emerald-50 text-emerald-800 border border-emerald-200 px-2.5 py-0.5 rounded font-bold uppercase">
+                        {ord.financialStatus}
+                      </span>
+                      <span className="text-gold-dark font-bold text-base">₹{ord.total}</span>
+                    </div>
                   </div>
 
-                  <p className="font-serif text-base text-obsidian">
-                    {ord.items.map((i) => i.title).join(', ')}
-                  </p>
+                  {/* Order Details Grid */}
+                  <div className="grid grid-cols-1 md:grid-cols-12 gap-6 items-center">
+                    
+                    {/* Left: Items Summary & Quantities */}
+                    <div className="md:col-span-7 space-y-3">
+                      <div className="space-y-1.5">
+                        <span className="text-[10px] uppercase font-mono text-obsidian/50 block">
+                          Purchased Pieces ({totalItemsCount} {totalItemsCount === 1 ? 'item' : 'items'})
+                        </span>
+                        <div className="space-y-1">
+                          {ord.items.map((item, idx) => (
+                            <div key={idx} className="flex items-baseline justify-between gap-2 text-xs font-sans">
+                              <span className="font-serif text-obsidian font-semibold">
+                                {item.title} <span className="font-mono text-[11px] text-gold-dark font-bold">(Qty: {item.quantity})</span>
+                              </span>
+                              <span className="font-mono text-obsidian/70">₹{item.price * item.quantity}</span>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
 
-                  <div className="flex flex-wrap gap-4 text-xs text-obsidian/60 font-sans">
-                    <span>
-                      Ordered: {new Date(ord.createdAt).toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' })}
-                    </span>
-                    <span>•</span>
-                    <span>Destination: {ord.customer.address}</span>
+                      <div className="flex flex-wrap gap-4 text-xs text-obsidian/60 font-sans pt-2 border-t border-champagne-200/50">
+                        <span><strong>Order Date:</strong> {formattedDate} at {formattedTime}</span>
+                        <span>•</span>
+                        <span><strong>Destination:</strong> {ord.customer.address}</span>
+                      </div>
+                    </div>
+
+                    {/* Right: Estimated Delivery & Action Buttons */}
+                    <div className="md:col-span-5 flex flex-col justify-between gap-4 p-4 bg-white/90 rounded-2xl border border-champagne-300/50">
+                      <div className="space-y-0.5">
+                        <span className="text-[10px] uppercase font-mono text-gold-dark font-bold flex items-center gap-1">
+                          <Clock className="w-3 h-3 text-gold-dark" /> Estimated Delivery
+                        </span>
+                        <p className="font-serif text-base font-bold text-obsidian">
+                          {ord.estimatedDelivery?.estimatedDateFormatted || formattedDate}
+                        </p>
+                        <p className="text-[11px] font-mono text-gold-dark font-medium">
+                          {ord.estimatedDelivery?.expectedTimeWindow || 'Expected between 10:00 AM – 8:00 PM IST'}
+                        </p>
+                      </div>
+
+                      <div className="flex items-center gap-2 pt-2 border-t border-champagne-200/50">
+                        <Link
+                          to={`/order-tracking?id=${ord.orderNumber}`}
+                          className="flex-1 py-2 px-4 rounded-full bg-obsidian text-pearl-100 text-xs uppercase font-mono tracking-wider font-bold hover:bg-obsidian-200 transition-all text-center flex items-center justify-center gap-1.5 shadow-sm"
+                        >
+                          <Truck className="w-3.5 h-3.5 text-champagne-300" />
+                          <span>Track</span>
+                        </Link>
+
+                        <Link
+                          to={`/account/orders/${ord.orderNumber}`}
+                          className="flex-1 py-2 px-4 rounded-full border border-champagne-300/80 bg-white hover:bg-champagne-100/60 text-obsidian text-xs uppercase font-mono tracking-wider font-bold transition-all text-center"
+                        >
+                          Details
+                        </Link>
+                      </div>
+                    </div>
+
                   </div>
-                </div>
 
-                <div className="flex items-center gap-4 w-full md:w-auto justify-between md:justify-end border-t md:border-t-0 pt-4 md:pt-0 border-champagne-300/30">
-                  <span className="font-mono text-lg font-bold text-gold-dark">₹{ord.total}</span>
-                  <Link
-                    to={`/account/orders/${ord.orderNumber}`}
-                    className="px-5 py-2.5 bg-obsidian text-pearl-100 text-xs uppercase font-mono tracking-widest font-bold rounded-full hover:bg-obsidian-200 transition-all flex items-center gap-1.5 shadow-sm"
-                  >
-                    <span>View Receipt</span>
-                    <ArrowRight className="w-3.5 h-3.5" />
-                  </Link>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         )}
 

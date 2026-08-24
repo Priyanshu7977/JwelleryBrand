@@ -5,123 +5,140 @@ import {
   DeliveryTracking,
 } from '../types/backend';
 import { supabase, isSupabaseConfigured } from '../lib/supabase';
+import {
+  formatOrderDateIST,
+  formatOrderTimeIST,
+  formatTimelineStampIST,
+  getHourInIST,
+} from '../utils/dateIST';
 
 const TRACKING_STORAGE_KEY = 'celestia_delivery_tracking_registry';
 
 /**
- * Calculates a dynamic delivery estimate based on shipping method and current IST time
+ * Calculates dynamic delivery date and realistic time window in IST
  */
 export function calculateDeliveryEstimate(
   shippingMethod: string,
-  orderDate: Date = new Date()
+  orderDateInput: Date | string | number = new Date()
 ): DeliveryEstimate {
-  const isSameDay = shippingMethod.toLowerCase().includes('same-day') || shippingMethod.toLowerCase().includes('mumbai');
+  const orderDate = new Date(orderDateInput);
+  const isSameDay =
+    shippingMethod.toLowerCase().includes('same-day') ||
+    shippingMethod.toLowerCase().includes('mumbai');
 
   if (isSameDay) {
-    const currentHour = orderDate.getHours();
-    const isBeforeCutoff = currentHour < 14; // 2:00 PM IST Cutoff
+    const currentHourIST = getHourInIST(orderDate);
+    const isBeforeCutoff = currentHourIST < 14; // 2:00 PM IST Cutoff
 
     const targetDate = new Date(orderDate);
     if (!isBeforeCutoff) {
       targetDate.setDate(targetDate.getDate() + 1);
     }
 
-    const options: Intl.DateTimeFormatOptions = { weekday: 'short', day: 'numeric', month: 'short' };
-    const dateFormatted = targetDate.toLocaleDateString('en-US', options);
+    const estimatedDateFormatted = formatOrderDateIST(targetDate);
+    const expectedTimeWindow = isBeforeCutoff
+      ? 'Expected between 6:00 PM – 9:00 PM IST'
+      : 'Expected between 10:00 AM – 2:00 PM IST';
 
     return {
-      formattedRange: isBeforeCutoff ? `Today by 8:00 PM IST` : `Tomorrow (${dateFormatted}) by 2:00 PM IST`,
+      estimatedDateFormatted,
+      expectedTimeWindow,
+      formattedRange: `${estimatedDateFormatted} • ${expectedTimeWindow}`,
       isSameDay: true,
       minDays: 0,
       maxDays: 1,
       deliveryDateStart: targetDate.toISOString(),
       deliveryDateEnd: targetDate.toISOString(),
       cutoffInfo: isBeforeCutoff
-        ? 'Same-day courier departs from Bandra Atelier at 4:30 PM'
-        : 'Order placed after 2:00 PM cutoff • Priority morning dispatch',
+        ? 'Same-day courier departs from Mumbai Atelier at 4:30 PM'
+        : 'Priority morning dispatch (Order placed after 2:00 PM cutoff)',
     };
   }
 
-  // Pan-India Express Air Delivery (2 to 3 days)
-  const minDate = new Date(orderDate);
-  minDate.setDate(minDate.getDate() + 2);
+  // Pan-India Express Air Delivery (typically 2 to 3 days from order date)
+  const targetDate = new Date(orderDate);
+  targetDate.setDate(targetDate.getDate() + 3);
 
-  const maxDate = new Date(orderDate);
-  maxDate.setDate(maxDate.getDate() + 4);
-
-  const minFormatted = minDate.toLocaleDateString('en-US', { day: 'numeric', month: 'short' });
-  const maxFormatted = maxDate.toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' });
+  const estimatedDateFormatted = formatOrderDateIST(targetDate);
+  const expectedTimeWindow = 'Expected between 10:00 AM – 8:00 PM IST';
 
   return {
-    formattedRange: `${minFormatted} — ${maxFormatted}`,
+    estimatedDateFormatted,
+    expectedTimeWindow,
+    formattedRange: `${estimatedDateFormatted} • ${expectedTimeWindow}`,
     isSameDay: false,
     minDays: 2,
     maxDays: 4,
-    deliveryDateStart: minDate.toISOString(),
-    deliveryDateEnd: maxDate.toISOString(),
-    cutoffInfo: 'Direct air cargo dispatch via Delhivery / Bluedart',
+    deliveryDateStart: targetDate.toISOString(),
+    deliveryDateEnd: targetDate.toISOString(),
+    cutoffInfo: 'Direct priority air cargo dispatch via Delhivery / Bluedart',
   };
 }
 
 /**
- * Builds standard 5-stage timeline progression for an order
+ * Builds standard 5-stage timeline progression with real IST timestamps
  */
 export function generateTimelineEvents(
-  stage: DeliveryStage,
-  orderDate: Date = new Date(),
+  stage: DeliveryStage = 'confirmed',
+  orderDateInput: Date | string | number = new Date(),
   destinationCity: string = 'Mumbai'
 ): DeliveryTimelineEvent[] {
+  const orderDate = new Date(orderDateInput);
   const stages: DeliveryStage[] = ['confirmed', 'packed', 'shipped', 'out_for_delivery', 'delivered'];
   const currentIndex = stages.indexOf(stage);
 
-  const formatTime = (hoursOffset: number) => {
-    const d = new Date(orderDate.getTime() + hoursOffset * 3600 * 1000);
-    return d.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
-  };
-
-  const formatDate = (daysOffset: number) => {
-    const d = new Date(orderDate.getTime() + daysOffset * 24 * 3600 * 1000);
-    return d.toLocaleDateString('en-US', { day: 'numeric', month: 'short' });
-  };
+  // Calculate estimated offsets
+  const packTime = new Date(orderDate.getTime() + 2.5 * 3600 * 1000);
+  const shipTime = new Date(orderDate.getTime() + 5.5 * 3600 * 1000);
+  const outDeliveryTime = new Date(orderDate.getTime() + 48 * 3600 * 1000);
+  const deliveredTime = new Date(orderDate.getTime() + 54 * 3600 * 1000);
 
   return [
     {
       stage: 'confirmed',
-      title: 'Order Confirmed & Payment Verified',
-      description: 'Order registered in Celestia Mumbai Atelier order queue.',
-      timestamp: `${formatDate(0)}, ${formatTime(0)}`,
+      title: 'Order Confirmed',
+      description: 'Order placed & payment verified in Mumbai Atelier queue.',
+      timestamp: formatTimelineStampIST(orderDate),
       location: 'Mumbai Atelier Desk',
       completed: currentIndex >= 0,
     },
     {
       stage: 'packed',
-      title: 'Inspected & Sealed with Gold Wax',
-      description: 'Anti-tarnish calibration, velvet box packaging & custom Polaroid proofing.',
-      timestamp: currentIndex >= 1 ? `${formatDate(0)}, ${formatTime(2)}` : 'Estimated +2 hrs',
+      title: 'Order Packed',
+      description: 'Anti-tarnish wax seal applied with custom velvet box packaging.',
+      timestamp: currentIndex >= 1
+        ? formatTimelineStampIST(packTime)
+        : `${formatOrderDateIST(packTime)} • Estimated by ${formatOrderTimeIST(packTime)}`,
       location: 'Bandra West Studio Lab',
       completed: currentIndex >= 1,
     },
     {
       stage: 'shipped',
-      title: 'Dispatched via Air / Road Express',
-      description: 'Airway bill generated and handover to premium courier network.',
-      timestamp: currentIndex >= 2 ? `${formatDate(0)}, ${formatTime(4)}` : 'Estimated +4 hrs',
+      title: 'Order Shipped',
+      description: 'Airway bill generated and handed over to express delivery network.',
+      timestamp: currentIndex >= 2
+        ? formatTimelineStampIST(shipTime)
+        : `${formatOrderDateIST(shipTime)} • Estimated by ${formatOrderTimeIST(shipTime)}`,
       location: 'Mumbai Air Logistics Hub',
       completed: currentIndex >= 2,
     },
     {
       stage: 'out_for_delivery',
-      title: 'Out for Doorstep Delivery',
-      description: 'Courier specialist dispatched for contactless handover.',
-      timestamp: currentIndex >= 3 ? `${formatDate(1)}, 10:30 AM` : 'In Transit to Destination Hub',
+      title: 'Out for Delivery',
+      description: 'Courier specialist dispatched for contactless doorstep handover.',
+      timestamp: currentIndex >= 3
+        ? formatTimelineStampIST(outDeliveryTime)
+        : `${formatOrderDateIST(outDeliveryTime)} • Expected between 10:00 AM – 1:00 PM`,
       location: `${destinationCity} Delivery Center`,
       completed: currentIndex >= 3,
     },
     {
       stage: 'delivered',
-      title: 'Delivered to Recipient',
-      description: 'Signature verified and safely handed to recipient.',
-      timestamp: currentIndex >= 4 ? `${formatDate(1)}, 03:15 PM` : 'Awaiting Delivery',
+      title: 'Delivered',
+      description: 'Safely delivered with contactless signature verification.',
+      timestamp: currentIndex >= 4
+        ? formatTimelineStampIST(deliveredTime)
+        : `${formatOrderDateIST(deliveredTime)} • Expected between 10:00 AM – 8:00 PM IST`,
       location: `${destinationCity} Destination`,
       completed: currentIndex >= 4,
     },
@@ -129,10 +146,9 @@ export function generateTimelineEvents(
 }
 
 /**
- * Creates or saves delivery tracking record in Supabase or Local Registry
+ * Saves or updates delivery tracking record in Supabase & Local Registry
  */
 export async function saveDeliveryTracking(tracking: DeliveryTracking): Promise<void> {
-  // If Supabase configured, save to Postgres
   if (isSupabaseConfigured() && supabase) {
     try {
       await supabase.from('delivery_tracking').upsert({
@@ -151,7 +167,6 @@ export async function saveDeliveryTracking(tracking: DeliveryTracking): Promise<
     }
   }
 
-  // Always persist to local storage cache for offline resilient lookup
   try {
     const raw = localStorage.getItem(TRACKING_STORAGE_KEY);
     const list: DeliveryTracking[] = raw ? JSON.parse(raw) : [];
@@ -161,13 +176,12 @@ export async function saveDeliveryTracking(tracking: DeliveryTracking): Promise<
 }
 
 /**
- * Fetches tracking by tracking number or order ID
+ * Fetches delivery tracking by tracking number or order ID
  */
 export async function getDeliveryTracking(query: string): Promise<DeliveryTracking | null> {
   const cleanQuery = query.trim().toUpperCase();
   if (!cleanQuery) return null;
 
-  // Check Supabase if configured
   if (isSupabaseConfigured() && supabase) {
     try {
       const { data, error } = await supabase
@@ -177,6 +191,7 @@ export async function getDeliveryTracking(query: string): Promise<DeliveryTracki
         .maybeSingle();
 
       if (data && !error) {
+        const estDelivery = calculateDeliveryEstimate(data.carrier, new Date(data.created_at));
         return {
           id: data.id,
           orderId: data.order_id,
@@ -185,14 +200,7 @@ export async function getDeliveryTracking(query: string): Promise<DeliveryTracki
           currentStatus: data.current_status as DeliveryStage,
           destinationCity: data.destination_city,
           timeline: data.timeline_events || [],
-          estimatedDelivery: {
-            formattedRange: `${new Date(data.estimated_delivery_start).toLocaleDateString()} — ${new Date(data.estimated_delivery_end).toLocaleDateString()}`,
-            isSameDay: data.carrier.includes('Mumbai'),
-            minDays: 1,
-            maxDays: 3,
-            deliveryDateStart: data.estimated_delivery_start,
-            deliveryDateEnd: data.estimated_delivery_end,
-          },
+          estimatedDelivery: estDelivery,
           lastUpdated: data.updated_at || new Date().toISOString(),
         };
       }
@@ -201,7 +209,6 @@ export async function getDeliveryTracking(query: string): Promise<DeliveryTracki
     }
   }
 
-  // Fallback to Local Storage Registry
   try {
     const raw = localStorage.getItem(TRACKING_STORAGE_KEY);
     if (raw) {
@@ -216,16 +223,17 @@ export async function getDeliveryTracking(query: string): Promise<DeliveryTracki
     }
   } catch {}
 
-  // Fallback demo matching for legacy demo orders
+  // Fallback demo matching
   if (cleanQuery.includes('9921') || cleanQuery.includes('8941')) {
+    const seedDate = new Date(Date.now() - 86400000);
     return {
       orderId: 'ORD-2026-8941',
       trackingNumber: 'MUM-EXPRESS-9921',
       carrier: 'Mumbai Atelier Express',
       currentStatus: 'delivered',
       destinationCity: 'Bandra West, Mumbai',
-      estimatedDelivery: calculateDeliveryEstimate('Mumbai Same-Day Express Courier'),
-      timeline: generateTimelineEvents('delivered', new Date(Date.now() - 86400000), 'Bandra West, Mumbai'),
+      estimatedDelivery: calculateDeliveryEstimate('Mumbai Same-Day Express Courier', seedDate),
+      timeline: generateTimelineEvents('delivered', seedDate, 'Bandra West, Mumbai'),
       lastUpdated: new Date().toISOString(),
     };
   }

@@ -41,6 +41,8 @@ export interface DeliveryTimelineEvent {
 }
 
 export interface DeliveryEstimate {
+  estimatedDateFormatted: string; // e.g. "02 Sep 2026" or "28 Aug 2026"
+  expectedTimeWindow: string; // e.g. "Expected between 10:00 AM – 8:00 PM IST"
   formattedRange: string;
   isSameDay: boolean;
   minDays: number;
