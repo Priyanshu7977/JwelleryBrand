@@ -129,6 +129,16 @@ export const CartDrawer: React.FC = () => {
                     <p className="text-xs font-serif text-gold-dark font-medium mt-0.5">
                       ₹{item.product.price}
                     </p>
+                    {item.selectedPersonalisation?.boxType && (
+                      <p className="text-[10px] text-obsidian/60 italic mt-0.5 line-clamp-1">
+                        Box: {item.selectedPersonalisation.boxType}
+                      </p>
+                    )}
+                    {item.selectedPersonalisation?.customNote && (
+                      <p className="text-[10px] text-gold-dark italic mt-0.5 line-clamp-1">
+                        Note: "{item.selectedPersonalisation.customNote}"
+                      </p>
+                    )}
                     {item.product.sameDayMumbaiAvailable && (
                       <span className="inline-flex items-center gap-1 text-[9px] uppercase tracking-wider text-emerald-800 bg-emerald-50 px-1.5 py-0.5 rounded mt-1 font-sans">
                         Mumbai Same-Day Ready

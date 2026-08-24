@@ -8,46 +8,53 @@ export const Section05Gifting: React.FC = () => {
   const {
     selectedHamperBox,
     setSelectedHamperBox,
-    hamperItems,
-    addHamperItem,
-    removeHamperItem,
+    cart,
+    addToCart,
+    removeFromCart,
     polaroidNote,
     setPolaroidNote,
-    addToCart,
+    totalItems,
+    subtotal,
+    setIsCartOpen,
   } = useCart();
 
   const [polaroidImageUrl, setPolaroidImageUrl] = useState<string>(
     'https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?q=80&w=600&auto=format&fit=crop'
   );
 
-  const totalHamperPrice = selectedHamperBox.price + hamperItems.reduce((s, i) => s + i.price, 0);
-
   const handleAddHamperToBag = () => {
-    // Create custom bespoke hamper product representation
-    const customHamperProduct = {
-      id: `custom-hamper-${Date.now()}`,
-      handle: 'bespoke-custom-curated-hamper',
-      title: `Bespoke ${selectedHamperBox.name}`,
-      category: 'gifting' as const,
-      price: totalHamperPrice,
-      description: `Custom curated hamper with ${hamperItems.map(i => i.title).join(', ')} and custom Polaroid keepsake.`,
-      editorialNote: 'A bespoke emotional experience assembled with love in Mumbai.',
-      material: `${selectedHamperBox.name}, Handcrafted Satin Ribbon, Glossy Fuji Film`,
-      craftsmanship: 'Hand-packed in Mumbai atelier with custom wax seal.',
-      sameDayMumbaiAvailable: true,
-      images: {
-        hero: selectedHamperBox.imageUrl,
-        alt: `Custom ${selectedHamperBox.name} with personalised memories`
-      },
-      tags: ['Custom Hamper', 'Personalised', 'Bespoke']
-    };
+    // Add the keepsake box to the cart with the custom note and ribbon specifications
+    const boxProductId = `box-${selectedHamperBox.id}`;
+    const boxInCart = cart.some(i => i.product.id === boxProductId);
 
-    addToCart(customHamperProduct, 1, {
-      boxType: selectedHamperBox.name,
-      customNote: polaroidNote,
-      polaroidPhotoUrl: polaroidImageUrl,
-      ribbonColor: 'Champagne Double Satin'
-    });
+    if (!boxInCart) {
+      const boxProduct = {
+        id: boxProductId,
+        handle: selectedHamperBox.id,
+        title: selectedHamperBox.name,
+        category: 'gifting' as const,
+        price: selectedHamperBox.price,
+        description: selectedHamperBox.description,
+        editorialNote: 'A bespoke emotional keepsake packaging assembled with love in Mumbai.',
+        material: `${selectedHamperBox.name}, Handcrafted Satin Ribbon, Glossy Fuji Film`,
+        craftsmanship: 'Hand-packed in Mumbai atelier with custom wax seal.',
+        sameDayMumbaiAvailable: true,
+        images: {
+          hero: selectedHamperBox.imageUrl,
+          alt: `Custom ${selectedHamperBox.name} with personalised memories`
+        },
+        tags: ['Custom Hamper', 'Personalised', 'Bespoke']
+      };
+
+      addToCart(boxProduct, 1, {
+        boxType: selectedHamperBox.name,
+        customNote: polaroidNote,
+        polaroidPhotoUrl: polaroidImageUrl,
+        ribbonColor: 'Champagne Double Satin'
+      });
+    }
+
+    setIsCartOpen(true);
   };
 
   return (
@@ -90,7 +97,7 @@ export const Section05Gifting: React.FC = () => {
                   <span className="w-5 h-5 rounded-full bg-obsidian text-pearl-100 flex items-center justify-center text-[10px] font-mono">1</span>
                   Select Keepsake Velvet Box
                 </h4>
-                <span className="text-xs font-mono text-gold-dark">₹{selectedHamperBox.price}</span>
+                <span className="text-xs font-mono text-gold-dark font-medium">₹{selectedHamperBox.price}</span>
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
@@ -124,19 +131,20 @@ export const Section05Gifting: React.FC = () => {
               <div className="flex items-center justify-between">
                 <h4 className="text-xs uppercase tracking-widest text-obsidian font-semibold flex items-center gap-2">
                   <span className="w-5 h-5 rounded-full bg-obsidian text-pearl-100 flex items-center justify-center text-[10px] font-mono">2</span>
-                  Add Adornments & Jewellery ({hamperItems.length}/4)
+                  Add Adornments & Jewellery {totalItems > 0 ? `(${totalItems} in bag)` : ''}
                 </h4>
               </div>
 
               <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
                 {FEATURED_PRODUCTS.slice(0, 6).map((prod) => {
-                  const isInside = hamperItems.some((i) => i.id === prod.id);
+                  const cartItem = cart.find((i) => i.product.id === prod.id);
+                  const isInside = Boolean(cartItem);
                   return (
                     <div
                       key={prod.id}
                       className={`p-2.5 rounded-2xl border transition-all flex flex-col justify-between ${
                         isInside
-                          ? 'border-gold-dark bg-champagne-100/50'
+                          ? 'border-gold-dark bg-champagne-100/50 shadow-sm'
                           : 'border-champagne-300/30 bg-white/50 hover:bg-white'
                       }`}
                     >
@@ -147,20 +155,25 @@ export const Section05Gifting: React.FC = () => {
                       <div className="flex items-center justify-between mt-2 pt-1 border-t border-champagne-200/50">
                         <span className="text-[11px] font-mono text-gold-dark font-medium">₹{prod.price}</span>
                         {isInside ? (
-                          <button
-                            onClick={() => removeHamperItem(prod.id)}
-                            className="p-1 text-red-600 hover:bg-red-50 rounded-full"
-                            title="Remove from hamper"
-                          >
-                            <Trash2 className="w-3 h-3" />
-                          </button>
+                          <div className="flex items-center gap-1.5">
+                            {cartItem && cartItem.quantity > 1 && (
+                              <span className="text-[10px] font-mono text-gold-dark font-semibold">x{cartItem.quantity}</span>
+                            )}
+                            <button
+                              onClick={() => removeFromCart(prod.id)}
+                              className="p-1.5 text-red-600 hover:bg-red-50 rounded-full transition-colors"
+                              title="Remove from bag"
+                            >
+                              <Trash2 className="w-3.5 h-3.5" />
+                            </button>
+                          </div>
                         ) : (
                           <button
-                            onClick={() => addHamperItem(prod)}
-                            className="p-1 bg-obsidian text-pearl-100 hover:bg-obsidian-200 rounded-full"
-                            title="Add to hamper"
+                            onClick={() => addToCart(prod, 1, { boxType: selectedHamperBox.name, customNote: polaroidNote })}
+                            className="p-1.5 bg-obsidian text-pearl-100 hover:bg-obsidian-200 rounded-full transition-colors"
+                            title="Add to curated bag"
                           >
-                            <Plus className="w-3 h-3" />
+                            <Plus className="w-3.5 h-3.5" />
                           </button>
                         )}
                       </div>
@@ -236,11 +249,11 @@ export const Section05Gifting: React.FC = () => {
                 </div>
                 <div className="flex justify-between text-obsidian/70">
                   <span>Curated Pieces:</span>
-                  <span className="font-serif font-medium text-obsidian">{hamperItems.length} selected</span>
+                  <span className="font-serif font-medium text-obsidian">{totalItems} {totalItems === 1 ? 'piece' : 'pieces'} in bag</span>
                 </div>
                 <div className="flex justify-between text-sm font-medium text-obsidian pt-2 border-t border-champagne-300/40">
-                  <span className="font-serif text-base">Hamper Total</span>
-                  <span className="font-mono text-lg font-bold text-gold-dark">₹{totalHamperPrice}</span>
+                  <span className="font-serif text-base">Bag Total</span>
+                  <span className="font-mono text-lg font-bold text-gold-dark">₹{subtotal}</span>
                 </div>
               </div>
 
@@ -251,7 +264,7 @@ export const Section05Gifting: React.FC = () => {
                 onClick={handleAddHamperToBag}
                 className="w-full"
               >
-                <span>Curate & Add Hamper to Bag</span>
+                <span>{totalItems > 0 ? 'View in Bag & Checkout' : 'Curate & Add Hamper to Bag'}</span>
                 <ArrowRight className="w-4 h-4" />
               </MagneticButton>
 

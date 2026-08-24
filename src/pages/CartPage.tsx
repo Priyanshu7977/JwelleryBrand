@@ -147,6 +147,17 @@ export const CartPage: React.FC = () => {
                       ₹{item.product.price}
                     </p>
 
+                    {item.selectedPersonalisation?.boxType && (
+                      <p className="text-[11px] text-obsidian/70 italic line-clamp-1">
+                        Box: {item.selectedPersonalisation.boxType}
+                      </p>
+                    )}
+                    {item.selectedPersonalisation?.customNote && (
+                      <p className="text-[11px] text-gold-dark italic line-clamp-1">
+                        Note: "{item.selectedPersonalisation.customNote}"
+                      </p>
+                    )}
+
                     {item.product.sameDayMumbaiAvailable && (
                       <span className="inline-flex text-[9px] uppercase tracking-wider bg-emerald-50 text-emerald-800 px-2 py-0.5 rounded font-sans">
                         Mumbai Same-Day Ready

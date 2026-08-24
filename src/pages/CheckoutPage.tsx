@@ -525,7 +525,10 @@ export const CheckoutPage: React.FC = () => {
                       {item.product.title}
                     </h4>
                     <p className="text-xs text-obsidian/60 font-mono">Qty: {item.quantity}</p>
-                    {item.selectedPersonalisation && (
+                    {item.selectedPersonalisation?.boxType && (
+                      <p className="text-[10px] text-obsidian/70 truncate">Box: {item.selectedPersonalisation.boxType}</p>
+                    )}
+                    {item.selectedPersonalisation?.customNote && (
                       <p className="text-[10px] text-gold-dark truncate">Note: {item.selectedPersonalisation.customNote}</p>
                     )}
                   </div>

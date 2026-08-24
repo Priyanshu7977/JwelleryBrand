@@ -37,7 +37,7 @@ const CART_STORAGE_KEY = 'celestia_cart_items';
 const CartContext = createContext<CartContextType | undefined>(undefined);
 
 export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  // Real empty initial cart state (only loads items user actually added)
+  // Single shared global cart state for the entire application
   const [cart, setCart] = useState<CartItem[]>(() => {
     try {
       const saved = localStorage.getItem(CART_STORAGE_KEY);
@@ -52,12 +52,11 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [isConciergeOpen, setIsConciergeOpen] = useState(false);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
 
-  // Hamper Builder state
+  // Hamper Builder configuration state
   const [selectedHamperBox, setSelectedHamperBox] = useState<HamperBoxOption>(HAMPER_BOX_OPTIONS[0]);
-  const [hamperItems, setHamperItems] = useState<Product[]>([]);
   const [polaroidNote, setPolaroidNote] = useState<string>("To my favourite person, shining always ✨");
 
-  // Persist cart to localStorage
+  // Persist single global cart to localStorage
   useEffect(() => {
     try {
       localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(cart));
@@ -73,11 +72,15 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const addToCart = (product: Product, quantity = 1, personalisation?: CartItem['selectedPersonalisation']) => {
     setCart((prev) => {
-      const existing = prev.find((item) => item.product.id === product.id);
-      if (existing) {
-        return prev.map((item) =>
-          item.product.id === product.id
-            ? { ...item, quantity: item.quantity + quantity }
+      const existingIndex = prev.findIndex((item) => item.product.id === product.id);
+      if (existingIndex > -1) {
+        return prev.map((item, idx) =>
+          idx === existingIndex
+            ? {
+                ...item,
+                quantity: item.quantity + quantity,
+                selectedPersonalisation: personalisation || item.selectedPersonalisation
+              }
             : item
         );
       }
@@ -143,17 +146,18 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
     0
   );
 
+  // Derived directly from the single global cart to prevent parallel detached states
+  const hamperItems = cart.map(item => item.product);
+
   const addHamperItem = (product: Product) => {
-    if (hamperItems.length >= 6) {
-      showToast("Maximum 6 items per bespoke hamper box");
-      return;
-    }
-    setHamperItems(prev => [...prev, product]);
-    showToast(`Added ${product.title} to hamper`);
+    addToCart(product, 1, {
+      boxType: selectedHamperBox.name,
+      customNote: polaroidNote
+    });
   };
 
   const removeHamperItem = (productId: string) => {
-    setHamperItems(prev => prev.filter(i => i.id !== productId));
+    removeFromCart(productId);
   };
 
   const checkoutViaWhatsApp = () => {
