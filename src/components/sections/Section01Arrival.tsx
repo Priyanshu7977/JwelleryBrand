@@ -68,7 +68,7 @@ export const Section01Arrival: React.FC = () => {
 
   // Automatically start music and trigger post-video login as soon as doors open & film reveals
   useEffect(() => {
-    if (scrollFraction >= 0.12 && !hasTriggeredVideoEnd.current) {
+    if (scrollFraction >= 0.22 && !hasTriggeredVideoEnd.current) {
       hasTriggeredVideoEnd.current = true;
       window.dispatchEvent(new CustomEvent('celestia:video-ended'));
 
@@ -83,12 +83,12 @@ export const Section01Arrival: React.FC = () => {
 
   // Video scrubber lerp loop
   useEffect(() => {
-    if (scrollFraction > 0.20) {
+    if (scrollFraction > 0.45) {
       if (rafRef.current) cancelAnimationFrame(rafRef.current);
       return;
     }
 
-    const videoPhaseProgress = Math.min(1, Math.max(0, scrollFraction / 0.12));
+    const videoPhaseProgress = Math.min(1, Math.max(0, scrollFraction / 0.30));
     if (videoDuration > 0) {
       targetTimeRef.current = videoPhaseProgress * videoDuration;
     }
@@ -119,42 +119,42 @@ export const Section01Arrival: React.FC = () => {
   };
 
   // =========================================================================
-  // 1. DOOR OPENING PHASE (0.00 - 0.10): Fast, Smooth & 100% Reversible Doors
+  // 1. DOOR OPENING PHASE (0.00 - 0.22): Smooth & 100% Reversible Doors
   // =========================================================================
-  const doorProgress = Math.min(1, Math.max(0, scrollFraction / 0.09));
+  const doorProgress = Math.min(1, Math.max(0, scrollFraction / 0.20));
   const easedDoorProgress = Math.pow(doorProgress, 1.1);
   const doorLeftTranslate = -easedDoorProgress * 102; // -0% to -102%
   const doorRightTranslate = easedDoorProgress * 102; // 0% to 102%
-  const doorSeamOpacity = Math.max(0, 1 - doorProgress * 3.0);
+  const doorSeamOpacity = Math.max(0, 1 - doorProgress * 2.5);
   const doorOverallOpacity = doorProgress >= 0.98 ? 0 : 1;
 
   // =========================================================================
-  // 2. VIDEO FILM PHASE (0.05 - 0.16): Swift Reveal & Immediate Login Transition
+  // 2. VIDEO FILM PHASE (0.15 - 0.40): Smooth Reveal & Seamless Hero Entrance
   // =========================================================================
-  const isVideoPhase = scrollFraction < 0.16;
-  const videoOpacity = Math.max(0, Math.min(1, 1 - (scrollFraction - 0.10) * 12.0));
-  const heroOpacity = Math.min(1, Math.max(0, (scrollFraction - 0.10) * 8.0));
+  const isVideoPhase = scrollFraction < 0.38;
+  const videoOpacity = Math.max(0, Math.min(1, 1 - (scrollFraction - 0.22) * 6.0));
+  const heroOpacity = Math.min(1, Math.max(0, (scrollFraction - 0.20) * 5.0));
 
-  // 3. 3D WebGL & Kinetic Reveal Progress (0.15 - 1.00)
-  const threeDProgress = Math.max(0, Math.min(1, (scrollFraction - 0.12) / 0.88));
-  const monumentProgress = Math.max(0, Math.min(1, (scrollFraction - 0.14) / 0.86));
-  const monumentScale = 1 - monumentProgress * 0.06;
-  const monumentTranslateY = -monumentProgress * 25;
+  // 3. 3D WebGL & Kinetic Reveal Progress (0.20 - 1.00)
+  const threeDProgress = Math.max(0, Math.min(1, (scrollFraction - 0.20) / 0.80));
+  const monumentProgress = Math.max(0, Math.min(1, (scrollFraction - 0.22) / 0.78));
+  const monumentScale = 1 - monumentProgress * 0.05;
+  const monumentTranslateY = -monumentProgress * 20;
 
   // Kinetic Piece 01 Card
-  const p1Opacity = Math.max(0, Math.min(1, (scrollFraction - 0.35) * 6.0));
-  const p1TranslateX = Math.max(0, (0.60 - scrollFraction) * 100);
-  const p1Rotate = Math.max(0, (0.60 - scrollFraction) * 8);
+  const p1Opacity = Math.max(0, Math.min(1, (scrollFraction - 0.35) * 5.0));
+  const p1TranslateX = Math.max(0, (0.60 - scrollFraction) * 80);
+  const p1Rotate = Math.max(0, (0.60 - scrollFraction) * 6);
 
   // Kinetic Piece 02 Card
-  const p2Opacity = Math.max(0, Math.min(1, (scrollFraction - 0.55) * 6.0));
-  const p2TranslateX = Math.max(0, (0.80 - scrollFraction) * 100);
-  const p2Rotate = Math.max(0, (0.80 - scrollFraction) * -8);
+  const p2Opacity = Math.max(0, Math.min(1, (scrollFraction - 0.55) * 5.0));
+  const p2TranslateX = Math.max(0, (0.80 - scrollFraction) * 80);
+  const p2Rotate = Math.max(0, (0.80 - scrollFraction) * -6);
 
   return (
     <section
       ref={containerRef}
-      className="relative w-full h-[260vh] bg-pearl-100 selection:bg-champagne-300 transform-gpu"
+      className="relative w-full h-[140vh] sm:h-[150vh] bg-pearl-100 selection:bg-champagne-300 transform-gpu"
       id="section-arrival"
     >
       {/* Fixed Fullscreen Viewport (100vw x 100vh) */}
