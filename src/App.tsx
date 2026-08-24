@@ -41,6 +41,7 @@ import { ShippingReturnsPage } from './pages/ShippingReturnsPage';
 import { TermsPage } from './pages/TermsPage';
 import { PrivacyPage } from './pages/PrivacyPage';
 import { CheckoutPage } from './pages/CheckoutPage';
+import { OrderSuccessPage } from './pages/OrderSuccessPage';
 
 const ToastNotification: React.FC = () => {
   const { toastMessage } = useCart();
@@ -116,6 +117,8 @@ const AppShell: React.FC = () => {
             <Route path="/search" element={<SearchPage />} />
             <Route path="/cart" element={<CartPage />} />
             <Route path="/checkout" element={<CheckoutPage />} />
+            <Route path="/order-success" element={<OrderSuccessPage />} />
+            <Route path="/order-success/:orderId" element={<OrderSuccessPage />} />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/register" element={<RegisterPage />} />
             <Route path="/signup" element={<RegisterPage />} />
@@ -130,6 +133,7 @@ const AppShell: React.FC = () => {
             <Route path="/account/orders" element={<OrdersPage />} />
             <Route path="/account/orders/:orderId" element={<OrderDetailPage />} />
             <Route path="/order-tracking" element={<OrderTrackingPage />} />
+            <Route path="/order-tracking/:trackingId" element={<OrderTrackingPage />} />
             <Route path="/shipping-returns" element={<ShippingReturnsPage />} />
             <Route path="/terms" element={<TermsPage />} />
             <Route path="/privacy" element={<PrivacyPage />} />

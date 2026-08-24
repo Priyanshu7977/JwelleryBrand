@@ -3,6 +3,8 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
 import { BRAND_INFO } from '../data/shopify-data';
+import { createOrder } from '../services/orderService';
+import { OrderItem } from '../types/backend';
 import {
   Lock,
   ShieldCheck,
@@ -41,7 +43,6 @@ export const CheckoutPage: React.FC = () => {
   const [paymentMethod, setPaymentMethod] = useState<'upi' | 'card' | 'cod' | 'whatsapp'>('upi');
   const [upiCopied, setUpiCopied] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
-  const [orderConfirmed, setOrderConfirmed] = useState<any | null>(null);
 
   const shippingCost = subtotal >= BRAND_INFO.freeShippingThreshold || subtotal === 0 ? 0 : 99;
   const sameDayExtra = shippingMethod === 'same-day' ? 100 : 0;
@@ -54,7 +55,7 @@ export const CheckoutPage: React.FC = () => {
     setTimeout(() => setUpiCopied(false), 2500);
   };
 
-  const handlePlaceOrder = (e: React.FormEvent) => {
+  const handlePlaceOrder = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!name || !email || !phone || !street || !pincode) {
       showToast("Please fill in all shipping and contact details.");
@@ -63,37 +64,53 @@ export const CheckoutPage: React.FC = () => {
 
     setIsProcessing(true);
 
-    setTimeout(() => {
-      const newOrderId = `ORD-2026-${Math.floor(1000 + Math.random() * 9000)}`;
-      const confirmedOrder = {
-        orderId: newOrderId,
-        date: new Date().toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' }),
-        items: [...cart],
+    try {
+      const orderItems: OrderItem[] = cart.map((item) => {
+        const img = item.product?.images?.hero || (item.product?.images as any)?.[0] || '';
+        return {
+          productId: item.product?.id || `item-${Date.now()}`,
+          shopifyVariantId: item.product?.shopifyVariantId,
+          title: item.product?.title || 'Celestia Fine Piece',
+          handle: item.product?.handle || 'celestia-piece',
+          imageUrl: img,
+          price: item.product?.price || 0,
+          quantity: item.quantity,
+          boxType: item.selectedPersonalisation?.boxType,
+          customNotes: item.selectedPersonalisation?.customNote,
+        };
+      });
+
+      const newOrder = await createOrder({
+        customer: {
+          name,
+          email,
+          phone,
+          address: `${street}, ${city}, ${state} - ${pincode}`,
+        },
+        items: orderItems,
         subtotal,
         shippingCost: shippingCost + sameDayExtra,
         total: finalTotal,
         shippingMethod: shippingMethod === 'same-day' ? 'Mumbai Same-Day Express Courier' : 'Pan-India Free Express Air Delivery',
         paymentMethod: paymentMethod.toUpperCase(),
-        customer: { name, email, phone, address: `${street}, ${city}, ${state} - ${pincode}` },
-      };
-
-      // Save order to localStorage user order registry
-      try {
-        const savedOrdersRaw = localStorage.getItem('celestia_user_orders');
-        const savedOrders = savedOrdersRaw ? JSON.parse(savedOrdersRaw) : [];
-        localStorage.setItem('celestia_user_orders', JSON.stringify([confirmedOrder, ...savedOrders]));
-      } catch {}
+        userId: user?.id,
+      });
 
       // Clear cart
       clearCart();
       setIsProcessing(false);
-      setOrderConfirmed(confirmedOrder);
-      showToast(`Order ${newOrderId} placed successfully ✨`);
-    }, 1200);
+      showToast(`Order ${newOrder.orderNumber} placed successfully ✨`);
+
+      // Navigate to dedicated Order Success Page with full order state
+      navigate(`/order-success/${newOrder.orderNumber}`, { state: { order: newOrder } });
+    } catch (err) {
+      setIsProcessing(false);
+      showToast("Could not place order. Please try again.");
+    }
   };
 
-  // If cart is empty and no confirmed order, redirect to shop
-  if (cart.length === 0 && !orderConfirmed) {
+  // If cart is empty, redirect to shop
+  if (cart.length === 0) {
     return (
       <div className="w-full min-h-screen bg-pearl-100 pt-36 sm:pt-40 md:pt-44 pb-32 px-4 sm:px-8 flex items-center justify-center">
         <div className="max-w-md w-full bg-pearl-50/95 p-8 rounded-3xl border border-champagne-300/60 shadow-luxury-soft text-center space-y-6">
@@ -113,70 +130,6 @@ export const CheckoutPage: React.FC = () => {
             <span>Explore Collection</span>
             <ArrowRight className="w-4 h-4" />
           </Link>
-        </div>
-      </div>
-    );
-  }
-
-  // =========================================================================
-  // SUCCESS ORDER CONFIRMATION VIEW
-  // =========================================================================
-  if (orderConfirmed) {
-    return (
-      <div className="w-full min-h-screen bg-pearl-100 pt-36 sm:pt-40 md:pt-44 pb-32 px-4 sm:px-8 flex items-center justify-center">
-        <div className="max-w-2xl w-full bg-pearl-50/98 p-6 sm:p-10 md:p-12 rounded-3xl border border-champagne-300/80 shadow-2xl space-y-8 text-center">
-          
-          <div className="w-20 h-20 rounded-full bg-emerald-100 border border-emerald-300 text-emerald-800 flex items-center justify-center mx-auto shadow-sm">
-            <CheckCircle2 className="w-10 h-10 animate-scale-up" />
-          </div>
-
-          <div className="space-y-2">
-            <span className="text-xs uppercase font-mono tracking-widest text-gold-dark font-bold">
-              Order Confirmed • Mumbai Atelier Dispatched
-            </span>
-            <h1 className="font-serif-luxury text-4xl sm:text-5xl text-obsidian uppercase">
-              THANK YOU, <span className="italic font-light text-gold-dark">{orderConfirmed.customer.name.split(' ')[0]}</span>.
-            </h1>
-            <p className="text-xs sm:text-sm text-obsidian/70 font-sans max-w-md mx-auto">
-              Your pieces are being prepared under soft daylight in Mumbai. A confirmation receipt has been dispatched to <strong>{orderConfirmed.customer.email}</strong>.
-            </p>
-          </div>
-
-          <div className="bg-white p-5 sm:p-6 rounded-2xl border border-champagne-300/50 text-left space-y-4">
-            <div className="flex justify-between items-center border-b border-champagne-200 pb-3">
-              <div>
-                <span className="text-[10px] uppercase font-mono text-obsidian/60 block">Order Number</span>
-                <span className="font-mono text-base font-bold text-obsidian">{orderConfirmed.orderId}</span>
-              </div>
-              <div className="text-right">
-                <span className="text-[10px] uppercase font-mono text-obsidian/60 block">Total Paid</span>
-                <span className="font-mono text-base font-bold text-gold-dark">₹{orderConfirmed.total}</span>
-              </div>
-            </div>
-
-            <div className="space-y-2 text-xs font-sans text-obsidian/80">
-              <p><strong>Shipping to:</strong> {orderConfirmed.customer.address}</p>
-              <p><strong>Method:</strong> {orderConfirmed.shippingMethod}</p>
-              <p><strong>Payment Method:</strong> {orderConfirmed.paymentMethod}</p>
-            </div>
-          </div>
-
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-2">
-            <Link
-              to="/order-tracking"
-              className="w-full sm:w-auto px-6 py-3 rounded-full bg-obsidian text-pearl-100 text-xs uppercase font-mono tracking-widest font-bold hover:bg-obsidian-200 transition-all shadow-md flex items-center justify-center gap-2"
-            >
-              <Truck className="w-4 h-4" />
-              <span>Track Live Delivery</span>
-            </Link>
-            <Link
-              to="/shop"
-              className="w-full sm:w-auto px-6 py-3 rounded-full border border-champagne-300/80 bg-pearl-50 text-obsidian text-xs uppercase font-mono tracking-widest font-bold hover:bg-champagne-100 transition-all"
-            >
-              Continue Shopping
-            </Link>
-          </div>
-
         </div>
       </div>
     );

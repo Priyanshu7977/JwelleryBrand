@@ -1,8 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
 import { FEATURED_PRODUCTS } from '../data/shopify-data';
+import { getUserOrders } from '../services/orderService';
+import { OrderMetadata } from '../types/backend';
 import { LuxuryBadge } from '../components/ui/LuxuryBadge';
 import {
   User,
@@ -21,7 +23,8 @@ import {
   Plus,
   LogIn,
   Eye,
-  Trash2
+  Trash2,
+  Truck
 } from 'lucide-react';
 
 export const AccountPage: React.FC = () => {
@@ -29,6 +32,17 @@ export const AccountPage: React.FC = () => {
   const { user, logout, isAuthenticated, wishlist, toggleWishlist } = useAuth();
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState<'profile' | 'orders' | 'addresses' | 'wishlist' | 'preferences'>('profile');
+  const [ordersList, setOrdersList] = useState<OrderMetadata[]>([]);
+  const [ordersLoading, setOrdersLoading] = useState(false);
+
+  useEffect(() => {
+    if (user?.email) {
+      setOrdersLoading(true);
+      getUserOrders(user.email)
+        .then((data) => setOrdersList(data))
+        .finally(() => setOrdersLoading(false));
+    }
+  }, [user?.email]);
 
   // Address edit state
   const [isAddingAddress, setIsAddingAddress] = useState(false);
@@ -244,17 +258,68 @@ export const AccountPage: React.FC = () => {
 
         {/* 2. Orders History */}
         {activeTab === 'orders' && (
-          <div className="space-y-4">
-            <div className="p-8 text-center bg-pearl-50 rounded-3xl border border-champagne-300/50 space-y-4 shadow-sm">
-              <Package className="w-8 h-8 mx-auto text-gold-dark" />
-              <h3 className="font-serif-luxury text-2xl text-obsidian">No Active Orders Pending</h3>
-              <p className="text-xs text-obsidian-soft max-w-sm mx-auto">
-                Your past parcels and newly placed bespoke dispatches will appear here with live tracking.
-              </p>
-              <Link to="/shop" className="inline-block btn-primary text-xs">
-                Explore The Collection
+          <div className="space-y-6">
+            <div className="flex items-center justify-between">
+              <h3 className="font-serif-luxury text-2xl text-obsidian">Atelier Orders & Dispatches</h3>
+              <Link
+                to="/account/orders"
+                className="text-xs uppercase font-mono tracking-widest text-gold-dark hover:underline font-bold"
+              >
+                View Full Archive →
               </Link>
             </div>
+
+            {ordersLoading ? (
+              <div className="p-12 text-center bg-pearl-50 rounded-3xl border border-champagne-300/50">
+                <div className="w-8 h-8 rounded-full border-2 border-gold-dark border-t-transparent animate-spin mx-auto" />
+                <p className="text-xs font-mono text-obsidian/60 mt-2">Loading Orders...</p>
+              </div>
+            ) : ordersList.length === 0 ? (
+              <div className="p-8 text-center bg-pearl-50 rounded-3xl border border-champagne-300/50 space-y-4 shadow-sm">
+                <Package className="w-8 h-8 mx-auto text-gold-dark" />
+                <h3 className="font-serif-luxury text-2xl text-obsidian">No Active Orders Pending</h3>
+                <p className="text-xs text-obsidian-soft max-w-sm mx-auto">
+                  Your past parcels and newly placed bespoke dispatches will appear here with live tracking.
+                </p>
+                <Link to="/shop" className="inline-block btn-primary text-xs">
+                  Explore The Collection
+                </Link>
+              </div>
+            ) : (
+              <div className="space-y-4">
+                {ordersList.slice(0, 3).map((ord) => (
+                  <div
+                    key={ord.id || ord.orderNumber}
+                    className="p-5 sm:p-6 bg-pearl-50 rounded-3xl border border-champagne-300/50 shadow-sm flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 hover:border-champagne-300 transition-all"
+                  >
+                    <div className="space-y-1">
+                      <div className="flex items-center gap-2">
+                        <span className="font-mono text-sm font-bold text-obsidian">{ord.orderNumber}</span>
+                        <span className="text-[10px] uppercase font-mono bg-emerald-100 text-emerald-900 border border-emerald-300 px-2 py-0.5 rounded-full font-bold">
+                          {ord.fulfillmentStatus.replace('_', ' ')}
+                        </span>
+                      </div>
+                      <p className="font-serif text-sm text-obsidian line-clamp-1">
+                        {ord.items.map((i) => i.title).join(', ')}
+                      </p>
+                      <p className="text-[11px] text-obsidian/60 font-sans">
+                        Placed on {new Date(ord.createdAt).toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' })}
+                      </p>
+                    </div>
+
+                    <div className="flex items-center gap-3 w-full sm:w-auto justify-between sm:justify-end">
+                      <span className="font-mono text-base font-bold text-gold-dark">₹{ord.total}</span>
+                      <Link
+                        to={`/account/orders/${ord.orderNumber}`}
+                        className="px-4 py-2 bg-obsidian text-pearl-100 text-xs uppercase font-mono tracking-wider font-bold rounded-full hover:bg-obsidian-200"
+                      >
+                        Details
+                      </Link>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
         )}
 

@@ -1,5 +1,6 @@
 export interface Product {
   id: string;
+  shopifyVariantId?: string;
   handle: string;
   dm2buyId?: string;
   url?: string;
