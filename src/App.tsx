@@ -95,9 +95,6 @@ const AppShell: React.FC = () => {
         {/* Luxury Custom Cursor (Desktop) */}
         <CustomCursor />
 
-        {/* One-Shot Atelier Opening Doors Ceremony (Plays once per browser session) */}
-        <CinematicAtelierOpening />
-
         {/* Global Floating Navigation */}
         <Navigation />
 
