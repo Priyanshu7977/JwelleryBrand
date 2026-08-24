@@ -23,11 +23,11 @@ export const Section01Arrival: React.FC = () => {
   return (
     <section
       ref={containerRef}
-      className="relative w-full h-[100dvh] min-h-[580px] max-h-[960px] bg-pearl-100 selection:bg-champagne-300 flex flex-col justify-between pt-24 sm:pt-28 lg:pt-32 pb-6 sm:pb-8 px-4 sm:px-6 md:px-10 lg:px-14 overflow-hidden"
+      className="relative w-full h-[100dvh] min-h-[580px] max-h-[960px] bg-obsidian/10 selection:bg-champagne-300 flex flex-col justify-between pt-24 sm:pt-28 lg:pt-32 pb-6 sm:pb-8 px-4 sm:px-6 md:px-10 lg:px-14 overflow-hidden"
       id="section-arrival"
     >
       {/* ===================================================================== */}
-      {/* HIGH-DEFINITION USER JEWELLERY BACKGROUND VIDEO                      */}
+      {/* 100% CLEAR, FULL-OPACITY USER JEWELLERY BACKGROUND VIDEO (NO OVERLAY) */}
       {/* ===================================================================== */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden select-none z-0">
         <video
@@ -37,23 +37,19 @@ export const Section01Arrival: React.FC = () => {
           muted
           playsInline
           preload="auto"
-          className="absolute inset-0 w-full h-full object-cover object-center scale-105 transition-all duration-700 opacity-80 filter brightness-95 contrast-105"
+          className="absolute inset-0 w-full h-full object-cover object-center scale-100 opacity-100 transition-opacity duration-500"
         >
           <source src="/assets/videos/hero-jewelry.mp4" type="video/mp4" />
           <source src="/assets/videos/hero-jewelry.webm" type="video/webm" />
           <source src="https://upload.wikimedia.org/wikipedia/commons/4/47/Jewellery_Maker.webm" type="video/webm" />
         </video>
-
-        {/* Minimal Soft Vignette */}
-        <div className="absolute inset-0 bg-gradient-to-r from-pearl-100/80 via-pearl-100/35 to-transparent" />
-        <div className="absolute inset-0 bg-gradient-to-t from-pearl-100/85 via-transparent to-pearl-100/40" />
       </div>
 
       {/* ===================================================================== */}
-      {/* MAIN HERO CONTENT (Properly Scaled & Fitted to 100vh)                 */}
+      {/* MAIN HERO CONTENT (Crisp Floating Luxury Glass Card)                  */}
       {/* ===================================================================== */}
       <div className="relative z-10 w-full max-w-7xl mx-auto flex-1 flex flex-col justify-center py-2 sm:py-4">
-        <div className="max-w-2xl lg:max-w-3xl space-y-3.5 sm:space-y-4 md:space-y-5 text-left">
+        <div className="max-w-2xl lg:max-w-3xl space-y-3.5 sm:space-y-4 md:space-y-5 text-left p-6 sm:p-8 rounded-3xl bg-pearl-50/80 backdrop-blur-md border border-white/70 shadow-2xl">
           
           {/* Top Identity Tag */}
           <div
@@ -62,7 +58,7 @@ export const Section01Arrival: React.FC = () => {
               transform: isLoaded ? 'translateY(0)' : 'translateY(10px)',
               transition: 'opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1) 100ms, transform 0.6s cubic-bezier(0.16, 1, 0.3, 1) 100ms',
             }}
-            className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-white/90 backdrop-blur-md border border-champagne-300/80 text-[10px] sm:text-xs uppercase font-mono tracking-widest text-gold-dark font-bold shadow-xs"
+            className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-white/90 border border-champagne-300/80 text-[10px] sm:text-xs uppercase font-mono tracking-widest text-gold-dark font-bold shadow-xs"
           >
             <Sparkles className="w-3.5 h-3.5 text-gold-dark" />
             <span>Mumbai Atelier MMXXVI • 1,000+ Journeys</span>
@@ -89,7 +85,7 @@ export const Section01Arrival: React.FC = () => {
               transform: isLoaded ? 'translateY(0)' : 'translateY(12px)',
               transition: 'opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1) 300ms, transform 0.7s cubic-bezier(0.16, 1, 0.3, 1) 300ms',
             }}
-            className="text-xs sm:text-sm md:text-base text-obsidian/90 max-w-lg leading-relaxed font-normal"
+            className="text-xs sm:text-sm md:text-base text-obsidian font-medium max-w-lg leading-relaxed"
           >
             Discover artisanal bangles, 18k gold dipped jewellery suites, and bespoke velvet celebration hampers handcrafted with love in Mumbai.
           </p>
@@ -113,7 +109,7 @@ export const Section01Arrival: React.FC = () => {
 
             <a
               href="/gifting"
-              className="btn-secondary group flex items-center justify-center gap-2 px-5 sm:px-7 py-3 text-xs sm:text-sm uppercase font-bold tracking-widest text-center transition-all bg-white/90 backdrop-blur-md shadow-xs"
+              className="btn-secondary group flex items-center justify-center gap-2 px-5 sm:px-7 py-3 text-xs sm:text-sm uppercase font-bold tracking-widest text-center transition-all bg-white hover:bg-champagne-100 shadow-xs"
             >
               <span>Gifting Atelier</span>
               <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform duration-300 opacity-70" />
@@ -154,10 +150,10 @@ export const Section01Arrival: React.FC = () => {
           opacity: isLoaded ? 1 : 0,
           transition: 'opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1) 600ms',
         }}
-        className="relative z-10 flex flex-row items-center justify-between gap-3 w-full max-w-7xl mx-auto pt-3 border-t border-champagne-300/40"
+        className="relative z-10 flex flex-row items-center justify-between gap-3 w-full max-w-7xl mx-auto pt-3"
       >
-        <div className="flex items-center gap-2 text-left">
-          <span className="hidden sm:inline w-6 h-0.5 bg-gold-dark" />
+        <div className="flex items-center gap-2 text-left bg-white/90 backdrop-blur-md px-3.5 py-1.5 rounded-full border border-champagne-300/60 shadow-xs">
+          <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
           <span className="text-[10px] sm:text-xs uppercase font-mono tracking-widest text-obsidian font-bold">
             1,000+ Journeys • Pan-India Free Express Delivery
           </span>
