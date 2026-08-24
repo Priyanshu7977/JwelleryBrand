@@ -144,7 +144,7 @@ export const Navigation: React.FC = () => {
         onMouseLeave={() => setHoveredMenu(null)}
       >
         <div
-          className={`max-w-7xl mx-auto flex items-center justify-between transition-all duration-300 rounded-full px-3.5 sm:px-6 py-2 sm:py-2.5 ${
+          className={`max-w-7xl mx-auto grid grid-cols-[auto_1fr_auto] items-center transition-all duration-300 rounded-full px-3.5 sm:px-6 py-2 sm:py-2.5 ${
             isScrolled
               ? 'glass-pearl shadow-luxury-soft border border-champagne-300/80'
               : 'bg-pearl-50/95 backdrop-blur-md border border-champagne-300/70 shadow-sm'
@@ -152,9 +152,9 @@ export const Navigation: React.FC = () => {
         >
           
           {/* ================================================================= */}
-          {/* 1. LEFT SECTION: Logo Corner + All Nav Links Aligned One by One   */}
+          {/* 1. LEFT: Logo at Left Corner                                      */}
           {/* ================================================================= */}
-          <div className="flex items-center gap-4 sm:gap-6 xl:gap-8">
+          <div className="flex items-center gap-3 shrink-0">
             
             {/* Mobile Hamburger Button */}
             <div className="flex items-center lg:hidden">
@@ -167,7 +167,7 @@ export const Navigation: React.FC = () => {
               </button>
             </div>
 
-            {/* CELestia Brand Logo at the Left Corner */}
+            {/* CELestia Brand Logo */}
             <Link
               to="/"
               onClick={handleLogoClick}
@@ -188,98 +188,100 @@ export const Navigation: React.FC = () => {
               </span>
             </Link>
 
-            {/* All Navigation Links Aligned Sequentially After Logo */}
-            <nav className="hidden lg:flex items-center gap-4 xl:gap-6 pl-2 xl:pl-4 border-l border-champagne-300/60">
-              
-              {/* Shop Link with Mega Menu */}
-              <div
-                className="relative py-2"
-                onMouseEnter={() => setHoveredMenu('shop')}
-              >
-                <NavLink
-                  to="/shop"
-                  className={({ isActive }) =>
-                    `text-[11px] uppercase tracking-widest-luxury transition-colors font-semibold whitespace-nowrap ${
-                      isActive ? 'text-gold-dark font-bold' : 'text-obsidian hover:text-gold-dark'
-                    }`
-                  }
-                >
-                  Shop
-                </NavLink>
-              </div>
-
-              {/* Collections Link with Mega Menu */}
-              <div
-                className="relative py-2"
-                onMouseEnter={() => setHoveredMenu('collections')}
-              >
-                <NavLink
-                  to="/collections"
-                  className={({ isActive }) =>
-                    `text-[11px] uppercase tracking-widest-luxury transition-colors font-semibold whitespace-nowrap ${
-                      isActive ? 'text-gold-dark font-bold' : 'text-obsidian hover:text-gold-dark'
-                    }`
-                  }
-                >
-                  Collections
-                </NavLink>
-              </div>
-
-              {/* Gifting */}
-              <NavLink
-                to="/gifting"
-                className={({ isActive }) =>
-                  `text-[11px] uppercase tracking-widest-luxury transition-colors font-semibold whitespace-nowrap ${
-                    isActive ? 'text-gold-dark font-bold' : 'text-obsidian hover:text-gold-dark'
-                  }`
-                }
-              >
-                Gifting
-              </NavLink>
-
-              {/* The World */}
-              <NavLink
-                to="/the-world"
-                className={({ isActive }) =>
-                  `text-[11px] uppercase tracking-widest-luxury transition-colors font-semibold whitespace-nowrap ${
-                    isActive ? 'text-gold-dark font-bold' : 'text-obsidian hover:text-gold-dark'
-                  }`
-                }
-              >
-                The World
-              </NavLink>
-
-              {/* Community */}
-              <NavLink
-                to="/community"
-                className={({ isActive }) =>
-                  `text-[11px] uppercase tracking-widest-luxury transition-colors font-semibold whitespace-nowrap ${
-                    isActive ? 'text-gold-dark font-bold' : 'text-obsidian hover:text-gold-dark'
-                  }`
-                }
-              >
-                Community
-              </NavLink>
-
-              {/* Contact */}
-              <NavLink
-                to="/contact"
-                className={({ isActive }) =>
-                  `text-[11px] uppercase tracking-widest-luxury transition-colors font-semibold whitespace-nowrap ${
-                    isActive ? 'text-gold-dark font-bold' : 'text-obsidian hover:text-gold-dark'
-                  }`
-                }
-              >
-                Contact
-              </NavLink>
-            </nav>
-
           </div>
 
           {/* ================================================================= */}
-          {/* 2. RIGHT SECTION: Compact Utilities & Bag Trigger                 */}
+          {/* 2. CENTER: Navigation Links Centered in Middle                    */}
           {/* ================================================================= */}
-          <div className="flex items-center gap-1 sm:gap-1.5 md:gap-2 shrink-0">
+          <nav className="hidden lg:flex items-center justify-center gap-5 xl:gap-8 px-4">
+            
+            {/* Shop Link with Mega Menu */}
+            <div
+              className="relative py-2"
+              onMouseEnter={() => setHoveredMenu('shop')}
+            >
+              <NavLink
+                to="/shop"
+                className={({ isActive }) =>
+                  `text-[11px] uppercase tracking-widest-luxury transition-colors font-semibold whitespace-nowrap ${
+                    isActive ? 'text-gold-dark font-bold' : 'text-obsidian hover:text-gold-dark'
+                  }`
+                }
+              >
+                Shop
+              </NavLink>
+            </div>
+
+            {/* Collections Link with Mega Menu */}
+            <div
+              className="relative py-2"
+              onMouseEnter={() => setHoveredMenu('collections')}
+            >
+              <NavLink
+                to="/collections"
+                className={({ isActive }) =>
+                  `text-[11px] uppercase tracking-widest-luxury transition-colors font-semibold whitespace-nowrap ${
+                    isActive ? 'text-gold-dark font-bold' : 'text-obsidian hover:text-gold-dark'
+                  }`
+                }
+              >
+                Collections
+              </NavLink>
+            </div>
+
+            {/* Gifting */}
+            <NavLink
+              to="/gifting"
+              className={({ isActive }) =>
+                `text-[11px] uppercase tracking-widest-luxury transition-colors font-semibold whitespace-nowrap ${
+                  isActive ? 'text-gold-dark font-bold' : 'text-obsidian hover:text-gold-dark'
+                }`
+              }
+            >
+              Gifting
+            </NavLink>
+
+            {/* The World */}
+            <NavLink
+              to="/the-world"
+              className={({ isActive }) =>
+                `text-[11px] uppercase tracking-widest-luxury transition-colors font-semibold whitespace-nowrap ${
+                  isActive ? 'text-gold-dark font-bold' : 'text-obsidian hover:text-gold-dark'
+                }`
+              }
+            >
+              The World
+            </NavLink>
+
+            {/* Community */}
+            <NavLink
+              to="/community"
+              className={({ isActive }) =>
+                `text-[11px] uppercase tracking-widest-luxury transition-colors font-semibold whitespace-nowrap ${
+                  isActive ? 'text-gold-dark font-bold' : 'text-obsidian hover:text-gold-dark'
+                }`
+              }
+            >
+              Community
+            </NavLink>
+
+            {/* Contact */}
+            <NavLink
+              to="/contact"
+              className={({ isActive }) =>
+                `text-[11px] uppercase tracking-widest-luxury transition-colors font-semibold whitespace-nowrap ${
+                  isActive ? 'text-gold-dark font-bold' : 'text-obsidian hover:text-gold-dark'
+                }`
+              }
+            >
+              Contact
+            </NavLink>
+          </nav>
+
+          {/* ================================================================= */}
+          {/* 3. RIGHT: Compact Utilities & Bag Trigger                         */}
+          {/* ================================================================= */}
+          <div className="flex items-center justify-end gap-1 sm:gap-1.5 md:gap-2 shrink-0">
             
             {/* Search Icon */}
             <Link
