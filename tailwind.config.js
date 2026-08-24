@@ -77,9 +77,9 @@ export default {
         }
       },
       fontFamily: {
-        serif: ['"Cormorant Garamond"', 'Cinzel', '"Playfair Display"', 'Georgia', 'serif'],
-        sans: ['"Plus Jakarta Sans"', 'Inter', 'system-ui', 'sans-serif'],
-        display: ['Cinzel', '"Cormorant Garamond"', 'serif'],
+        sans: ['"Montserrat"', 'Inter', 'system-ui', 'sans-serif'],
+        serif: ['"Montserrat"', 'Cinzel', '"Cormorant Garamond"', 'serif'],
+        display: ['"Montserrat"', 'Cinzel', 'sans-serif'],
       },
       letterSpacing: {
         'widest-luxury': '0.25em',

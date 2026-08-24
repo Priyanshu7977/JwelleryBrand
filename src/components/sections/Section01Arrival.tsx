@@ -1,9 +1,8 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { ProductStage3D } from '../canvas/ProductStage3D';
 import { FEATURED_PRODUCTS } from '../../data/shopify-data';
 import { useCart } from '../../context/CartContext';
 import { LuxuryBadge } from '../ui/LuxuryBadge';
-import { Sparkles, ArrowDown, Eye, ShoppingBag, Volume2, VolumeX, ArrowRight } from 'lucide-react';
+import { Sparkles, ArrowDown, Eye, ShoppingBag, Volume2, VolumeX, ArrowRight, ShieldCheck, Truck, Award } from 'lucide-react';
 import { atelierSound } from '../../utils/audioAtelier';
 
 export const Section01Arrival: React.FC = () => {
@@ -14,15 +13,14 @@ export const Section01Arrival: React.FC = () => {
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
   const [isLoaded, setIsLoaded] = useState(false);
   const [isAudioActive, setIsAudioActive] = useState(false);
+  const [activeTab, setActiveTab] = useState<0 | 1>(0);
   const { setQuickViewProduct, addToCart } = useCart();
 
-  // Entrance animation trigger
   useEffect(() => {
-    const timer = setTimeout(() => setIsLoaded(true), 150);
+    const timer = setTimeout(() => setIsLoaded(true), 100);
     return () => clearTimeout(timer);
   }, []);
 
-  // Sync with audio engine state
   useEffect(() => {
     const unsubscribe = atelierSound.subscribe((state) => {
       setIsAudioActive(state === 'AUDIO_ENABLED');
@@ -40,20 +38,20 @@ export const Section01Arrival: React.FC = () => {
     }
   };
 
-  // Subtle interactive mouse parallax
   const handleMouseMove = (e: React.MouseEvent) => {
-    if (window.innerWidth < 1024) return;
+    if (typeof window !== 'undefined' && window.innerWidth < 1024) return;
     const { clientX, clientY } = e;
     const { innerWidth, innerHeight } = window;
-    const x = (clientX / innerWidth - 0.5) * 20; // -10px to +10px
-    const y = (clientY / innerHeight - 0.5) * 20; // -10px to +10px
+    const x = (clientX / innerWidth - 0.5) * 20;
+    const y = (clientY / innerHeight - 0.5) * 20;
     setMousePos({ x, y });
   };
 
   const product1 = FEATURED_PRODUCTS[0]; // pink and blue bangle set of 2 (₹500)
   const product2 = FEATURED_PRODUCTS[1]; // Desi Barbie Hamper (₹999)
+  const displayProducts = [product1, product2];
+  const currentProduct = displayProducts[activeTab];
 
-  // Performant rAF-throttled scroll listener
   useEffect(() => {
     const handleScroll = () => {
       if (!scrollTicking.current) {
@@ -73,52 +71,43 @@ export const Section01Arrival: React.FC = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // 3D WebGL spatial rotation progress
-  const threeDProgress = Math.max(0, Math.min(1, scrollFraction));
-
-  // Dynamic transforms
-  const p1OffsetX = isLoaded ? -mousePos.x * 0.8 : -45;
-  const p1OffsetY = isLoaded ? -mousePos.y * 0.6 : 0;
-  const p2OffsetX = isLoaded ? mousePos.x * 0.8 : 45;
-  const p2OffsetY = isLoaded ? mousePos.y * 0.6 : 0;
-  const monumentOffsetX = mousePos.x * 0.3;
-  const monumentOffsetY = mousePos.y * 0.3;
+  const cardParallaxX = mousePos.x * 0.5;
+  const cardParallaxY = mousePos.y * 0.5 - scrollFraction * 15;
 
   return (
     <section
       ref={containerRef}
       onMouseMove={handleMouseMove}
-      className="relative w-full min-h-[92vh] lg:min-h-screen bg-pearl-100 selection:bg-champagne-300 flex flex-col justify-between pt-24 sm:pt-28 md:pt-32 pb-4 sm:pb-6 px-4 sm:px-8 md:px-12 lg:px-16 overflow-hidden transform-gpu"
+      className="relative w-full min-h-[92vh] lg:min-h-screen bg-pearl-100 selection:bg-champagne-300 flex flex-col justify-between pt-24 sm:pt-28 md:pt-32 pb-6 sm:pb-8 px-4 sm:px-6 md:px-10 lg:px-14 overflow-hidden"
       id="section-arrival"
     >
-      {/* Ambient Lighting Background */}
-      <div className="absolute inset-0 pointer-events-none overflow-hidden">
-        <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] sm:w-[700px] h-[500px] sm:h-[700px] bg-gradient-radial from-champagne-200/35 to-transparent rounded-full blur-2xl" />
-        <div className="absolute bottom-10 right-10 w-[350px] sm:w-[500px] h-[350px] sm:h-[500px] bg-gradient-radial from-blush-100/40 to-transparent rounded-full blur-2xl" />
-        <div className="absolute inset-0 bg-noise opacity-20" />
+      {/* Background Ambience */}
+      <div className="absolute inset-0 pointer-events-none overflow-hidden select-none">
+        <div
+          className="absolute top-1/4 right-1/4 w-[350px] sm:w-[550px] lg:w-[650px] h-[350px] sm:h-[550px] lg:h-[650px] bg-gradient-radial from-champagne-200/40 via-champagne-100/20 to-transparent rounded-full blur-3xl opacity-80"
+        />
+        <div
+          className="absolute bottom-10 left-10 w-[280px] sm:w-[420px] lg:w-[500px] h-[280px] sm:h-[420px] lg:h-[500px] bg-gradient-radial from-rose-200/35 via-rose-100/15 to-transparent rounded-full blur-3xl opacity-75"
+        />
+        <div className="absolute inset-0 bg-noise opacity-15" />
       </div>
 
-      {/* 3D WebGL Real Product Stage with dynamic scroll rotation */}
-      <div className="absolute inset-0 z-0 pointer-events-auto opacity-75 transform-gpu">
-        <ProductStage3D scrollProgress={threeDProgress} />
-      </div>
-
-      {/* Top Subheader Identity & Audio Toggle */}
-      <div className="relative z-10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 w-full max-w-[1500px] mx-auto">
-        <div className="space-y-0.5 sm:space-y-1">
-          <span className="text-[10px] sm:text-xs uppercase font-mono tracking-widest text-gold-dark font-bold flex items-center gap-1.5">
+      {/* Top Subheader Identity & Sound Controller */}
+      <div className="relative z-10 flex items-center justify-between gap-3 w-full max-w-7xl mx-auto">
+        <div className="flex flex-wrap items-center gap-2">
+          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-champagne-100 border border-champagne-300/80 text-[10px] sm:text-[11px] font-mono font-bold uppercase tracking-widest text-gold-dark">
             <Sparkles className="w-3.5 h-3.5 text-gold-dark" />
-            <span>Live Runway Campaign MMXXVI</span>
+            <span>Mumbai Atelier MMXXVI</span>
           </span>
-          <p className="font-serif italic text-xs sm:text-sm text-obsidian-soft font-medium">
-            Handcrafted Fine Jewellery & Bespoke Keepsake Hampers
-          </p>
+          <span className="hidden sm:inline text-xs text-obsidian-soft font-medium">
+            Handcrafted Fine Jewellery & Hampers
+          </span>
         </div>
 
         {/* Sound Micro-toggle */}
         <button
           onClick={toggleAudio}
-          className={`flex items-center gap-2 px-4 sm:px-5 h-9 sm:h-11 rounded-full border transition-all text-[11px] sm:text-xs font-mono font-bold uppercase tracking-wider backdrop-blur-md shadow-md ${
+          className={`flex items-center gap-2 px-3 sm:px-3.5 h-8 rounded-full border transition-all text-[11px] font-mono font-bold uppercase tracking-wider backdrop-blur-md shadow-sm ${
             isAudioActive
               ? 'bg-champagne-300 border-gold-dark text-obsidian shadow-gold-dark/20'
               : 'border-champagne-300/80 bg-pearl-50/90 hover:bg-white text-obsidian'
@@ -126,148 +115,161 @@ export const Section01Arrival: React.FC = () => {
           aria-label="Toggle atmospheric sound"
         >
           {isAudioActive ? (
-            <Volume2 className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-gold-dark animate-pulse" />
+            <Volume2 className="w-3.5 h-3.5 text-gold-dark animate-pulse" />
           ) : (
-            <VolumeX className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-obsidian" />
+            <VolumeX className="w-3.5 h-3.5 text-obsidian" />
           )}
-          <span>{isAudioActive ? 'Atelier Sound: ON' : 'Atelier Sound: OFF'}</span>
+          <span>{isAudioActive ? 'Sound: ON' : 'Sound: OFF'}</span>
         </button>
       </div>
 
-      {/* Clean Spatial 3-Column Arena with Kinetic Parallax & Hover Float */}
-      <div className="relative z-10 flex-1 max-w-[1500px] w-full mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8 items-center py-4 sm:py-6">
+      {/* Hero Content: Balanced Split Layout */}
+      <div className="relative z-10 flex-1 max-w-7xl w-full mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8 sm:gap-10 lg:gap-12 items-center py-4 sm:py-6 lg:py-8">
         
-        {/* LEFT COLUMN: Real Piece 01 Kinetic Glide Card */}
-        <div className="hidden lg:flex lg:col-span-3 justify-start">
-          <div
-            style={{
-              transform: `translate3d(${p1OffsetX}px, ${p1OffsetY}px, 0) rotate(${isLoaded ? 2.5 : 6}deg)`,
-              opacity: isLoaded ? 1 : 0,
-              transition: 'transform 0.45s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.6s ease-out',
-            }}
-            className="group w-full max-w-[280px] p-5 bg-pearl-50/95 backdrop-blur-md rounded-3xl border border-champagne-300/80 shadow-luxury-soft hover:shadow-2xl hover:border-gold-dark/60 hover:-translate-y-2 hover:scale-[1.02] transition-all duration-300 space-y-3 hardware-accelerated cursor-pointer"
-          >
-            <div className="flex items-center justify-between">
-              <LuxuryBadge variant="gold">Real Piece 01</LuxuryBadge>
-              <span className="text-[10px] font-mono font-bold text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded-full">
-                In Stock ({product1.availableStock})
-              </span>
-            </div>
-            <div className="aspect-[4/3] rounded-2xl overflow-hidden bg-sand relative group-hover:scale-[1.02] transition-transform duration-500">
-              <img src={product1.images.hero} alt={product1.title} className="w-full h-full object-cover" loading="eager" />
-              <div className="absolute inset-0 bg-gradient-to-t from-obsidian/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-            </div>
-            <div>
-              <h3 className="font-serif-luxury text-base text-obsidian font-bold truncate group-hover:text-gold-dark transition-colors">
-                {product1.title}
-              </h3>
-              <span className="font-serif text-lg text-obsidian font-bold">₹{product1.price}</span>
-            </div>
-            <div className="flex gap-2 pt-1">
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  addToCart(product1, 1);
-                }}
-                className="flex-1 h-9 bg-obsidian text-pearl-100 text-xs uppercase tracking-widest rounded-full hover:bg-obsidian-200 transition-colors flex items-center justify-center gap-1.5 font-bold"
-              >
-                <ShoppingBag className="w-3.5 h-3.5" />
-                <span>Add Bag</span>
-              </button>
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setQuickViewProduct(product1);
-                }}
-                className="w-9 h-9 border border-champagne-300/80 hover:bg-champagne-100 rounded-full text-obsidian transition-colors flex items-center justify-center"
-                title="Inspect Piece"
-              >
-                <Eye className="w-3.5 h-3.5" />
-              </button>
-            </div>
-          </div>
-        </div>
-
-        {/* CENTER COLUMN: Pristine Celestia Monument with Subtle 3D Parallax */}
+        {/* Left Column: Brand Manifesto & CTAs (7 Cols) */}
         <div
           style={{
-            transform: `translate3d(${monumentOffsetX}px, ${monumentOffsetY}px, 0) scale(${isLoaded ? 1 : 0.95})`,
             opacity: isLoaded ? 1 : 0,
-            transition: 'transform 0.5s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.6s ease-out',
+            transform: isLoaded ? 'translateY(0)' : 'translateY(20px)',
+            transition: 'opacity 0.6s ease-out, transform 0.6s ease-out',
           }}
-          className="col-span-1 lg:col-span-6 text-center space-y-5 px-4 hardware-accelerated"
+          className="col-span-1 lg:col-span-7 space-y-4 sm:space-y-5 text-left"
         >
-          <div className="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-champagne-100/95 border border-champagne-300/80 backdrop-blur-sm text-xs uppercase font-mono tracking-widest text-obsidian font-bold shadow-sm animate-pulse" style={{ animationDuration: '3s' }}>
-            <Sparkles className="w-4 h-4 text-gold-dark" />
-            <span>400+ Handcrafted Pieces • Mumbai Studio</span>
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-champagne-200/70 border border-champagne-300 text-[11px] sm:text-xs uppercase font-mono tracking-widest text-obsidian font-bold">
+            <Sparkles className="w-3.5 h-3.5 text-gold-dark" />
+            <span>400+ Handcrafted Designs • 1,000+ Journeys</span>
           </div>
 
-          <h1 className="font-serif-luxury text-5xl sm:text-7xl md:text-8xl text-obsidian font-normal tracking-tight uppercase leading-[0.90] drop-shadow-sm">
-            CEL<span className="italic font-light lowercase text-gold-dark">estia</span>
+          <h1 className="text-3xl sm:text-5xl lg:text-6xl font-bold uppercase tracking-tight text-obsidian leading-[1.08]">
+            Handcrafted <br />
+            <span className="text-gold-dark font-normal italic">Fine Jewellery</span> <br />
+            Redefined For All.
           </h1>
 
-          <p className="font-sans text-xs sm:text-sm md:text-base tracking-[0.34em] uppercase text-obsidian-soft font-semibold max-w-lg mx-auto">
-            redefined for all.
+          <p className="text-sm sm:text-base text-obsidian-soft max-w-lg leading-relaxed">
+            Discover artisanal bangles, 18k gold dipped jewellery suites, and bespoke velvet celebration hampers handcrafted with love in Mumbai.
           </p>
 
-          <p className="font-serif italic text-base sm:text-xl text-obsidian font-normal max-w-md mx-auto leading-relaxed">
-            "Fine jewellery, artisanal bangles, and celebration hampers made to be worn with joy."
-          </p>
-
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-2">
-            <a href="#section-reveal" className="btn-primary w-full sm:w-auto shadow-md hover:scale-105 transition-transform">
+          {/* Action CTAs */}
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 pt-1">
+            <a
+              href="#section-reveal"
+              className="btn-primary shadow-md hover:shadow-lg flex items-center justify-center gap-2 px-6 py-3.5 text-xs sm:text-sm uppercase font-bold tracking-widest text-center w-full sm:w-auto"
+            >
               <span>Explore The Collection</span>
               <ArrowRight className="w-4 h-4" />
             </a>
-            <a href="/gifting" className="btn-secondary w-full sm:w-auto hover:scale-105 transition-transform">
+
+            <a
+              href="/gifting"
+              className="btn-secondary flex items-center justify-center gap-2 px-6 py-3.5 text-xs sm:text-sm uppercase font-bold tracking-widest text-center w-full sm:w-auto"
+            >
               <span>Gifting Atelier</span>
             </a>
           </div>
+
+          {/* Key Trust Signals */}
+          <div className="pt-3 border-t border-champagne-300/80 grid grid-cols-1 sm:grid-cols-3 gap-2 sm:gap-3 max-w-lg">
+            <div className="flex items-center gap-2">
+              <Award className="w-4 h-4 text-gold-dark shrink-0" />
+              <span className="text-[11px] font-bold text-obsidian uppercase tracking-wider">100% Handcrafted</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <Truck className="w-4 h-4 text-gold-dark shrink-0" />
+              <span className="text-[11px] font-bold text-obsidian uppercase tracking-wider">Pan-India Express</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <ShieldCheck className="w-4 h-4 text-gold-dark shrink-0" />
+              <span className="text-[11px] font-bold text-obsidian uppercase tracking-wider">Secure Payment</span>
+            </div>
+          </div>
         </div>
 
-        {/* RIGHT COLUMN: Real Piece 02 Kinetic Glide Card */}
-        <div className="hidden lg:flex lg:col-span-3 justify-end">
-          <div
-            style={{
-              transform: `translate3d(${p2OffsetX}px, ${p2OffsetY}px, 0) rotate(${isLoaded ? -2.5 : -6}deg)`,
-              opacity: isLoaded ? 1 : 0,
-              transition: 'transform 0.45s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.6s ease-out',
-            }}
-            className="group w-full max-w-[280px] p-5 bg-pearl-50/95 backdrop-blur-md rounded-3xl border border-champagne-300/80 shadow-luxury-soft hover:shadow-2xl hover:border-gold-dark/60 hover:-translate-y-2 hover:scale-[1.02] transition-all duration-300 space-y-3 hardware-accelerated cursor-pointer"
-          >
+        {/* Right Column: Featured Luxury Showcase (5 Cols) */}
+        <div
+          style={{
+            transform: typeof window !== 'undefined' && window.innerWidth >= 1024 ? `translate3d(${cardParallaxX}px, ${cardParallaxY}px, 0)` : 'none',
+            opacity: isLoaded ? 1 : 0,
+            transition: 'transform 0.45s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.6s ease-out',
+          }}
+          className="col-span-1 lg:col-span-5 flex flex-col items-center lg:items-end w-full"
+        >
+          {/* Card Switcher Tabs */}
+          <div className="flex items-center justify-center gap-2 p-1 bg-white/90 backdrop-blur-md rounded-full border border-champagne-300/80 mb-3 shadow-sm w-full max-w-[340px] sm:max-w-[360px]">
+            <button
+              onClick={() => setActiveTab(0)}
+              className={`flex-1 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider transition-all text-center ${
+                activeTab === 0
+                  ? 'bg-obsidian text-pearl-100 shadow-sm'
+                  : 'text-obsidian hover:text-gold-dark'
+              }`}
+            >
+              Real Piece 01
+            </button>
+            <button
+              onClick={() => setActiveTab(1)}
+              className={`flex-1 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider transition-all text-center ${
+                activeTab === 1
+                  ? 'bg-obsidian text-pearl-100 shadow-sm'
+                  : 'text-obsidian hover:text-gold-dark'
+              }`}
+            >
+              Real Piece 02
+            </button>
+          </div>
+
+          {/* Active Featured Product Card */}
+          <div className="w-full max-w-[340px] sm:max-w-[360px] p-4 sm:p-5 bg-white/95 backdrop-blur-md rounded-3xl border border-champagne-300/80 shadow-luxury-soft hover:shadow-2xl transition-all duration-300 space-y-3">
             <div className="flex items-center justify-between">
-              <LuxuryBadge variant="blush">Real Piece 02</LuxuryBadge>
-              <span className="text-[10px] font-mono font-bold text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded-full">
-                Mumbai Ready
+              <LuxuryBadge variant={activeTab === 0 ? 'gold' : 'blush'}>
+                {activeTab === 0 ? 'Artisanal Bangle' : 'Celebration Hamper'}
+              </LuxuryBadge>
+              <span className="text-[10px] sm:text-[11px] font-mono font-bold text-emerald-800 bg-emerald-50 px-2.5 py-1 rounded-full">
+                {currentProduct.availableStock ? `In Stock (${currentProduct.availableStock})` : 'Mumbai Ready'}
               </span>
             </div>
-            <div className="aspect-[4/3] rounded-2xl overflow-hidden bg-sand relative group-hover:scale-[1.02] transition-transform duration-500">
-              <img src={product2.images.hero} alt={product2.title} className="w-full h-full object-cover" loading="eager" />
-              <div className="absolute inset-0 bg-gradient-to-t from-obsidian/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+
+            <div
+              className="aspect-[4/3] rounded-2xl overflow-hidden bg-sand relative group cursor-pointer"
+              onClick={() => setQuickViewProduct(currentProduct)}
+            >
+              <img
+                src={currentProduct.images.hero}
+                alt={currentProduct.title}
+                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                loading="eager"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-obsidian/30 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-3">
+                <span className="text-xs text-white font-bold uppercase tracking-widest flex items-center gap-1">
+                  <Eye className="w-3.5 h-3.5" /> Quick View
+                </span>
+              </div>
             </div>
+
             <div>
-              <h3 className="font-serif-luxury text-base text-obsidian font-bold truncate group-hover:text-gold-dark transition-colors">
-                {product2.title}
+              <h3 className="text-base font-bold text-obsidian truncate">
+                {currentProduct.title}
               </h3>
-              <span className="font-serif text-lg text-obsidian font-bold">₹{product2.price}</span>
+              <p className="text-xs text-obsidian-soft line-clamp-1 mt-0.5">
+                {currentProduct.description}
+              </p>
+              <div className="flex items-center justify-between pt-1.5">
+                <span className="text-xl font-bold text-obsidian">₹{currentProduct.price}</span>
+                <span className="text-[10px] sm:text-[11px] text-obsidian-soft uppercase tracking-wider font-semibold">Includes Taxes</span>
+              </div>
             </div>
+
             <div className="flex gap-2 pt-1">
               <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  addToCart(product2, 1);
-                }}
-                className="flex-1 h-9 bg-obsidian text-pearl-100 text-xs uppercase tracking-widest rounded-full hover:bg-obsidian-200 transition-colors flex items-center justify-center gap-1.5 font-bold"
+                onClick={() => addToCart(currentProduct, 1)}
+                className="flex-1 h-10 bg-obsidian text-pearl-100 text-xs uppercase tracking-widest rounded-full hover:bg-obsidian-200 transition-colors flex items-center justify-center gap-1.5 font-bold shadow-md"
               >
                 <ShoppingBag className="w-3.5 h-3.5" />
-                <span>Add Bag</span>
+                <span>Add To Bag</span>
               </button>
               <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setQuickViewProduct(product2);
-                }}
-                className="w-9 h-9 border border-champagne-300/80 hover:bg-champagne-100 rounded-full text-obsidian transition-colors flex items-center justify-center"
+                onClick={() => setQuickViewProduct(currentProduct)}
+                className="w-10 h-10 border border-champagne-300/80 hover:bg-champagne-100 rounded-full text-obsidian transition-colors flex items-center justify-center shadow-sm shrink-0"
                 title="Inspect Piece"
               >
                 <Eye className="w-3.5 h-3.5" />
@@ -278,21 +280,21 @@ export const Section01Arrival: React.FC = () => {
 
       </div>
 
-      {/* Bottom Interactive Scroll Anchor */}
-      <div className="relative z-10 flex flex-col sm:flex-row items-center justify-between gap-3 w-full max-w-[1500px] mx-auto pb-1">
-        <div className="flex items-center gap-3">
-          <span className="w-8 sm:w-10 h-0.5 bg-gold-dark" />
-          <span className="text-[11px] sm:text-xs uppercase font-mono tracking-widest text-obsidian font-bold">
+      {/* Bottom Interactive Anchor & Stats */}
+      <div className="relative z-10 flex flex-col sm:flex-row items-center justify-between gap-3 w-full max-w-7xl mx-auto pt-2">
+        <div className="flex items-center gap-2 sm:gap-3 text-center sm:text-left">
+          <span className="hidden sm:inline w-8 sm:w-10 h-0.5 bg-gold-dark" />
+          <span className="text-[10px] sm:text-xs uppercase font-mono tracking-widest text-obsidian font-bold">
             1,000+ Journeys Dispatched • Pan-India Free Express
           </span>
         </div>
 
         <a
           href="#section-reveal"
-          className="flex items-center gap-2 text-xs uppercase font-mono tracking-widest text-obsidian hover:text-gold-dark transition-colors group cursor-pointer font-bold px-4 sm:px-5 py-2 sm:py-2.5 rounded-full bg-pearl-50 border border-champagne-300/80 shadow-sm hover:shadow-md transition-all"
+          className="flex items-center gap-2 text-[11px] sm:text-xs uppercase font-mono tracking-widest text-obsidian hover:text-gold-dark transition-colors group cursor-pointer font-bold px-4 py-1.5 sm:py-2 rounded-full bg-pearl-50 border border-champagne-300/80 shadow-sm hover:shadow-md transition-all"
         >
           <span>Scroll To Enter Collection</span>
-          <ArrowDown className="w-4 h-4 text-gold-dark group-hover:translate-y-1 transition-transform" />
+          <ArrowDown className="w-3.5 h-3.5 text-gold-dark group-hover:translate-y-1 transition-transform" />
         </a>
       </div>
     </section>

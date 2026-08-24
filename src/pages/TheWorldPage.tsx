@@ -1,8 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { Compass, MapPin, Instagram, ArrowRight, Sparkles } from 'lucide-react';
 import { BRAND_INFO, FOUNDER_INFO } from '../data/shopify-data';
-import { MagneticButton } from '../components/ui/MagneticButton';
-import { Sparkles, MapPin, ShieldCheck, Heart, Award, ArrowRight, Instagram, Compass, Truck, Video } from 'lucide-react';
 
 export const TheWorldPage: React.FC = () => {
   const chapters = [
@@ -43,128 +42,157 @@ export const TheWorldPage: React.FC = () => {
     }
   ];
 
+  const cleanedQuote = FOUNDER_INFO.quote.replace(/^["']|["']$/g, '');
+
   return (
-    <div className="w-full min-h-screen bg-pearl-100 pt-36 sm:pt-40 md:pt-44 pb-32 px-4 sm:px-8 md:px-12 lg:px-20 selection:bg-champagne-300">
-      <div className="max-w-[1500px] mx-auto space-y-20">
+    <div className="w-full min-h-screen bg-pearl-100 pt-28 sm:pt-32 md:pt-36 pb-20 px-4 sm:px-6 md:px-10 lg:px-14 selection:bg-champagne-300">
+      <div className="max-w-7xl mx-auto space-y-8 sm:space-y-10">
         
-        {/* Cinematic Universe Header */}
-        <div className="text-center space-y-4 max-w-4xl mx-auto border-b border-champagne-300/40 pb-12">
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-pearl-50 border border-champagne-300/80 text-[11px] uppercase tracking-monumental text-gold-dark font-medium shadow-sm">
+        {/* Full-Width Cinematic Header */}
+        <div className="text-center space-y-1.5 max-w-2xl mx-auto border-b border-champagne-300/40 pb-4 sm:pb-5">
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-pearl-50 border border-champagne-300/80 text-[10px] sm:text-[11px] uppercase font-mono tracking-widest text-gold-dark font-bold shadow-sm">
             <Compass className="w-3.5 h-3.5" />
             <span>The Celestia Universe</span>
           </div>
 
-          <h1 className="font-serif-luxury text-5xl sm:text-7xl md:text-9xl text-obsidian uppercase font-normal leading-[0.9]">
-            THE <span className="italic font-light text-gold-dark">World</span>.
+          <h1 className="text-3xl sm:text-5xl md:text-6xl text-obsidian font-bold uppercase leading-tight">
+            THE <span className="italic font-normal text-gold-dark">World</span>.
           </h1>
 
-          <p className="font-serif italic text-xl sm:text-2xl text-obsidian/85 max-w-2xl mx-auto leading-relaxed">
+          <p className="italic text-sm sm:text-base text-obsidian-soft max-w-lg mx-auto leading-relaxed">
             "A tactile world where modern jewellery meets vintage emotion."
           </p>
         </div>
 
-        {/* Chapter Journey Flow */}
-        <div className="space-y-20 max-w-5xl mx-auto">
-          {chapters.map((ch, idx) => (
-            <div
-              key={ch.num}
-              className="grid grid-cols-1 md:grid-cols-12 gap-8 md:gap-14 items-start p-8 md:p-12 rounded-3xl bg-pearl-50/90 border border-champagne-300/50 shadow-luxury-soft"
-            >
-              {/* Chapter Number Badge (3 Cols) */}
-              <div className="md:col-span-3 space-y-2">
-                <span className="font-mono text-4xl sm:text-5xl font-light text-gold-dark/60 block">
-                  {ch.num}
-                </span>
-                <span className="text-[10px] uppercase tracking-monumental text-gold-dark font-semibold block">
-                  {ch.subtitle}
-                </span>
-              </div>
-
-              {/* Narrative Content (9 Cols) */}
-              <div className="md:col-span-9 space-y-5">
-                <h2 className="font-serif-luxury text-3xl sm:text-4xl text-obsidian leading-snug">
-                  {ch.title}
-                </h2>
-
-                <p className="text-xs sm:text-sm text-obsidian/75 font-sans leading-relaxed">
-                  {ch.text}
-                </p>
-
-                <blockquote className="border-l-2 border-gold-dark pl-4 italic font-serif text-sm text-obsidian/90">
-                  "{ch.accent}"
-                </blockquote>
-              </div>
-            </div>
-          ))}
-        </div>
-
-        {/* Founder & Creative Direction Showcase — "FROM THE ATELIER" */}
-        <div className="max-w-5xl mx-auto p-8 md:p-14 rounded-3xl bg-gradient-to-b from-pearl-50 to-champagne-100/40 border border-champagne-300/80 shadow-2xl">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 md:gap-14 items-center">
+        {/* ========================================================================= */}
+        {/* FULL-WIDTH FOUNDER / OWNER SPOTLIGHT HERO CARD (Fitted on Screen)         */}
+        {/* ========================================================================= */}
+        <div className="w-full bg-white/95 p-5 sm:p-7 lg:p-8 rounded-3xl border border-champagne-300/70 shadow-luxury-soft">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 lg:gap-10 items-center">
             
-            {/* High-End Editorial Founder Portrait Panel (5 Cols) */}
+            {/* Owner Picture (5 Cols) */}
             <div className="lg:col-span-5 relative group">
-              <div className="aspect-[4/5] rounded-3xl overflow-hidden bg-sand shadow-luxury-soft border border-champagne-300/70 relative transition-transform duration-500 hover:scale-[1.02]">
+              <div className="aspect-[4/3] sm:aspect-square max-h-[320px] rounded-2xl overflow-hidden bg-sand shadow-lg border border-champagne-300/60 relative">
                 <img
                   src={FOUNDER_INFO.image}
                   alt={FOUNDER_INFO.altText}
                   onError={(e) => {
-                    // Fallback to SVG if webp is not found
                     (e.target as HTMLImageElement).src = FOUNDER_INFO.fallbackImage;
                   }}
-                  className="w-full h-full object-cover filter brightness-[1.01] contrast-[1.01]"
+                  className="w-full h-full object-cover filter brightness-[1.02] contrast-[1.02]"
                   style={{ objectPosition: 'center 20%' }}
                 />
               </div>
 
-              {/* Floating Curator Badge */}
-              <div className="absolute -bottom-4 -right-2 sm:-right-4 p-4 bg-white/95 backdrop-blur-md rounded-2xl shadow-xl border border-champagne-300/80 max-w-[240px] space-y-0.5">
-                <div className="flex items-center gap-1.5 text-[9px] uppercase tracking-widest text-gold-dark font-mono font-semibold">
-                  <MapPin className="w-3 h-3 text-gold-dark shrink-0" />
+              {/* Studio Badge */}
+              <div className="mt-2.5 sm:mt-0 sm:absolute sm:-bottom-4 sm:-right-2 p-3 bg-white/95 backdrop-blur-md rounded-xl shadow-md border border-champagne-300/80 space-y-0.5">
+                <div className="flex items-center gap-1 text-gold-dark font-mono text-[10px] uppercase tracking-wider font-bold">
+                  <MapPin className="w-3 h-3" />
                   <span>{FOUNDER_INFO.location}</span>
                 </div>
-                <p className="font-serif text-xs text-obsidian font-semibold leading-tight">
+                <p className="text-xs font-bold text-obsidian">
                   {FOUNDER_INFO.title}
                 </p>
               </div>
             </div>
 
-            {/* Founder Message & Atelier Narrative (7 Cols) */}
-            <div className="lg:col-span-7 space-y-6 lg:pl-2">
-              <div className="space-y-2">
-                <span className="text-[10px] uppercase tracking-monumental text-gold-dark font-semibold">
-                  {FOUNDER_INFO.subtitle}
-                </span>
-                <h3 className="font-serif-luxury text-3xl sm:text-4xl text-obsidian leading-snug">
-                  {FOUNDER_INFO.quote}
-                </h3>
+            {/* Owner Story Narrative (7 Cols) */}
+            <div className="lg:col-span-7 space-y-3 sm:space-y-4">
+              <div className="space-y-1">
+                <div className="flex items-center gap-2">
+                  <span className="text-[10px] sm:text-[11px] uppercase font-mono tracking-widest text-gold-dark font-bold">
+                    About The Founder
+                  </span>
+                  <span className="w-1.5 h-1.5 rounded-full bg-gold-dark" />
+                  <span className="text-xs italic text-obsidian/60 font-medium">Mumbai Studio Origins</span>
+                </div>
+
+                <h2 className="text-xl sm:text-3xl font-bold text-obsidian uppercase leading-snug">
+                  The Person Behind <span className="italic font-normal text-gold-dark">Celestia</span>.
+                </h2>
               </div>
 
-              <div className="space-y-3 text-xs sm:text-sm text-obsidian/75 font-sans leading-relaxed">
-                <p>{FOUNDER_INFO.storyParagraph1}</p>
-                <p>{FOUNDER_INFO.storyParagraph2}</p>
-              </div>
+              <blockquote className="border-l-2 border-gold-dark pl-3 italic text-xs sm:text-sm text-obsidian/90 font-medium">
+                "{cleanedQuote}"
+              </blockquote>
 
-              <div className="flex flex-wrap gap-4 pt-2">
-                <Link to="/shop">
-                  <MagneticButton variant="primary" size="md">
-                    <span>Discover The Collection</span>
-                    <ArrowRight className="w-4 h-4" />
-                  </MagneticButton>
-                </Link>
+              <p className="text-xs sm:text-sm text-obsidian-soft leading-relaxed">
+                {FOUNDER_INFO.storyParagraph1}
+              </p>
 
+              <p className="text-xs sm:text-sm text-obsidian-soft leading-relaxed">
+                {FOUNDER_INFO.storyParagraph2}
+              </p>
+
+              <div className="pt-1 flex flex-wrap items-center gap-2.5">
                 <a
                   href={BRAND_INFO.instagramUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 px-5 py-3 rounded-full border border-champagne-300/80 text-obsidian text-xs uppercase tracking-widest hover:bg-champagne-100/60 transition-colors"
+                  className="h-10 px-5 rounded-full bg-obsidian text-pearl-100 text-xs uppercase font-bold tracking-wider hover:bg-obsidian-200 transition-all inline-flex items-center gap-2 shadow-md"
                 >
-                  <Instagram className="w-4 h-4 text-champagne-400" />
-                  <span>@celestiaamor.in</span>
+                  <Instagram className="w-3.5 h-3.5 text-champagne-300" />
+                  <span>Follow @celestiaamor.in</span>
                 </a>
+
+                <Link
+                  to="/shop"
+                  className="h-10 px-5 rounded-full border border-champagne-300/80 hover:bg-champagne-100/60 text-obsidian text-xs uppercase font-bold tracking-wider transition-all inline-flex items-center gap-1.5"
+                >
+                  <span>Explore Pieces</span>
+                  <ArrowRight className="w-3.5 h-3.5" />
+                </Link>
               </div>
             </div>
 
+          </div>
+        </div>
+
+        {/* ========================================================================= */}
+        {/* FULL-WIDTH 5 CORE PRINCIPLES GRID                                         */}
+        {/* ========================================================================= */}
+        <div className="space-y-5 pt-2">
+          <div className="text-center space-y-1 pb-1">
+            <span className="text-[10px] sm:text-[11px] uppercase font-mono tracking-widest text-gold-dark font-bold">
+              Our Five Core Principles
+            </span>
+            <h3 className="text-xl sm:text-3xl font-bold text-obsidian uppercase">
+              How We Craft Every Moment
+            </h3>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">
+            {chapters.map((ch) => (
+              <div
+                key={ch.num}
+                className="p-5 rounded-3xl bg-white/90 border border-champagne-300/60 shadow-sm hover:shadow-luxury-soft transition-all duration-300 flex flex-col justify-between"
+              >
+                <div className="space-y-2.5">
+                  <div className="flex items-center justify-between">
+                    <span className="font-mono text-2xl font-light text-gold-dark/60">
+                      {ch.num}
+                    </span>
+                    <span className="text-[9px] uppercase font-mono tracking-widest text-gold-dark font-bold px-2 py-0.5 bg-pearl-50 rounded-full border border-champagne-300/50">
+                      {ch.subtitle}
+                    </span>
+                  </div>
+
+                  <h4 className="text-base font-bold text-obsidian leading-snug">
+                    {ch.title}
+                  </h4>
+
+                  <p className="text-xs text-obsidian/75 leading-relaxed">
+                    {ch.text}
+                  </p>
+                </div>
+
+                <div className="pt-3 mt-3 border-t border-champagne-300/40">
+                  <blockquote className="border-l-2 border-gold-dark pl-2.5 italic text-xs text-obsidian/90">
+                    "{ch.accent}"
+                  </blockquote>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
 
@@ -172,3 +200,5 @@ export const TheWorldPage: React.FC = () => {
     </div>
   );
 };
+
+export default TheWorldPage;

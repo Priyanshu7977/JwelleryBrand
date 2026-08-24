@@ -22,7 +22,7 @@ export const Section08FinalMoment: React.FC = () => {
 
         {/* Large Typography Transition */}
         <div className="space-y-4">
-          <h2 className="font-serif-luxury text-5xl sm:text-7xl md:text-8xl lg:text-9xl text-obsidian font-normal leading-[0.9] tracking-tight uppercase">
+          <h2 className="font-serif-luxury text-4xl sm:text-6xl md:text-7xl lg:text-8xl text-obsidian font-bold leading-[0.95] tracking-tight uppercase">
             redefined <br />
             <span className="italic font-light lowercase text-gold-dark">for all.</span>
           </h2>

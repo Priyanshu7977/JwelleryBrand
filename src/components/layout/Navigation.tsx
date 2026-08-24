@@ -144,7 +144,7 @@ export const Navigation: React.FC = () => {
         onMouseLeave={() => setHoveredMenu(null)}
       >
         <div
-          className={`max-w-7xl mx-auto flex items-center justify-between transition-all duration-300 rounded-full px-3.5 sm:px-6 py-2 sm:py-2.5 ${
+          className={`max-w-7xl mx-auto grid grid-cols-[1fr_auto_1fr] items-center transition-all duration-300 rounded-full px-3.5 sm:px-6 py-2 sm:py-2.5 ${
             isScrolled
               ? 'glass-pearl shadow-luxury-soft border border-champagne-300/80'
               : 'bg-pearl-50/95 backdrop-blur-md border border-champagne-300/70 shadow-sm'
@@ -152,99 +152,99 @@ export const Navigation: React.FC = () => {
         >
           
           {/* ================================================================= */}
-          {/* 1. MOBILE/TABLET LEFT: Visible Dedicated Hamburger Button         */}
+          {/* 1. LEFT SECTION: Mobile Hamburger / Desktop Left Links            */}
           {/* ================================================================= */}
-          <div className="flex items-center lg:hidden">
-            <button
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="w-9 h-9 sm:w-10 sm:h-10 flex items-center justify-center rounded-full bg-champagne-100/70 hover:bg-champagne-200 text-obsidian transition-colors shadow-sm focus:outline-none"
-              aria-label={mobileMenuOpen ? "Close navigation menu" : "Open navigation menu"}
-            >
-              {mobileMenuOpen ? <X className="w-5 h-5 text-obsidian" /> : <Menu className="w-5 h-5 text-obsidian" />}
-            </button>
+          <div className="flex items-center justify-start gap-4 xl:gap-6">
+            {/* Mobile Hamburger Button */}
+            <div className="flex items-center lg:hidden">
+              <button
+                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                className="w-9 h-9 sm:w-10 sm:h-10 flex items-center justify-center rounded-full bg-champagne-100/70 hover:bg-champagne-200 text-obsidian transition-colors shadow-sm focus:outline-none"
+                aria-label={mobileMenuOpen ? "Close navigation menu" : "Open navigation menu"}
+              >
+                {mobileMenuOpen ? <X className="w-5 h-5 text-obsidian" /> : <Menu className="w-5 h-5 text-obsidian" />}
+              </button>
+            </div>
+
+            {/* Desktop Navigation Links */}
+            <nav className="hidden lg:flex items-center gap-5 xl:gap-7">
+              <div
+                className="relative py-2"
+                onMouseEnter={() => setHoveredMenu('shop')}
+              >
+                <NavLink
+                  to="/shop"
+                  className={({ isActive }) =>
+                    `text-[11px] uppercase tracking-widest-luxury transition-colors font-semibold whitespace-nowrap ${
+                      isActive ? 'text-gold-dark font-bold' : 'text-obsidian hover:text-gold-dark'
+                    }`
+                  }
+                >
+                  Shop
+                </NavLink>
+              </div>
+
+              <div
+                className="relative py-2"
+                onMouseEnter={() => setHoveredMenu('collections')}
+              >
+                <NavLink
+                  to="/collections"
+                  className={({ isActive }) =>
+                    `text-[11px] uppercase tracking-widest-luxury transition-colors font-semibold whitespace-nowrap ${
+                      isActive ? 'text-gold-dark font-bold' : 'text-obsidian hover:text-gold-dark'
+                    }`
+                  }
+                >
+                  Collections
+                </NavLink>
+              </div>
+
+              <NavLink
+                to="/gifting"
+                className={({ isActive }) =>
+                  `text-[11px] uppercase tracking-widest-luxury transition-colors font-semibold whitespace-nowrap ${
+                    isActive ? 'text-gold-dark font-bold' : 'text-obsidian hover:text-gold-dark'
+                  }`
+                }
+              >
+                Gifting
+              </NavLink>
+            </nav>
           </div>
 
           {/* ================================================================= */}
-          {/* 2. DESKTOP LEFT: Navigation Links (Shop, Collections, Gifting)   */}
+          {/* 2. CENTER: CELestia Brand Logo & Tagline (Isolated Breathing Room)*/}
           {/* ================================================================= */}
-          <nav className="hidden lg:flex items-center gap-4 xl:gap-6">
-            {/* SHOP with Mega Menu */}
-            <div
-              className="relative py-2"
-              onMouseEnter={() => setHoveredMenu('shop')}
+          <div className="flex flex-col items-center justify-center text-center px-4 sm:px-8">
+            <Link
+              to="/"
+              onClick={handleLogoClick}
+              className="flex flex-col items-center group transition-transform duration-300 hover:scale-[1.02] cursor-pointer"
+              aria-label="Celestia Homepage"
             >
-              <NavLink
-                to="/shop"
-                className={({ isActive }) =>
-                  `text-[11px] uppercase tracking-widest-luxury transition-colors font-semibold whitespace-nowrap ${
-                    isActive ? 'text-gold-dark font-bold' : 'text-obsidian hover:text-gold-dark'
-                  }`
-                }
-              >
-                Shop
-              </NavLink>
-            </div>
-
-            {/* COLLECTIONS with Preview */}
-            <div
-              className="relative py-2"
-              onMouseEnter={() => setHoveredMenu('collections')}
-            >
-              <NavLink
-                to="/collections"
-                className={({ isActive }) =>
-                  `text-[11px] uppercase tracking-widest-luxury transition-colors font-semibold whitespace-nowrap ${
-                    isActive ? 'text-gold-dark font-bold' : 'text-obsidian hover:text-gold-dark'
-                  }`
-                }
-              >
-                Collections
-              </NavLink>
-            </div>
-
-            {/* GIFTING */}
-            <NavLink
-              to="/gifting"
-              className={({ isActive }) =>
-                `text-[11px] uppercase tracking-widest-luxury transition-colors font-semibold whitespace-nowrap ${
-                  isActive ? 'text-gold-dark font-bold' : 'text-obsidian hover:text-gold-dark'
-                }`
-              }
-            >
-              Gifting
-            </NavLink>
-          </nav>
-
-          {/* ================================================================= */}
-          {/* 3. CENTER: CELestia Brand Logo & Tagline                          */}
-          {/* ================================================================= */}
-          <Link
-            to="/"
-            onClick={handleLogoClick}
-            className="flex flex-col items-center group transition-transform duration-300 hover:scale-[1.02] cursor-pointer px-2"
-            aria-label="Celestia Homepage"
-          >
-            <div className="flex items-center gap-1.5">
-              <span
-                className={`font-serif-luxury tracking-[0.14em] font-normal text-obsidian uppercase transition-all duration-300 ${
-                  isScrolled ? 'text-lg sm:text-2xl' : 'text-xl sm:text-2xl md:text-3xl'
-                }`}
-              >
-                CEL<span className="italic font-light lowercase">estia</span>
+              <div className="flex items-center gap-1.5">
+                <span
+                  className={`font-serif-luxury tracking-[0.14em] font-normal text-obsidian uppercase transition-all duration-300 ${
+                    isScrolled ? 'text-lg sm:text-2xl' : 'text-xl sm:text-2xl md:text-3xl'
+                  }`}
+                >
+                  CEL<span className="italic font-light lowercase">estia</span>
+                </span>
+              </div>
+              <span className="text-[7.5px] sm:text-[8.5px] tracking-[0.32em] text-obsidian-soft uppercase font-sans font-medium -mt-0.5 whitespace-nowrap">
+                redefined for all.
               </span>
-            </div>
-            <span className="text-[7.5px] sm:text-[8.5px] tracking-[0.32em] text-obsidian-soft uppercase font-sans font-medium -mt-0.5">
-              redefined for all.
-            </span>
-          </Link>
+            </Link>
+          </div>
 
           {/* ================================================================= */}
-          {/* 4. RIGHT SECTION: Desktop Links & Compact Mobile Utilities        */}
+          {/* 3. RIGHT SECTION: Desktop Links & Compact Utilities               */}
           {/* ================================================================= */}
-          <div className="flex items-center gap-2 sm:gap-4 md:gap-6">
+          <div className="flex items-center justify-end gap-2 sm:gap-3 md:gap-4">
             
-            {/* Desktop Navigation (The World, Community, Contact Us) */}
-            <nav className="hidden lg:flex items-center gap-4 xl:gap-6">
+            {/* Desktop Navigation */}
+            <nav className="hidden lg:flex items-center gap-4 xl:gap-5 mr-1">
               <NavLink
                 to="/the-world"
                 className={({ isActive }) =>
@@ -275,39 +275,39 @@ export const Navigation: React.FC = () => {
                   }`
                 }
               >
-                Contact Us
+                Contact
               </NavLink>
             </nav>
 
-            {/* Utility Icons Group */}
-            <div className="flex items-center gap-1 sm:gap-2">
+            {/* Utility Icons */}
+            <div className="flex items-center gap-1 sm:gap-1.5 shrink-0">
               
               {/* Search Icon */}
               <Link
                 to="/search"
-                className="p-2 text-obsidian/80 hover:text-obsidian hover:bg-champagne-100/60 rounded-full transition-all"
+                className="p-1.5 sm:p-2 text-obsidian/80 hover:text-obsidian hover:bg-champagne-100/60 rounded-full transition-all"
                 aria-label="Search Catalogue"
                 title="Search"
               >
                 <Search className="w-4 h-4" />
               </Link>
 
-              {/* Wishlist Icon with count badge */}
+              {/* Wishlist Icon */}
               <Link
                 to="/wishlist"
-                className="relative p-2 text-obsidian/80 hover:text-obsidian hover:bg-champagne-100/60 rounded-full transition-all"
+                className="relative p-1.5 sm:p-2 text-obsidian/80 hover:text-obsidian hover:bg-champagne-100/60 rounded-full transition-all"
                 aria-label={`Private Wishlist (${wishlistCount} items)`}
                 title="Private Wishlist"
               >
                 <Heart className="w-4 h-4 text-obsidian/80 hover:text-rose-600 transition-colors" />
                 {wishlistCount > 0 && (
-                  <span className="absolute top-1 right-1 w-3.5 h-3.5 rounded-full bg-rose-600 text-white text-[9px] font-bold flex items-center justify-center shadow-sm">
+                  <span className="absolute top-0.5 right-0.5 w-3.5 h-3.5 rounded-full bg-rose-600 text-white text-[9px] font-bold flex items-center justify-center shadow-sm">
                     {wishlistCount}
                   </span>
                 )}
               </Link>
 
-              {/* Account Icon (Visible on all screens) */}
+              {/* Account Icon */}
               <Link
                 to="/account"
                 className="relative p-1.5 sm:p-2 text-obsidian/80 hover:text-obsidian hover:bg-champagne-100/60 rounded-full transition-all"
@@ -316,11 +316,11 @@ export const Navigation: React.FC = () => {
               >
                 <User className="w-4 h-4" />
                 {isAuthenticated && (
-                  <span className="absolute top-1 right-1 w-2 h-2 rounded-full bg-emerald-500 ring-2 ring-pearl-50" />
+                  <span className="absolute top-0.5 right-0.5 w-2 h-2 rounded-full bg-emerald-500 ring-2 ring-pearl-50" />
                 )}
               </Link>
 
-              {/* WhatsApp Concierge (Desktop Only - In mobile drawer on mobile) */}
+              {/* WhatsApp Concierge (Desktop) */}
               <button
                 onClick={() => setIsConciergeOpen(true)}
                 className="hidden sm:flex p-2 text-emerald-800 hover:text-emerald-900 hover:bg-emerald-50 rounded-full transition-all"
@@ -333,7 +333,7 @@ export const Navigation: React.FC = () => {
               {/* Shopping Bag Trigger */}
               <button
                 onClick={() => setIsCartOpen(true)}
-                className="relative flex items-center gap-1.5 bg-obsidian text-pearl-100 px-3 sm:px-3.5 py-1.5 rounded-full text-[10px] sm:text-[11px] uppercase tracking-widest-luxury hover:bg-obsidian-200 transition-all shadow-sm font-bold shrink-0"
+                className="relative flex items-center gap-1.5 bg-obsidian text-pearl-100 px-2.5 sm:px-3.5 py-1.5 rounded-full text-[10px] sm:text-[11px] uppercase tracking-widest-luxury hover:bg-obsidian-200 transition-all shadow-sm font-bold shrink-0 ml-0.5 sm:ml-1"
                 aria-label={`Open Bag (${totalItems} items)`}
               >
                 <ShoppingBag className="w-3.5 h-3.5" />
