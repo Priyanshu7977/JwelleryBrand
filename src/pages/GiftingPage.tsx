@@ -73,7 +73,7 @@ export const GiftingPage: React.FC = () => {
           </h1>
 
           <p className="text-xs text-obsidian/75 leading-relaxed">
-            Curate bespoke memories. Choose your velvet gift box, assemble jewellery, and include a custom retro Polaroid note.
+            Curate your custom celebration gift box. Choose your velvet box, assemble jewellery, and include a personalized retro Polaroid note.
           </p>
 
           {/* Occasion Filter Tabs */}

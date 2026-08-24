@@ -61,13 +61,13 @@ export const CELESTIA_COLLECTIONS: Collection[] = [
   {
     id: 'col-gifting',
     handle: 'custom-gifting',
-    title: 'Bespoke Hampers & Gifting',
+    title: 'Gift Hampers & Boxes',
     subtitle: 'Curated Expressions of Love',
-    editorialNarrative: 'Signature luxury hampers including Desi Barbie, Purple Tulip, and festive celebration boxes tied with satin ribbons.',
+    editorialNarrative: 'Signature luxury gift hampers including Desi Barbie, Purple Tulip, and festive celebration boxes tied with satin ribbons.',
     accentQuote: 'Unboxing is where the magic begins.',
     featuredImage: '/assets/products/desi-barbie-hamper.jpg',
     productCount: 12,
-    tags: ['Custom Ribbon', 'Bespoke Packaging', 'Same-Day Mumbai']
+    tags: ['Custom Ribbon', 'Gift Packaging', 'Same-Day Mumbai']
   },
   {
     id: 'col-personalised',

@@ -78,7 +78,7 @@ export const Section05Gifting: React.FC = () => {
             </h2>
 
             <p className="text-xs sm:text-sm text-obsidian/75 leading-relaxed">
-              Craft a bespoke memory box. Select your keepsake velvet packaging, choose signature adornments, and include a custom printed retro Polaroid.
+              Craft a custom celebration gift box. Select your keepsake velvet packaging, choose signature adornments, and include a personalized printed retro Polaroid.
             </p>
           </div>
         </RevealOnScroll>

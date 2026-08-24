@@ -66,7 +66,7 @@ export const Footer: React.FC = () => {
               </div>
 
               <p className="text-sm text-[#EDE6DA] leading-relaxed max-w-sm">
-                Artisanal bangles, anti-tarnish fine jewellery, and bespoke celebration hampers crafted with tenderness in Mumbai. Dispatched with love across India.
+                Artisanal bangles, anti-tarnish fine jewellery, and custom gift hampers crafted with tenderness in Mumbai. Dispatched with love across India.
               </p>
 
               <div className="flex items-center gap-3 pt-2">

@@ -43,7 +43,7 @@ export const Section03Collections: React.FC = () => {
             </div>
 
             <p className="max-w-md text-xs sm:text-sm text-obsidian-soft leading-relaxed">
-              Move between sculptural fine jewellery, fluid artisanal bangles, and bespoke personalised gifting boxes.
+              Move between sculptural fine jewellery, fluid artisanal bangles, and custom gift hampers.
             </p>
           </div>
         </RevealOnScroll>

@@ -21,7 +21,7 @@ export const ShopPage: React.FC = () => {
     { id: 'all', label: 'All Pieces' },
     { id: 'bangles', label: 'Artisanal Bangles' },
     { id: 'jewellery', label: 'Fine Jewellery' },
-    { id: 'gifting', label: 'Bespoke Hampers' },
+    { id: 'gifting', label: 'Gift Hampers' },
     { id: 'personalised', label: 'Polaroids & Personalised' },
     { id: 'accessories', label: 'Charms & Accessories' },
   ];

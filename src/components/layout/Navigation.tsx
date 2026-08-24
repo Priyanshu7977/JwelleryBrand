@@ -93,9 +93,9 @@ export const Navigation: React.FC = () => {
       url: '/collections/jewellery'
     },
     {
-      title: 'Bespoke Celebration Hampers',
+      title: 'Custom Gift Hampers',
       categorySlug: 'gifting',
-      description: 'Custom velvet keepsake trunks, birthday curations, and wax-sealed retro polaroids.',
+      description: 'Velvet keepsake gift boxes, birthday hampers, and wax-sealed retro polaroids.',
       product: FEATURED_PRODUCTS[1], // desi barbie hamper
       url: '/gifting'
     },
@@ -519,7 +519,7 @@ export const Navigation: React.FC = () => {
                     }`
                   }
                 >
-                  Bespoke Gifting
+                  Gift Hampers
                 </NavLink>
 
                 <NavLink
