@@ -134,17 +134,17 @@ export const Navigation: React.FC = () => {
         <span className="hidden md:inline text-obsidian font-bold">PAN-INDIA FREE EXPRESS DELIVERY &gt; ₹999</span>
       </div>
 
-      {/* Floating Main Header */}
+      {/* Floating Main Header with Exact max-w-7xl & matching px-4 sm:px-6 md:px-10 lg:px-14 */}
       <header
         className={`fixed left-0 right-0 z-50 transition-all duration-500 ${
           isShown ? 'translate-y-0 opacity-100 pointer-events-auto' : '-translate-y-28 opacity-0 pointer-events-none'
         } ${
-          isScrolled ? 'top-1 sm:top-2 px-3 sm:px-6' : 'top-7 sm:top-8 px-3 sm:px-6'
+          isScrolled ? 'top-1 sm:top-2 px-4 sm:px-6 md:px-10 lg:px-14' : 'top-7 sm:top-8 px-4 sm:px-6 md:px-10 lg:px-14'
         }`}
         onMouseLeave={() => setHoveredMenu(null)}
       >
         <div
-          className={`max-w-7xl mx-auto grid grid-cols-[auto_1fr_auto] items-center transition-all duration-300 rounded-full px-3.5 sm:px-6 py-2 sm:py-2.5 ${
+          className={`max-w-7xl mx-auto grid grid-cols-[180px_1fr_180px] xl:grid-cols-[220px_1fr_220px] items-center transition-all duration-300 rounded-full px-4 sm:px-6 py-2 sm:py-2.5 ${
             isScrolled
               ? 'glass-pearl shadow-luxury-soft border border-champagne-300/80'
               : 'bg-pearl-50/95 backdrop-blur-md border border-champagne-300/70 shadow-sm'
@@ -152,9 +152,9 @@ export const Navigation: React.FC = () => {
         >
           
           {/* ================================================================= */}
-          {/* 1. LEFT: Logo at Left Corner                                      */}
+          {/* 1. LEFT COLUMN: Logo at Left Corner                               */}
           {/* ================================================================= */}
-          <div className="flex items-center gap-3 shrink-0">
+          <div className="flex items-center justify-start gap-3">
             
             {/* Mobile Hamburger Button */}
             <div className="flex items-center lg:hidden">
@@ -191,9 +191,9 @@ export const Navigation: React.FC = () => {
           </div>
 
           {/* ================================================================= */}
-          {/* 2. CENTER: Navigation Links Centered in Middle                    */}
+          {/* 2. CENTER COLUMN: Mathematical Center-Aligned Navigation Links     */}
           {/* ================================================================= */}
-          <nav className="hidden lg:flex items-center justify-center gap-5 xl:gap-8 px-4">
+          <nav className="hidden lg:flex items-center justify-center gap-4 xl:gap-6 px-2">
             
             {/* Shop Link with Mega Menu */}
             <div
@@ -279,9 +279,9 @@ export const Navigation: React.FC = () => {
           </nav>
 
           {/* ================================================================= */}
-          {/* 3. RIGHT: Compact Utilities & Bag Trigger                         */}
+          {/* 3. RIGHT COLUMN: Compact Utilities & Bag Trigger                  */}
           {/* ================================================================= */}
-          <div className="flex items-center justify-end gap-1 sm:gap-1.5 md:gap-2 shrink-0">
+          <div className="flex items-center justify-end gap-1 sm:gap-1.5 md:gap-2">
             
             {/* Search Icon */}
             <Link
