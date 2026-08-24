@@ -7,14 +7,10 @@ import { Section05Gifting } from '../components/sections/Section05Gifting';
 import { ThePersonBehindCelestia } from '../components/sections/ThePersonBehindCelestia';
 import { Section07Instagram } from '../components/sections/Section07Instagram';
 import { Section08FinalMoment } from '../components/sections/Section08FinalMoment';
-import { GoldThreadSignature } from '../components/motion/GoldThreadSignature';
 
 export const HomePage: React.FC = () => {
   return (
     <div className="w-full flex-1 relative">
-      {/* Signature Animated Gold Thread Traveling Across Homepage */}
-      <GoldThreadSignature />
-
       {/* 01: Cinematic Product-Led Immersive Opening */}
       <Section01Arrival />
 
@@ -41,3 +37,5 @@ export const HomePage: React.FC = () => {
     </div>
   );
 };
+
+export default HomePage;
