@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Link, NavLink, useLocation } from 'react-router-dom';
 import { 
   ShoppingBag, 
@@ -42,12 +42,29 @@ export const Navigation: React.FC = () => {
     }
   };
 
-  // Check scroll position
+  // Check scroll position and direction for show/hide animation
   const [scrollY, setScrollY] = useState(0);
+  const [isHeaderVisible, setIsHeaderVisible] = useState(true);
+  const lastScrollY = useRef(0);
+
   useEffect(() => {
     const handleScroll = () => {
-      setScrollY(window.scrollY);
-      setIsScrolled(window.scrollY > 30);
+      const currentScrollY = window.scrollY;
+      setScrollY(currentScrollY);
+      setIsScrolled(currentScrollY > 30);
+
+      // At top of page, always keep header visible
+      if (currentScrollY <= 50) {
+        setIsHeaderVisible(true);
+      } else if (currentScrollY > lastScrollY.current + 8) {
+        // Scrolling DOWN -> Header HIDES smoothly
+        setIsHeaderVisible(false);
+      } else if (currentScrollY < lastScrollY.current - 8) {
+        // Scrolling UP -> Header APPEARS smoothly
+        setIsHeaderVisible(true);
+      }
+
+      lastScrollY.current = currentScrollY;
     };
 
     window.addEventListener('scroll', handleScroll, { passive: true });
@@ -59,10 +76,6 @@ export const Navigation: React.FC = () => {
     setMobileMenuOpen(false);
     setHoveredMenu(null);
   }, [location.pathname]);
-
-  // Pure fashion film opening rule: On homepage during film scrubbing (scroll < window.innerHeight * 0.95), hide navigation
-  const isHomePage = location.pathname === '/';
-  const isFilmOpening = isHomePage && scrollY < window.innerHeight * 0.95;
 
   const megaCategories = [
     {
@@ -103,13 +116,14 @@ export const Navigation: React.FC = () => {
   ];
 
   const currentMegaProduct = megaCategories[activeCategoryIndex].product;
+  const isShown = isHeaderVisible || mobileMenuOpen || hoveredMenu !== null;
 
   return (
     <>
       {/* Top Mumbai Studio Announcement Bar */}
       <div
-        className={`fixed top-0 left-0 right-0 z-50 bg-champagne-200 text-obsidian py-1.5 px-3 sm:px-4 text-center text-[10px] sm:text-[11px] tracking-widest uppercase font-mono font-semibold flex items-center justify-center gap-2 sm:gap-3 border-b border-champagne-300 transition-transform duration-500 ${
-          isFilmOpening ? '-translate-y-full opacity-0 pointer-events-none' : 'translate-y-0 opacity-100'
+        className={`fixed top-0 left-0 right-0 z-50 bg-champagne-200 text-obsidian py-1.5 px-3 sm:px-4 text-center text-[10px] sm:text-[11px] tracking-widest uppercase font-mono font-semibold flex items-center justify-center gap-2 sm:gap-3 border-b border-champagne-300 transition-all duration-500 ${
+          isShown ? 'translate-y-0 opacity-100' : '-translate-y-full opacity-0 pointer-events-none'
         }`}
       >
         <span className="flex items-center gap-1">
@@ -123,9 +137,7 @@ export const Navigation: React.FC = () => {
       {/* Floating Main Header */}
       <header
         className={`fixed left-0 right-0 z-50 transition-all duration-500 ${
-          isFilmOpening
-            ? '-translate-y-28 opacity-0 pointer-events-none'
-            : 'translate-y-0 opacity-100'
+          isShown ? 'translate-y-0 opacity-100 pointer-events-auto' : '-translate-y-28 opacity-0 pointer-events-none'
         } ${
           isScrolled ? 'top-1 sm:top-2 px-3 sm:px-6' : 'top-7 sm:top-8 px-3 sm:px-6'
         }`}

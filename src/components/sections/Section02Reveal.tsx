@@ -19,7 +19,7 @@ export const Section02Reveal: React.FC = () => {
   return (
     <section
       id="section-reveal"
-      className="relative w-full pt-8 sm:pt-14 md:pt-20 pb-16 sm:pb-20 md:pb-28 px-4 sm:px-8 md:px-12 lg:px-20 bg-warm-ivory-100 overflow-hidden border-t border-champagne-300/40"
+      className="relative w-full pt-10 sm:pt-14 md:pt-18 pb-20 md:pb-28 px-4 sm:px-8 md:px-12 lg:px-20 bg-warm-ivory-100 overflow-hidden border-t border-champagne-300/40"
     >
       {/* Background Decor */}
       <div className="absolute inset-0 bg-noise opacity-30 pointer-events-none" />
