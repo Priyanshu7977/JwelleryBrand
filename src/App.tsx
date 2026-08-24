@@ -58,26 +58,26 @@ const ToastNotification: React.FC = () => {
 
 const AppShell: React.FC = () => {
   useEffect(() => {
-    // Initialize fast, responsive Lenis momentum scrolling
+    // Lenis Smooth Scrolling Engine
     const lenis = new Lenis({
       duration: 0.8,
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
       orientation: 'vertical',
       gestureOrientation: 'vertical',
       smoothWheel: true,
-      wheelMultiplier: 1.1,
-      touchMultiplier: 1.4,
+      wheelMultiplier: 1.0,
+      touchMultiplier: 1.5,
+      infinite: false,
     });
 
-    let rafId: number;
     function raf(time: number) {
       lenis.raf(time);
-      rafId = requestAnimationFrame(raf);
+      requestAnimationFrame(raf);
     }
-    rafId = requestAnimationFrame(raf);
+
+    requestAnimationFrame(raf);
 
     return () => {
-      cancelAnimationFrame(rafId);
       lenis.destroy();
     };
   }, []);
@@ -85,7 +85,7 @@ const AppShell: React.FC = () => {
   return (
     <Router>
       <ScrollToTop />
-      {/* Cinematic Route Transition Curtain */}
+      {/* Route Transition Page Wipe */}
       <RouteTransition />
 
       {/* Product-to-Bag Golden Particle Fly Animation */}
@@ -109,6 +109,7 @@ const AppShell: React.FC = () => {
             <Route path="/collections" element={<CollectionsPage />} />
             <Route path="/collections/:handle" element={<CollectionDetailPage />} />
             <Route path="/product/:handle" element={<ProductDetailPage />} />
+            <Route path="/products/:handle" element={<ProductDetailPage />} />
             <Route path="/gifting" element={<GiftingPage />} />
             <Route path="/the-world" element={<TheWorldPage />} />
             <Route path="/about" element={<TheWorldPage />} />
@@ -141,22 +142,22 @@ const AppShell: React.FC = () => {
           </Routes>
         </main>
 
-        {/* Architectural Atelier Footer */}
-        <Footer />
-
-        {/* Global Drawers, Modals & Toast */}
-        <CelestiaEntranceModal />
+        {/* Global Drawers & Modals */}
         <CartDrawer />
         <QuickViewModal />
         <SearchModal />
         <ConciergeModal />
+        <CelestiaEntranceModal />
         <ToastNotification />
+
+        {/* Global Progressive Footer */}
+        <Footer />
       </div>
     </Router>
   );
 };
 
-export const App: React.FC = () => {
+export function App() {
   return (
     <AuthProvider>
       <CartProvider>
@@ -164,6 +165,6 @@ export const App: React.FC = () => {
       </CartProvider>
     </AuthProvider>
   );
-};
+}
 
 export default App;

@@ -15,7 +15,11 @@ import {
   Copy,
   ArrowUpRight,
   ChevronDown,
+  Navigation as NavigationIcon,
+  ShieldCheck,
+  HelpCircle,
 } from 'lucide-react';
+import { RevealOnScroll } from '../components/motion/RevealOnScroll';
 
 export const ContactPage: React.FC = () => {
   const { showToast } = useCart();
@@ -30,7 +34,7 @@ export const ContactPage: React.FC = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [copiedField, setCopiedField] = useState<string | null>(null);
-  const [activeFaq, setActiveFaq] = useState<number | null>(null);
+  const [activeFaq, setActiveFaq] = useState<number | null>(0); // First open by default
 
   const handleCopy = (text: string, label: string) => {
     try {
@@ -83,279 +87,318 @@ export const ContactPage: React.FC = () => {
     },
     {
       q: "How do I share photos for custom Polaroids or bespoke hampers?",
-      a: "After placing your order or sending an inquiry, our concierge sends you a private WhatsApp upload link where you can share your high-res photos."
+      a: "After placing your order or sending an inquiry, our concierge sends you a private WhatsApp upload link where you can share your high-res photos for instant custom archival printing."
+    },
+    {
+      q: "Can I customise hamper gift box colors and personal ribbon engravings?",
+      a: "Yes! Every celebration hamper allows you to choose your velvet keepsake box color, double-satin ribbon tone, and custom wax-sealed calligraphy card."
     }
   ];
 
   return (
-    <div className="w-full min-h-screen bg-pearl-100 pt-20 sm:pt-24 md:pt-28 pb-16 px-4 sm:px-6 md:px-10 lg:px-14 selection:bg-champagne-300 overflow-x-hidden relative">
+    <div className="w-full min-h-screen bg-pearl-100 pt-28 sm:pt-32 pb-20 px-4 sm:px-6 md:px-10 lg:px-14 selection:bg-champagne-300 overflow-x-hidden relative">
+      {/* Background Ambience */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
         <div className="absolute top-20 left-1/2 -translate-x-1/2 w-[450px] sm:w-[650px] h-[280px] sm:h-[400px] bg-champagne-200/25 rounded-full blur-3xl" />
       </div>
 
       <div className="w-full max-w-7xl mx-auto space-y-8 sm:space-y-10 relative z-10">
         
-        {/* Compact Editorial Header */}
-        <div className="text-center space-y-1.5 max-w-xl mx-auto">
-          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/90 border border-champagne-300/80 text-[10px] sm:text-[11px] uppercase font-mono tracking-widest text-gold-dark font-bold shadow-sm">
-            <Sparkles className="w-3.5 h-3.5 text-gold-dark" />
-            <span>Atelier Desk • Mumbai</span>
-          </div>
+        {/* ========================================================================= */}
+        {/* 1ST SECTION: PHYSICAL ATELIER GOOGLE MAP & DIRECT REACH CHANNELS          */}
+        {/* ========================================================================= */}
+        <RevealOnScroll direction="up" delay={0}>
+          <div className="w-full bg-white/95 rounded-3xl border border-champagne-300/70 shadow-luxury-soft overflow-hidden p-5 sm:p-7 space-y-6">
+            
+            {/* Map Header & Directions CTA */}
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-champagne-300/40 pb-4">
+              <div className="space-y-1">
+                <div className="flex items-center gap-2 text-gold-dark font-mono text-[10px] sm:text-[11px] uppercase tracking-wider font-bold">
+                  <MapPin className="w-3.5 h-3.5" />
+                  <span>Physical Atelier Location • Mumbai MMXXVI</span>
+                </div>
+                <h1 className="text-2xl sm:text-4xl font-bold text-obsidian uppercase">
+                  Bandra West Studio, <span className="italic font-normal text-gold-dark">Mumbai</span>
+                </h1>
+                <p className="text-xs text-obsidian-soft">
+                  Bandra West, Mumbai, Maharashtra 400050, India • Open Daily: 10:00 AM – 8:00 PM IST
+                </p>
+              </div>
 
-          <h1 className="text-3xl sm:text-5xl md:text-6xl text-obsidian font-bold uppercase leading-tight">
-            CONTACT <span className="italic font-normal text-gold-dark lowercase">us</span>.
-          </h1>
-
-          <p className="text-xs sm:text-sm text-obsidian/75 leading-relaxed">
-            Have a question regarding custom hampers, sizing, or urgent Mumbai dispatch? Connect directly with our atelier team.
-          </p>
-        </div>
-
-        {/* 2-Column Contact Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 items-start">
-          
-          {/* Left Column: Direct Channels (5 cols) */}
-          <div className="lg:col-span-5 space-y-3.5">
-            <div className="space-y-1">
-              <span className="text-[10px] sm:text-[11px] uppercase font-mono tracking-widest text-gold-dark font-bold">
-                Get In Touch
-              </span>
-              <h2 className="text-xl sm:text-2xl font-bold text-obsidian uppercase">
-                DIRECT <span className="italic font-normal text-gold-dark">Channels</span>.
-              </h2>
+              <a
+                href="https://maps.google.com/?q=Bandra+West,+Mumbai,+Maharashtra+400050"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn-primary h-11 px-6 text-xs uppercase font-bold tracking-wider inline-flex items-center justify-center gap-2 shadow-md hover:shadow-lg active:scale-[0.98] transition-all shrink-0 self-start sm:self-auto"
+              >
+                <NavigationIcon className="w-3.5 h-3.5" />
+                <span>Get Directions</span>
+                <ArrowUpRight className="w-3.5 h-3.5 opacity-70" />
+              </a>
             </div>
 
-            {/* Channels */}
-            <div className="space-y-2.5">
-              {/* WhatsApp Card */}
-              <div className="p-3 sm:p-3.5 rounded-2xl bg-white border border-emerald-300/60 shadow-sm flex items-center justify-between gap-3">
-                <div className="flex items-center gap-3 min-w-0 flex-1">
-                  <div className="w-9 h-9 rounded-xl bg-emerald-50 text-emerald-800 flex items-center justify-center shrink-0">
+            {/* Embedded Interactive Google Map */}
+            <div className="w-full h-[300px] sm:h-[380px] md:h-[420px] rounded-2xl overflow-hidden border border-champagne-300/60 bg-sand/30 relative shadow-inner">
+              <iframe
+                title="Celestia Atelier Mumbai Location Map"
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d30164.717145293214!2d72.81898748367503!3d19.05955963782787!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3be7c8e123f8d27b%3A0x437996b49a236a78!2sBandra%20West%2C%20Mumbai%2C%20Maharashtra!5e0!3m2!1sen!2sin!4v1700000000000!5m2!1sen!2sin"
+                width="100%"
+                height="100%"
+                style={{ border: 0, filter: 'contrast(1.02) saturate(0.95)' }}
+                allowFullScreen={false}
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+                className="w-full h-full"
+              />
+
+              {/* Floating Studio Info Pill */}
+              <div className="absolute bottom-3 left-3 sm:bottom-4 sm:left-4 p-3.5 rounded-xl bg-obsidian/90 backdrop-blur-md text-pearl-50 border border-champagne-400/40 text-xs shadow-xl max-w-sm space-y-1 pointer-events-none">
+                <div className="flex items-center gap-1.5 font-bold text-champagne-300 font-mono text-[10px] uppercase tracking-wider">
+                  <Sparkles className="w-3 h-3" />
+                  <span>Celestia Studio & Atelier</span>
+                </div>
+                <p className="text-[11px] text-pearl-100 leading-snug">
+                  Bandra West, Mumbai 400050 • Same-Day Mumbai Express Dispatch Ready
+                </p>
+              </div>
+            </div>
+
+            {/* Direct Channels Quick Bar below Map */}
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-2">
+              {/* WhatsApp */}
+              <a
+                href={BRAND_INFO.whatsappUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="p-3.5 rounded-2xl bg-emerald-50/70 border border-emerald-300/70 hover:bg-emerald-100/80 transition-all flex items-center justify-between group"
+              >
+                <div className="flex items-center gap-3">
+                  <div className="w-9 h-9 rounded-xl bg-emerald-800 text-pearl-100 flex items-center justify-center shrink-0 shadow-sm">
                     <MessageCircle className="w-4 h-4" />
                   </div>
-                  <div className="min-w-0 flex-1">
-                    <span className="text-[10px] uppercase font-mono font-bold text-emerald-800 block">
+                  <div>
+                    <span className="text-[10px] uppercase font-mono font-bold text-emerald-900 block">
                       WhatsApp Concierge
                     </span>
-                    <span className="text-xs font-mono font-bold text-obsidian truncate block">
+                    <span className="text-xs font-mono font-bold text-obsidian block">
                       {BRAND_INFO.whatsapp}
                     </span>
                   </div>
                 </div>
+                <ArrowUpRight className="w-4 h-4 text-emerald-800 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+              </a>
 
-                <div className="flex items-center gap-1 shrink-0">
-                  <button
-                    type="button"
-                    onClick={() => handleCopy(BRAND_INFO.whatsapp, 'WhatsApp Number')}
-                    className="w-8 h-8 rounded-lg flex items-center justify-center text-obsidian/60 hover:text-obsidian hover:bg-pearl-100 transition-colors"
-                    title="Copy number"
-                  >
-                    {copiedField === 'WhatsApp Number' ? <Check className="w-3.5 h-3.5 text-emerald-600" /> : <Copy className="w-3.5 h-3.5" />}
-                  </button>
-                  <a
-                    href={BRAND_INFO.whatsappUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="w-8 h-8 rounded-lg bg-emerald-800 hover:bg-emerald-900 text-pearl-100 flex items-center justify-center transition-colors shadow-sm"
-                  >
-                    <ArrowUpRight className="w-3.5 h-3.5" />
-                  </a>
-                </div>
-              </div>
-
-              {/* Email Card */}
-              <div className="p-3 sm:p-3.5 rounded-2xl bg-white border border-champagne-300/60 shadow-sm flex items-center justify-between gap-3">
-                <div className="flex items-center gap-3 min-w-0 flex-1">
-                  <div className="w-9 h-9 rounded-xl bg-amber-50 text-gold-dark flex items-center justify-center shrink-0">
+              {/* Email */}
+              <a
+                href={`mailto:${BRAND_INFO.email}`}
+                className="p-3.5 rounded-2xl bg-amber-50/70 border border-amber-300/70 hover:bg-amber-100/80 transition-all flex items-center justify-between group"
+              >
+                <div className="flex items-center gap-3">
+                  <div className="w-9 h-9 rounded-xl bg-gold-dark text-pearl-100 flex items-center justify-center shrink-0 shadow-sm">
                     <Mail className="w-4 h-4" />
                   </div>
-                  <div className="min-w-0 flex-1">
-                    <span className="text-[10px] uppercase font-mono font-bold text-gold-dark block">
-                      Email Inquiry
+                  <div>
+                    <span className="text-[10px] uppercase font-mono font-bold text-amber-900 block">
+                      Email Atelier
                     </span>
-                    <span className="text-xs font-mono font-bold text-obsidian truncate block">
+                    <span className="text-xs font-mono font-bold text-obsidian block truncate max-w-[150px]">
                       {BRAND_INFO.email}
                     </span>
                   </div>
                 </div>
+                <ArrowUpRight className="w-4 h-4 text-gold-dark group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+              </a>
 
-                <div className="flex items-center gap-1 shrink-0">
-                  <button
-                    type="button"
-                    onClick={() => handleCopy(BRAND_INFO.email, 'Email Address')}
-                    className="w-8 h-8 rounded-lg flex items-center justify-center text-obsidian/60 hover:text-obsidian hover:bg-pearl-100 transition-colors"
-                  >
-                    {copiedField === 'Email Address' ? <Check className="w-3.5 h-3.5 text-emerald-600" /> : <Copy className="w-3.5 h-3.5" />}
-                  </button>
-                  <a
-                    href={`mailto:${BRAND_INFO.email}`}
-                    className="w-8 h-8 rounded-lg bg-obsidian text-pearl-100 flex items-center justify-center hover:bg-obsidian-200 transition-colors shadow-sm"
-                  >
-                    <ArrowUpRight className="w-3.5 h-3.5" />
-                  </a>
-                </div>
-              </div>
-
-              {/* Phone Card */}
-              <div className="p-3 sm:p-3.5 rounded-2xl bg-white border border-champagne-300/60 shadow-sm flex items-center justify-between gap-3">
-                <div className="flex items-center gap-3 min-w-0 flex-1">
-                  <div className="w-9 h-9 rounded-xl bg-champagne-100 text-obsidian flex items-center justify-center shrink-0">
+              {/* Phone */}
+              <a
+                href={`tel:${BRAND_INFO.phone}`}
+                className="p-3.5 rounded-2xl bg-pearl-50 border border-champagne-300/80 hover:bg-champagne-100/80 transition-all flex items-center justify-between group"
+              >
+                <div className="flex items-center gap-3">
+                  <div className="w-9 h-9 rounded-xl bg-obsidian text-pearl-100 flex items-center justify-center shrink-0 shadow-sm">
                     <Phone className="w-4 h-4" />
                   </div>
-                  <div className="min-w-0 flex-1">
+                  <div>
                     <span className="text-[10px] uppercase font-mono font-bold text-obsidian/70 block">
-                      Atelier Helpline
+                      Direct Helpline
                     </span>
-                    <span className="text-xs font-mono font-bold text-obsidian truncate block">
+                    <span className="text-xs font-mono font-bold text-obsidian block">
                       {BRAND_INFO.phone}
                     </span>
                   </div>
                 </div>
+                <ArrowUpRight className="w-4 h-4 text-obsidian group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+              </a>
+            </div>
 
-                <div className="flex items-center gap-1 shrink-0">
-                  <button
-                    type="button"
-                    onClick={() => handleCopy(BRAND_INFO.phone, 'Phone Number')}
-                    className="w-8 h-8 rounded-lg flex items-center justify-center text-obsidian/60 hover:text-obsidian hover:bg-pearl-100 transition-colors"
-                  >
-                    {copiedField === 'Phone Number' ? <Check className="w-3.5 h-3.5 text-emerald-600" /> : <Copy className="w-3.5 h-3.5" />}
-                  </button>
-                  <a
-                    href={`tel:${BRAND_INFO.phone}`}
-                    className="w-8 h-8 rounded-lg bg-obsidian text-pearl-100 flex items-center justify-center hover:bg-obsidian-200 transition-colors shadow-sm"
-                  >
-                    <ArrowUpRight className="w-3.5 h-3.5" />
-                  </a>
-                </div>
+          </div>
+        </RevealOnScroll>
+
+        {/* ========================================================================= */}
+        {/* 2ND SECTION: SEND A MESSAGE FORM (2nd on page)                            */}
+        {/* ========================================================================= */}
+        <RevealOnScroll direction="up" delay={100}>
+          <div className="w-full grid grid-cols-1 lg:grid-cols-12 gap-8 items-center bg-white/95 p-6 sm:p-8 lg:p-10 rounded-3xl border border-champagne-300/60 shadow-luxury-soft">
+            
+            {/* Left Narrative & Response Promise (5 cols) */}
+            <div className="lg:col-span-5 space-y-4">
+              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-champagne-100 border border-champagne-300/80 text-[10px] sm:text-[11px] uppercase font-mono tracking-widest text-gold-dark font-bold">
+                <Sparkles className="w-3.5 h-3.5 text-gold-dark" />
+                <span>Atelier Concierge Desk</span>
               </div>
 
-              {/* Studio Location Card */}
-              <div className="p-3 sm:p-3.5 rounded-2xl bg-white border border-champagne-300/60 shadow-sm flex items-center gap-3">
-                <div className="w-9 h-9 rounded-xl bg-champagne-100 text-obsidian flex items-center justify-center shrink-0">
-                  <MapPin className="w-4 h-4 text-gold-dark" />
+              <h2 className="text-2xl sm:text-4xl font-bold text-obsidian uppercase leading-tight">
+                SEND A <span className="italic font-normal text-gold-dark">Message</span>.
+              </h2>
+
+              <p className="text-xs sm:text-sm text-obsidian-soft leading-relaxed">
+                Have a question regarding custom hampers, sizing, bulk orders, or urgent Mumbai dispatch? Leave us a note and our Bandra studio concierge will get back to you promptly.
+              </p>
+
+              <div className="space-y-2 pt-2 border-t border-champagne-300/40 text-xs">
+                <div className="flex items-center gap-2 text-obsidian">
+                  <Clock className="w-4 h-4 text-gold-dark shrink-0" />
+                  <span className="font-medium">Average response time: <strong>Under 2 hours</strong> during studio hours</span>
                 </div>
-                <div>
-                  <span className="text-[10px] uppercase font-mono font-bold text-obsidian/70 block">
-                    Celestia Atelier & Studio
-                  </span>
-                  <span className="text-xs text-obsidian font-medium">
-                    Bandra West, Mumbai, Maharashtra 400050, India
-                  </span>
+                <div className="flex items-center gap-2 text-obsidian">
+                  <ShieldCheck className="w-4 h-4 text-gold-dark shrink-0" />
+                  <span className="font-medium">Direct personal assistance from our founder & design team</span>
                 </div>
               </div>
             </div>
-          </div>
 
-          {/* Right Column: Send A Message Form (7 cols) */}
-          <div className="lg:col-span-7 bg-white/95 p-5 sm:p-7 rounded-3xl border border-champagne-300/60 shadow-luxury-soft space-y-4">
-            <div className="space-y-0.5">
-              <h2 className="text-xl sm:text-2xl font-bold text-obsidian uppercase">
-                SEND A <span className="italic font-normal text-gold-dark">Message</span>.
-              </h2>
-              <p className="text-xs text-obsidian-soft">
-                Leave us a note and we will get back to you promptly.
+            {/* Right Message Form (7 cols) */}
+            <div className="lg:col-span-7">
+              <form onSubmit={handleSubmit} className="space-y-3.5">
+                <div className="space-y-1">
+                  <label className="text-[11px] uppercase font-mono font-bold text-obsidian/80">Full Name *</label>
+                  <input
+                    type="text"
+                    value={formData.name}
+                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                    placeholder="Your Name"
+                    required
+                    className="w-full px-4 py-2.5 rounded-xl bg-pearl-50 border border-champagne-300/70 text-xs text-obsidian focus:outline-none focus:border-gold-dark transition-all"
+                  />
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+                  <div className="space-y-1">
+                    <label className="text-[11px] uppercase font-mono font-bold text-obsidian/80">Email Address *</label>
+                    <input
+                      type="email"
+                      value={formData.email}
+                      onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                      placeholder="you@example.com"
+                      required
+                      className="w-full px-4 py-2.5 rounded-xl bg-pearl-50 border border-champagne-300/70 text-xs text-obsidian focus:outline-none focus:border-gold-dark transition-all"
+                    />
+                  </div>
+
+                  <div className="space-y-1">
+                    <label className="text-[11px] uppercase font-mono font-bold text-obsidian/80">Phone / WhatsApp</label>
+                    <input
+                      type="tel"
+                      value={formData.phone}
+                      onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                      placeholder="+91 98765 43210"
+                      className="w-full px-4 py-2.5 rounded-xl bg-pearl-50 border border-champagne-300/70 text-xs text-obsidian focus:outline-none focus:border-gold-dark transition-all"
+                    />
+                  </div>
+                </div>
+
+                <div className="space-y-1">
+                  <label className="text-[11px] uppercase font-mono font-bold text-obsidian/80">Message *</label>
+                  <textarea
+                    value={formData.message}
+                    onChange={(e) => setFormData({ ...formData, message: e.target.value })}
+                    placeholder="How can our atelier help you today?"
+                    required
+                    rows={3}
+                    className="w-full px-4 py-2.5 rounded-xl bg-pearl-50 border border-champagne-300/70 text-xs text-obsidian focus:outline-none focus:border-gold-dark resize-none font-sans transition-all"
+                  />
+                </div>
+
+                <button
+                  type="submit"
+                  disabled={isSubmitting}
+                  className="btn-primary w-full h-11 flex items-center justify-center gap-2 text-xs uppercase font-bold tracking-widest shadow-md hover:shadow-lg active:scale-[0.98] transition-all"
+                >
+                  {isSubmitting ? (
+                    <span>Sending Message...</span>
+                  ) : isSubmitted ? (
+                    <span>Sent Successfully! ✨</span>
+                  ) : (
+                    <>
+                      <Send className="w-3.5 h-3.5" />
+                      <span>Send Message to Atelier</span>
+                    </>
+                  )}
+                </button>
+              </form>
+            </div>
+
+          </div>
+        </RevealOnScroll>
+
+        {/* ========================================================================= */}
+        {/* 3RD SECTION: FAQS IN 1 CONTINUOUS SECTION (Full Width 1-Column Stack)     */}
+        {/* ========================================================================= */}
+        <RevealOnScroll direction="up" delay={150}>
+          <div className="w-full bg-white/95 rounded-3xl border border-champagne-300/60 shadow-luxury-soft p-6 sm:p-8 lg:p-10 space-y-6">
+            
+            {/* FAQs Header */}
+            <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-3 border-b border-champagne-300/40 pb-4">
+              <div className="space-y-1">
+                <div className="inline-flex items-center gap-1.5 text-gold-dark font-mono text-[10px] sm:text-[11px] uppercase tracking-wider font-bold">
+                  <HelpCircle className="w-3.5 h-3.5" />
+                  <span>Frequently Asked Questions</span>
+                </div>
+                <h3 className="text-2xl sm:text-3xl font-bold text-obsidian uppercase">
+                  ATELIER <span className="italic font-normal text-gold-dark">Knowledge & Help</span>.
+                </h3>
+              </div>
+              <p className="text-xs text-obsidian-soft max-w-md">
+                Common inquiries regarding bespoke hampers, sizing, anti-tarnish warranty, and Mumbai express deliveries.
               </p>
             </div>
 
-            <form onSubmit={handleSubmit} className="space-y-3">
-              <div className="space-y-1">
-                <label className="text-[11px] uppercase font-mono font-bold text-obsidian/80">Full Name *</label>
-                <input
-                  type="text"
-                  value={formData.name}
-                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                  placeholder="Your Name"
-                  required
-                  className="w-full px-3.5 py-2 rounded-xl bg-pearl-50 border border-champagne-300/70 text-xs text-obsidian focus:outline-none focus:border-gold-dark"
-                />
-              </div>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                <div className="space-y-1">
-                  <label className="text-[11px] uppercase font-mono font-bold text-obsidian/80">Email Address *</label>
-                  <input
-                    type="email"
-                    value={formData.email}
-                    onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                    placeholder="you@example.com"
-                    required
-                    className="w-full px-3.5 py-2 rounded-xl bg-pearl-50 border border-champagne-300/70 text-xs text-obsidian focus:outline-none focus:border-gold-dark"
-                  />
-                </div>
-
-                <div className="space-y-1">
-                  <label className="text-[11px] uppercase font-mono font-bold text-obsidian/80">Phone / WhatsApp</label>
-                  <input
-                    type="tel"
-                    value={formData.phone}
-                    onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                    placeholder="+91 98765 43210"
-                    className="w-full px-3.5 py-2 rounded-xl bg-pearl-50 border border-champagne-300/70 text-xs text-obsidian focus:outline-none focus:border-gold-dark"
-                  />
-                </div>
-              </div>
-
-              <div className="space-y-1">
-                <label className="text-[11px] uppercase font-mono font-bold text-obsidian/80">Message *</label>
-                <textarea
-                  value={formData.message}
-                  onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                  placeholder="How can we help you today?"
-                  required
-                  rows={3}
-                  className="w-full px-3.5 py-2 rounded-xl bg-pearl-50 border border-champagne-300/70 text-xs text-obsidian focus:outline-none focus:border-gold-dark resize-none font-sans"
-                />
-              </div>
-
-              <button
-                type="submit"
-                disabled={isSubmitting}
-                className="btn-primary w-full h-11 flex items-center justify-center gap-2 text-xs uppercase font-bold tracking-widest shadow-md"
-              >
-                {isSubmitting ? (
-                  <span>Sending Message...</span>
-                ) : isSubmitted ? (
-                  <span>Sent Successfully! ✨</span>
-                ) : (
-                  <>
-                    <Send className="w-3.5 h-3.5" />
-                    <span>Send Message to Atelier</span>
-                  </>
-                )}
-              </button>
-            </form>
-          </div>
-
-        </div>
-
-        {/* FAQs Accordion */}
-        <div className="space-y-3 pt-6 border-t border-champagne-300/40">
-          <h3 className="text-center text-xs uppercase font-mono tracking-widest text-gold-dark font-bold">
-            Frequently Asked Questions
-          </h3>
-
-          <div className="max-w-2xl mx-auto space-y-2">
-            {faqs.map((faq, idx) => (
-              <div
-                key={idx}
-                className="bg-white/90 rounded-2xl border border-champagne-300/60 overflow-hidden"
-              >
-                <button
-                  onClick={() => setActiveFaq(activeFaq === idx ? null : idx)}
-                  className="w-full p-3.5 text-left flex items-center justify-between text-xs sm:text-sm font-bold text-obsidian"
-                >
-                  <span>{faq.q}</span>
-                  <ChevronDown className={`w-4 h-4 transition-transform ${activeFaq === idx ? 'rotate-180 text-gold-dark' : 'text-obsidian/60'}`} />
-                </button>
-                {activeFaq === idx && (
-                  <div className="px-3.5 pb-3.5 text-xs text-obsidian-soft leading-relaxed border-t border-champagne-300/40 pt-2">
-                    {faq.a}
+            {/* 1 Single Continuous Column FAQ List */}
+            <div className="space-y-3">
+              {faqs.map((faq, idx) => {
+                const isOpen = activeFaq === idx;
+                return (
+                  <div
+                    key={idx}
+                    className={`rounded-2xl border transition-all duration-300 overflow-hidden ${
+                      isOpen
+                        ? 'border-gold-dark bg-champagne-50/50 shadow-sm'
+                        : 'border-champagne-300/60 bg-pearl-50/70 hover:bg-white'
+                    }`}
+                  >
+                    <button
+                      onClick={() => setActiveFaq(isOpen ? null : idx)}
+                      className="w-full p-4 sm:p-5 text-left flex items-center justify-between gap-4 text-xs sm:text-sm font-bold text-obsidian transition-colors"
+                    >
+                      <span className="leading-snug">{faq.q}</span>
+                      <ChevronDown
+                        className={`w-4 h-4 shrink-0 transition-transform duration-300 ${
+                          isOpen ? 'rotate-180 text-gold-dark' : 'text-obsidian/60'
+                        }`}
+                      />
+                    </button>
+                    {isOpen && (
+                      <div className="px-4 sm:px-5 pb-4 sm:pb-5 text-xs sm:text-sm text-obsidian-soft leading-relaxed border-t border-champagne-300/40 pt-3">
+                        {faq.a}
+                      </div>
+                    )}
                   </div>
-                )}
-              </div>
-            ))}
+                );
+              })}
+            </div>
+
           </div>
-        </div>
+        </RevealOnScroll>
 
       </div>
     </div>

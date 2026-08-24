@@ -106,14 +106,14 @@
 }
 
 .type-body-md {
-  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-family: 'Montserrat', sans-serif;
   font-size: 0.9375rem; /* 15px */
   line-height: 1.65;
   color: #423C36;
 }
 
 .type-body-sm {
-  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-family: 'Montserrat', sans-serif;
   font-size: 0.8125rem; /* 13px */
   line-height: 1.5;
   color: #5C544D;
@@ -136,26 +136,28 @@
   color: #5C544D;
 }
 
-/* Global Button System */
+/* Global Button System with Signature Micro-Interactions */
 .btn-primary {
-  height: 50px;
-  padding-left: 2rem;
-  padding-right: 2rem;
+  height: 48px;
+  padding-left: 1.75rem;
+  padding-right: 1.75rem;
   border-radius: 9999px;
   background-color: #1E1A17;
   color: #FAF7F0;
-  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-family: 'Montserrat', sans-serif;
   font-size: 0.8125rem;
   text-transform: uppercase;
-  letter-spacing: 0.18em;
+  letter-spacing: 0.16em;
   font-weight: 700;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 0.625rem;
   box-shadow: 0 4px 14px rgba(30, 26, 23, 0.14);
-  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
   flex-shrink: 0;
+  position: relative;
+  overflow: hidden;
 }
 
 .btn-primary:hover {
@@ -169,23 +171,23 @@
 }
 
 .btn-secondary {
-  height: 50px;
-  padding-left: 2rem;
-  padding-right: 2rem;
+  height: 48px;
+  padding-left: 1.75rem;
+  padding-right: 1.75rem;
   border-radius: 9999px;
   border: 1.5px solid rgba(194, 168, 117, 0.8);
   background-color: rgba(251, 249, 245, 0.95);
   color: #1E1A17;
-  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-family: 'Montserrat', sans-serif;
   font-size: 0.8125rem;
   text-transform: uppercase;
-  letter-spacing: 0.18em;
+  letter-spacing: 0.16em;
   font-weight: 700;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 0.625rem;
-  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
   flex-shrink: 0;
 }
 
@@ -193,6 +195,7 @@
   background-color: #F3EBDB;
   border-color: #7A5B28;
   transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(122, 91, 40, 0.12);
 }
 
 .btn-secondary:active {
@@ -204,7 +207,7 @@
   padding-left: 1.25rem;
   padding-right: 1.25rem;
   border-radius: 9999px;
-  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-family: 'Montserrat', sans-serif;
   font-size: 0.75rem;
   text-transform: uppercase;
   letter-spacing: 0.1em;
@@ -322,6 +325,106 @@
 
 .image-zoom-container:hover img {
   transform: scale(1.05);
+}
+
+/* ==========================================================================
+   CELESTIA SIGNATURE MOTION SYSTEM
+   ========================================================================== */
+
+/* 1. Luxury Light Sheen Sweep Across Jewellery Cards */
+.luxury-sheen {
+  position: relative;
+  overflow: hidden;
+}
+
+.luxury-sheen::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -150%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    105deg,
+    transparent 20%,
+    rgba(255, 255, 255, 0.35) 50%,
+    transparent 80%
+  );
+  pointer-events: none;
+  opacity: 0;
+  transition: left 0.9s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.4s ease;
+}
+
+.luxury-sheen:hover::after {
+  left: 150%;
+  opacity: 1;
+}
+
+/* 2. Warm Jewellery Spotlight Bloom (Behind Fine Jewellery) */
+.jewellery-spotlight {
+  position: relative;
+}
+
+.jewellery-spotlight::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 80%;
+  height: 80%;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(216, 195, 154, 0.28) 0%, rgba(216, 195, 154, 0.08) 50%, transparent 75%);
+  pointer-events: none;
+  filter: blur(28px);
+  z-index: 0;
+  animation: warmBloomPulse 6s ease-in-out infinite alternate;
+}
+
+@keyframes warmBloomPulse {
+  0% {
+    transform: translate(-50%, -50%) scale(0.92);
+    opacity: 0.6;
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(1.08);
+    opacity: 0.95;
+  }
+}
+
+/* 3. Subtle Luxury Floating */
+@keyframes subtleFloat {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-5px);
+  }
+}
+
+.animate-subtle-float {
+  animation: subtleFloat 5.5s cubic-bezier(0.45, 0.05, 0.55, 0.95) infinite;
+}
+
+/* 4. Gold Thread Pulse Animation */
+@keyframes goldThreadGlow {
+  0%, 100% {
+    filter: drop-shadow(0 0 3px rgba(216, 195, 154, 0.6));
+  }
+  50% {
+    filter: drop-shadow(0 0 8px rgba(194, 154, 75, 0.9));
+  }
+}
+
+.gold-thread-glow {
+  animation: goldThreadGlow 3.5s ease-in-out infinite;
+}
+
+/* 5. Runway Stagger Transition Curves */
+.transition-reveal {
+  transition: opacity 0.75s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.75s cubic-bezier(0.16, 1, 0.3, 1),
+              filter 0.75s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 @keyframes flyToCart {

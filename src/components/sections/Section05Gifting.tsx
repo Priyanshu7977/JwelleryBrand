@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { HAMPER_BOX_OPTIONS } from '../../data/shopify-data';
 import { useCart } from '../../context/CartContext';
 import { Gift, Sparkles, Image as ImageIcon, Heart } from 'lucide-react';
+import { RevealOnScroll } from '../motion/RevealOnScroll';
+import { ProductTiltCard } from '../motion/ProductTiltCard';
 
 export const Section05Gifting: React.FC = () => {
   const {
@@ -64,29 +66,31 @@ export const Section05Gifting: React.FC = () => {
       <div className="max-w-7xl mx-auto space-y-10 sm:space-y-12">
         
         {/* Section Header */}
-        <div className="text-center space-y-3 max-w-3xl mx-auto">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-pearl-100 border border-blush-200 text-[11px] uppercase font-mono tracking-widest text-gold-dark font-bold shadow-sm">
-            <Gift className="w-3.5 h-3.5" />
-            <span>Act 05 — The Gifting Atelier</span>
+        <RevealOnScroll direction="up" delay={0}>
+          <div className="text-center space-y-3 max-w-3xl mx-auto">
+            <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-pearl-100 border border-blush-200 text-[11px] uppercase font-mono tracking-widest text-gold-dark font-bold shadow-sm">
+              <Gift className="w-3.5 h-3.5" />
+              <span>Act 05 — The Gifting Atelier</span>
+            </div>
+
+            <h2 className="text-3xl sm:text-5xl md:text-6xl text-obsidian font-bold uppercase leading-[1.05]">
+              FOR SOMEONE <span className="italic font-normal lowercase text-gold-dark">special.</span>
+            </h2>
+
+            <p className="text-xs sm:text-sm text-obsidian/75 leading-relaxed">
+              Craft a bespoke memory box. Select your keepsake velvet packaging, choose signature adornments, and include a custom printed retro Polaroid.
+            </p>
           </div>
+        </RevealOnScroll>
 
-          <h2 className="text-3xl sm:text-5xl md:text-6xl text-obsidian font-bold uppercase leading-[1.05]">
-            FOR SOMEONE <span className="italic font-normal lowercase text-gold-dark">special.</span>
-          </h2>
-
-          <p className="text-xs sm:text-sm text-obsidian/75 leading-relaxed">
-            Craft a bespoke memory box. Select your keepsake velvet packaging, choose signature adornments, and include a custom printed retro Polaroid.
-          </p>
-        </div>
-
-        {/* 2-Column Workshop Studio */}
+        {/* 2-Column Workshop Studio with Layered Unboxing Motion */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 md:gap-10 items-start">
           
           {/* Left Column: Hamper Builder Controls (7 Cols) */}
           <div className="lg:col-span-7 space-y-6 bg-white/90 p-5 sm:p-8 rounded-3xl border border-champagne-300/60 shadow-luxury-soft">
             
             {/* Step 1: Select Box Casing */}
-            <div className="space-y-3">
+            <RevealOnScroll direction="up" delay={100} className="space-y-3">
               <div className="flex items-center justify-between">
                 <h4 className="text-xs uppercase font-mono tracking-widest text-obsidian font-bold flex items-center gap-2">
                   <span className="w-5 h-5 rounded-full bg-obsidian text-pearl-100 flex items-center justify-center text-[10px] font-mono">1</span>
@@ -96,28 +100,28 @@ export const Section05Gifting: React.FC = () => {
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                {HAMPER_BOX_OPTIONS.map((box) => (
+                {HAMPER_BOX_OPTIONS.map((box, bIdx) => (
                   <button
                     key={box.id}
                     onClick={() => setSelectedHamperBox(box)}
-                    className={`p-3.5 rounded-2xl border text-left transition-all ${
+                    className={`p-3.5 rounded-2xl border text-left transition-all duration-300 ${
                       selectedHamperBox.id === box.id
-                        ? 'border-gold-dark bg-champagne-100/60 shadow-md ring-2 ring-gold-dark/30'
+                        ? 'border-gold-dark bg-champagne-100/60 shadow-md ring-2 ring-gold-dark/30 scale-[1.02]'
                         : 'border-champagne-300/60 bg-pearl-50 hover:bg-white'
                     }`}
                   >
-                    <div className="aspect-[4/3] rounded-xl overflow-hidden mb-2 bg-sand">
-                      <img src={box.imageUrl} alt={box.name} className="w-full h-full object-cover" />
+                    <div className="aspect-[4/3] rounded-xl overflow-hidden mb-2 bg-sand luxury-sheen">
+                      <img src={box.imageUrl} alt={box.name} className="w-full h-full object-cover transition-transform duration-500 hover:scale-105" />
                     </div>
                     <p className="text-xs font-bold text-obsidian truncate">{box.name}</p>
                     <p className="text-[11px] text-gold-dark font-mono font-bold mt-0.5">₹{box.price}</p>
                   </button>
                 ))}
               </div>
-            </div>
+            </RevealOnScroll>
 
             {/* Step 2: Personalised Note & Polaroid */}
-            <div className="space-y-3 pt-4 border-t border-champagne-300/50">
+            <RevealOnScroll direction="up" delay={200} className="space-y-3 pt-4 border-t border-champagne-300/50">
               <h4 className="text-xs uppercase font-mono tracking-widest text-obsidian font-bold flex items-center gap-2">
                 <span className="w-5 h-5 rounded-full bg-obsidian text-pearl-100 flex items-center justify-center text-[10px] font-mono">2</span>
                 Handwritten Note & Custom Polaroid
@@ -126,59 +130,61 @@ export const Section05Gifting: React.FC = () => {
               <textarea
                 value={polaroidNote}
                 onChange={(e) => setPolaroidNote(e.target.value)}
-                placeholder="Write your personal message here (will be hand-calligraphed onto textured archival cardstock)..."
+                placeholder="Write your personal message here (will be hand-calligraphed onto textured archival cardstock with gold wax seal)..."
                 rows={3}
-                className="w-full p-3.5 rounded-2xl bg-pearl-50 border border-champagne-300/70 text-xs sm:text-sm text-obsidian placeholder:text-obsidian-muted focus:outline-none focus:border-gold-dark resize-none font-sans"
+                className="w-full p-3.5 rounded-2xl bg-pearl-50 border border-champagne-300/70 text-xs sm:text-sm text-obsidian placeholder:text-obsidian-muted focus:outline-none focus:border-gold-dark resize-none font-sans transition-all"
               />
-            </div>
+            </RevealOnScroll>
 
             {/* Step 3: Add to Bag Action */}
-            <div className="pt-2">
+            <RevealOnScroll direction="up" delay={300} className="pt-2">
               <button
                 onClick={handleAddHamperToBag}
-                className="btn-primary w-full h-12 flex items-center justify-center gap-2 text-xs sm:text-sm uppercase font-bold tracking-widest shadow-lg"
+                className="btn-primary w-full h-12 flex items-center justify-center gap-2 text-xs sm:text-sm uppercase font-bold tracking-widest shadow-lg hover:shadow-xl active:scale-[0.98] transition-all"
               >
                 <Sparkles className="w-4 h-4" />
                 <span>Add Custom Hamper to Bag • ₹{selectedHamperBox.price}</span>
               </button>
-            </div>
+            </RevealOnScroll>
 
           </div>
 
-          {/* Right Column: Live Hamper Preview (5 Cols) */}
-          <div className="lg:col-span-5 bg-white/95 p-5 sm:p-8 rounded-3xl border border-champagne-300/60 shadow-luxury-soft space-y-4">
-            <div className="flex items-center justify-between">
-              <span className="text-xs uppercase font-mono tracking-widest text-gold-dark font-bold">
-                Live Hamper Assembly
-              </span>
-              <span className="text-[11px] font-mono text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded-full font-bold">
-                Mumbai Atelier
-              </span>
-            </div>
-
-            <div className="aspect-[4/3] rounded-2xl overflow-hidden bg-sand border border-champagne-300/40">
-              <img
-                src={selectedHamperBox.imageUrl}
-                alt={selectedHamperBox.name}
-                className="w-full h-full object-cover"
-              />
-            </div>
-
-            <div className="p-4 rounded-2xl bg-pearl-50 border border-champagne-300/60 space-y-2">
-              <div className="flex items-center gap-2 text-xs font-bold text-obsidian">
-                <ImageIcon className="w-4 h-4 text-gold-dark" />
-                <span>Includes Custom Retro Polaroid Print</span>
+          {/* Right Column: Live Hamper Preview (5 Cols) with Tilt */}
+          <RevealOnScroll direction="up" delay={200} className="lg:col-span-5">
+            <ProductTiltCard className="bg-white/95 p-5 sm:p-7 rounded-3xl border border-champagne-300/60 shadow-luxury-soft space-y-4 jewellery-spotlight">
+              <div className="flex items-center justify-between">
+                <span className="text-xs uppercase font-mono tracking-widest text-gold-dark font-bold">
+                  Live Hamper Assembly
+                </span>
+                <span className="text-[10px] font-mono text-emerald-800 bg-emerald-50 px-2.5 py-0.5 rounded-full font-bold">
+                  Mumbai Atelier
+                </span>
               </div>
-              <p className="text-[11px] text-obsidian-soft italic line-clamp-2">
-                "{polaroidNote || 'No message added yet — will include blank signature gold-foil card.'}"
-              </p>
-            </div>
 
-            <div className="pt-2 border-t border-champagne-300/50 flex items-center justify-between text-xs">
-              <span className="font-medium text-obsidian-soft">Packaging Total:</span>
-              <span className="text-base font-bold text-obsidian font-mono">₹{selectedHamperBox.price}</span>
-            </div>
-          </div>
+              <div className="aspect-[16/10] rounded-2xl overflow-hidden bg-sand border border-champagne-300/40 relative luxury-sheen">
+                <img
+                  src={selectedHamperBox.imageUrl}
+                  alt={selectedHamperBox.name}
+                  className="w-full h-full object-cover transition-transform duration-700 hover:scale-105"
+                />
+              </div>
+
+              <div className="p-3.5 rounded-2xl bg-pearl-50 border border-champagne-300/60 space-y-1">
+                <div className="flex items-center gap-2 text-xs font-bold text-obsidian">
+                  <Gift className="w-4 h-4 text-gold-dark" />
+                  <span>Includes Custom Retro Polaroid Print</span>
+                </div>
+                <p className="text-xs text-obsidian-soft italic line-clamp-2">
+                  "{polaroidNote || 'To my favourite person, shining always ✨'}"
+                </p>
+              </div>
+
+              <div className="pt-2 border-t border-champagne-300/50 flex items-center justify-between text-xs">
+                <span className="font-medium text-obsidian-soft">Packaging Total:</span>
+                <span className="text-base font-bold text-obsidian font-mono">₹{selectedHamperBox.price}</span>
+              </div>
+            </ProductTiltCard>
+          </RevealOnScroll>
 
         </div>
 

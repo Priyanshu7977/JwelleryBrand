@@ -1,9 +1,12 @@
 import React, { useState, useMemo } from 'react';
+import { Link } from 'react-router-dom';
 import { FEATURED_PRODUCTS } from '../data/shopify-data';
 import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
 import { LuxuryBadge } from '../components/ui/LuxuryBadge';
 import { Search, ShoppingBag, Eye, Heart } from 'lucide-react';
+import { RevealOnScroll } from '../components/motion/RevealOnScroll';
+import { ProductTiltCard } from '../components/motion/ProductTiltCard';
 
 export const ShopPage: React.FC = () => {
   const { addToCart, setQuickViewProduct } = useCart();
@@ -56,37 +59,39 @@ export const ShopPage: React.FC = () => {
   };
 
   return (
-    <div className="w-full min-h-screen bg-pearl-100 pt-20 sm:pt-24 md:pt-28 pb-16 px-4 sm:px-6 md:px-10 lg:px-14 selection:bg-champagne-300">
+    <div className="w-full min-h-screen bg-pearl-100 pt-28 sm:pt-32 pb-16 px-4 sm:px-6 md:px-10 lg:px-14 selection:bg-champagne-300">
       <div className="max-w-7xl mx-auto space-y-6 sm:space-y-8">
         
         {/* Compact Editorial Discovery Room Header */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 border-b border-champagne-300/40 pb-4 sm:pb-5">
-          <div className="space-y-1.5">
-            <div className="flex items-center gap-2">
-              <span className="text-[10px] sm:text-[11px] uppercase font-mono tracking-widest text-gold-dark font-bold">
-                The Discovery Room
-              </span>
-              <span className="w-1.5 h-1.5 rounded-full bg-gold-dark" />
-              <span className="text-xs italic text-obsidian-soft font-medium">
-                400+ Handcrafted Creations
-              </span>
+        <RevealOnScroll direction="up" delay={0}>
+          <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 border-b border-champagne-300/40 pb-4 sm:pb-5">
+            <div className="space-y-1.5">
+              <div className="flex items-center gap-2">
+                <span className="text-[10px] sm:text-[11px] uppercase font-mono tracking-widest text-gold-dark font-bold">
+                  The Discovery Room
+                </span>
+                <span className="w-1.5 h-1.5 rounded-full bg-gold-dark" />
+                <span className="text-xs italic text-obsidian-soft font-medium">
+                  400+ Handcrafted Creations
+                </span>
+              </div>
+
+              <h1 className="text-3xl sm:text-5xl md:text-6xl text-obsidian font-bold uppercase leading-tight">
+                THE <span className="italic font-normal text-gold-dark">Collection</span>.
+              </h1>
+
+              <p className="text-xs sm:text-sm text-obsidian/75 leading-relaxed max-w-lg">
+                Browse sculptural fine jewellery, handcrafted artisanal bangles, custom celebration hampers, and retro polaroid keepsakes.
+              </p>
             </div>
 
-            <h1 className="text-3xl sm:text-5xl md:text-6xl text-obsidian font-bold uppercase leading-tight">
-              THE <span className="italic font-normal text-gold-dark">Collection</span>.
-            </h1>
-
-            <p className="text-xs sm:text-sm text-obsidian/75 leading-relaxed max-w-lg">
-              Browse sculptural fine jewellery, handcrafted artisanal bangles, custom celebration hampers, and retro polaroid keepsakes.
-            </p>
+            <div className="text-right hidden sm:block">
+              <span className="text-[10px] sm:text-[11px] font-mono uppercase tracking-widest text-emerald-800 bg-emerald-50 px-3 py-1 rounded-full font-bold border border-emerald-200">
+                🚚 Same-Day Mumbai Ready
+              </span>
+            </div>
           </div>
-
-          <div className="text-right hidden sm:block">
-            <span className="text-[10px] sm:text-[11px] font-mono uppercase tracking-widest text-emerald-800 bg-emerald-50 px-3 py-1 rounded-full font-bold border border-emerald-200">
-              🚚 Same-Day Mumbai Ready
-            </span>
-          </div>
-        </div>
+        </RevealOnScroll>
 
         {/* Filter and Search Toolbar */}
         <div className="flex flex-col lg:flex-row gap-3 justify-between items-stretch lg:items-center">
@@ -120,88 +125,93 @@ export const ShopPage: React.FC = () => {
           </div>
         </div>
 
-        {/* Product Cards Grid - Fitted & Proportioned */}
+        {/* Product Cards Grid - Fitted & Proportioned with Direct Product Links */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-5">
-          {filteredProducts.map((prod) => (
-            <div
-              key={prod.id}
-              className="bg-white rounded-2xl overflow-hidden border border-champagne-300/60 shadow-sm hover:shadow-luxury-soft transition-all duration-300 flex flex-col justify-between group"
-            >
-              <div className="relative aspect-[4/3] max-h-[220px] overflow-hidden bg-sand">
-                <img
-                  src={prod.images.hero}
-                  alt={prod.title}
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                  loading="lazy"
-                />
+          {filteredProducts.map((prod, idx) => (
+            <RevealOnScroll key={prod.id} direction="up" delay={Math.min(idx * 50, 300)}>
+              <ProductTiltCard
+                className="bg-white rounded-2xl overflow-hidden border border-champagne-300/60 shadow-sm hover:shadow-luxury-soft transition-all duration-400 flex flex-col justify-between group h-full"
+              >
+                <div className="relative aspect-[4/3] max-h-[220px] overflow-hidden bg-sand luxury-sheen">
+                  <Link to={`/product/${prod.handle}`} className="block w-full h-full">
+                    <img
+                      src={prod.images.hero}
+                      alt={prod.title}
+                      className="w-full h-full object-cover group-hover:scale-108 transition-transform duration-700 ease-out"
+                      loading="lazy"
+                    />
+                  </Link>
 
-                {/* Wishlist Button */}
-                <button
-                  onClick={() => toggleWishlist(prod.id)}
-                  className="absolute top-2.5 right-2.5 p-1.5 bg-white/90 backdrop-blur-sm rounded-full text-obsidian shadow-sm hover:scale-110 transition-transform"
-                  aria-label="Wishlist"
-                >
-                  <Heart
-                    className={`w-3.5 h-3.5 ${
-                      isWishlisted(prod.id) ? 'fill-rose-600 text-rose-600' : 'text-obsidian'
-                    }`}
-                  />
-                </button>
+                  {/* Wishlist Button */}
+                  <button
+                    onClick={() => toggleWishlist(prod.id)}
+                    className="absolute top-2.5 right-2.5 p-1.5 bg-white/90 backdrop-blur-sm rounded-full text-obsidian shadow-sm hover:scale-110 active:scale-[0.9] transition-transform z-10"
+                    aria-label="Wishlist"
+                  >
+                    <Heart
+                      className={`w-3.5 h-3.5 ${
+                        isWishlisted(prod.id) ? 'fill-rose-600 text-rose-600' : 'text-obsidian'
+                      }`}
+                    />
+                  </button>
 
-                {/* Badges */}
-                <div className="absolute top-2.5 left-2.5 flex flex-col gap-1">
-                  {prod.isBestseller && <LuxuryBadge variant="gold">Bestseller</LuxuryBadge>}
-                  {prod.availableStock && (
-                    <span className="text-[9px] font-mono font-bold bg-emerald-50 text-emerald-800 px-2 py-0.5 rounded-full">
-                      In Stock ({prod.availableStock})
-                    </span>
-                  )}
-                </div>
-              </div>
-
-              <div className="p-3.5 space-y-2 flex-1 flex flex-col justify-between">
-                <div>
-                  <span className="text-[9px] font-mono uppercase tracking-widest text-gold-dark font-bold">
-                    {prod.category}
-                  </span>
-                  <h3 className="text-sm font-bold text-obsidian truncate mt-0.5">
-                    {prod.title}
-                  </h3>
-                  <p className="text-[11px] text-obsidian-soft line-clamp-1 mt-0.5">
-                    {prod.description}
-                  </p>
-                </div>
-
-                <div className="pt-1.5 border-t border-champagne-300/40">
-                  <div className="flex items-baseline justify-between mb-2">
-                    <span className="text-base sm:text-lg font-bold text-obsidian">₹{prod.price}</span>
-                    {prod.compareAtPrice && (
-                      <span className="text-xs text-obsidian-muted line-through font-medium">
-                        ₹{prod.compareAtPrice}
+                  {/* Badges */}
+                  <div className="absolute top-2.5 left-2.5 flex flex-col gap-1 z-10 pointer-events-none">
+                    {prod.isBestseller && <LuxuryBadge variant="gold">Bestseller</LuxuryBadge>}
+                    {prod.availableStock && (
+                      <span className="text-[9px] font-mono font-bold bg-emerald-50 text-emerald-800 px-2 py-0.5 rounded-full">
+                        In Stock ({prod.availableStock})
                       </span>
                     )}
                   </div>
+                </div>
 
-                  <div className="flex gap-1.5">
-                    <button
-                      onClick={() => handleQuickAdd(prod)}
-                      className="flex-1 h-9 bg-obsidian text-pearl-100 text-xs uppercase font-bold tracking-wider rounded-full hover:bg-obsidian-200 transition-colors flex items-center justify-center gap-1.5 shadow-sm"
-                    >
-                      <ShoppingBag className="w-3.5 h-3.5" />
-                      <span>{addedId === prod.id ? 'Added!' : 'Add to Bag'}</span>
-                    </button>
+                <div className="p-3.5 space-y-2 flex-1 flex flex-col justify-between">
+                  <div>
+                    <span className="text-[9px] font-mono uppercase tracking-widest text-gold-dark font-bold">
+                      {prod.category}
+                    </span>
+                    <Link to={`/product/${prod.handle}`}>
+                      <h3 className="text-sm font-bold text-obsidian truncate mt-0.5 hover:text-gold-dark transition-colors">
+                        {prod.title}
+                      </h3>
+                    </Link>
+                    <p className="text-[11px] text-obsidian-soft line-clamp-1 mt-0.5">
+                      {prod.description}
+                    </p>
+                  </div>
 
-                    <button
-                      onClick={() => setQuickViewProduct(prod)}
-                      className="w-9 h-9 border border-champagne-300/80 hover:bg-champagne-100 rounded-full text-obsidian transition-colors flex items-center justify-center shrink-0"
-                      title="Quick View"
-                    >
-                      <Eye className="w-3.5 h-3.5" />
-                    </button>
+                  <div className="pt-1.5 border-t border-champagne-300/40">
+                    <div className="flex items-baseline justify-between mb-2">
+                      <span className="text-base sm:text-lg font-bold text-obsidian">₹{prod.price}</span>
+                      {prod.compareAtPrice && (
+                        <span className="text-xs text-obsidian-muted line-through font-medium">
+                          ₹{prod.compareAtPrice}
+                        </span>
+                      )}
+                    </div>
+
+                    <div className="flex gap-1.5">
+                      <button
+                        onClick={() => handleQuickAdd(prod)}
+                        className="flex-1 h-9 bg-obsidian text-pearl-100 text-xs uppercase font-bold tracking-wider rounded-full hover:bg-obsidian-200 active:scale-[0.98] transition-all flex items-center justify-center gap-1.5 shadow-sm"
+                      >
+                        <ShoppingBag className="w-3.5 h-3.5" />
+                        <span>{addedId === prod.id ? 'Added!' : 'Add to Bag'}</span>
+                      </button>
+
+                      <button
+                        onClick={() => setQuickViewProduct(prod)}
+                        className="w-9 h-9 border border-champagne-300/80 hover:bg-champagne-100 active:scale-[0.98] rounded-full text-obsidian transition-all flex items-center justify-center shrink-0"
+                        title="Quick View"
+                      >
+                        <Eye className="w-3.5 h-3.5" />
+                      </button>
+                    </div>
                   </div>
                 </div>
-              </div>
-            </div>
+              </ProductTiltCard>
+            </RevealOnScroll>
           ))}
         </div>
 

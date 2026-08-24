@@ -2,7 +2,9 @@ import React, { useState } from 'react';
 import { FEATURED_PRODUCTS } from '../../data/shopify-data';
 import { useCart } from '../../context/CartContext';
 import { LuxuryBadge } from '../ui/LuxuryBadge';
-import { Sparkles, Eye, ShoppingBag, ShieldCheck } from 'lucide-react';
+import { Eye, ShoppingBag, ShieldCheck, ArrowRight } from 'lucide-react';
+import { RevealOnScroll } from '../motion/RevealOnScroll';
+import { ProductTiltCard } from '../motion/ProductTiltCard';
 
 export const Section02Reveal: React.FC = () => {
   const { setQuickViewProduct, addToCart } = useCart();
@@ -28,90 +30,94 @@ export const Section02Reveal: React.FC = () => {
       <div className="max-w-7xl mx-auto space-y-10 sm:space-y-12">
         
         {/* Section Editorial Header */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 border-b border-champagne-300/60 pb-6 sm:pb-8">
-          <div className="space-y-2">
-            <div className="flex items-center gap-2">
-              <span className="text-xs uppercase font-mono tracking-widest text-gold-dark font-bold">
-                Act 02 — The Reveal
-              </span>
-              <span className="w-1.5 h-1.5 rounded-full bg-gold-dark" />
-              <span className="text-xs sm:text-sm italic text-obsidian-soft font-medium">
-                Fine Jewellery & Gemstones
-              </span>
+        <RevealOnScroll direction="up" delay={0}>
+          <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 border-b border-champagne-300/60 pb-6 sm:pb-8">
+            <div className="space-y-2">
+              <div className="flex items-center gap-2">
+                <span className="text-xs uppercase font-mono tracking-widest text-gold-dark font-bold">
+                  Act 02 — The Reveal
+                </span>
+                <span className="w-1.5 h-1.5 rounded-full bg-gold-dark" />
+                <span className="text-xs sm:text-sm italic text-obsidian-soft font-medium">
+                  Fine Jewellery & Gemstones
+                </span>
+              </div>
+              <h2 className="text-3xl sm:text-5xl md:text-6xl text-obsidian font-bold uppercase leading-[1.05]">
+                Sculpted in <span className="italic font-normal text-gold-dark">Gold</span> & Light.
+              </h2>
             </div>
-            <h2 className="text-3xl sm:text-5xl md:text-6xl text-obsidian font-bold uppercase leading-[1.05]">
-              Sculpted in <span className="italic font-normal text-gold-dark">Gold</span> & Light.
-            </h2>
-          </div>
 
-          {/* Product Switcher Tabs */}
-          <div className="flex items-center gap-2 overflow-x-auto pb-1 md:pb-0">
-            {revealProducts.map((prod, idx) => (
-              <button
-                key={prod.id}
-                onClick={() => setActiveTab(idx)}
-                className={`px-4 sm:px-5 py-2 sm:py-2.5 rounded-full text-xs uppercase font-mono tracking-wider transition-all shrink-0 font-bold ${
-                  activeTab === idx
-                    ? 'bg-obsidian text-pearl-100 shadow-md'
-                    : 'bg-pearl-50 text-obsidian-soft hover:text-obsidian hover:bg-champagne-100/60 border border-champagne-300/60'
-                }`}
-              >
-                0{idx + 1}. {prod.title.split(' ')[0]}
-              </button>
-            ))}
+            {/* Product Switcher Tabs */}
+            <div className="flex items-center gap-2 overflow-x-auto pb-1 md:pb-0">
+              {revealProducts.map((prod, idx) => (
+                <button
+                  key={prod.id}
+                  onClick={() => setActiveTab(idx)}
+                  className={`px-4 sm:px-5 py-2 sm:py-2.5 rounded-full text-xs uppercase font-mono tracking-wider transition-all shrink-0 font-bold ${
+                    activeTab === idx
+                      ? 'bg-obsidian text-pearl-100 shadow-md'
+                      : 'bg-pearl-50 text-obsidian-soft hover:text-obsidian hover:bg-champagne-100/60 border border-champagne-300/60'
+                  }`}
+                >
+                  0{idx + 1}. {prod.title.split(' ')[0]}
+                </button>
+              ))}
+            </div>
           </div>
-        </div>
+        </RevealOnScroll>
 
         {/* Balanced 2-Column High-Fashion Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 md:gap-12 items-center">
           
-          {/* Main Editorial Image Frame (6 Cols) */}
-          <div className="lg:col-span-6 relative group">
-            <div className="relative aspect-[4/3] sm:aspect-[16/11] lg:aspect-[4/3] rounded-3xl overflow-hidden bg-sand/40 border border-champagne-300/80 shadow-luxury-soft">
-              <img
-                src={heroProduct.images.hero}
-                alt={heroProduct.images.alt}
-                className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-              />
-              
-              {/* Floating Quick Action Overlay */}
-              <div className="absolute inset-0 bg-gradient-to-t from-obsidian/75 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end justify-between p-4 sm:p-6">
-                <div className="text-pearl-100 space-y-0.5">
-                  <p className="text-[10px] sm:text-xs uppercase font-mono tracking-wider text-champagne-200 font-bold">
-                    Handcrafted Detail
-                  </p>
-                  <p className="text-base sm:text-lg text-pearl-50 font-bold">
-                    {heroProduct.material}
-                  </p>
+          {/* Main Editorial Image Frame (6 Cols) with Tilt & Sheen */}
+          <RevealOnScroll direction="up" delay={150} className="lg:col-span-6">
+            <ProductTiltCard className="rounded-3xl border border-champagne-300/80 shadow-luxury-soft jewellery-spotlight">
+              <div className="relative aspect-[4/3] sm:aspect-[16/11] lg:aspect-[4/3] rounded-3xl overflow-hidden bg-sand/40 group luxury-sheen">
+                <img
+                  src={heroProduct.images.hero}
+                  alt={heroProduct.images.alt}
+                  className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-108"
+                />
+                
+                {/* Floating Quick Action Overlay */}
+                <div className="absolute inset-0 bg-gradient-to-t from-obsidian/75 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end justify-between p-4 sm:p-6">
+                  <div className="text-pearl-100 space-y-0.5">
+                    <p className="text-[10px] sm:text-xs uppercase font-mono tracking-wider text-champagne-200 font-bold">
+                      Handcrafted Detail
+                    </p>
+                    <p className="text-base sm:text-lg text-pearl-50 font-bold">
+                      {heroProduct.material}
+                    </p>
+                  </div>
+
+                  <button
+                    onClick={() => setQuickViewProduct(heroProduct)}
+                    className="px-4 sm:px-5 py-2 sm:py-2.5 rounded-full bg-pearl-50 text-obsidian text-xs uppercase tracking-widest font-bold flex items-center gap-1.5 hover:bg-champagne-200 active:scale-[0.98] transition-all shadow-lg"
+                  >
+                    <Eye className="w-3.5 h-3.5" />
+                    <span>Inspect</span>
+                  </button>
                 </div>
 
-                <button
-                  onClick={() => setQuickViewProduct(heroProduct)}
-                  className="px-4 sm:px-5 py-2 sm:py-2.5 rounded-full bg-pearl-50 text-obsidian text-xs uppercase tracking-widest font-bold flex items-center gap-1.5 hover:bg-champagne-200 transition-all shadow-lg"
-                >
-                  <Eye className="w-3.5 h-3.5" />
-                  <span>Inspect</span>
-                </button>
-              </div>
-
-              {/* Floating Bestseller Tag */}
-              <div className="absolute top-4 left-4">
-                <LuxuryBadge variant="gold">Signature Series</LuxuryBadge>
-              </div>
-
-              {/* Same Day Mumbai dispatch badge */}
-              {heroProduct.sameDayMumbaiAvailable && (
-                <div className="absolute top-4 right-4">
-                  <LuxuryBadge variant="pearl" dot={false}>
-                    🚚 Mumbai Same-Day
-                  </LuxuryBadge>
+                {/* Floating Bestseller Tag */}
+                <div className="absolute top-4 left-4 z-10">
+                  <LuxuryBadge variant="gold">Signature Series</LuxuryBadge>
                 </div>
-              )}
-            </div>
-          </div>
+
+                {/* Same Day Mumbai dispatch badge */}
+                {heroProduct.sameDayMumbaiAvailable && (
+                  <div className="absolute top-4 right-4 z-10">
+                    <LuxuryBadge variant="pearl" dot={false}>
+                      🚚 Mumbai Same-Day
+                    </LuxuryBadge>
+                  </div>
+                )}
+              </div>
+            </ProductTiltCard>
+          </RevealOnScroll>
 
           {/* Editorial Storytelling Column (6 Cols) */}
-          <div className="lg:col-span-6 space-y-5 sm:space-y-6">
+          <RevealOnScroll direction="up" delay={250} className="lg:col-span-6 space-y-5 sm:space-y-6">
             <div className="space-y-2.5">
               <div className="flex items-center gap-2.5">
                 <span className="text-xs uppercase font-mono tracking-widest text-gold-dark font-bold">
@@ -138,56 +144,62 @@ export const Section02Reveal: React.FC = () => {
                   </span>
                 )}
                 {heroProduct.compareAtPrice && (
-                  <span className="text-xs uppercase font-mono font-bold text-amber-900 bg-amber-100 px-2.5 py-0.5 rounded-full">
+                  <span className="text-xs uppercase tracking-wider text-emerald-800 font-bold bg-emerald-50 px-2.5 py-1 rounded-full">
                     Save ₹{heroProduct.compareAtPrice - heroProduct.price}
                   </span>
                 )}
               </div>
             </div>
 
-            {/* Description & Narrative */}
             <p className="text-sm sm:text-base text-obsidian-soft leading-relaxed">
               {heroProduct.description}
             </p>
 
-            {/* Craftsmanship Bullet Points */}
-            <div className="space-y-2 pt-2 border-t border-champagne-300/50">
-              <div className="flex items-center gap-2 text-xs sm:text-sm text-obsidian font-medium">
-                <Sparkles className="w-4 h-4 text-gold-dark shrink-0" />
-                <span>100% Anti-tarnish gold plating finish</span>
+            <blockquote className="border-l-2 border-gold-dark pl-4 italic text-sm text-obsidian/85">
+              "{heroProduct.editorialNote}"
+            </blockquote>
+
+            {/* Specifications Details */}
+            <div className="grid grid-cols-2 gap-4 py-4 border-y border-champagne-300/60 text-xs">
+              <div>
+                <span className="font-mono uppercase tracking-wider text-gold-dark font-bold block mb-1">
+                  Crafting Material
+                </span>
+                <span className="text-obsidian font-semibold">{heroProduct.material}</span>
               </div>
-              <div className="flex items-center gap-2 text-xs sm:text-sm text-obsidian font-medium">
-                <ShieldCheck className="w-4 h-4 text-gold-dark shrink-0" />
-                <span>Hand-tied double satin luxury gift boxing included</span>
+              <div>
+                <span className="font-mono uppercase tracking-wider text-gold-dark font-bold block mb-1">
+                  Atelier Promise
+                </span>
+                <span className="text-obsidian font-semibold">{heroProduct.craftsmanship}</span>
               </div>
             </div>
 
-            {/* CTAs */}
-            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-4 pt-2">
+            {/* CTAs with Micro-Interactions */}
+            <div className="flex flex-col sm:flex-row gap-3 pt-2">
               <button
                 onClick={() => addToCart(heroProduct, 1)}
-                className="btn-primary flex-1 h-12 flex items-center justify-center gap-2"
+                className="btn-primary group flex-1 h-12 shadow-lg hover:shadow-xl active:scale-[0.98] transition-all flex items-center justify-center gap-2 text-xs uppercase font-bold tracking-widest"
               >
                 <ShoppingBag className="w-4 h-4" />
-                <span>Add to Curated Bag</span>
+                <span>Add To Bag • ₹{heroProduct.price}</span>
               </button>
 
               <button
                 onClick={() => setQuickViewProduct(heroProduct)}
-                className="btn-secondary h-12 flex items-center justify-center gap-2 px-6"
+                className="btn-secondary group px-6 h-12 active:scale-[0.98] transition-all flex items-center justify-center gap-2 text-xs uppercase font-bold tracking-widest"
               >
-                <Eye className="w-4 h-4" />
-                <span>Quick View</span>
+                <span>Inspect Suite</span>
+                <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform duration-300" />
               </button>
             </div>
 
-            {/* Free Shipping Milestone Alert */}
-            <div className="p-3.5 rounded-2xl bg-pearl-50 border border-champagne-300/80 text-xs text-obsidian flex items-center justify-between shadow-sm">
-              <span className="font-medium">📦 Complimentary express shipping on orders over ₹999</span>
-              <span className="font-mono text-gold-dark font-bold">Pan-India</span>
+            {/* Trust note */}
+            <div className="flex items-center gap-2 text-xs text-obsidian-soft pt-1">
+              <ShieldCheck className="w-4 h-4 text-gold-dark shrink-0" />
+              <span>100% Anti-Tarnish Dual Dip Coating • Waterproof Everyday Wear</span>
             </div>
-
-          </div>
+          </RevealOnScroll>
 
         </div>
 

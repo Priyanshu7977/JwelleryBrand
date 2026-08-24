@@ -16,6 +16,10 @@ import {
   MapPin,
   Check,
   Circle,
+  Mail,
+  Printer,
+  ExternalLink,
+  Send,
 } from 'lucide-react';
 import { getOrderById } from '../services/orderService';
 import { OrderMetadata } from '../types/backend';
@@ -29,6 +33,7 @@ export const OrderSuccessPage: React.FC = () => {
 
   const [order, setOrder] = useState<OrderMetadata | null>(stateOrder || null);
   const [loading, setLoading] = useState<boolean>(!stateOrder);
+  const [emailSentNotice, setEmailSentNotice] = useState(false);
 
   // Trigger celebration confetti on mount
   useEffect(() => {
@@ -145,6 +150,37 @@ export const OrderSuccessPage: React.FC = () => {
     },
   ];
 
+  // Email invoice mailto trigger
+  const handleOpenEmailInvoice = () => {
+    const itemsList = order.items.map((i) => `- ${i.title} (Qty: ${i.quantity}) - ₹${i.price * i.quantity}`).join('%0A');
+    const mailSubject = encodeURIComponent(`Celestia Atelier Order Confirmation & Invoice: ${order.orderNumber}`);
+    const mailBody = encodeURIComponent(
+      `Dear ${order.customer.name},\n\nThank you for choosing Celestia Atelier Mumbai.\n\n` +
+      `ORDER SUMMARY\n` +
+      `----------------------------------------\n` +
+      `Order Number: ${order.orderNumber}\n` +
+      `Order Date: ${formattedOrderDate} at ${formattedOrderTime}\n` +
+      `Payment Method: ${order.paymentMethod} (Status: Paid)\n` +
+      `Shipping Method: ${order.shippingMethod}\n` +
+      `Estimated Delivery: ${order.estimatedDelivery?.estimatedDateFormatted || formattedOrderDate}\n\n` +
+      `DELIVERY ADDRESS\n` +
+      `----------------------------------------\n` +
+      `${order.customer.name}\n${order.customer.address}\nPhone: ${order.customer.phone}\n\n` +
+      `ITEMS PURCHASED\n` +
+      `----------------------------------------\n`
+    ) + itemsList + encodeURIComponent(
+      `\n\nSubtotal: ₹${order.subtotal}\n` +
+      `Shipping: ₹${order.shippingCost}\n` +
+      `Total Paid: ₹${order.total}\n\n` +
+      `Track your order online anytime at: https://celestiaamor.in/order-tracking?id=${order.orderNumber}\n\n` +
+      `With love,\nCelestia Atelier & Fine Adornments\nBandra West, Mumbai 400050\nWhatsApp: +91 7718825792`
+    );
+
+    window.open(`mailto:${order.customer.email}?cc=${BRAND_INFO.email}&subject=${mailSubject}&body=${mailBody}`, '_blank');
+    setEmailSentNotice(true);
+    setTimeout(() => setEmailSentNotice(false), 4000);
+  };
+
   return (
     <div className="w-full min-h-screen bg-pearl-100 pt-32 sm:pt-36 md:pt-40 pb-32 px-4 sm:px-6 md:px-10 lg:px-16 selection:bg-champagne-300">
       <div className="max-w-4xl mx-auto space-y-8">
@@ -166,13 +202,50 @@ export const OrderSuccessPage: React.FC = () => {
               <span>ORDER CONFIRMED</span>
             </span>
 
-            <h1 className="font-serif-luxury text-3xl sm:text-5xl md:text-6xl text-obsidian uppercase pt-2">
-              THANK YOU, <span className="italic font-light text-gold-dark">{order.customer.name.split(' ')[0]}</span>.
+            <h1 className="text-3xl sm:text-5xl md:text-6xl text-obsidian uppercase pt-2 font-bold leading-tight">
+              THANK YOU, <span className="italic font-normal text-gold-dark">{order.customer.name.split(' ')[0]}</span>.
             </h1>
 
-            <p className="text-xs sm:text-sm text-obsidian/70 font-sans max-w-lg mx-auto leading-relaxed">
+            <p className="text-xs sm:text-sm text-obsidian/70 max-w-lg mx-auto leading-relaxed">
               Your order has been confirmed and placed in our Bandra West studio queue. A confirmation receipt has been transmitted to <strong>{order.customer.email}</strong>.
             </p>
+          </div>
+
+          {/* ========================================================================= */}
+          {/* EMAIL RECEIPT & INVOICE LINKED CARD                                       */}
+          {/* ========================================================================= */}
+          <div className="p-4 sm:p-5 rounded-2xl bg-white border border-emerald-300/70 shadow-sm flex flex-col sm:flex-row items-center justify-between gap-4 text-left">
+            <div className="flex items-center gap-3.5">
+              <div className="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-800 flex items-center justify-center shrink-0 border border-emerald-200">
+                <Mail className="w-5 h-5" />
+              </div>
+              <div className="space-y-0.5">
+                <p className="text-xs font-bold text-obsidian flex items-center gap-1.5">
+                  <span>Order Receipt & Tax Invoice Linked</span>
+                  <span className="text-[10px] font-mono bg-emerald-100 text-emerald-800 px-2 py-0.2 rounded font-bold">Active</span>
+                </p>
+                <p className="text-[11px] text-obsidian-soft">
+                  Transmitted to <strong className="text-obsidian">{order.customer.email}</strong> & Atelier Desk ({BRAND_INFO.email})
+                </p>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-2 w-full sm:w-auto">
+              <button
+                onClick={handleOpenEmailInvoice}
+                className="flex-1 sm:flex-initial px-4 py-2 rounded-full bg-emerald-800 hover:bg-emerald-900 text-pearl-100 text-xs font-bold uppercase tracking-wider transition-all flex items-center justify-center gap-1.5 shadow-sm"
+              >
+                <Send className="w-3.5 h-3.5" />
+                <span>{emailSentNotice ? 'Opened Mail!' : 'Email Invoice Copy'}</span>
+              </button>
+              <button
+                onClick={() => window.print()}
+                className="px-3.5 py-2 rounded-full border border-champagne-300/80 hover:bg-champagne-100 text-obsidian text-xs font-bold transition-all flex items-center justify-center gap-1"
+                title="Print Order Receipt"
+              >
+                <Printer className="w-3.5 h-3.5" />
+              </button>
+            </div>
           </div>
 
           {/* ========================================================================= */}
@@ -189,19 +262,19 @@ export const OrderSuccessPage: React.FC = () => {
 
               <div className="space-y-1">
                 <div className="flex justify-between items-baseline">
-                  <span className="text-xs text-obsidian/60 font-sans">Order Date:</span>
+                  <span className="text-xs text-obsidian/60">Order Date:</span>
                   <span className="font-mono text-sm font-bold text-obsidian">{formattedOrderDate}</span>
                 </div>
                 <div className="flex justify-between items-baseline">
-                  <span className="text-xs text-obsidian/60 font-sans">Order Time:</span>
+                  <span className="text-xs text-obsidian/60">Order Time:</span>
                   <span className="font-mono text-sm font-bold text-gold-dark">{formattedOrderTime}</span>
                 </div>
                 <div className="flex justify-between items-baseline pt-1 border-t border-champagne-200/60">
-                  <span className="text-xs text-obsidian/60 font-sans">Order Number:</span>
+                  <span className="text-xs text-obsidian/60">Order Number:</span>
                   <span className="font-mono text-sm font-bold text-obsidian">{order.orderNumber}</span>
                 </div>
                 <div className="flex justify-between items-baseline">
-                  <span className="text-xs text-obsidian/60 font-sans">Payment Status:</span>
+                  <span className="text-xs text-obsidian/60">Payment Status:</span>
                   <span className="font-mono text-xs font-bold text-emerald-800 uppercase bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">
                     {order.financialStatus} • {order.paymentMethod}
                   </span>
@@ -216,7 +289,7 @@ export const OrderSuccessPage: React.FC = () => {
                   <Truck className="w-4 h-4 text-gold-dark" />
                   <span>Estimated Delivery</span>
                 </div>
-                <h3 className="font-serif-luxury text-2xl sm:text-3xl text-obsidian font-bold">
+                <h3 className="text-2xl sm:text-3xl text-obsidian font-bold">
                   {order.estimatedDelivery?.estimatedDateFormatted || formattedOrderDate}
                 </h3>
                 <p className="text-xs font-mono text-gold-dark font-bold">
@@ -224,7 +297,7 @@ export const OrderSuccessPage: React.FC = () => {
                 </p>
               </div>
 
-              <div className="pt-2 border-t border-champagne-300/50 flex items-center justify-between text-xs text-obsidian/70 font-sans">
+              <div className="pt-2 border-t border-champagne-300/50 flex items-center justify-between text-xs text-obsidian/70">
                 <span>{order.shippingMethod}</span>
                 <span className="font-mono font-semibold text-obsidian">{order.carrier}</span>
               </div>
@@ -233,15 +306,15 @@ export const OrderSuccessPage: React.FC = () => {
           </div>
 
           {/* ========================================================================= */}
-          {/* PREMIUM DELIVERY TIMELINE (EXACT VISUAL SPECIFICATION)                     */}
+          {/* PREMIUM DELIVERY TIMELINE                                                 */}
           {/* ========================================================================= */}
           <div className="p-6 sm:p-8 bg-white/95 rounded-2xl border border-champagne-300/60 shadow-sm space-y-6 text-left">
             <div className="flex items-center justify-between border-b border-champagne-300/40 pb-4">
               <div>
-                <h3 className="font-serif-luxury text-xl text-obsidian font-bold">
+                <h3 className="text-xl text-obsidian font-bold">
                   Delivery Timeline
                 </h3>
-                <p className="text-xs text-obsidian/60 font-sans">
+                <p className="text-xs text-obsidian/60">
                   Real-time milestone progression for {order.orderNumber}
                 </p>
               </div>
@@ -270,7 +343,7 @@ export const OrderSuccessPage: React.FC = () => {
                     <div className="space-y-0.5 flex-1">
                       <div className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-1">
                         <h4
-                          className={`font-serif text-base sm:text-lg ${
+                          className={`text-base sm:text-lg ${
                             isCompleted ? 'text-obsidian font-bold' : 'text-obsidian/60 font-medium'
                           }`}
                         >
@@ -284,7 +357,7 @@ export const OrderSuccessPage: React.FC = () => {
                           {step.timestamp}
                         </span>
                       </div>
-                      <p className="text-xs text-obsidian/65 font-sans leading-relaxed">
+                      <p className="text-xs text-obsidian/65 leading-relaxed">
                         {step.description}
                       </p>
                     </div>
@@ -299,7 +372,7 @@ export const OrderSuccessPage: React.FC = () => {
           {/* ========================================================================= */}
           <div className="space-y-4 pt-4 border-t border-champagne-300/40 text-left">
             <div className="flex items-center justify-between">
-              <h3 className="font-serif-luxury text-xl text-obsidian font-bold">
+              <h3 className="text-xl text-obsidian font-bold">
                 Items Purchased ({order.items.reduce((acc, i) => acc + i.quantity, 0)} items)
               </h3>
               <span className="text-xs font-mono text-obsidian/60">Inspected under natural daylight</span>
@@ -325,8 +398,8 @@ export const OrderSuccessPage: React.FC = () => {
                     )}
 
                     <div className="space-y-1">
-                      <h4 className="font-serif text-base text-obsidian font-semibold">{item.title}</h4>
-                      <div className="flex flex-wrap items-center gap-2 text-xs font-sans">
+                      <h4 className="text-base text-obsidian font-semibold">{item.title}</h4>
+                      <div className="flex flex-wrap items-center gap-2 text-xs">
                         <span className="font-mono font-bold text-obsidian bg-champagne-100/70 px-2 py-0.5 rounded border border-champagne-300/50">
                           Quantity: {item.quantity}
                         </span>
@@ -335,7 +408,7 @@ export const OrderSuccessPage: React.FC = () => {
                         )}
                       </div>
                       {item.customNotes && (
-                        <p className="text-[11px] italic text-obsidian/70 font-sans bg-pearl-100 px-2.5 py-1 rounded inline-block mt-1">
+                        <p className="text-[11px] italic text-obsidian/70 bg-pearl-100 px-2.5 py-1 rounded inline-block mt-1">
                           Custom Note: "{item.customNotes}"
                         </p>
                       )}
@@ -353,7 +426,7 @@ export const OrderSuccessPage: React.FC = () => {
             </div>
 
             {/* Subtotal, Shipping, Total Breakdown */}
-            <div className="p-5 bg-white/90 rounded-2xl border border-champagne-300/60 text-xs font-sans space-y-2 max-w-sm ml-auto shadow-sm">
+            <div className="p-5 bg-white/90 rounded-2xl border border-champagne-300/60 text-xs space-y-2 max-w-sm ml-auto shadow-sm">
               <div className="flex justify-between text-obsidian/70">
                 <span>Subtotal ({order.items.reduce((acc, i) => acc + i.quantity, 0)} items)</span>
                 <span className="font-mono font-semibold text-obsidian">₹{order.subtotal}</span>
@@ -380,7 +453,7 @@ export const OrderSuccessPage: React.FC = () => {
           {/* ========================================================================= */}
           {/* SHIPPING DESTINATION & UNBOXING REMINDER                                  */}
           {/* ========================================================================= */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-left text-xs font-sans pt-4 border-t border-champagne-300/40">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-left text-xs pt-4 border-t border-champagne-300/40">
             <div className="p-4 bg-white rounded-2xl border border-champagne-300/50 space-y-1">
               <span className="text-[10px] uppercase font-mono text-gold-dark font-bold flex items-center gap-1">
                 <MapPin className="w-3.5 h-3.5" /> Destination Address
@@ -447,3 +520,5 @@ export const OrderSuccessPage: React.FC = () => {
     </div>
   );
 };
+
+export default OrderSuccessPage;

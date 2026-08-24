@@ -46,6 +46,7 @@ export interface CartItem {
     customNote?: string;
     ribbonColor?: string;
     boxType?: string;
+    selectedSize?: string;
   };
 }
 
