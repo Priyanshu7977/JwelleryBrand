@@ -66,9 +66,9 @@ export const Section01Arrival: React.FC = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Automatically start music and trigger post-video login as soon as user scrolls past the film sequence
+  // Automatically start music and trigger post-video login as soon as doors open & film reveals
   useEffect(() => {
-    if (scrollFraction >= 0.30 && !hasTriggeredVideoEnd.current) {
+    if (scrollFraction >= 0.12 && !hasTriggeredVideoEnd.current) {
       hasTriggeredVideoEnd.current = true;
       window.dispatchEvent(new CustomEvent('celestia:video-ended'));
 
@@ -81,14 +81,14 @@ export const Section01Arrival: React.FC = () => {
     }
   }, [scrollFraction, isAudioActive]);
 
-  // Video scrubber lerp loop (active only during film phase 0.00 - 0.35)
+  // Video scrubber lerp loop
   useEffect(() => {
-    if (scrollFraction > 0.38) {
+    if (scrollFraction > 0.20) {
       if (rafRef.current) cancelAnimationFrame(rafRef.current);
       return;
     }
 
-    const videoPhaseProgress = Math.min(1, Math.max(0, scrollFraction / 0.30));
+    const videoPhaseProgress = Math.min(1, Math.max(0, scrollFraction / 0.12));
     if (videoDuration > 0) {
       targetTimeRef.current = videoPhaseProgress * videoDuration;
     }
@@ -98,7 +98,7 @@ export const Section01Arrival: React.FC = () => {
       if (vid && !isNaN(vid.duration) && vid.duration > 0 && vid.readyState >= 2) {
         const diff = targetTimeRef.current - vid.currentTime;
         if (Math.abs(diff) > 0.01) {
-          vid.currentTime += diff * 0.30;
+          vid.currentTime += diff * 0.35;
         }
       }
       rafRef.current = requestAnimationFrame(renderLoop);
@@ -118,42 +118,119 @@ export const Section01Arrival: React.FC = () => {
     }
   };
 
-  // Phase Calculations:
-  // Phase 1 (0.00 - 0.32): Pure Fullscreen Fashion Video Intro
-  // Phase 2 (0.32 - 0.55): Grand Pristine Celestia Main Screen
-  // Phase 3 (0.55 - 0.78): Crazy 3D Spatial Scroll & Piece 01 Kinetic Glide-in
-  // Phase 4 (0.78 - 1.00): Piece 02 Kinetic Glide-in + Finale Collection Portal
-  const isVideoPhase = scrollFraction < 0.34;
-  const videoOpacity = Math.max(0, Math.min(1, 1 - (scrollFraction - 0.24) * 8.0));
-  const heroOpacity = Math.min(1, Math.max(0, (scrollFraction - 0.26) * 5.0));
+  // =========================================================================
+  // 1. DOOR OPENING PHASE (0.00 - 0.10): Fast, Smooth & 100% Reversible Doors
+  // =========================================================================
+  const doorProgress = Math.min(1, Math.max(0, scrollFraction / 0.09));
+  const easedDoorProgress = Math.pow(doorProgress, 1.1);
+  const doorLeftTranslate = -easedDoorProgress * 102; // -0% to -102%
+  const doorRightTranslate = easedDoorProgress * 102; // 0% to 102%
+  const doorSeamOpacity = Math.max(0, 1 - doorProgress * 3.0);
+  const doorOverallOpacity = doorProgress >= 0.98 ? 0 : 1;
 
-  // 3D WebGL progress
-  const threeDProgress = Math.max(0, Math.min(1, (scrollFraction - 0.30) / 0.70));
+  // =========================================================================
+  // 2. VIDEO FILM PHASE (0.05 - 0.16): Swift Reveal & Immediate Login Transition
+  // =========================================================================
+  const isVideoPhase = scrollFraction < 0.16;
+  const videoOpacity = Math.max(0, Math.min(1, 1 - (scrollFraction - 0.10) * 12.0));
+  const heroOpacity = Math.min(1, Math.max(0, (scrollFraction - 0.10) * 8.0));
 
-  // Center Brand Monument transforms
-  const monumentProgress = Math.max(0, Math.min(1, (scrollFraction - 0.32) / 0.68));
+  // 3. 3D WebGL & Kinetic Reveal Progress (0.15 - 1.00)
+  const threeDProgress = Math.max(0, Math.min(1, (scrollFraction - 0.12) / 0.88));
+  const monumentProgress = Math.max(0, Math.min(1, (scrollFraction - 0.14) / 0.86));
   const monumentScale = 1 - monumentProgress * 0.06;
   const monumentTranslateY = -monumentProgress * 25;
 
   // Kinetic Piece 01 Card
-  const p1Opacity = Math.max(0, Math.min(1, (scrollFraction - 0.48) * 5.0));
-  const p1TranslateX = Math.max(0, (0.70 - scrollFraction) * 100);
-  const p1Rotate = Math.max(0, (0.70 - scrollFraction) * 8);
+  const p1Opacity = Math.max(0, Math.min(1, (scrollFraction - 0.35) * 6.0));
+  const p1TranslateX = Math.max(0, (0.60 - scrollFraction) * 100);
+  const p1Rotate = Math.max(0, (0.60 - scrollFraction) * 8);
 
   // Kinetic Piece 02 Card
-  const p2Opacity = Math.max(0, Math.min(1, (scrollFraction - 0.68) * 5.0));
-  const p2TranslateX = Math.max(0, (0.90 - scrollFraction) * 100);
-  const p2Rotate = Math.max(0, (0.90 - scrollFraction) * -8);
+  const p2Opacity = Math.max(0, Math.min(1, (scrollFraction - 0.55) * 6.0));
+  const p2TranslateX = Math.max(0, (0.80 - scrollFraction) * 100);
+  const p2Rotate = Math.max(0, (0.80 - scrollFraction) * -8);
 
   return (
     <section
       ref={containerRef}
-      className="relative w-full h-[320vh] bg-pearl-100 selection:bg-champagne-300 transform-gpu"
+      className="relative w-full h-[260vh] bg-pearl-100 selection:bg-champagne-300 transform-gpu"
       id="section-arrival"
     >
       {/* Fixed Fullscreen Viewport (100vw x 100vh) */}
       <div className="sticky top-0 left-0 w-full h-screen overflow-hidden transform-gpu">
         
+        {/* ========================================================================= */}
+        {/* LAYER 0: ALWAYS-MOUNTED BIDIRECTIONAL ATELIER DOUBLE DOORS (0-18%)        */}
+        {/* ========================================================================= */}
+        <div
+          className="absolute inset-0 z-30 pointer-events-none overflow-hidden"
+          style={{
+            opacity: doorOverallOpacity,
+            visibility: doorOverallOpacity === 0 ? 'hidden' : 'visible',
+          }}
+        >
+          {/* Left Door Panel */}
+          <div
+            className="absolute top-0 bottom-0 left-0 w-1/2 overflow-hidden shadow-[10px_0_30px_rgba(0,0,0,0.8)] will-change-transform"
+            style={{
+              transform: `translate3d(${doorLeftTranslate}%, 0, 0)`,
+              background: 'linear-gradient(135deg, #15110F 0%, #0E0C0A 50%, #080706 100%)',
+              borderRight: '1px solid rgba(216, 195, 154, 0.45)',
+            }}
+          >
+            <div className="absolute inset-4 sm:inset-8 md:inset-12 border border-[#D8C39A]/10 rounded-sm pointer-events-none" />
+            <div className="absolute inset-8 sm:inset-14 md:inset-20 border border-[#D8C39A]/5 rounded-sm pointer-events-none" />
+            
+            {/* Left Half of Center Split Medallion */}
+            <div className="absolute top-1/2 right-0 -translate-y-1/2 translate-x-1/2 w-16 sm:w-20 md:w-24 h-16 sm:h-20 md:h-24 rounded-full border border-[#D8C39A]/40 bg-[#15110F] shadow-[0_0_25px_rgba(0,0,0,0.9)] flex items-center justify-start pl-2 sm:pl-3">
+              <div className="w-2 h-2 rounded-full bg-[#D8C39A]/70 shadow-[0_0_8px_#D8C39A]" />
+            </div>
+          </div>
+
+          {/* Right Door Panel */}
+          <div
+            className="absolute top-0 bottom-0 right-0 w-1/2 overflow-hidden shadow-[-10px_0_30px_rgba(0,0,0,0.8)] will-change-transform"
+            style={{
+              transform: `translate3d(${doorRightTranslate}%, 0, 0)`,
+              background: 'linear-gradient(225deg, #15110F 0%, #0E0C0A 50%, #080706 100%)',
+              borderLeft: '1px solid rgba(216, 195, 154, 0.45)',
+            }}
+          >
+            <div className="absolute inset-4 sm:inset-8 md:inset-12 border border-[#D8C39A]/10 rounded-sm pointer-events-none" />
+            <div className="absolute inset-8 sm:inset-14 md:inset-20 border border-[#D8C39A]/5 rounded-sm pointer-events-none" />
+
+            {/* Right Half of Center Split Medallion */}
+            <div className="absolute top-1/2 left-0 -translate-y-1/2 -translate-x-1/2 w-16 sm:w-20 md:w-24 h-16 sm:h-20 md:h-24 rounded-full border border-[#D8C39A]/40 bg-[#15110F] shadow-[0_0_25px_rgba(0,0,0,0.9)] flex items-center justify-end pr-2 sm:pr-3">
+              <div className="w-2 h-2 rounded-full bg-[#D8C39A]/70 shadow-[0_0_8px_#D8C39A]" />
+            </div>
+          </div>
+
+          {/* Center Door Seam Glowing Golden Thread */}
+          <div
+            className="absolute top-0 bottom-0 left-1/2 -translate-x-1/2 w-[2px] pointer-events-none"
+            style={{
+              opacity: doorSeamOpacity,
+              background: 'linear-gradient(to bottom, transparent, #D8C39A 30%, #FAF7F0 50%, #D8C39A 70%, transparent)',
+              boxShadow: '0 0 25px rgba(216, 195, 154, 0.9)',
+            }}
+          />
+
+          {/* Floating Instruction Banner on Closed Doors */}
+          <div
+            className="absolute inset-0 flex flex-col items-center justify-end pb-14 z-40"
+            style={{
+              opacity: Math.max(0, 1 - doorProgress * 4.0),
+              transform: `translateY(${doorProgress * 30}px)`,
+            }}
+          >
+            <div className="flex items-center gap-2.5 px-6 py-2.5 rounded-full bg-black/60 backdrop-blur-md border border-[#D8C39A]/50 text-xs font-mono uppercase tracking-widest text-[#FAF7F0] font-bold shadow-2xl">
+              <span>Scroll Down to Open Atelier Doors</span>
+              <ArrowDown className="w-4 h-4 text-[#D8C39A] animate-bounce" />
+            </div>
+          </div>
+        </div>
+
         {/* ========================================================================= */}
         {/* LAYER 1: PURE CINEMATIC FULLSCREEN VIDEO INTRO (ONLY VIDEO + LOGO) (0-32%) */}
         {/* ========================================================================= */}

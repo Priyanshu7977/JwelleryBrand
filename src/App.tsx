@@ -11,7 +11,7 @@ import { ConciergeModal } from './components/layout/ConciergeModal';
 import { CelestiaEntranceModal } from './components/layout/CelestiaEntranceModal';
 import { CustomCursor } from './components/ui/CustomCursor';
 import { ScrollToTop } from './components/layout/ScrollToTop';
-import { BrandedLoader } from './components/ui/BrandedLoader';
+import { CinematicAtelierOpening } from './components/ui/CinematicAtelierOpening';
 import { RouteTransition } from './components/layout/RouteTransition';
 import { FlyToCartAnimation } from './components/ui/FlyToCartAnimation';
 import { CheckCircle2 } from 'lucide-react';
@@ -85,9 +85,6 @@ const AppShell: React.FC = () => {
   return (
     <Router>
       <ScrollToTop />
-      {/* 1.2s Branded Pearl Entrance Loader */}
-      <BrandedLoader />
-
       {/* Cinematic Route Transition Curtain */}
       <RouteTransition />
 
