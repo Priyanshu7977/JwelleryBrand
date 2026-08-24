@@ -92,9 +92,6 @@ const AppShell: React.FC = () => {
       <FlyToCartAnimation />
 
       <div className="relative min-h-screen bg-pearl-100 text-obsidian selection:bg-champagne-300 selection:text-obsidian flex flex-col justify-between">
-        {/* Luxury Custom Cursor (Desktop) */}
-        <CustomCursor />
-
         {/* One-Shot Atelier Opening Doors Overlay (Isolated ceremony - unmounts after 3.6s) */}
         <CinematicAtelierOpening />
 
