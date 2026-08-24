@@ -128,9 +128,37 @@ CREATE POLICY "Users can manage own wishlist"
 ON public.wishlist_items FOR ALL 
 USING (auth.uid() = user_id);
 
+-- 6. CONTACT & CONCIERGE INQUIRIES TABLE
+CREATE TABLE IF NOT EXISTS public.contact_inquiries (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    name TEXT NOT NULL,
+    email TEXT NOT NULL,
+    phone TEXT,
+    inquiry_type TEXT NOT NULL, -- 'Jewellery' | 'Gifting' | 'Personalisation' | 'Order Help' | 'Private Appointment'
+    message TEXT NOT NULL,
+    status TEXT DEFAULT 'new' CHECK (status IN ('new', 'in_progress', 'resolved')),
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL
+);
+
+ALTER TABLE public.contact_inquiries ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Anyone can submit inquiry" 
+ON public.contact_inquiries FOR INSERT 
+WITH CHECK (true);
+
+-- 7. SHOPIFY WEBHOOKS DEDUPLICATION TABLE
+CREATE TABLE IF NOT EXISTS public.processed_webhooks (
+    webhook_id TEXT PRIMARY KEY,
+    topic TEXT NOT NULL,
+    shop_domain TEXT NOT NULL,
+    processed_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL
+);
+
 -- INDEXES FOR FAST LOOKUPS
 CREATE INDEX IF NOT EXISTS idx_orders_user_id ON public.orders(user_id);
 CREATE INDEX IF NOT EXISTS idx_orders_order_number ON public.orders(order_number);
 CREATE INDEX IF NOT EXISTS idx_tracking_order_id ON public.delivery_tracking(order_id);
 CREATE INDEX IF NOT EXISTS idx_tracking_number ON public.delivery_tracking(tracking_number);
 CREATE INDEX IF NOT EXISTS idx_wishlist_user ON public.wishlist_items(user_id);
+CREATE INDEX IF NOT EXISTS idx_inquiries_email ON public.contact_inquiries(email);
+

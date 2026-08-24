@@ -31,7 +31,7 @@ export const AccountPage: React.FC = () => {
   const { showToast, addToCart, setQuickViewProduct } = useCart();
   const { user, logout, isAuthenticated, wishlist, toggleWishlist } = useAuth();
   const navigate = useNavigate();
-  const [activeTab, setActiveTab] = useState<'profile' | 'orders' | 'addresses' | 'wishlist' | 'preferences'>('profile');
+  const [activeTab, setActiveTab] = useState<'profile' | 'orders' | 'tracking' | 'addresses' | 'wishlist' | 'preferences'>('profile');
   const [ordersList, setOrdersList] = useState<OrderMetadata[]>([]);
   const [ordersLoading, setOrdersLoading] = useState(false);
 
@@ -176,6 +176,7 @@ export const AccountPage: React.FC = () => {
           {[
             { id: 'profile', label: 'Member Profile', icon: <User className="w-3.5 h-3.5" /> },
             { id: 'orders', label: 'Atelier Dispatches', icon: <Package className="w-3.5 h-3.5" /> },
+            { id: 'tracking', label: 'Delivery Tracking', icon: <Truck className="w-3.5 h-3.5" /> },
             { id: 'addresses', label: 'Saved Addresses', icon: <MapPin className="w-3.5 h-3.5" /> },
             { id: 'wishlist', label: `Wishlist (${wishlist.length})`, icon: <Heart className="w-3.5 h-3.5" /> },
             { id: 'preferences', label: 'Preferences', icon: <Settings className="w-3.5 h-3.5" /> },
@@ -320,6 +321,68 @@ export const AccountPage: React.FC = () => {
                 ))}
               </div>
             )}
+          </div>
+        )}
+
+        {/* 2b. Delivery Tracking Tab */}
+        {activeTab === 'tracking' && (
+          <div className="space-y-6">
+            <div className="p-8 bg-pearl-50 rounded-3xl border border-champagne-300/60 shadow-sm space-y-6">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-champagne-300/40 pb-4">
+                <div>
+                  <h3 className="font-serif-luxury text-2xl text-obsidian">Live Parcel Tracking</h3>
+                  <p className="text-xs text-obsidian/60 font-sans">
+                    Track any active Mumbai Atelier dispatch or Pan-India express cargo.
+                  </p>
+                </div>
+
+                <Link
+                  to="/order-tracking"
+                  className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-obsidian text-pearl-100 text-xs uppercase font-mono tracking-wider font-bold hover:bg-obsidian-200 transition-all shadow-sm"
+                >
+                  <Truck className="w-3.5 h-3.5 text-champagne-300" />
+                  <span>Open Dedicated Tracking Center</span>
+                </Link>
+              </div>
+
+              {ordersList.length > 0 ? (
+                <div className="space-y-3">
+                  <span className="text-[10px] font-mono uppercase text-gold-dark font-bold block">
+                    Your Active Dispatches ({ordersList.length})
+                  </span>
+                  {ordersList.map((ord) => (
+                    <div
+                      key={ord.orderNumber}
+                      className="p-4 bg-white/90 rounded-2xl border border-champagne-300/60 flex flex-col sm:flex-row sm:items-center justify-between gap-3"
+                    >
+                      <div>
+                        <div className="flex items-center gap-2">
+                          <span className="font-mono text-sm font-bold text-obsidian">{ord.orderNumber}</span>
+                          <span className="text-xs text-obsidian/50 font-mono">Carrier: {ord.carrier}</span>
+                        </div>
+                        <p className="text-xs text-obsidian/70 font-sans mt-0.5">
+                          Estimated: <strong>{ord.estimatedDelivery?.estimatedDateFormatted || 'In Transit'}</strong> ({ord.estimatedDelivery?.expectedTimeWindow || '10:00 AM – 8:00 PM IST'})
+                        </p>
+                      </div>
+
+                      <Link
+                        to={`/order-tracking?id=${ord.orderNumber}`}
+                        className="px-4 py-2 rounded-full border border-champagne-300 bg-pearl-50 hover:bg-champagne-100 text-xs font-mono font-bold uppercase text-obsidian transition-all self-start sm:self-auto"
+                      >
+                        Track Milestone →
+                      </Link>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="text-center py-6 space-y-3">
+                  <p className="text-xs text-obsidian/60">No parcels currently in transit for your account.</p>
+                  <Link to="/order-tracking" className="text-xs font-mono font-bold text-gold-dark underline">
+                    Enter a tracking number manually →
+                  </Link>
+                </div>
+              )}
+            </div>
           </div>
         )}
 
