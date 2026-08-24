@@ -91,11 +91,13 @@ export const ContactPage: React.FC = () => {
   ];
 
   return (
-    <div className="w-full min-h-screen bg-pearl-100 pt-24 sm:pt-28 md:pt-36 pb-20 sm:pb-24 px-4 sm:px-6 md:px-10 lg:px-16 selection:bg-champagne-300">
-      {/* Ambient background glows */}
-      <div className="absolute top-20 left-1/2 -translate-x-1/2 w-[450px] sm:w-[650px] h-[280px] sm:h-[400px] bg-champagne-200/25 rounded-full blur-3xl pointer-events-none" />
+    <div className="w-full max-w-full min-h-screen bg-pearl-100 pt-24 sm:pt-28 md:pt-36 pb-20 sm:pb-24 px-4 sm:px-6 md:px-10 lg:px-16 selection:bg-champagne-300 overflow-x-hidden relative box-border">
+      {/* Ambient background glows - strictly clipped to prevent horizontal overflow */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
+        <div className="absolute top-20 left-1/2 -translate-x-1/2 w-[450px] sm:w-[650px] h-[280px] sm:h-[400px] bg-champagne-200/25 rounded-full blur-3xl" />
+      </div>
 
-      <div className="max-w-[1140px] mx-auto space-y-8 sm:space-y-12 md:space-y-14 relative z-10">
+      <div className="w-full max-w-[1140px] mx-auto space-y-8 sm:space-y-12 md:space-y-14 relative z-10 box-border">
         
         {/* ================================================================= */}
         {/* 1. EDITORIAL HEADER (Compact & Prominent)                          */}
@@ -118,10 +120,10 @@ export const ContactPage: React.FC = () => {
         {/* ================================================================= */}
         {/* 2. CORE TWO-COLUMN EDITORIAL CONTACT SECTION                      */}
         {/* ================================================================= */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 lg:gap-12 items-start">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 lg:gap-12 items-start max-w-full">
           
           {/* Left Column: Direct Reach Us Cards (5 cols) */}
-          <div className="w-full lg:col-span-5 space-y-4">
+          <div className="w-full max-w-full lg:col-span-5 space-y-4">
             
             <div className="space-y-1">
               <span className="text-[10px] sm:text-[11px] uppercase font-mono tracking-widest text-gold-dark font-bold">
@@ -135,20 +137,20 @@ export const ContactPage: React.FC = () => {
               </p>
             </div>
 
-            {/* Direct Cards (Equal Height & Full Readability) */}
-            <div className="space-y-3 pt-1">
+            {/* Direct Cards (Equal Height & 100% Locked Inside Viewport) */}
+            <div className="space-y-3 pt-1 max-w-full">
               
               {/* WhatsApp Card */}
-              <div className="min-h-[72px] p-3.5 sm:p-4 rounded-2xl bg-white border border-emerald-300/60 shadow-sm hover:border-emerald-500 transition-all flex items-center justify-between gap-3 group">
-                <div className="flex items-center gap-3 min-w-0">
+              <div className="min-h-[72px] p-3.5 sm:p-4 rounded-2xl bg-white border border-emerald-300/60 shadow-sm hover:border-emerald-500 transition-all flex items-center justify-between gap-3 max-w-full box-border group">
+                <div className="flex items-center gap-3 min-w-0 flex-1">
                   <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-emerald-50 text-emerald-800 flex items-center justify-center shrink-0 shadow-xs">
                     <MessageCircle className="w-5 h-5" />
                   </div>
-                  <div className="min-w-0">
+                  <div className="min-w-0 flex-1">
                     <span className="text-[10px] sm:text-[11px] uppercase font-mono tracking-wider text-emerald-800 font-bold block leading-tight">
                       WhatsApp Concierge
                     </span>
-                    <span className="text-xs sm:text-sm font-mono font-semibold text-obsidian block">
+                    <span className="text-xs sm:text-sm font-mono font-semibold text-obsidian block truncate">
                       {BRAND_INFO.whatsapp}
                     </span>
                   </div>
@@ -177,17 +179,17 @@ export const ContactPage: React.FC = () => {
                 </div>
               </div>
 
-              {/* Email Card (Full Email Readable Without Truncation) */}
-              <div className="min-h-[72px] p-3.5 sm:p-4 rounded-2xl bg-white border border-champagne-300/60 shadow-sm hover:border-gold-dark transition-all flex items-center justify-between gap-3 group">
-                <div className="flex items-center gap-3 min-w-0">
+              {/* Email Card (Locked cleanly without overflow) */}
+              <div className="min-h-[72px] p-3.5 sm:p-4 rounded-2xl bg-white border border-champagne-300/60 shadow-sm hover:border-gold-dark transition-all flex items-center justify-between gap-3 max-w-full box-border group">
+                <div className="flex items-center gap-3 min-w-0 flex-1">
                   <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-champagne-100/70 text-gold-dark flex items-center justify-center shrink-0 shadow-xs">
                     <Mail className="w-5 h-5" />
                   </div>
-                  <div className="min-w-0">
+                  <div className="min-w-0 flex-1">
                     <span className="text-[10px] sm:text-[11px] uppercase font-mono tracking-wider text-gold-dark font-bold block leading-tight">
                       Email Inquiry
                     </span>
-                    <span className="text-xs sm:text-sm font-sans font-medium text-obsidian block break-all sm:break-normal">
+                    <span className="text-xs sm:text-sm font-sans font-medium text-obsidian block truncate max-w-[190px] sm:max-w-none">
                       {BRAND_INFO.email}
                     </span>
                   </div>
@@ -215,16 +217,16 @@ export const ContactPage: React.FC = () => {
               </div>
 
               {/* Phone Line Card */}
-              <div className="min-h-[72px] p-3.5 sm:p-4 rounded-2xl bg-white border border-champagne-300/60 shadow-sm hover:border-gold-dark transition-all flex items-center justify-between gap-3 group">
-                <div className="flex items-center gap-3 min-w-0">
+              <div className="min-h-[72px] p-3.5 sm:p-4 rounded-2xl bg-white border border-champagne-300/60 shadow-sm hover:border-gold-dark transition-all flex items-center justify-between gap-3 max-w-full box-border group">
+                <div className="flex items-center gap-3 min-w-0 flex-1">
                   <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-champagne-100/70 text-gold-dark flex items-center justify-center shrink-0 shadow-xs">
                     <Phone className="w-5 h-5" />
                   </div>
-                  <div className="min-w-0">
+                  <div className="min-w-0 flex-1">
                     <span className="text-[10px] sm:text-[11px] uppercase font-mono tracking-wider text-gold-dark font-bold block leading-tight">
                       Atelier Helpline
                     </span>
-                    <span className="text-xs sm:text-sm font-mono font-semibold text-obsidian block">
+                    <span className="text-xs sm:text-sm font-mono font-semibold text-obsidian block truncate">
                       {BRAND_INFO.phone}
                     </span>
                   </div>
@@ -252,7 +254,7 @@ export const ContactPage: React.FC = () => {
               </div>
 
               {/* Location & Hours Card */}
-              <div className="p-4 rounded-2xl bg-pearl-50 border border-champagne-300/70 space-y-2.5">
+              <div className="p-4 rounded-2xl bg-pearl-50 border border-champagne-300/70 space-y-2.5 max-w-full box-border">
                 <div className="flex items-start gap-2.5">
                   <MapPin className="w-4 h-4 text-gold-dark shrink-0 mt-0.5" />
                   <div className="text-xs sm:text-sm text-obsidian/85 leading-snug font-sans">
@@ -285,7 +287,7 @@ export const ContactPage: React.FC = () => {
           </div>
 
           {/* Right Column: Full-Width Clean Contact Form (7 cols) */}
-          <div className="w-full lg:col-span-7 bg-white p-5 sm:p-8 md:p-10 rounded-3xl border border-champagne-300/80 shadow-luxury-soft space-y-5">
+          <div className="w-full max-w-full lg:col-span-7 bg-white p-5 sm:p-8 md:p-10 rounded-3xl border border-champagne-300/80 shadow-luxury-soft space-y-5 box-border">
             
             <div className="space-y-1 border-b border-champagne-300/40 pb-3.5">
               <h2 className="font-serif-luxury text-2xl sm:text-3xl text-obsidian uppercase">
@@ -296,10 +298,10 @@ export const ContactPage: React.FC = () => {
               </p>
             </div>
 
-            <form onSubmit={handleSubmit} className="space-y-4">
+            <form onSubmit={handleSubmit} className="space-y-4 max-w-full">
               
               {/* Name Field */}
-              <div className="space-y-1.5">
+              <div className="space-y-1.5 max-w-full">
                 <label className="text-[11px] sm:text-xs uppercase font-mono tracking-wider text-obsidian/75 font-bold block">
                   Full Name *
                 </label>
@@ -309,13 +311,13 @@ export const ContactPage: React.FC = () => {
                   placeholder="Your Name"
                   value={formData.name}
                   onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                  className="w-full px-4 py-3.5 rounded-xl bg-pearl-50/60 border border-champagne-300/80 font-sans text-sm text-obsidian placeholder:text-obsidian/40 focus:outline-none focus:border-gold-dark focus:bg-white transition-all shadow-sm"
+                  className="w-full max-w-full px-4 py-3.5 rounded-xl bg-pearl-50/60 border border-champagne-300/80 font-sans text-sm text-obsidian placeholder:text-obsidian/40 focus:outline-none focus:border-gold-dark focus:bg-white transition-all shadow-sm box-border"
                 />
               </div>
 
               {/* Email & Phone Grid */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 sm:gap-4">
-                <div className="space-y-1.5">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 sm:gap-4 max-w-full">
+                <div className="space-y-1.5 max-w-full">
                   <label className="text-[11px] sm:text-xs uppercase font-mono tracking-wider text-obsidian/75 font-bold block">
                     Email Address *
                   </label>
@@ -325,11 +327,11 @@ export const ContactPage: React.FC = () => {
                     placeholder="you@example.com"
                     value={formData.email}
                     onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                    className="w-full px-4 py-3.5 rounded-xl bg-pearl-50/60 border border-champagne-300/80 font-sans text-sm text-obsidian placeholder:text-obsidian/40 focus:outline-none focus:border-gold-dark focus:bg-white transition-all shadow-sm"
+                    className="w-full max-w-full px-4 py-3.5 rounded-xl bg-pearl-50/60 border border-champagne-300/80 font-sans text-sm text-obsidian placeholder:text-obsidian/40 focus:outline-none focus:border-gold-dark focus:bg-white transition-all shadow-sm box-border"
                   />
                 </div>
 
-                <div className="space-y-1.5">
+                <div className="space-y-1.5 max-w-full">
                   <label className="text-[11px] sm:text-xs uppercase font-mono tracking-wider text-obsidian/75 font-bold block">
                     Phone / WhatsApp (Optional)
                   </label>
@@ -338,13 +340,13 @@ export const ContactPage: React.FC = () => {
                     placeholder="+91 98765 43210"
                     value={formData.phone}
                     onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                    className="w-full px-4 py-3.5 rounded-xl bg-pearl-50/60 border border-champagne-300/80 font-sans text-sm text-obsidian placeholder:text-obsidian/40 focus:outline-none focus:border-gold-dark focus:bg-white transition-all shadow-sm"
+                    className="w-full max-w-full px-4 py-3.5 rounded-xl bg-pearl-50/60 border border-champagne-300/80 font-sans text-sm text-obsidian placeholder:text-obsidian/40 focus:outline-none focus:border-gold-dark focus:bg-white transition-all shadow-sm box-border"
                   />
                 </div>
               </div>
 
               {/* Message Field */}
-              <div className="space-y-1.5">
+              <div className="space-y-1.5 max-w-full">
                 <label className="text-[11px] sm:text-xs uppercase font-mono tracking-wider text-obsidian/75 font-bold block">
                   Message *
                 </label>
@@ -354,16 +356,16 @@ export const ContactPage: React.FC = () => {
                   placeholder="How can we help you today?"
                   value={formData.message}
                   onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                  className="w-full p-4 rounded-xl bg-pearl-50/60 border border-champagne-300/80 font-sans text-sm text-obsidian placeholder:text-obsidian/40 focus:outline-none focus:border-gold-dark focus:bg-white transition-all shadow-sm leading-relaxed resize-y"
+                  className="w-full max-w-full p-4 rounded-xl bg-pearl-50/60 border border-champagne-300/80 font-sans text-sm text-obsidian placeholder:text-obsidian/40 focus:outline-none focus:border-gold-dark focus:bg-white transition-all shadow-sm leading-relaxed resize-y box-border"
                 />
               </div>
 
               {/* Submit Button */}
-              <div className="pt-1">
+              <div className="pt-1 max-w-full">
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="w-full py-4 px-6 rounded-full bg-obsidian hover:bg-obsidian-200 text-pearl-100 text-xs sm:text-sm uppercase font-mono tracking-widest font-bold transition-all flex items-center justify-center gap-2 shadow-luxury-soft group disabled:opacity-70"
+                  className="w-full max-w-full py-4 px-6 rounded-full bg-obsidian hover:bg-obsidian-200 text-pearl-100 text-xs sm:text-sm uppercase font-mono tracking-widest font-bold transition-all flex items-center justify-center gap-2 shadow-luxury-soft group disabled:opacity-70 box-border"
                 >
                   {isSubmitting ? (
                     <span>Sending message...</span>
@@ -390,7 +392,7 @@ export const ContactPage: React.FC = () => {
         {/* ================================================================= */}
         {/* 3. CLEAN RESPONSIVE MAP SECTION (FIND US IN MUMBAI)               */}
         {/* ================================================================= */}
-        <div className="pt-2 sm:pt-4 space-y-4">
+        <div className="pt-2 sm:pt-4 space-y-4 max-w-full">
           <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-2 border-b border-champagne-300/40 pb-3">
             <div>
               <div className="inline-flex items-center gap-1.5 text-[10px] sm:text-[11px] uppercase font-mono tracking-widest text-gold-dark font-bold">
@@ -406,13 +408,13 @@ export const ContactPage: React.FC = () => {
             </p>
           </div>
 
-          <div className="rounded-3xl bg-white border border-champagne-300/70 shadow-sm overflow-hidden">
+          <div className="rounded-3xl bg-white border border-champagne-300/70 shadow-sm overflow-hidden max-w-full box-border">
             {/* Embedded Google Map */}
-            <div className="relative w-full h-[220px] sm:h-[280px] md:h-[320px] bg-sand/30 overflow-hidden">
+            <div className="relative w-full max-w-full h-[220px] sm:h-[280px] md:h-[320px] bg-sand/30 overflow-hidden">
               <iframe
                 title="Celestia Mumbai Atelier Map"
                 src="https://maps.google.com/maps?q=Bandra%20West,%20Mumbai,%20Maharashtra%20400050,%20India&t=&z=14&ie=UTF8&iwloc=&output=embed"
-                className="w-full h-full border-0"
+                className="w-full h-full border-0 block"
                 loading="lazy"
                 allowFullScreen
                 referrerPolicy="no-referrer-when-downgrade"
@@ -420,15 +422,15 @@ export const ContactPage: React.FC = () => {
             </div>
 
             {/* Map Action Footer */}
-            <div className="p-4 bg-pearl-50/90 border-t border-champagne-300/40 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs">
-              <span className="text-xs font-mono text-obsidian/80 text-center sm:text-left">
+            <div className="p-4 bg-pearl-50/90 border-t border-champagne-300/40 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs max-w-full box-border">
+              <span className="text-xs font-mono text-obsidian/80 text-center sm:text-left truncate max-w-full">
                 Bandra West, Mumbai, Maharashtra 400050, India
               </span>
               <a
                 href="https://maps.google.com/?q=Bandra+West+Mumbai+400050"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="px-4 py-2.5 rounded-full bg-obsidian hover:bg-obsidian-200 text-pearl-100 text-xs uppercase font-mono tracking-wider font-bold flex items-center gap-1.5 shadow-sm transition-all"
+                className="px-4 py-2.5 rounded-full bg-obsidian hover:bg-obsidian-200 text-pearl-100 text-xs uppercase font-mono tracking-wider font-bold flex items-center gap-1.5 shadow-sm transition-all shrink-0"
               >
                 <MapPin className="w-3.5 h-3.5 text-champagne-300" />
                 <span>Open in Google Maps</span>
@@ -451,11 +453,11 @@ export const ContactPage: React.FC = () => {
             </h3>
           </div>
 
-          <div className="space-y-3">
+          <div className="space-y-3 max-w-full">
             {faqs.map((faq, i) => (
               <div
                 key={i}
-                className="rounded-2xl bg-white border border-champagne-300/60 overflow-hidden transition-all shadow-sm"
+                className="rounded-2xl bg-white border border-champagne-300/60 overflow-hidden transition-all shadow-sm max-w-full"
               >
                 <button
                   type="button"
