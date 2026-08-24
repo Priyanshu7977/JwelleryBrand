@@ -1,25 +1,14 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Sparkles, ArrowDown, ArrowRight, ShieldCheck, Truck, Award, Volume2, VolumeX, Play, Pause } from 'lucide-react';
-import { atelierSound } from '../../utils/audioAtelier';
+import { Sparkles, ArrowRight, ShieldCheck, Truck, Award } from 'lucide-react';
 
 export const Section01Arrival: React.FC = () => {
   const containerRef = useRef<HTMLDivElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
-
   const [isLoaded, setIsLoaded] = useState(false);
-  const [isAudioActive, setIsAudioActive] = useState(false);
-  const [isVideoPlaying, setIsVideoPlaying] = useState(true);
 
   useEffect(() => {
     const timer = setTimeout(() => setIsLoaded(true), 80);
     return () => clearTimeout(timer);
-  }, []);
-
-  useEffect(() => {
-    const unsubscribe = atelierSound.subscribe((state) => {
-      setIsAudioActive(state === 'AUDIO_ENABLED');
-    });
-    return unsubscribe;
   }, []);
 
   // Ensure background video plays automatically
@@ -31,32 +20,10 @@ export const Section01Arrival: React.FC = () => {
     }
   }, []);
 
-  const toggleVideoPlayback = () => {
-    if (videoRef.current) {
-      if (videoRef.current.paused) {
-        videoRef.current.play();
-        setIsVideoPlaying(true);
-      } else {
-        videoRef.current.pause();
-        setIsVideoPlaying(false);
-      }
-    }
-  };
-
-  const toggleAudio = async () => {
-    if (!isAudioActive) {
-      const started = await atelierSound.start();
-      setIsAudioActive(started);
-    } else {
-      atelierSound.stop();
-      setIsAudioActive(false);
-    }
-  };
-
   return (
     <section
       ref={containerRef}
-      className="relative w-full h-[100dvh] min-h-[580px] max-h-[960px] bg-pearl-100 selection:bg-champagne-300 flex flex-col justify-between pt-24 sm:pt-28 lg:pt-32 pb-4 sm:pb-6 px-4 sm:px-6 md:px-10 lg:px-14 overflow-hidden"
+      className="relative w-full h-[100dvh] min-h-[580px] max-h-[960px] bg-pearl-100 selection:bg-champagne-300 flex flex-col justify-between pt-24 sm:pt-28 lg:pt-32 pb-6 sm:pb-8 px-4 sm:px-6 md:px-10 lg:px-14 overflow-hidden"
       id="section-arrival"
     >
       {/* ===================================================================== */}
@@ -180,7 +147,7 @@ export const Section01Arrival: React.FC = () => {
       </div>
 
       {/* ===================================================================== */}
-      {/* BOTTOM CONTROLLER BAR & STATS (Compact & Flush)                       */}
+      {/* BOTTOM STATS STRIP                                                    */}
       {/* ===================================================================== */}
       <div
         style={{
@@ -192,47 +159,8 @@ export const Section01Arrival: React.FC = () => {
         <div className="flex items-center gap-2 text-left">
           <span className="hidden sm:inline w-6 h-0.5 bg-gold-dark" />
           <span className="text-[10px] sm:text-xs uppercase font-mono tracking-widest text-obsidian font-bold">
-            1,000+ Journeys • Pan-India Free Express
+            1,000+ Journeys • Pan-India Free Express Delivery
           </span>
-        </div>
-
-        {/* Media Controls & Scroll CTA */}
-        <div className="flex items-center gap-2">
-          {/* Video Play/Pause */}
-          <button
-            onClick={toggleVideoPlayback}
-            className="p-2 rounded-full border border-champagne-300/80 bg-white/90 hover:bg-champagne-100 text-obsidian transition-all shadow-xs shrink-0"
-            title={isVideoPlaying ? 'Pause Background Video' : 'Play Background Video'}
-            aria-label="Toggle Background Video"
-          >
-            {isVideoPlaying ? <Pause className="w-3 h-3" /> : <Play className="w-3 h-3" />}
-          </button>
-
-          {/* Atmospheric Sound */}
-          <button
-            onClick={toggleAudio}
-            className={`p-2 rounded-full border transition-all shadow-xs shrink-0 ${
-              isAudioActive
-                ? 'bg-champagne-300 border-gold-dark text-obsidian'
-                : 'border-champagne-300/80 bg-white/90 hover:bg-champagne-100 text-obsidian'
-            }`}
-            title={isAudioActive ? 'Sound: ON' : 'Sound: OFF'}
-            aria-label="Toggle Atmosphere Sound"
-          >
-            {isAudioActive ? (
-              <Volume2 className="w-3 h-3 text-gold-dark animate-pulse" />
-            ) : (
-              <VolumeX className="w-3 h-3 text-obsidian" />
-            )}
-          </button>
-
-          <a
-            href="#section-reveal"
-            className="flex items-center gap-1.5 text-[10px] sm:text-xs uppercase font-mono tracking-widest text-obsidian hover:text-gold-dark transition-all group font-bold px-3.5 py-1.5 rounded-full bg-white/90 border border-champagne-300/80 shadow-xs"
-          >
-            <span>Explore</span>
-            <ArrowDown className="w-3 h-3 text-gold-dark group-hover:translate-y-0.5 transition-transform" />
-          </a>
         </div>
       </div>
     </section>
