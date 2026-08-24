@@ -6,6 +6,8 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
+    "typecheck": "tsc --noEmit",
+    "test": "node test/backend.test.mjs",
     "preview": "vite preview"
   },
   "dependencies": {
