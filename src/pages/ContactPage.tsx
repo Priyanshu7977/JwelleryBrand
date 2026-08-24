@@ -56,11 +56,21 @@ export const ContactPage: React.FC = () => {
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [copiedField, setCopiedField] = useState<string | null>(null);
   const [activeFaqIndex, setActiveFaqIndex] = useState<number | null>(0);
-  const [activeLocation, setActiveLocation] = useState<'bandra' | 'dispatch' | 'pan-india'>('bandra');
+  const [mapView, setMapView] = useState<'india' | 'mumbai' | 'atelier'>('mumbai');
   const [appointmentModalOpen, setAppointmentModalOpen] = useState(false);
   const [appointmentDate, setAppointmentDate] = useState('');
   const [appointmentTime, setAppointmentTime] = useState('14:00');
   const [appointmentReason, setAppointmentReason] = useState('Bespoke Gifting & Hamper Curation');
+
+  const getMapEmbedUrl = () => {
+    if (mapView === 'india') {
+      return 'https://maps.google.com/maps?q=Mumbai,%20Maharashtra,%20India&t=&z=5&ie=UTF8&iwloc=&output=embed';
+    }
+    if (mapView === 'mumbai') {
+      return 'https://maps.google.com/maps?q=Mumbai,%20Maharashtra,%20India&t=&z=11&ie=UTF8&iwloc=&output=embed';
+    }
+    return 'https://maps.google.com/maps?q=Bandra%20West,%20Mumbai,%20Maharashtra%20400050,%20India&t=&z=15&ie=UTF8&iwloc=&output=embed';
+  };
 
   const enquiryCategories: EnquiryCategory[] = [
     {
@@ -454,175 +464,139 @@ export const ContactPage: React.FC = () => {
 
 
         {/* ================================================================= */}
-        {/* 3. INTERACTIVE MUMBAI ATELIER MAP & GEOGRAPHY PULSE               */}
+        {/* 3. REAL INTERACTIVE MAP: "FIND US IN MUMBAI."                     */}
         {/* ================================================================= */}
-        <section className="space-y-6">
-          <div className="bg-obsidian text-pearl-100 rounded-3xl p-8 sm:p-12 md:p-16 border border-champagne-400/40 shadow-2xl relative overflow-hidden">
-            {/* Background Texture & Compass Watermark */}
-            <div className="absolute -right-20 -bottom-20 w-96 h-96 opacity-10 pointer-events-none text-champagne-300">
-              <Compass className="w-full h-full stroke-[0.5]" />
-            </div>
-
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center relative z-10">
-              
-              {/* Left Details */}
-              <div className="lg:col-span-6 space-y-6">
-                <div className="space-y-2">
-                  <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 border border-champagne-400/30 text-[10px] font-mono uppercase tracking-widest text-champagne-300">
-                    <MapPin className="w-3 h-3 text-gold" />
-                    <span>Mumbai Atelier & Dispatch Grid</span>
-                  </div>
-                  <h2 className="font-serif-luxury text-4xl sm:text-5xl text-pearl-50 uppercase">
-                    CRAFTED ON THE <span className="italic font-light text-champagne-300">Coast</span>.
-                  </h2>
-                  <p className="text-xs sm:text-sm text-pearl-200/80 font-sans leading-relaxed">
-                    Our creative studio operates from Bandra West, Mumbai. Every single parcel is inspected under natural coastal daylight, sealed with gold wax, and handed directly to express flight and road couriers.
-                  </p>
-                </div>
-
-                {/* Interactive Location Hub Selector */}
-                <div className="space-y-2.5">
-                  <button
-                    onClick={() => setActiveLocation('bandra')}
-                    className={`w-full p-4 rounded-2xl text-left border transition-all flex items-start gap-4 ${
-                      activeLocation === 'bandra'
-                        ? 'bg-white/15 border-champagne-300 text-pearl-50 shadow-lg'
-                        : 'bg-white/5 border-white/10 text-pearl-200/70 hover:bg-white/10'
-                    }`}
-                  >
-                    <div className="w-8 h-8 rounded-full bg-champagne-300 text-obsidian flex items-center justify-center text-xs font-mono font-bold shrink-0 mt-0.5">
-                      01
-                    </div>
-                    <div>
-                      <p className="font-serif-luxury text-base font-semibold text-pearl-50">
-                        Bandra West Creative Studio & Workshop
-                      </p>
-                      <p className="text-xs text-pearl-200/70 font-sans mt-0.5">
-                        Design lab, personalised polaroid darkroom printing, and archival wax sealing.
-                      </p>
-                    </div>
-                  </button>
-
-                  <button
-                    onClick={() => setActiveLocation('dispatch')}
-                    className={`w-full p-4 rounded-2xl text-left border transition-all flex items-start gap-4 ${
-                      activeLocation === 'dispatch'
-                        ? 'bg-white/15 border-champagne-300 text-pearl-50 shadow-lg'
-                        : 'bg-white/5 border-white/10 text-pearl-200/70 hover:bg-white/10'
-                    }`}
-                  >
-                    <div className="w-8 h-8 rounded-full bg-champagne-300 text-obsidian flex items-center justify-center text-xs font-mono font-bold shrink-0 mt-0.5">
-                      02
-                    </div>
-                    <div>
-                      <p className="font-serif-luxury text-base font-semibold text-pearl-50">
-                        Mumbai Express Dispatch Gateway
-                      </p>
-                      <p className="text-xs text-pearl-200/70 font-sans mt-0.5">
-                        Same-day courier dispatch across South Mumbai, Western & Central Suburbs, and Navi Mumbai.
-                      </p>
-                    </div>
-                  </button>
-
-                  <button
-                    onClick={() => setActiveLocation('pan-india')}
-                    className={`w-full p-4 rounded-2xl text-left border transition-all flex items-start gap-4 ${
-                      activeLocation === 'pan-india'
-                        ? 'bg-white/15 border-champagne-300 text-pearl-50 shadow-lg'
-                        : 'bg-white/5 border-white/10 text-pearl-200/70 hover:bg-white/10'
-                    }`}
-                  >
-                    <div className="w-8 h-8 rounded-full bg-champagne-300 text-obsidian flex items-center justify-center text-xs font-mono font-bold shrink-0 mt-0.5">
-                      03
-                    </div>
-                    <div>
-                      <p className="font-serif-luxury text-base font-semibold text-pearl-50">
-                        Pan-India Air Logistics Network
-                      </p>
-                      <p className="text-xs text-pearl-200/70 font-sans mt-0.5">
-                        Daily air cargo dispatches via Delhivery & Bluedart to Delhi, Bengaluru, Hyderabad, and all states.
-                      </p>
-                    </div>
-                  </button>
-                </div>
-
-                {/* Actions */}
-                <div className="flex flex-wrap gap-3 pt-2">
-                  <a
-                    href="https://maps.google.com/?q=Bandra+West+Mumbai"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="px-6 py-3 rounded-full bg-champagne-300 hover:bg-champagne-200 text-obsidian text-xs uppercase font-mono tracking-widest font-bold flex items-center gap-2 shadow-md transition-all"
-                  >
-                    <MapPin className="w-4 h-4" />
-                    <span>Open in Google Maps</span>
-                    <ExternalLink className="w-3.5 h-3.5 opacity-70" />
-                  </a>
-
-                  <button
-                    onClick={() => setAppointmentModalOpen(true)}
-                    className="px-6 py-3 rounded-full border border-champagne-400/60 bg-transparent hover:bg-white/10 text-pearl-100 text-xs uppercase font-mono tracking-widest font-semibold flex items-center gap-2 transition-all"
-                  >
-                    <Calendar className="w-4 h-4 text-champagne-300" />
-                    <span>Book Private Consultation</span>
-                  </button>
-                </div>
+        <section className="space-y-6" id="atelier-map-section">
+          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 border-b border-champagne-300/40 pb-6">
+            <div className="space-y-1">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-pearl-50 border border-champagne-300/70 text-[10px] font-mono uppercase tracking-widest text-gold-dark font-semibold shadow-sm">
+                <MapPin className="w-3.5 h-3.5" />
+                <span>Geographic Atelier Landmark</span>
               </div>
+              <h2 className="font-serif-luxury text-3xl sm:text-5xl text-obsidian uppercase">
+                FIND US IN <span className="italic font-light text-gold-dark">Mumbai.</span>
+              </h2>
+            </div>
+            <p className="text-xs sm:text-sm text-obsidian/70 font-sans max-w-md">
+              From the coastal studio in Bandra West to every doorstep across India. Discover our flagship atelier coordinates.
+            </p>
+          </div>
 
-              {/* Right Stylized Interactive Radar Graphic */}
-              <div className="lg:col-span-6 relative">
-                <div className="relative aspect-square max-w-md mx-auto rounded-3xl bg-[#120F0D] border border-champagne-400/30 p-6 flex flex-col justify-between overflow-hidden shadow-2xl">
-                  
-                  {/* Grid Lines */}
-                  <div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff08_1px,transparent_1px),linear-gradient(to_bottom,#ffffff08_1px,transparent_1px)] bg-[size:28px_28px]" />
-                  
-                  {/* Pulse Rings */}
-                  <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 rounded-full border border-champagne-400/20 animate-ping opacity-40 pointer-events-none" />
-                  <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-44 h-44 rounded-full border border-champagne-300/30" />
-                  <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-24 h-24 rounded-full bg-champagne-300/10 border border-champagne-300/50" />
-
-                  {/* Header info */}
-                  <div className="relative z-10 flex items-center justify-between text-xs font-mono text-champagne-300/90">
-                    <span className="tracking-widest">19.0596° N, 72.8295° E</span>
-                    <span className="inline-flex items-center gap-1.5 bg-emerald-950/80 border border-emerald-600/50 text-emerald-400 px-2.5 py-0.5 rounded-full text-[10px]">
-                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-                      LIVE STUDIO
+          <div className="bg-pearl-50 rounded-3xl border border-champagne-300/70 shadow-luxury-soft overflow-hidden">
+            
+            {/* Top Toolbar / View Switcher */}
+            <div className="p-4 sm:p-6 border-b border-champagne-300/40 flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white/70">
+              
+              {/* Location Badge & Status */}
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-2xl bg-champagne-100 text-gold-dark flex items-center justify-center shrink-0 shadow-inner">
+                  <MapPin className="w-5 h-5" />
+                </div>
+                <div>
+                  <div className="flex items-center gap-2">
+                    <h3 className="font-serif-luxury text-lg text-obsidian font-bold">
+                      Celestia Mumbai Atelier
+                    </h3>
+                    <span className="inline-flex items-center gap-1.5 bg-emerald-100 text-emerald-800 border border-emerald-300 px-2 py-0.5 rounded-full text-[10px] font-mono font-semibold">
+                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-600 animate-pulse" />
+                      Live Studio
                     </span>
                   </div>
-
-                  {/* Central Atelier Beacon */}
-                  <div className="relative z-10 text-center my-auto space-y-2">
-                    <div className="w-14 h-14 mx-auto rounded-full bg-gradient-to-br from-champagne-200 to-gold-dark text-obsidian flex items-center justify-center shadow-[0_0_30px_rgba(216,195,154,0.6)] animate-bounce-short">
-                      <Sparkles className="w-6 h-6" />
-                    </div>
-                    <div>
-                      <h4 className="font-serif-luxury text-xl text-pearl-50">
-                        {activeLocation === 'bandra' && 'Bandra West Atelier'}
-                        {activeLocation === 'dispatch' && 'Western Express Hub'}
-                        {activeLocation === 'pan-india' && 'Air Logistics Gateway'}
-                      </h4>
-                      <p className="text-[11px] font-mono text-champagne-200/80">
-                        Mumbai • Dispatches Active
-                      </p>
-                    </div>
-                  </div>
-
-                  {/* Bottom Stats */}
-                  <div className="relative z-10 grid grid-cols-2 gap-2 pt-4 border-t border-white/10 text-xs font-mono">
-                    <div className="bg-white/5 p-2.5 rounded-xl">
-                      <span className="text-pearl-200/60 block text-[9px] uppercase">Daily Parcels</span>
-                      <span className="text-pearl-100 font-bold">1,000+ Dispatched</span>
-                    </div>
-                    <div className="bg-white/5 p-2.5 rounded-xl text-right">
-                      <span className="text-pearl-200/60 block text-[9px] uppercase">Avg Fulfillment</span>
-                      <span className="text-emerald-400 font-bold">&lt; 4 Hours</span>
-                    </div>
-                  </div>
-
+                  <p className="text-xs text-obsidian/70 font-sans">
+                    Bandra West, Mumbai, Maharashtra 400050, India
+                  </p>
                 </div>
               </div>
 
+              {/* View Controller (India -> Mumbai -> Bandra Atelier) */}
+              <div className="flex items-center gap-1.5 p-1 bg-pearl-100 rounded-full border border-champagne-300/60 self-start md:self-auto">
+                <button
+                  type="button"
+                  onClick={() => setMapView('india')}
+                  className={`px-3.5 py-1.5 rounded-full text-xs font-mono transition-all ${
+                    mapView === 'india'
+                      ? 'bg-obsidian text-pearl-100 shadow-sm font-semibold'
+                      : 'text-obsidian/70 hover:text-obsidian'
+                  }`}
+                >
+                  🇮🇳 India Overview
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setMapView('mumbai')}
+                  className={`px-3.5 py-1.5 rounded-full text-xs font-mono transition-all ${
+                    mapView === 'mumbai'
+                      ? 'bg-obsidian text-pearl-100 shadow-sm font-semibold'
+                      : 'text-obsidian/70 hover:text-obsidian'
+                  }`}
+                >
+                  📍 Mumbai Metro
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setMapView('atelier')}
+                  className={`px-3.5 py-1.5 rounded-full text-xs font-mono transition-all ${
+                    mapView === 'atelier'
+                      ? 'bg-obsidian text-pearl-100 shadow-sm font-semibold'
+                      : 'text-obsidian/70 hover:text-obsidian'
+                  }`}
+                >
+                  🏛️ Bandra Atelier
+                </button>
+              </div>
+
             </div>
+
+            {/* Real Interactive Embeddable Map Container */}
+            <div className="relative w-full h-[360px] sm:h-[450px] md:h-[500px] bg-sand/30 overflow-hidden">
+              <iframe
+                title="Celestia Mumbai Atelier Real Map"
+                src={getMapEmbedUrl()}
+                className="w-full h-full border-0"
+                loading="lazy"
+                allowFullScreen
+                referrerPolicy="no-referrer-when-downgrade"
+              />
+
+              {/* Floating Real-Time Status Pill */}
+              <div className="absolute top-4 left-4 z-10 pointer-events-none">
+                <span className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-obsidian/90 backdrop-blur-md border border-champagne-300/40 text-[11px] font-mono text-pearl-100 shadow-lg">
+                  <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                  <span>Pan-India Air Logistics & Mumbai Same-Day Gateway</span>
+                </span>
+              </div>
+            </div>
+
+            {/* Bottom Actions Row */}
+            <div className="p-4 sm:p-6 bg-white/90 border-t border-champagne-300/40 flex flex-col sm:flex-row items-center justify-between gap-4">
+              <div className="flex items-center gap-2 text-xs font-mono text-obsidian/70 text-center sm:text-left">
+                <Compass className="w-4 h-4 text-gold-dark shrink-0" />
+                <span>Coordinates: 19.0596° N, 72.8295° E • Mumbai, Maharashtra, India</span>
+              </div>
+
+              <div className="flex flex-wrap items-center gap-3 w-full sm:w-auto">
+                <a
+                  href="https://maps.google.com/?q=Bandra+West+Mumbai+400050"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex-1 sm:flex-none px-6 py-3 rounded-full bg-obsidian hover:bg-obsidian-200 text-pearl-100 text-xs uppercase font-mono tracking-widest font-bold flex items-center justify-center gap-2 shadow-sm transition-all"
+                >
+                  <MapPin className="w-4 h-4 text-champagne-300" />
+                  <span>Open in Google Maps</span>
+                  <ExternalLink className="w-3.5 h-3.5 opacity-70" />
+                </a>
+
+                <button
+                  type="button"
+                  onClick={() => setAppointmentModalOpen(true)}
+                  className="flex-1 sm:flex-none px-6 py-3 rounded-full border border-champagne-300/80 bg-white hover:bg-champagne-100/60 text-obsidian text-xs uppercase font-mono tracking-widest font-semibold flex items-center justify-center gap-2 shadow-sm transition-all"
+                >
+                  <Calendar className="w-4 h-4 text-gold-dark" />
+                  <span>Book Private Consultation</span>
+                </button>
+              </div>
+            </div>
+
           </div>
         </section>
 
