@@ -2,18 +2,20 @@ import React, { useEffect, useRef, useState } from 'react';
 import { FEATURED_PRODUCTS } from '../../data/shopify-data';
 import { useCart } from '../../context/CartContext';
 import { LuxuryBadge } from '../ui/LuxuryBadge';
-import { Sparkles, ArrowDown, Eye, ShoppingBag, Volume2, VolumeX, ArrowRight, ShieldCheck, Truck, Award } from 'lucide-react';
+import { Sparkles, ArrowDown, Eye, ShoppingBag, Volume2, VolumeX, ArrowRight, ShieldCheck, Truck, Award, Play, Pause } from 'lucide-react';
 import { atelierSound } from '../../utils/audioAtelier';
 import { ProductTiltCard } from '../motion/ProductTiltCard';
 
 export const Section01Arrival: React.FC = () => {
   const containerRef = useRef<HTMLDivElement>(null);
+  const videoRef = useRef<HTMLVideoElement>(null);
   const scrollTicking = useRef<boolean>(false);
 
   const [scrollFraction, setScrollFraction] = useState(0);
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
   const [isLoaded, setIsLoaded] = useState(false);
   const [isAudioActive, setIsAudioActive] = useState(false);
+  const [isVideoPlaying, setIsVideoPlaying] = useState(true);
   const [activeTab, setActiveTab] = useState<0 | 1>(0);
   const { setQuickViewProduct, addToCart } = useCart();
 
@@ -28,6 +30,27 @@ export const Section01Arrival: React.FC = () => {
     });
     return unsubscribe;
   }, []);
+
+  // Ensure background video plays automatically
+  useEffect(() => {
+    if (videoRef.current) {
+      videoRef.current.play().catch(() => {
+        // Fallback for browsers that block immediate auto-play
+      });
+    }
+  }, []);
+
+  const toggleVideoPlayback = () => {
+    if (videoRef.current) {
+      if (videoRef.current.paused) {
+        videoRef.current.play();
+        setIsVideoPlaying(true);
+      } else {
+        videoRef.current.pause();
+        setIsVideoPlaying(false);
+      }
+    }
+  };
 
   const toggleAudio = async () => {
     if (!isAudioActive) {
@@ -82,21 +105,41 @@ export const Section01Arrival: React.FC = () => {
       className="relative w-full min-h-[90vh] lg:min-h-[96vh] bg-pearl-100 selection:bg-champagne-300 flex flex-col justify-between pt-32 sm:pt-36 md:pt-40 pb-8 px-4 sm:px-6 md:px-10 lg:px-14 overflow-hidden"
       id="section-arrival"
     >
-      {/* Background Ambience & Floating Parallax Blooms */}
-      <div className="absolute inset-0 pointer-events-none overflow-hidden select-none">
+      {/* ===================================================================== */}
+      {/* AUTOPLAYING OPEN-SOURCE JEWELLERY ATELIER BACKGROUND VIDEO            */}
+      {/* ===================================================================== */}
+      <div className="absolute inset-0 pointer-events-none overflow-hidden select-none z-0">
+        <video
+          ref={videoRef}
+          autoPlay
+          loop
+          muted
+          playsInline
+          preload="auto"
+          className="absolute inset-0 w-full h-full object-cover opacity-20 mix-blend-multiply filter contrast-110 brightness-95 transition-opacity duration-1000 scale-105"
+        >
+          <source src="/assets/videos/hero-jewelry.webm" type="video/webm" />
+          <source src="https://upload.wikimedia.org/wikipedia/commons/4/47/Jewellery_Maker.webm" type="video/webm" />
+          <source src="https://upload.wikimedia.org/wikipedia/commons/7/7c/Making_a_silver_chain.webm" type="video/webm" />
+        </video>
+
+        {/* Ambient Gradient Masks & Parallax Blooms to guarantee text contrast */}
+        <div className="absolute inset-0 bg-gradient-to-r from-pearl-100/90 via-pearl-100/65 to-pearl-100/85" />
+        <div className="absolute inset-0 bg-gradient-to-b from-pearl-100/95 via-transparent to-pearl-100/95" />
+        
         <div
           style={{
             transform: `translate3d(${mousePos.x * -0.2}px, ${mousePos.y * -0.2}px, 0)`,
             transition: 'transform 0.8s cubic-bezier(0.16, 1, 0.3, 1)',
           }}
-          className="absolute top-1/4 right-1/4 w-[350px] sm:w-[550px] lg:w-[650px] h-[350px] sm:h-[550px] lg:h-[650px] bg-gradient-radial from-champagne-200/40 via-champagne-100/20 to-transparent rounded-full blur-3xl opacity-80"
+          className="absolute top-1/4 right-1/4 w-[350px] sm:w-[550px] lg:w-[650px] h-[350px] sm:h-[550px] lg:h-[650px] bg-gradient-radial from-champagne-200/40 via-champagne-100/20 to-transparent rounded-full blur-3xl opacity-75"
         />
         <div
           style={{
             transform: `translate3d(${mousePos.x * 0.25}px, ${mousePos.y * 0.25}px, 0)`,
             transition: 'transform 0.8s cubic-bezier(0.16, 1, 0.3, 1)',
           }}
-          className="absolute bottom-10 left-10 w-[280px] sm:w-[420px] lg:w-[500px] h-[280px] sm:h-[420px] lg:h-[500px] bg-gradient-radial from-rose-200/35 via-rose-100/15 to-transparent rounded-full blur-3xl opacity-75"
+          className="absolute bottom-10 left-10 w-[280px] sm:w-[420px] lg:w-[500px] h-[280px] sm:h-[420px] lg:h-[500px] bg-gradient-radial from-rose-200/35 via-rose-100/15 to-transparent rounded-full blur-3xl opacity-70"
         />
         <div className="absolute inset-0 bg-noise opacity-15" />
       </div>
@@ -118,7 +161,7 @@ export const Section01Arrival: React.FC = () => {
                 transform: isLoaded ? 'translateY(0)' : 'translateY(12px)',
                 transition: 'opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1) 100ms, transform 0.6s cubic-bezier(0.16, 1, 0.3, 1) 100ms',
               }}
-              className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-champagne-100 border border-champagne-300 text-[10px] sm:text-[11px] uppercase font-mono tracking-widest text-gold-dark font-bold shadow-xs"
+              className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-champagne-100/90 backdrop-blur-sm border border-champagne-300 text-[10px] sm:text-[11px] uppercase font-mono tracking-widest text-gold-dark font-bold shadow-xs"
             >
               <Sparkles className="w-3.5 h-3.5 text-gold-dark" />
               <span>Mumbai Atelier MMXXVI • 1,000+ Journeys Dispatched</span>
@@ -145,7 +188,7 @@ export const Section01Arrival: React.FC = () => {
                 transform: isLoaded ? 'translateY(0)' : 'translateY(14px)',
                 transition: 'opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1) 300ms, transform 0.7s cubic-bezier(0.16, 1, 0.3, 1) 300ms',
               }}
-              className="text-sm sm:text-base text-obsidian-soft max-w-lg leading-relaxed"
+              className="text-sm sm:text-base text-obsidian-soft max-w-lg leading-relaxed font-normal"
             >
               Discover artisanal bangles, 18k gold dipped jewellery suites, and bespoke velvet celebration hampers handcrafted with love in Mumbai.
             </p>
@@ -169,7 +212,7 @@ export const Section01Arrival: React.FC = () => {
 
               <a
                 href="/gifting"
-                className="btn-secondary group flex items-center justify-center gap-2 px-6 py-3.5 text-xs sm:text-sm uppercase font-bold tracking-widest text-center w-full sm:w-auto transition-all"
+                className="btn-secondary group flex items-center justify-center gap-2 px-6 py-3.5 text-xs sm:text-sm uppercase font-bold tracking-widest text-center w-full sm:w-auto transition-all backdrop-blur-sm"
               >
                 <span>Gifting Atelier</span>
                 <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform duration-300 opacity-70" />
@@ -212,7 +255,7 @@ export const Section01Arrival: React.FC = () => {
             }}
             className="col-span-1 lg:col-span-5 flex flex-col items-center lg:items-end w-full space-y-3"
           >
-            {/* Switcher & Sound Bar */}
+            {/* Switcher & Media Controllers */}
             <div className="flex items-center justify-between gap-2 w-full max-w-[340px] sm:max-w-[360px]">
               {/* Tab Switcher */}
               <div className="flex items-center flex-1 p-1 bg-white/90 backdrop-blur-md rounded-full border border-champagne-300/80 shadow-xs">
@@ -238,6 +281,16 @@ export const Section01Arrival: React.FC = () => {
                 </button>
               </div>
 
+              {/* Video Play/Pause Micro-Toggle */}
+              <button
+                onClick={toggleVideoPlayback}
+                className="p-2 rounded-full border border-champagne-300/80 bg-white/90 hover:bg-champagne-100 text-obsidian transition-all shadow-xs shrink-0"
+                title={isVideoPlaying ? 'Pause Atelier Film' : 'Play Atelier Film'}
+                aria-label="Toggle Atelier Video"
+              >
+                {isVideoPlaying ? <Pause className="w-3.5 h-3.5" /> : <Play className="w-3.5 h-3.5" />}
+              </button>
+
               {/* Atmospheric Sound Toggle */}
               <button
                 onClick={toggleAudio}
@@ -247,6 +300,7 @@ export const Section01Arrival: React.FC = () => {
                     : 'border-champagne-300/80 bg-white/90 hover:bg-champagne-100 text-obsidian'
                 }`}
                 title={isAudioActive ? 'Sound: ON' : 'Sound: OFF'}
+                aria-label="Toggle Atmosphere Audio"
               >
                 {isAudioActive ? (
                   <Volume2 className="w-4 h-4 text-gold-dark animate-pulse" />
