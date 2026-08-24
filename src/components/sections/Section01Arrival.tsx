@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Sparkles, ArrowRight, ShieldCheck, Truck, Award } from 'lucide-react';
+import { ArrowRight, ShieldCheck, Truck, Award } from 'lucide-react';
 
 export const Section01Arrival: React.FC = () => {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -23,7 +23,7 @@ export const Section01Arrival: React.FC = () => {
   return (
     <section
       ref={containerRef}
-      className="relative w-full h-[100dvh] min-h-[580px] max-h-[960px] bg-pearl-100 selection:bg-champagne-300 flex flex-col justify-between pt-24 sm:pt-28 lg:pt-32 pb-6 sm:pb-8 px-4 sm:px-6 md:px-10 lg:px-14 overflow-hidden"
+      className="relative w-full h-[100dvh] min-h-[580px] max-h-[960px] bg-pearl-100 selection:bg-champagne-300 flex flex-col justify-center pt-24 sm:pt-28 lg:pt-32 pb-8 sm:pb-12 px-4 sm:px-6 md:px-10 lg:px-14 overflow-hidden"
       id="section-arrival"
     >
       {/* ===================================================================== */}
@@ -46,30 +46,17 @@ export const Section01Arrival: React.FC = () => {
       </div>
 
       {/* ===================================================================== */}
-      {/* MAIN HERO CONTENT (Directly over Video, No Glass Overlay Box)         */}
+      {/* MAIN HERO CONTENT (Ultra Clean & Minimal, No Floating Pill Badges)    */}
       {/* ===================================================================== */}
-      <div className="relative z-10 w-full max-w-7xl mx-auto flex-1 flex flex-col justify-center py-2 sm:py-4">
-        <div className="max-w-2xl lg:max-w-3xl space-y-3.5 sm:space-y-4 md:space-y-5 text-left">
+      <div className="relative z-10 w-full max-w-7xl mx-auto flex flex-col justify-center">
+        <div className="max-w-2xl lg:max-w-3xl space-y-4 sm:space-y-5 text-left">
           
-          {/* Top Identity Tag */}
-          <div
-            style={{
-              opacity: isLoaded ? 1 : 0,
-              transform: isLoaded ? 'translateY(0)' : 'translateY(10px)',
-              transition: 'opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1) 100ms, transform 0.6s cubic-bezier(0.16, 1, 0.3, 1) 100ms',
-            }}
-            className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-white/95 border border-champagne-300 text-[10px] sm:text-xs uppercase font-mono tracking-widest text-gold-dark font-bold shadow-sm"
-          >
-            <Sparkles className="w-3.5 h-3.5 text-gold-dark" />
-            <span>Mumbai Atelier MMXXVI • 1,000+ Journeys</span>
-          </div>
-
           {/* Main Luxury Headline */}
           <h1
             style={{
               opacity: isLoaded ? 1 : 0,
               transform: isLoaded ? 'translateY(0)' : 'translateY(14px)',
-              transition: 'opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1) 200ms, transform 0.7s cubic-bezier(0.16, 1, 0.3, 1) 200ms',
+              transition: 'opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1) 150ms, transform 0.7s cubic-bezier(0.16, 1, 0.3, 1) 150ms',
             }}
             className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold uppercase tracking-tight text-obsidian leading-[1.08] drop-shadow-xs"
           >
@@ -83,7 +70,7 @@ export const Section01Arrival: React.FC = () => {
             style={{
               opacity: isLoaded ? 1 : 0,
               transform: isLoaded ? 'translateY(0)' : 'translateY(12px)',
-              transition: 'opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1) 300ms, transform 0.7s cubic-bezier(0.16, 1, 0.3, 1) 300ms',
+              transition: 'opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1) 250ms, transform 0.7s cubic-bezier(0.16, 1, 0.3, 1) 250ms',
             }}
             className="text-xs sm:text-sm md:text-base text-obsidian font-semibold max-w-lg leading-relaxed drop-shadow-xs"
           >
@@ -95,7 +82,7 @@ export const Section01Arrival: React.FC = () => {
             style={{
               opacity: isLoaded ? 1 : 0,
               transform: isLoaded ? 'translateY(0)' : 'translateY(12px)',
-              transition: 'opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1) 400ms, transform 0.7s cubic-bezier(0.16, 1, 0.3, 1) 400ms',
+              transition: 'opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1) 350ms, transform 0.7s cubic-bezier(0.16, 1, 0.3, 1) 350ms',
             }}
             className="flex flex-row items-center gap-3 pt-1"
           >
@@ -121,9 +108,9 @@ export const Section01Arrival: React.FC = () => {
             style={{
               opacity: isLoaded ? 1 : 0,
               transform: isLoaded ? 'translateY(0)' : 'translateY(10px)',
-              transition: 'opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1) 500ms, transform 0.7s cubic-bezier(0.16, 1, 0.3, 1) 500ms',
+              transition: 'opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1) 450ms, transform 0.7s cubic-bezier(0.16, 1, 0.3, 1) 450ms',
             }}
-            className="pt-2 sm:pt-3 border-t border-champagne-300/80 flex flex-wrap items-center gap-4 sm:gap-6 text-xs text-obsidian font-bold uppercase tracking-wider"
+            className="pt-3 border-t border-champagne-300/80 flex flex-wrap items-center gap-4 sm:gap-6 text-xs text-obsidian font-bold uppercase tracking-wider"
           >
             <div className="flex items-center gap-1.5">
               <Award className="w-3.5 h-3.5 text-gold-dark shrink-0" />
@@ -139,24 +126,6 @@ export const Section01Arrival: React.FC = () => {
             </div>
           </div>
 
-        </div>
-      </div>
-
-      {/* ===================================================================== */}
-      {/* BOTTOM STATS STRIP                                                    */}
-      {/* ===================================================================== */}
-      <div
-        style={{
-          opacity: isLoaded ? 1 : 0,
-          transition: 'opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1) 600ms',
-        }}
-        className="relative z-10 flex flex-row items-center justify-between gap-3 w-full max-w-7xl mx-auto pt-3"
-      >
-        <div className="flex items-center gap-2 text-left bg-white/95 px-3.5 py-1.5 rounded-full border border-champagne-300 shadow-sm">
-          <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-          <span className="text-[10px] sm:text-xs uppercase font-mono tracking-widest text-obsidian font-bold">
-            1,000+ Journeys • Pan-India Free Express Delivery
-          </span>
         </div>
       </div>
     </section>
