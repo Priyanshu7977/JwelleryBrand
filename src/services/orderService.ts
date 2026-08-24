@@ -5,6 +5,7 @@ import {
   generateTimelineEvents,
   saveDeliveryTracking,
 } from './trackingService';
+import { sendOrderConfirmationEmail } from './emailService';
 
 const ORDERS_STORAGE_KEY = 'celestia_user_orders';
 
@@ -210,6 +211,9 @@ export async function createOrder(payload: {
     const existing: OrderMetadata[] = raw ? JSON.parse(raw) : INITIAL_DEMO_ORDERS;
     localStorage.setItem(ORDERS_STORAGE_KEY, JSON.stringify([newOrder, ...existing]));
   } catch {}
+
+  // Automatically dispatch confirmation email in background
+  sendOrderConfirmationEmail(newOrder).catch((e) => console.warn('Email dispatch failed:', e));
 
   return newOrder;
 }
