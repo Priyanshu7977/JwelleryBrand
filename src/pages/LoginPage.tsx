@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
-import { Eye, EyeOff, Lock, Mail, ArrowRight, Sparkles } from 'lucide-react';
+import { Mail, Lock, Eye, EyeOff, Sparkles, ArrowRight, ShieldCheck, Gem } from 'lucide-react';
+import { sanitizeEmail, sanitizePassword } from '../utils/sanitize';
 
 export const LoginPage: React.FC = () => {
   const location = useLocation();
@@ -60,7 +61,7 @@ export const LoginPage: React.FC = () => {
                 required
                 placeholder="you@email.com"
                 value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                onChange={(e) => setEmail(sanitizeEmail(e.target.value))}
                 className="w-full bg-transparent text-sm font-sans text-obsidian focus:outline-none placeholder:text-obsidian/40"
               />
             </div>
@@ -82,7 +83,7 @@ export const LoginPage: React.FC = () => {
                 required
                 placeholder="••••••••"
                 value={password}
-                onChange={(e) => setPassword(e.target.value)}
+                onChange={(e) => setPassword(sanitizePassword(e.target.value))}
                 className="w-full bg-transparent text-sm font-sans text-obsidian focus:outline-none placeholder:text-obsidian/40"
               />
               <button

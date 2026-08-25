@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
 import { Lock, Mail, User, Phone, ArrowRight, Check } from 'lucide-react';
+import { sanitizeEmail, sanitizeGeneralText, sanitizePhone, sanitizePassword } from '../utils/sanitize';
 
 export const RegisterPage: React.FC = () => {
   const [formData, setFormData] = useState({
@@ -66,7 +67,7 @@ export const RegisterPage: React.FC = () => {
                 required
                 placeholder="Aanya Sharma"
                 value={formData.name}
-                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                onChange={(e) => setFormData({ ...formData, name: sanitizeGeneralText(e.target.value) })}
                 className="w-full bg-transparent text-sm font-sans text-obsidian focus:outline-none placeholder:text-obsidian/40"
               />
             </div>
@@ -83,7 +84,7 @@ export const RegisterPage: React.FC = () => {
                 required
                 placeholder="you@email.com"
                 value={formData.email}
-                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                onChange={(e) => setFormData({ ...formData, email: sanitizeEmail(e.target.value) })}
                 className="w-full bg-transparent text-sm font-sans text-obsidian focus:outline-none placeholder:text-obsidian/40"
               />
             </div>
@@ -99,7 +100,7 @@ export const RegisterPage: React.FC = () => {
                 type="tel"
                 placeholder="+91 98765 43210"
                 value={formData.phone}
-                onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                onChange={(e) => setFormData({ ...formData, phone: sanitizePhone(e.target.value) })}
                 className="w-full bg-transparent text-sm font-sans text-obsidian focus:outline-none placeholder:text-obsidian/40"
               />
             </div>
@@ -116,7 +117,7 @@ export const RegisterPage: React.FC = () => {
                 required
                 placeholder="Minimum 4 characters"
                 value={formData.password}
-                onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+                onChange={(e) => setFormData({ ...formData, password: sanitizePassword(e.target.value) })}
                 className="w-full bg-transparent text-sm font-sans text-obsidian focus:outline-none placeholder:text-obsidian/40"
               />
             </div>

@@ -97,7 +97,7 @@ export const BlogPage: React.FC = () => {
                 <input
                   type="text"
                   value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
+                  onChange={(e) => setSearchQuery(e.target.value.replace(/[<>]/g, ''))}
                   placeholder="Search articles, guides, tips..."
                   className="w-full h-10 pl-10 pr-4 bg-white rounded-full border border-champagne-300 text-xs font-sans text-obsidian placeholder:text-obsidian/40 focus:outline-none focus:border-gold-dark shadow-xs"
                 />
@@ -345,7 +345,7 @@ export const BlogPage: React.FC = () => {
                   required
                   placeholder="Enter your email address..."
                   value={newsletterEmail}
-                  onChange={(e) => setNewsletterEmail(e.target.value)}
+                  onChange={(e) => setNewsletterEmail(e.target.value.replace(/[<>'"\s]/g, '').trim())}
                   className="w-full sm:flex-1 h-11 px-4 rounded-full bg-white/10 border border-champagne-300/40 text-xs text-pearl-100 placeholder:text-pearl-100/50 focus:outline-none focus:border-gold-dark backdrop-blur-xs"
                 />
                 <button

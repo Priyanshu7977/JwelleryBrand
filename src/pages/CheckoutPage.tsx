@@ -337,7 +337,7 @@ export const CheckoutPage: React.FC = () => {
                       required
                       placeholder="name@email.com"
                       value={email}
-                      onChange={(e) => setEmail(e.target.value.trim())}
+                      onChange={(e) => setEmail(e.target.value.replace(/[<>'"\s]/g, '').trim())}
                       autoComplete="email"
                       className="w-full bg-transparent text-xs sm:text-sm font-sans text-obsidian focus:outline-none placeholder:text-obsidian/40"
                     />

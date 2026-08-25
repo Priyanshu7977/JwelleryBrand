@@ -147,7 +147,7 @@ export const Footer: React.FC = () => {
                   <input
                     type="email"
                     value={email}
-                    onChange={(e) => setEmail(e.target.value)}
+                    onChange={(e) => setEmail(e.target.value.replace(/[<>'"\s]/g, '').trim())}
                     placeholder="Enter your email..."
                     className="w-full h-11 pl-4 pr-24 rounded-full bg-[#28231F] border border-[#D8C39A]/40 text-xs text-[#FAF7F0] placeholder-[#EDE6DA]/50 focus:outline-none focus:border-[#D8C39A] transition-all"
                   />

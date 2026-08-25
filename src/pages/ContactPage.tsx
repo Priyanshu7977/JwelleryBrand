@@ -391,7 +391,7 @@ export const ContactPage: React.FC = () => {
                     <input
                       type="email"
                       value={formData.email}
-                      onChange={(e) => setFormData({ ...formData, email: e.target.value.trim() })}
+                      onChange={(e) => setFormData({ ...formData, email: e.target.value.replace(/[<>'"\s]/g, '').trim() })}
                       placeholder="you@example.com"
                       required
                       autoComplete="email"

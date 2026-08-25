@@ -3,6 +3,7 @@ import { useLocation } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { useCart } from '../../context/CartContext';
 import { Sparkles, ArrowRight, Lock, Mail, User, Eye, EyeOff, Phone, AlertCircle, ShieldCheck, X, ShoppingBag } from 'lucide-react';
+import { sanitizeEmail, sanitizeGeneralText, sanitizePhone, sanitizePassword } from '../../utils/sanitize';
 
 export const CelestiaEntranceModal: React.FC = () => {
   const {
@@ -176,7 +177,7 @@ export const CelestiaEntranceModal: React.FC = () => {
           </h2>
 
           <p className="text-[9px] sm:text-[10px] font-sans tracking-[0.3em] uppercase text-[#D8C39A] font-bold">
-            redefined for all.
+            redefined for all
           </p>
 
           {/* Dynamic Reason Message (e.g. When proceeding to checkout / shopping) */}
@@ -243,8 +244,13 @@ export const CelestiaEntranceModal: React.FC = () => {
                   placeholder="name@email.com"
                   value={email}
                   onChange={(e) => {
-                    setEmail(e.target.value);
-                    if (errorMessage) setErrorMessage(null);
+                    const clean = sanitizeEmail(e.target.value);
+                    if (e.target.value.includes('<') || e.target.value.toLowerCase().includes('script') || e.target.value.toLowerCase().includes('iframe')) {
+                      setErrorMessage("HTML, script and iframe tags are not permitted.");
+                    } else if (errorMessage) {
+                      setErrorMessage(null);
+                    }
+                    setEmail(clean);
                   }}
                   className="w-full bg-transparent text-sm font-sans text-[#FAF7F0] focus:outline-none placeholder:text-[#FAF7F0]/40"
                 />
@@ -263,8 +269,13 @@ export const CelestiaEntranceModal: React.FC = () => {
                   placeholder="••••••••"
                   value={password}
                   onChange={(e) => {
-                    setPassword(e.target.value);
-                    if (errorMessage) setErrorMessage(null);
+                    const clean = sanitizePassword(e.target.value);
+                    if (e.target.value.includes('<') || e.target.value.toLowerCase().includes('script') || e.target.value.toLowerCase().includes('iframe')) {
+                      setErrorMessage("HTML, script and iframe tags are not permitted.");
+                    } else if (errorMessage) {
+                      setErrorMessage(null);
+                    }
+                    setPassword(clean);
                   }}
                   className="w-full bg-transparent text-sm font-sans text-[#FAF7F0] focus:outline-none placeholder:text-[#FAF7F0]/40"
                 />
@@ -307,8 +318,13 @@ export const CelestiaEntranceModal: React.FC = () => {
                   placeholder="e.g. Radhika Sharma"
                   value={name}
                   onChange={(e) => {
-                    setName(e.target.value);
-                    if (errorMessage) setErrorMessage(null);
+                    const clean = sanitizeGeneralText(e.target.value);
+                    if (e.target.value.includes('<') || e.target.value.toLowerCase().includes('script') || e.target.value.toLowerCase().includes('iframe')) {
+                      setErrorMessage("HTML, script and iframe tags are not permitted.");
+                    } else if (errorMessage) {
+                      setErrorMessage(null);
+                    }
+                    setName(clean);
                   }}
                   className="w-full bg-transparent text-sm font-sans text-[#FAF7F0] focus:outline-none placeholder:text-[#FAF7F0]/40"
                 />
@@ -327,8 +343,13 @@ export const CelestiaEntranceModal: React.FC = () => {
                   placeholder="name@email.com"
                   value={email}
                   onChange={(e) => {
-                    setEmail(e.target.value);
-                    if (errorMessage) setErrorMessage(null);
+                    const clean = sanitizeEmail(e.target.value);
+                    if (e.target.value.includes('<') || e.target.value.toLowerCase().includes('script') || e.target.value.toLowerCase().includes('iframe')) {
+                      setErrorMessage("HTML, script and iframe tags are not permitted.");
+                    } else if (errorMessage) {
+                      setErrorMessage(null);
+                    }
+                    setEmail(clean);
                   }}
                   className="w-full bg-transparent text-sm font-sans text-[#FAF7F0] focus:outline-none placeholder:text-[#FAF7F0]/40"
                 />
@@ -345,7 +366,7 @@ export const CelestiaEntranceModal: React.FC = () => {
                   type="tel"
                   placeholder="+91 98765 43210"
                   value={phone}
-                  onChange={(e) => setPhone(e.target.value)}
+                  onChange={(e) => setPhone(sanitizePhone(e.target.value))}
                   className="w-full bg-transparent text-sm font-sans text-[#FAF7F0] focus:outline-none placeholder:text-[#FAF7F0]/40"
                 />
               </div>
@@ -363,8 +384,13 @@ export const CelestiaEntranceModal: React.FC = () => {
                   placeholder="Minimum 4 characters"
                   value={password}
                   onChange={(e) => {
-                    setPassword(e.target.value);
-                    if (errorMessage) setErrorMessage(null);
+                    const clean = sanitizePassword(e.target.value);
+                    if (e.target.value.includes('<') || e.target.value.toLowerCase().includes('script') || e.target.value.toLowerCase().includes('iframe')) {
+                      setErrorMessage("HTML, script and iframe tags are not permitted.");
+                    } else if (errorMessage) {
+                      setErrorMessage(null);
+                    }
+                    setPassword(clean);
                   }}
                   className="w-full bg-transparent text-sm font-sans text-[#FAF7F0] focus:outline-none placeholder:text-[#FAF7F0]/40"
                 />

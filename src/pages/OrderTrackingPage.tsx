@@ -109,7 +109,7 @@ export const OrderTrackingPage: React.FC = () => {
             <input
               type="text"
               value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
+              onChange={(e) => setSearchQuery(e.target.value.replace(/[^a-zA-Z0-9_\-\s]/g, '').trim())}
               placeholder="Enter Order # or Tracking ID (e.g. ORD-2026-8941)..."
               className="w-full text-xs font-mono text-obsidian focus:outline-none bg-transparent"
             />
