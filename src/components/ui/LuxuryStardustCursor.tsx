@@ -57,25 +57,25 @@ export const LuxuryStardustCursor: React.FC = () => {
       lastX = e.clientX;
       lastY = e.clientY;
 
-      // Spawn 1-2 stardust sparks per movement
-      const count = Math.min(2, Math.floor(dist / 12) + 1);
+      // Spawn 2-3 lively stardust sparks per movement
+      const count = Math.min(3, Math.floor(dist / 8) + 1);
       for (let i = 0; i < count; i++) {
         const baseColor = GOLD_COLORS[Math.floor(Math.random() * GOLD_COLORS.length)];
         particles.push({
-          x: e.clientX + (Math.random() - 0.5) * 6,
-          y: e.clientY + (Math.random() - 0.5) * 6,
-          size: Math.random() * 2.2 + 1.2,
-          speedX: (Math.random() - 0.5) * 0.32, // gentle, slow ambient drift
-          speedY: Math.random() * 0.18 + 0.06,  // slow dreamy floating fall
+          x: e.clientX + (Math.random() - 0.5) * 7,
+          y: e.clientY + (Math.random() - 0.5) * 7,
+          size: Math.random() * 2.3 + 1.2,
+          speedX: (Math.random() - 0.5) * 0.85, // lively, snappy horizontal burst
+          speedY: Math.random() * 0.5 + 0.2,    // energetic downward sparkle fall
           color: baseColor,
-          alpha: 0.96,
-          decay: Math.random() * 0.0008 + 0.0032, // stays visible for exactly 4.5 seconds (~270 frames @ 60fps)
+          alpha: 0.95,
+          decay: Math.random() * 0.002 + 0.007, // crisp, bright shimmer
         });
       }
 
-      // Allow a rich lingering 4.5-second trail
-      if (particles.length > 180) {
-        particles = particles.slice(-180);
+      // Keep active particle trail
+      if (particles.length > 100) {
+        particles = particles.slice(-100);
       }
     };
 
@@ -88,8 +88,8 @@ export const LuxuryStardustCursor: React.FC = () => {
         const p = particles[i];
         p.x += p.speedX;
         p.y += p.speedY;
-        p.speedX *= 0.992; // smooth air resistance
-        p.speedY *= 0.992;
+        p.speedX *= 0.975; // dynamic, responsive motion
+        p.speedY *= 0.975;
         p.alpha -= p.decay;
 
         if (p.alpha <= 0) {
