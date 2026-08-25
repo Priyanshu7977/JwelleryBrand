@@ -135,13 +135,11 @@ export const Navigation: React.FC = () => {
         <span className="hidden md:inline text-obsidian font-bold">PAN-INDIA FREE EXPRESS DELIVERY &gt; ₹999</span>
       </div>
 
-      {/* Floating Main Header with Generous Spacing from Announcement Bar */}
+      {/* Floating Main Header with Consistent Spacing from Announcement Bar */}
       <header
-        className={`fixed left-0 right-0 z-50 transition-all duration-500 ${
+        className={`fixed left-0 right-0 z-50 transition-all duration-300 ${
           isShown ? 'translate-y-0 opacity-100 pointer-events-auto' : '-translate-y-28 opacity-0 pointer-events-none'
-        } ${
-          isScrolled ? 'top-2 sm:top-3 md:top-4 px-4 sm:px-6 md:px-10 lg:px-14' : 'top-11 sm:top-12 md:top-14 px-4 sm:px-6 md:px-10 lg:px-14'
-        }`}
+        } top-9 sm:top-10 md:top-11 px-4 sm:px-6 md:px-10 lg:px-14`}
         onMouseLeave={() => setHoveredMenu(null)}
       >
         <div
