@@ -26,7 +26,7 @@ export const Section04World: React.FC = () => {
 
           <h2 className="font-serif-luxury text-4xl sm:text-6xl md:text-8xl text-obsidian font-normal leading-[0.92]">
             Little things <br />
-            <span className="font-zapfino text-champagne-400 font-normal tracking-normal capitalize inline-block text-[34px] sm:text-[54px] md:text-[68px] leading-[0.9] px-1">That Become</span> <br />
+            <span className="font-zapfino text-champagne-400 font-normal tracking-normal lowercase inline-block text-[34px] sm:text-[54px] md:text-[68px] leading-[0.9] px-1">that become</span> <br />
             your moments.
           </h2>
         </div>

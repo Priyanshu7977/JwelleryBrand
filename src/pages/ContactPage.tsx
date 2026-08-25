@@ -512,7 +512,7 @@ export const ContactPage: React.FC = () => {
                   <span>Frequently Asked Questions</span>
                 </div>
                 <h3 className="text-2xl sm:text-3xl font-bold text-obsidian">
-                  Atelier <span className="font-semibold text-gold-dark">Knowledge & Help</span>.
+                  Atelier <span className="font-semibold text-gold-dark">knowledge & help</span>.
                 </h3>
               </div>
               <p className="text-xs text-obsidian-soft max-w-md">

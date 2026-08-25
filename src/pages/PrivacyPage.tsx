@@ -11,7 +11,7 @@ export const PrivacyPage: React.FC = () => {
             Data Integrity
           </span>
           <h1 className="font-serif-luxury text-4xl sm:text-6xl text-obsidian">
-            Privacy <span className="font-semibold text-gold-dark">Policy</span>.
+            Privacy <span className="font-semibold text-gold-dark">policy</span>.
           </h1>
           <p className="text-xs text-obsidian/60 font-sans">
             Your trust is our foremost priority.
@@ -20,28 +20,28 @@ export const PrivacyPage: React.FC = () => {
 
         <div className="space-y-8 bg-pearl-50/90 p-8 md:p-12 rounded-3xl border border-champagne-300/50 shadow-sm text-xs text-obsidian/80 font-sans leading-relaxed">
           <section className="space-y-2">
-            <h2 className="font-serif-luxury text-2xl text-obsidian">1. Information We Collect</h2>
+            <h2 className="font-serif-luxury text-2xl text-obsidian">1. Information we collect</h2>
             <p>
               We collect your name, shipping address, contact phone number, and email address solely for processing your orders, generating express courier labels, and communicating dispatch milestones.
             </p>
           </section>
 
           <section className="space-y-2">
-            <h2 className="font-serif-luxury text-2xl text-obsidian">2. Privacy of Custom Polaroid Photos</h2>
+            <h2 className="font-serif-luxury text-2xl text-obsidian">2. Privacy of custom polaroid photos</h2>
             <p>
               Photos submitted for custom 20-pack Polaroids or keepsake hamper envelopes are stored temporarily on encrypted private drives and permanently purged from print queues within 7 days of shipment. We never share, publish, or utilize your personal photos without explicit consent.
             </p>
           </section>
 
           <section className="space-y-2">
-            <h2 className="font-serif-luxury text-2xl text-obsidian">3. Third-Party Services</h2>
+            <h2 className="font-serif-luxury text-2xl text-obsidian">3. Third-party services</h2>
             <p>
               Payment transactions are processed securely through certified gateways. We do not store credit card numbers, CVVs, or bank PINs on our servers.
             </p>
           </section>
 
           <section className="space-y-2">
-            <h2 className="font-serif-luxury text-2xl text-obsidian">4. Contact Privacy Officer</h2>
+            <h2 className="font-serif-luxury text-2xl text-obsidian">4. Contact privacy officer</h2>
             <p>
               If you have queries regarding your data or wish to request data erasure, email <a href={`mailto:${BRAND_INFO.email}`} className="underline font-bold text-obsidian">{BRAND_INFO.email}</a>.
             </p>

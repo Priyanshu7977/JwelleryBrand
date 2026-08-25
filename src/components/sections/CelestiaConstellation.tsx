@@ -56,7 +56,7 @@ export const CelestiaConstellation: React.FC = () => {
             </div>
 
             <h2 className="font-serif-luxury text-4xl sm:text-6xl md:text-7xl text-obsidian font-normal leading-[0.95]">
-              The Celestia <span className="font-zapfino text-champagne-400 font-normal tracking-normal capitalize inline-block text-[34px] sm:text-[50px] md:text-[60px] leading-[0.9] px-1">Constellation</span>.
+              The celestia <span className="font-zapfino text-champagne-400 font-normal tracking-normal lowercase inline-block text-[34px] sm:text-[50px] md:text-[60px] leading-[0.9] px-1">constellation</span>.
             </h2>
 
             <p className="text-xs sm:text-sm text-obsidian/75 font-sans leading-relaxed max-w-xl">

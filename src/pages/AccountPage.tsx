@@ -114,7 +114,7 @@ export const AccountPage: React.FC = () => {
               Private Atelier Portal
             </span>
             <h1 className="font-serif-luxury text-3xl sm:text-5xl md:text-6xl text-obsidian">
-              Your <span className="font-semibold text-gold-dark">Account</span>.
+              Your <span className="font-semibold text-gold-dark">account</span>.
             </h1>
             <p className="text-sm text-obsidian-soft font-sans max-w-md mx-auto leading-relaxed">
               Sign in to manage your dispatches, view saved addresses, track custom celebration hampers, or view your private wishlist.
@@ -273,7 +273,7 @@ export const AccountPage: React.FC = () => {
         {activeTab === 'orders' && (
           <div className="space-y-6">
             <div className="flex items-center justify-between">
-              <h3 className="font-serif-luxury text-2xl text-obsidian">Atelier Orders & Dispatches</h3>
+              <h3 className="font-serif-luxury text-2xl text-obsidian">Atelier orders & dispatches</h3>
               <Link
                 to="/account/orders"
                 className="text-xs uppercase font-mono tracking-widest text-gold-dark hover:underline font-bold"

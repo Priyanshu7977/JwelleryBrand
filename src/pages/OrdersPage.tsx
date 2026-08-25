@@ -39,7 +39,7 @@ export const OrdersPage: React.FC = () => {
             Atelier Dispatches
           </span>
           <h1 className="font-serif-luxury text-4xl sm:text-6xl text-obsidian">
-            Your <span className="font-semibold text-gold-dark">Orders</span>.
+            Your <span className="font-semibold text-gold-dark">orders</span>.
           </h1>
         </div>
 
@@ -51,7 +51,7 @@ export const OrdersPage: React.FC = () => {
         ) : orders.length === 0 ? (
           <div className="p-16 text-center space-y-4 bg-pearl-50/80 rounded-3xl border border-champagne-300/50">
             <Package className="w-10 h-10 text-gold-dark mx-auto" />
-            <h3 className="font-serif-luxury text-2xl text-obsidian">No Dispatches Yet</h3>
+            <h3 className="font-serif-luxury text-2xl text-obsidian">No dispatches yet</h3>
             <p className="text-xs text-obsidian/70 max-w-sm mx-auto">
               Your pieces and bespoke curations will appear here once you place your first order.
             </p>

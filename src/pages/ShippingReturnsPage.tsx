@@ -20,7 +20,7 @@ export const ShippingReturnsPage: React.FC = () => {
           </div>
 
           <h1 className="font-serif-luxury text-4xl sm:text-6xl text-obsidian">
-            Shipping & <span className="font-semibold text-gold-dark">Returns</span>.
+            Shipping & <span className="font-semibold text-gold-dark">returns</span>.
           </h1>
 
           <p className="text-xs sm:text-sm text-obsidian/75 font-sans leading-relaxed">
@@ -37,7 +37,7 @@ export const ShippingReturnsPage: React.FC = () => {
               <div className="p-3 bg-champagne-200/80 text-obsidian rounded-2xl">
                 <Truck className="w-5 h-5" />
               </div>
-              <h2 className="font-serif-luxury text-2xl text-obsidian">Dispatch & Delivery Timelines</h2>
+              <h2 className="font-serif-luxury text-2xl text-obsidian">Dispatch & delivery timelines</h2>
             </div>
             
             <div className="space-y-3 text-xs text-obsidian/80 font-sans leading-relaxed">
@@ -59,7 +59,7 @@ export const ShippingReturnsPage: React.FC = () => {
               <div className="p-3 bg-champagne-200/80 text-obsidian rounded-2xl">
                 <ShieldAlert className="w-5 h-5 text-amber-800" />
               </div>
-              <h2 className="font-serif-luxury text-2xl text-obsidian">Cancellations, Returns & Exchanges</h2>
+              <h2 className="font-serif-luxury text-2xl text-obsidian">Cancellations, returns & exchanges</h2>
             </div>
             
             <div className="space-y-3 text-xs text-obsidian/80 font-sans leading-relaxed">
@@ -78,7 +78,7 @@ export const ShippingReturnsPage: React.FC = () => {
               <div className="p-3 bg-champagne-200/80 text-obsidian rounded-2xl">
                 <Video className="w-5 h-5 text-gold-dark" />
               </div>
-              <h2 className="font-serif-luxury text-2xl text-obsidian">Damaged or Missing Item Claims</h2>
+              <h2 className="font-serif-luxury text-2xl text-obsidian">Damaged or missing item claims</h2>
             </div>
             
             <div className="space-y-3 text-xs text-obsidian/80 font-sans leading-relaxed">
