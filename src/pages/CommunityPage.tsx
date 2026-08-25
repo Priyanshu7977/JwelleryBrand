@@ -32,7 +32,7 @@ export const CommunityPage: React.FC = () => {
               </div>
 
               <h1 className="site-main-title text-obsidian">
-                The live <span className="font-zapfino text-champagne-400 font-normal tracking-normal lowercase inline-block px-1">circle</span>.
+                The live <span className="font-zapfino text-champagne-400 font-normal tracking-normal lowercase inline-block px-1">circle</span>
               </h1>
 
               <p className="text-xs sm:text-sm text-obsidian/75 leading-relaxed max-w-lg">

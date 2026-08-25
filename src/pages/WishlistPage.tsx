@@ -35,7 +35,7 @@ export const WishlistPage: React.FC = () => {
             </div>
 
             <h1 className="site-main-title text-obsidian">
-              Your <span className="font-zapfino text-champagne-400 font-normal tracking-normal lowercase inline-block px-1">wishlist</span>.
+              Your <span className="font-zapfino text-champagne-400 font-normal tracking-normal lowercase inline-block px-1">wishlist</span>
             </h1>
 
             <p className="text-xs sm:text-sm text-obsidian-soft leading-relaxed max-w-xl">

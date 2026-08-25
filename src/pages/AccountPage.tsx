@@ -114,7 +114,7 @@ export const AccountPage: React.FC = () => {
               Private Atelier Portal
             </span>
             <h1 className="site-main-title text-obsidian">
-              Your <span className="font-semibold text-gold-dark">account</span>.
+              Your <span className="font-semibold text-gold-dark">account</span>
             </h1>
             <p className="text-sm text-obsidian-soft font-sans max-w-md mx-auto leading-relaxed">
               Sign in to manage your dispatches, view saved addresses, track custom celebration hampers, or view your private wishlist.

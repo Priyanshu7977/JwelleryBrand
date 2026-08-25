@@ -28,8 +28,8 @@ export const ForgotPasswordPage: React.FC = () => {
         </Link>
 
         <div className="space-y-2">
-          <h1 className="font-serif-luxury text-3xl text-obsidian">
-            Reset <span className="font-semibold text-gold-dark">password</span>.
+          <h1 className="site-main-title text-obsidian">
+            Reset <span className="font-semibold text-gold-dark">password</span>
           </h1>
           <p className="text-xs text-obsidian/60 font-sans leading-relaxed">
             Enter your account email and we will send you a secure link to reset your credentials.

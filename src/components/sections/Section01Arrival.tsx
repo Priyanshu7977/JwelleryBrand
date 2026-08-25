@@ -50,12 +50,12 @@ export const Section01Arrival: React.FC = () => {
         
         {/* Luxury White Headline & Description */}
         <div className="max-w-xl lg:max-w-2xl space-y-3 text-left">
-          <h1 className="text-3xl sm:text-5xl md:text-6xl font-bold tracking-tight text-white leading-[1.08] drop-shadow-2xl">
+          <h1 className="site-main-title text-white drop-shadow-2xl">
             Handcrafted <br />
             <span className="font-zapfino text-champagne-300 font-normal tracking-normal lowercase inline-block py-2.5 drop-shadow-2xl">
               fine jewellery
             </span> <br />
-            redefined for all.
+            redefined for all
           </h1>
 
           <p className="text-xs sm:text-base md:text-lg text-white font-medium max-w-xl leading-relaxed drop-shadow-lg">

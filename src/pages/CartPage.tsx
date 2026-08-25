@@ -66,7 +66,7 @@ export const CartPage: React.FC = () => {
               Curated Bag ({totalItems} {totalItems === 1 ? 'item' : 'items'})
             </span>
             <h1 className="site-main-title text-obsidian font-serif-luxury">
-              Your <span className="font-zapfino text-champagne-400 font-normal tracking-normal lowercase inline-block px-1">bag</span>.
+              Your <span className="font-zapfino text-champagne-400 font-normal tracking-normal lowercase inline-block px-1">bag</span>
             </h1>
           </div>
 

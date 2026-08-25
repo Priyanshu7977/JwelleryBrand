@@ -20,7 +20,7 @@ export const SectionBlogShowcase: React.FC = () => {
             </div>
 
             <h2 className="site-main-title text-obsidian font-serif-luxury">
-              From the <span className="font-zapfino text-champagne-400 font-normal tracking-normal lowercase inline-block px-1">journal</span>.
+              From the <span className="font-zapfino text-champagne-400 font-normal tracking-normal lowercase inline-block px-1">journal</span>
             </h2>
 
             <p className="text-xs sm:text-sm text-obsidian-soft font-sans leading-relaxed">

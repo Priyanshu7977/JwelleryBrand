@@ -90,7 +90,7 @@ export const OrderTrackingPage: React.FC = () => {
           </div>
 
           <h1 className="site-main-title text-obsidian font-serif-luxury">
-            Track your <span className="font-zapfino text-champagne-400 font-normal tracking-normal lowercase inline-block px-1">parcel</span>.
+            Track your <span className="font-zapfino text-champagne-400 font-normal tracking-normal lowercase inline-block px-1">parcel</span>
           </h1>
 
           <p className="text-xs sm:text-sm text-obsidian-soft max-w-md mx-auto leading-relaxed">

@@ -86,7 +86,7 @@ export const ObjectsOfAffection: React.FC = () => {
                 <span>Act 04 — The Celestia Edit</span>
               </div>
               <h2 className="site-main-title text-obsidian">
-                Objects of <span className="font-zapfino text-champagne-400 font-normal tracking-normal lowercase inline-block px-1">affection</span>.
+                Objects of <span className="font-zapfino text-champagne-400 font-normal tracking-normal lowercase inline-block px-1">affection</span>
               </h2>
             </div>
 

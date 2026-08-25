@@ -26,7 +26,7 @@ export const Section08FinalMoment: React.FC = () => {
           <div className="space-y-3">
             <h2 className="site-main-title text-obsidian">
               Redefined <br />
-              <span className="font-zapfino text-champagne-400 font-normal tracking-normal lowercase inline-block px-1">for all.</span>
+              <span className="font-zapfino text-champagne-400 font-normal tracking-normal lowercase inline-block px-1">for all</span>
             </h2>
 
             <p className="text-xl sm:text-2xl md:text-3xl text-obsidian/80 font-serif max-w-xl mx-auto pt-2 font-medium">

@@ -56,7 +56,7 @@ export const TheWorldPage: React.FC = () => {
           </div>
 
           <h1 className="site-main-title text-obsidian">
-            The <span className="font-zapfino text-champagne-400 font-normal tracking-normal lowercase inline-block px-1">world</span>.
+            The <span className="font-zapfino text-champagne-400 font-normal tracking-normal lowercase inline-block px-1">world</span>
           </h1>
 
           <p className="text-sm sm:text-base text-obsidian-soft max-w-lg mx-auto leading-relaxed font-serif">

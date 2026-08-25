@@ -252,7 +252,7 @@ export const CheckoutPage: React.FC = () => {
               <span className="text-[11px] text-emerald-800 font-sans font-semibold">256-Bit SSL Encrypted</span>
             </div>
             <h1 className="site-main-title text-obsidian font-serif-luxury">
-              Express <span className="font-zapfino text-champagne-400 font-normal tracking-normal lowercase inline-block px-1">checkout</span>.
+              Express <span className="font-zapfino text-champagne-400 font-normal tracking-normal lowercase inline-block px-1">checkout</span>
             </h1>
           </div>
 

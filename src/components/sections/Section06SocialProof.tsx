@@ -66,7 +66,7 @@ export const Section06SocialProof: React.FC = () => {
               <span className="text-xs font-serif text-obsidian/60">Reviews 🧿✨</span>
             </div>
             <h2 className="site-main-title text-obsidian">
-              Praised by <span className="font-zapfino text-champagne-400 font-normal tracking-normal lowercase inline-block px-1">those who wear it</span>.
+              Praised by <span className="font-zapfino text-champagne-400 font-normal tracking-normal lowercase inline-block px-1">those who wear it</span>
             </h2>
           </div>
 

@@ -77,7 +77,7 @@ export const ShopPage: React.FC = () => {
               </div>
 
               <h1 className="site-main-title text-obsidian">
-                The <span className="font-zapfino text-champagne-400 font-normal tracking-normal lowercase inline-block px-1">collection</span>.
+                The <span className="font-zapfino text-champagne-400 font-normal tracking-normal lowercase inline-block px-1">collection</span>
               </h1>
 
               <p className="text-xs sm:text-sm text-obsidian/75 leading-relaxed max-w-lg">

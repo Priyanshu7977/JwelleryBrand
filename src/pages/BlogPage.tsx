@@ -83,7 +83,7 @@ export const BlogPage: React.FC = () => {
                 </div>
 
                 <h1 className="site-main-title text-obsidian font-serif-luxury">
-                  Stories & <span className="font-zapfino text-champagne-400 font-normal tracking-normal lowercase inline-block px-1">lookbooks</span>.
+                  Stories & <span className="font-zapfino text-champagne-400 font-normal tracking-normal lowercase inline-block px-1">lookbooks</span>
                 </h1>
 
                 <p className="text-xs sm:text-sm text-obsidian-soft font-sans leading-relaxed">
@@ -326,7 +326,7 @@ export const BlogPage: React.FC = () => {
                 Join The Reading Circle
               </span>
               <h2 className="font-serif-luxury text-2xl sm:text-3xl font-bold text-pearl-50">
-                Styling notes & <span className="font-zapfino text-champagne-300 font-normal tracking-normal lowercase inline-block px-1">secret drops</span>.
+                Styling notes & <span className="font-zapfino text-champagne-300 font-normal tracking-normal lowercase inline-block px-1">secret drops</span>
               </h2>
               <p className="text-xs sm:text-sm text-pearl-200/80 font-sans leading-relaxed">
                 Receive weekly jewellery stacking masterclasses, private unboxing previews, and early VIP access to limited artisan drops.

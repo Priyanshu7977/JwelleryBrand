@@ -11,7 +11,7 @@ export const TermsPage: React.FC = () => {
             Legal Agreements
           </span>
           <h1 className="site-main-title text-obsidian">
-            Terms & <span className="font-semibold text-gold-dark">conditions</span>.
+            Terms & <span className="font-semibold text-gold-dark">conditions</span>
           </h1>
           <p className="text-xs text-obsidian/60 font-sans">
             Last Updated: August 2026 • Mumbai Studio Atelier

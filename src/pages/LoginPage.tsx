@@ -40,8 +40,8 @@ export const LoginPage: React.FC = () => {
           <span className="text-[10px] uppercase tracking-monumental text-gold-dark font-semibold">
             Atelier Portal
           </span>
-          <h1 className="font-serif-luxury text-3xl md:text-4xl text-obsidian">
-            Sign <span className="font-semibold text-gold-dark">in</span>.
+          <h1 className="site-main-title text-obsidian">
+            Sign <span className="font-semibold text-gold-dark">in</span>
           </h1>
           <p className="text-xs text-obsidian/60 font-sans max-w-xs mx-auto">
             Access your order tracking, custom polaroid history, and saved address.

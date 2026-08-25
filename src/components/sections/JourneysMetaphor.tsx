@@ -20,7 +20,7 @@ export const JourneysMetaphor: React.FC = () => {
           </div>
 
           <h2 className="site-main-title text-obsidian">
-            <AnimatedCounter target={1000} suffix="+" /> <span className="font-zapfino text-champagne-400 font-normal tracking-normal lowercase inline-block px-1">journeys</span>.
+            <AnimatedCounter target={1000} suffix="+" /> <span className="font-zapfino text-champagne-400 font-normal tracking-normal lowercase inline-block px-1">journeys</span>
           </h2>
 
           <p className="text-xs sm:text-sm text-obsidian/75 font-sans leading-relaxed max-w-xl mx-auto">

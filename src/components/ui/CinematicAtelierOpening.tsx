@@ -153,7 +153,7 @@ export const CinematicAtelierOpening: React.FC = () => {
           }`}
         >
           <p className="font-zapfino text-xl sm:text-2xl md:text-3xl text-champagne-300 font-normal tracking-normal lowercase py-1">
-            redefined for all.
+            redefined for all
           </p>
 
           <div className="flex items-center justify-center gap-3 pt-3">

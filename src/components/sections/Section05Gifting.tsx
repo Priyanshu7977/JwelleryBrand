@@ -74,7 +74,7 @@ export const Section05Gifting: React.FC = () => {
             </div>
 
             <h2 className="site-main-title text-obsidian">
-              For someone <span className="font-zapfino text-champagne-400 font-normal tracking-normal lowercase inline-block px-1">special.</span>
+              For someone <span className="font-zapfino text-champagne-400 font-normal tracking-normal lowercase inline-block px-1">special</span>
             </h2>
 
             <p className="text-xs sm:text-sm text-obsidian/75 leading-relaxed">

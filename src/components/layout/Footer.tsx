@@ -45,7 +45,7 @@ export const Footer: React.FC = () => {
             </div>
 
             <h2 className="site-main-title text-[#FAF7F0] max-w-4xl mx-auto">
-              Where timeless <span className="font-zapfino text-[#D8C39A] font-normal tracking-normal lowercase inline-block px-1">charm</span> meets everyday <span className="font-zapfino text-[#D8C39A] font-normal tracking-normal lowercase inline-block px-1">grace</span>.
+              Where timeless <span className="font-zapfino text-[#D8C39A] font-normal tracking-normal lowercase inline-block px-1">charm</span> meets everyday <span className="font-zapfino text-[#D8C39A] font-normal tracking-normal lowercase inline-block px-1">grace</span>
             </h2>
           </div>
         </RevealOnScroll>

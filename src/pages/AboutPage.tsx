@@ -25,7 +25,7 @@ export const AboutPage: React.FC = () => {
           </div>
 
           <h1 className="site-main-title text-obsidian">
-            The soul of <span className="font-zapfino text-champagne-400 font-normal tracking-normal lowercase inline-block px-1">celestia</span>.
+            The soul of <span className="font-zapfino text-champagne-400 font-normal tracking-normal lowercase inline-block px-1">celestia</span>
           </h1>
 
           <p className="font-serif text-xl sm:text-2xl text-obsidian/85 leading-relaxed">

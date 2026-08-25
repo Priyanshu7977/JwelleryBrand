@@ -27,7 +27,7 @@ export const Section04World: React.FC = () => {
           <h2 className="site-main-title text-obsidian">
             Little things <br />
             <span className="font-zapfino text-champagne-400 font-normal tracking-normal lowercase inline-block px-1">that become</span> <br />
-            your moments.
+            your moments
           </h2>
         </div>
 
