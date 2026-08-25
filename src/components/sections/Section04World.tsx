@@ -24,7 +24,7 @@ export const Section04World: React.FC = () => {
             <span className="text-xs font-serif text-obsidian/60">Philosophy & Origin</span>
           </div>
 
-          <h2 className="text-3xl sm:text-5xl md:text-6xl text-obsidian font-bold leading-[1.08]">
+          <h2 className="site-main-title text-obsidian">
             Little things <br />
             <span className="font-zapfino text-champagne-400 font-normal tracking-normal lowercase inline-block px-1">that become</span> <br />
             your moments.

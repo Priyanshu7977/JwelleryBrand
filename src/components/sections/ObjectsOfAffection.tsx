@@ -85,7 +85,7 @@ export const ObjectsOfAffection: React.FC = () => {
                 <Sparkles className="w-3.5 h-3.5" />
                 <span>Act 04 — The Celestia Edit</span>
               </div>
-              <h2 className="text-3xl sm:text-5xl md:text-6xl text-obsidian font-bold leading-[1.08]">
+              <h2 className="site-main-title text-obsidian">
                 Objects of <span className="font-zapfino text-champagne-400 font-normal tracking-normal lowercase inline-block px-1">affection</span>.
               </h2>
             </div>

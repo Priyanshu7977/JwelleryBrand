@@ -113,7 +113,7 @@ export const AccountPage: React.FC = () => {
             <span className="text-xs uppercase font-mono tracking-widest text-gold-dark font-bold">
               Private Atelier Portal
             </span>
-            <h1 className="font-serif-luxury text-3xl sm:text-5xl md:text-6xl text-obsidian">
+            <h1 className="site-main-title text-obsidian">
               Your <span className="font-semibold text-gold-dark">account</span>.
             </h1>
             <p className="text-sm text-obsidian-soft font-sans max-w-md mx-auto leading-relaxed">

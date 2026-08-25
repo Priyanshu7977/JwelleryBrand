@@ -24,7 +24,7 @@ export const AboutPage: React.FC = () => {
             </span>
           </div>
 
-          <h1 className="text-3xl sm:text-5xl md:text-6xl text-obsidian font-bold leading-[1.08]">
+          <h1 className="site-main-title text-obsidian">
             The soul of <span className="font-zapfino text-champagne-400 font-normal tracking-normal lowercase inline-block px-1">celestia</span>.
           </h1>
 

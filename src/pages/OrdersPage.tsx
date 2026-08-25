@@ -38,7 +38,7 @@ export const OrdersPage: React.FC = () => {
           <span className="text-[10px] uppercase tracking-monumental text-gold-dark font-semibold">
             Atelier Dispatches
           </span>
-          <h1 className="font-serif-luxury text-4xl sm:text-6xl text-obsidian">
+          <h1 className="site-main-title text-obsidian">
             Your <span className="font-semibold text-gold-dark">orders</span>.
           </h1>
         </div>

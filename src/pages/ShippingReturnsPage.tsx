@@ -19,7 +19,7 @@ export const ShippingReturnsPage: React.FC = () => {
             </span>
           </div>
 
-          <h1 className="font-serif-luxury text-4xl sm:text-6xl text-obsidian">
+          <h1 className="site-main-title text-obsidian">
             Shipping & <span className="font-semibold text-gold-dark">returns</span>.
           </h1>
 
