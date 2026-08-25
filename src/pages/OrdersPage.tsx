@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowLeft, Package, Truck, CheckCircle2, ArrowRight, Clock, MapPin, Check } from 'lucide-react';
+import { ArrowLeft, Package, Truck, CheckCircle2, ArrowRight, Clock, MapPin, Check, Download } from 'lucide-react';
 import { getUserOrders } from '../services/orderService';
+import { downloadOrderInvoicePDF } from '../services/pdfInvoiceService';
 import { OrderMetadata } from '../types/backend';
 import { useAuth } from '../context/AuthContext';
 import { formatOrderDateIST, formatOrderTimeIST } from '../utils/dateIST';
@@ -142,15 +143,24 @@ export const OrdersPage: React.FC = () => {
                       <div className="flex items-center gap-2 pt-2 border-t border-champagne-200/50">
                         <Link
                           to={`/order-tracking?id=${ord.orderNumber}`}
-                          className="flex-1 py-2 px-4 rounded-full bg-obsidian text-pearl-100 text-xs uppercase font-mono tracking-wider font-bold hover:bg-obsidian-200 transition-all text-center flex items-center justify-center gap-1.5 shadow-sm"
+                          className="flex-1 py-2 px-3 rounded-full bg-obsidian text-pearl-100 text-xs uppercase font-mono tracking-wider font-bold hover:bg-obsidian-200 transition-all text-center flex items-center justify-center gap-1.5 shadow-sm"
                         >
                           <Truck className="w-3.5 h-3.5 text-champagne-300" />
                           <span>Track</span>
                         </Link>
 
+                        <button
+                          onClick={() => downloadOrderInvoicePDF(ord)}
+                          className="py-2 px-3 rounded-full border border-champagne-300 bg-pearl-50 hover:bg-champagne-100 text-obsidian text-xs uppercase font-mono tracking-wider font-bold transition-all text-center flex items-center justify-center gap-1 cursor-pointer"
+                          title="Download PDF Invoice"
+                        >
+                          <Download className="w-3.5 h-3.5 text-gold-dark" />
+                          <span>PDF</span>
+                        </button>
+
                         <Link
                           to={`/account/orders/${ord.orderNumber}`}
-                          className="flex-1 py-2 px-4 rounded-full border border-champagne-300/80 bg-white hover:bg-champagne-100/60 text-obsidian text-xs uppercase font-mono tracking-wider font-bold transition-all text-center"
+                          className="flex-1 py-2 px-3 rounded-full border border-champagne-300/80 bg-white hover:bg-champagne-100/60 text-obsidian text-xs uppercase font-mono tracking-wider font-bold transition-all text-center"
                         >
                           Details
                         </Link>

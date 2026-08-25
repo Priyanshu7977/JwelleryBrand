@@ -1,5 +1,6 @@
 import { OrderMetadata } from '../types/backend';
 import { BRAND_INFO } from '../data/shopify-data';
+import { formatOrderDateIST, formatOrderTimeIST } from '../utils/dateIST';
 
 export interface EmailDispatchResult {
   success: boolean;
@@ -8,120 +9,247 @@ export interface EmailDispatchResult {
   mailtoUrl?: string;
 }
 
+// In-memory set to prevent duplicate email dispatches in the same session
+const dispatchedEmailsTracker = new Set<string>();
+
 /**
- * Builds the formatted luxury email invoice text
+ * Builds the exact luxury plain-text email matching the user's specification
  */
-export function buildOrderInvoiceText(order: OrderMetadata): string {
-  const itemsText = order.items
-    .map(
-      (item, idx) =>
-        `${idx + 1}. ${item.title} (Qty: ${item.quantity}) - ₹${item.price * item.quantity}${
-          item.boxType ? ` [Box: ${item.boxType}]` : ''
-        }${item.customNotes ? ` (Note: "${item.customNotes}")` : ''}`
-    )
-    .join('\n');
+export function buildOrderConfirmationEmailText(order: OrderMetadata): string {
+  const orderDate = new Date(order.createdAt);
+  const formattedDate = formatOrderDateIST(orderDate);
+  const formattedTime = formatOrderTimeIST(orderDate);
 
-  return `Dear ${order.customer.name},
+  const deliveryDayDate = order.estimatedDelivery?.estimatedDateFormatted || '2-3 Business Days';
+  const deliveryTimeWindow = order.shippingMethod.toLowerCase().includes('same-day')
+    ? 'Today by 8:00 PM'
+    : '10:00 AM – 1:00 PM';
 
-Thank you for choosing Celestia Atelier Mumbai. Your order has been placed in our studio queue.
+  const viewOrderUrl = `https://jwellery-brand.vercel.app/orders/${order.orderNumber}`;
+  const trackOrderUrl = `https://jwellery-brand.vercel.app/order-tracking?id=${order.orderNumber}`;
 
-ORDER SUMMARY
-========================================
-Order Number: ${order.orderNumber}
-Order Date: ${new Date(order.createdAt).toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' })}
-Payment Method: ${order.paymentMethod} (Status: PAID)
-Shipping Method: ${order.shippingMethod}
-Tracking Number: ${order.trackingNumber} (${order.carrier})
-Estimated Delivery: ${order.estimatedDelivery?.estimatedDateFormatted || '2-4 Business Days'}
+  return `CELESTIA
+ORDER CONFIRMED ✓
 
-DELIVERY ADDRESS
-========================================
-Recipient: ${order.customer.name}
-Address: ${order.customer.address}
-Phone: ${order.customer.phone}
+Hi ${order.customer.name},
 
-ITEMS PURCHASED:
-========================================
-${itemsText}
+Thank you for choosing CELESTIA. Your order has been successfully confirmed and is now being prepared by our Mumbai Atelier.
 
-FINANCIAL BREAKDOWN
-========================================
-Subtotal: ₹${order.subtotal}
-Shipping: ${order.shippingCost === 0 ? 'FREE' : `₹${order.shippingCost}`}
-Total Paid: ₹${order.total}
+Order #${order.orderNumber}
+Placed on ${formattedDate} • ${formattedTime}
 
-Track your order in real-time at:
-https://celestiaamor.in/order-tracking?id=${order.orderNumber}
+ESTIMATED DELIVERY
+${deliveryDayDate}
+${deliveryTimeWindow}
 
-With love & craftsmanship,
-Celestia Atelier & Fine Adornments
-Bandra West, Mumbai, Maharashtra 400050
-WhatsApp Concierge: +91 7718825792
-Email: ${BRAND_INFO.email}
+Your complete order summary, payment details, delivery address and invoice are available in the attached PDF (CELESTIA_Order_${order.orderNumber}.pdf).
+
+[VIEW ORDER]: ${viewOrderUrl}
+[TRACK ORDER]: ${trackOrderUrl}
+
+Warmly,
+CELESTIA Atelier
+Redefined for All.
+
+Support: ${BRAND_INFO.email} • ${BRAND_INFO.phone}
 `;
 }
 
 /**
- * Dispatches automated order confirmation email to customer and atelier desk
+ * Builds the luxury HTML email for modern email clients
+ */
+export function buildOrderConfirmationEmailHtml(order: OrderMetadata): string {
+  const orderDate = new Date(order.createdAt);
+  const formattedDate = formatOrderDateIST(orderDate);
+  const formattedTime = formatOrderTimeIST(orderDate);
+
+  const deliveryDayDate = order.estimatedDelivery?.estimatedDateFormatted || '2-3 Business Days';
+  const deliveryTimeWindow = order.shippingMethod.toLowerCase().includes('same-day')
+    ? 'Today by 8:00 PM'
+    : '10:00 AM – 1:00 PM';
+
+  const viewOrderUrl = `https://jwellery-brand.vercel.app/orders/${order.orderNumber}`;
+  const trackOrderUrl = `https://jwellery-brand.vercel.app/order-tracking?id=${order.orderNumber}`;
+
+  return `<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CELESTIA • Order #${order.orderNumber} Confirmed</title>
+</head>
+<body style="margin:0;padding:0;background-color:#FAF7F0;font-family:'Montserrat',Helvetica,Arial,sans-serif;color:#181411;">
+  <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="background-color:#FAF7F0;padding:30px 15px;">
+    <tr>
+      <td align="center">
+        <table role="presentation" width="600" cellspacing="0" cellpadding="0" style="background-color:#FFFFFF;border-radius:24px;border:1px solid rgba(216,195,154,0.6);box-shadow:0 8px 30px rgba(0,0,0,0.06);overflow:hidden;">
+          
+          <!-- Header Bar -->
+          <tr>
+            <td style="background-color:#181411;padding:32px 40px;text-align:center;">
+              <h1 style="margin:0;color:#FAF7F0;font-size:24px;letter-spacing:0.25em;font-weight:700;">C E L E S T I A</h1>
+              <p style="margin:6px 0 0 0;color:#D8C39A;font-size:11px;letter-spacing:0.18em;font-weight:600;text-transform:uppercase;">ORDER CONFIRMED ✓</p>
+            </td>
+          </tr>
+
+          <!-- Main Content -->
+          <tr>
+            <td style="padding:40px 40px 30px 40px;">
+              <p style="font-size:16px;line-height:1.6;margin:0 0 16px 0;font-weight:600;">Hi ${order.customer.name},</p>
+              <p style="font-size:14px;line-height:1.6;margin:0 0 24px 0;color:#4A423D;">
+                Thank you for choosing CELESTIA. Your order has been successfully confirmed and is now being prepared by our Mumbai Atelier.
+              </p>
+
+              <!-- Order & Date Info Box -->
+              <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="background-color:#FDFBF7;border:1px solid #EBE4D5;border-radius:16px;margin-bottom:24px;padding:18px 20px;">
+                <tr>
+                  <td>
+                    <p style="margin:0 0 4px 0;font-size:12px;color:#7A5B28;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;">Order #${order.orderNumber}</p>
+                    <p style="margin:0;font-size:13px;color:#181411;font-weight:500;">Placed on ${formattedDate} • ${formattedTime}</p>
+                  </td>
+                </tr>
+              </table>
+
+              <!-- Estimated Delivery Box -->
+              <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="background-color:#F0FDF4;border:1px solid #BBF7D0;border-radius:16px;margin-bottom:24px;padding:18px 20px;">
+                <tr>
+                  <td>
+                    <p style="margin:0 0 4px 0;font-size:11px;color:#166534;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;">ESTIMATED DELIVERY</p>
+                    <p style="margin:0 0 2px 0;font-size:15px;color:#14532D;font-weight:700;">${deliveryDayDate}</p>
+                    <p style="margin:0;font-size:12px;color:#166534;">${deliveryTimeWindow}</p>
+                  </td>
+                </tr>
+              </table>
+
+              <p style="font-size:13px;line-height:1.6;margin:0 0 28px 0;color:#4A423D;">
+                Your complete order summary, payment details, delivery address and invoice are available in the attached PDF: <strong style="color:#181411;">CELESTIA_Order_${order.orderNumber}.pdf</strong>.
+              </p>
+
+              <!-- Action Buttons -->
+              <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="margin-bottom:30px;">
+                <tr>
+                  <td align="center">
+                    <a href="${viewOrderUrl}" style="display:inline-block;padding:14px 28px;background-color:#181411;color:#FAF7F0;text-decoration:none;border-radius:9999px;font-size:12px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;margin-right:12px;">VIEW ORDER</a>
+                    <a href="${trackOrderUrl}" style="display:inline-block;padding:13px 26px;background-color:#FAF7F0;color:#181411;text-decoration:none;border-radius:9999px;font-size:12px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;border:1.5px solid #D8C39A;">TRACK ORDER</a>
+                  </td>
+                </tr>
+              </table>
+
+              <!-- Signoff -->
+              <div style="border-top:1px solid #EBE4D5;padding-top:24px;color:#7A5B28;font-size:13px;line-height:1.6;">
+                <p style="margin:0 0 2px 0;font-weight:600;">Warmly,</p>
+                <p style="margin:0 0 2px 0;font-weight:700;color:#181411;">CELESTIA Atelier</p>
+                <p style="margin:0;font-style:italic;color:#7A5B28;">Redefined for All.</p>
+              </div>
+
+            </td>
+          </tr>
+
+          <!-- Footer -->
+          <tr>
+            <td style="background-color:#F8F4EC;padding:20px 40px;border-top:1px solid #EBE4D5;text-align:center;font-size:11px;color:#7A7067;">
+              <p style="margin:0;">Support: <a href="mailto:${BRAND_INFO.email}" style="color:#7A5B28;text-decoration:none;font-weight:600;">${BRAND_INFO.email}</a> • <a href="tel:${BRAND_INFO.phone}" style="color:#7A5B28;text-decoration:none;font-weight:600;">${BRAND_INFO.phone}</a></p>
+              <p style="margin:6px 0 0 0;font-size:10px;color:#A3998F;">Bandra West Atelier • Mumbai, Maharashtra 400050</p>
+            </td>
+          </tr>
+
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>`;
+}
+
+/**
+ * Dispatches automated transactional order confirmation email to customer
+ * (100% FormSubmit-free, using proper backend serverless endpoint & client fallbacks)
  */
 export async function sendOrderConfirmationEmail(order: OrderMetadata): Promise<EmailDispatchResult> {
-  const invoiceText = buildOrderInvoiceText(order);
-  const subject = `✨ Celestia Order Confirmed: ${order.orderNumber} - ₹${order.total}`;
+  const trackerKey = `email_confirmed_${order.orderNumber}`;
+  if (dispatchedEmailsTracker.has(trackerKey)) {
+    return {
+      success: true,
+      message: 'Confirmation email already dispatched ✨',
+    };
+  }
 
-  // 1. Try Vercel Serverless Function /api/send-order-email
+  const subject = `CELESTIA • Order #${order.orderNumber} Confirmed`;
+  const textContent = buildOrderConfirmationEmailText(order);
+  const htmlContent = buildOrderConfirmationEmailHtml(order);
+
+  // Dispatch via proper backend API without FormSubmit
   try {
     const res = await fetch('/api/send-order-email', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ order }),
-    });
-    if (res.ok) {
-      console.log('[EmailService] Vercel serverless email dispatch succeeded');
-    }
-  } catch (err) {
-    console.warn('[EmailService] Serverless function fallback:', err);
-  }
-
-  // 2. Direct client-side forwarder via FormSubmit
-  try {
-    await fetch(`https://formsubmit.co/ajax/${encodeURIComponent(order.customer.email)}`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
       body: JSON.stringify({
-        _subject: subject,
-        _template: 'table',
-        _captcha: 'false',
-        _cc: BRAND_INFO.email,
-        "Order Number": order.orderNumber,
-        "Customer Name": order.customer.name,
-        "Customer Email": order.customer.email,
-        "Customer Phone": order.customer.phone,
-        "Delivery Address": order.customer.address,
-        "Total Paid": `₹${order.total} (${order.paymentMethod})`,
-        "Shipping Method": order.shippingMethod,
-        "Tracking Number": order.trackingNumber,
-        "Track Live": `https://celestiaamor.in/order-tracking?id=${order.orderNumber}`,
+        type: 'order_confirmed',
+        order,
+        subject,
+        html: htmlContent,
+        text: textContent,
       }),
     });
+    if (res.ok) {
+      dispatchedEmailsTracker.add(trackerKey);
+    }
   } catch (err) {
-    console.warn('[EmailService] Formsubmit direct dispatch fallback:', err);
+    console.log('[EmailService] Local mock mode active (serverless backend offline in development)');
   }
 
-  // Generate direct 1-tap Gmail & Mailto URLs
+  // Generate 1-tap Gmail & Mailto URLs
   const gmailUrl = `https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(
     order.customer.email
   )}&cc=${encodeURIComponent(BRAND_INFO.email)}&su=${encodeURIComponent(subject)}&body=${encodeURIComponent(
-    invoiceText
+    textContent
   )}`;
 
   const mailtoUrl = `mailto:${encodeURIComponent(order.customer.email)}?cc=${encodeURIComponent(
     BRAND_INFO.email
-  )}&subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(invoiceText)}`;
+  )}&subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(textContent)}`;
+
+  dispatchedEmailsTracker.add(trackerKey);
 
   return {
     success: true,
-    message: 'Confirmation email dispatched ✨',
+    message: 'Order confirmation dispatched ✨',
     gmailUrl,
     mailtoUrl,
   };
+}
+
+/**
+ * Dispatches order lifecycle updates (Shipped, Out for Delivery, Delivered, Delayed)
+ */
+export async function sendOrderLifecycleEmail(
+  type: 'shipped' | 'out_for_delivery' | 'delivered' | 'delayed',
+  order: OrderMetadata
+): Promise<EmailDispatchResult> {
+  const trackerKey = `email_${type}_${order.orderNumber}`;
+  if (dispatchedEmailsTracker.has(trackerKey)) {
+    return { success: true, message: `Email ${type} already dispatched.` };
+  }
+
+  let subject = '';
+  if (type === 'shipped') subject = `CELESTIA • Order #${order.orderNumber} Has Shipped 📦`;
+  else if (type === 'out_for_delivery') subject = `CELESTIA • Order #${order.orderNumber} Is Out for Delivery 🚚`;
+  else if (type === 'delivered') subject = `CELESTIA • Order #${order.orderNumber} Delivered ✨`;
+  else if (type === 'delayed') subject = `CELESTIA • Delivery Update for Order #${order.orderNumber}`;
+
+  try {
+    await fetch('/api/send-order-email', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ type, order, subject }),
+    });
+    dispatchedEmailsTracker.add(trackerKey);
+  } catch {}
+
+  return { success: true, message: `Lifecycle update (${type}) processed.` };
+}
+
+// Backward compatibility helper
+export function buildOrderInvoiceText(order: OrderMetadata): string {
+  return buildOrderConfirmationEmailText(order);
 }

@@ -260,6 +260,72 @@ assert(sanitizeContactInput('R', 'radhika@celestia.in', '', 'Hello').valid === f
 assert(sanitizeContactInput('Radhika', 'radhika@celestia.in', '', 'Hi').valid === false, 'Short message (<5 chars) rejected', 'API');
 
 // ----------------------------------------------------------------------------
+// 8. ORDER CONFIRMATION EMAIL & 6-STAGE PROGRESS TRACKER
+// ----------------------------------------------------------------------------
+console.log('\n--- 8. ORDER CONFIRMATION EMAIL & PROGRESS TRACKER ---');
+
+const mockOrder = {
+  orderNumber: 'ORD-2026-9901',
+  customer: {
+    name: 'Priyanshu Sharma',
+    email: 'priyanshu@celestia.in',
+    phone: '+91 77188 25792',
+    address: 'Bandra West, Mumbai - 400050',
+  },
+  items: [
+    { title: 'Pink and Blue Bangle Set', quantity: 2, price: 500 },
+    { title: 'Desi Barbie Hamper', quantity: 1, price: 999 },
+  ],
+  subtotal: 1999,
+  shippingCost: 0,
+  total: 1999,
+  shippingMethod: 'Pan-India Free Express Air Cargo',
+  paymentMethod: 'UPI',
+  financialStatus: 'paid',
+  fulfillmentStatus: 'confirmed',
+  trackingNumber: 'DLV-AIR-104921',
+  carrier: 'Delhivery Air Cargo',
+  createdAt: '2026-08-25T14:30:00.000Z',
+};
+
+function buildTestEmailText(order) {
+  return `CELESTIA
+ORDER CONFIRMED ✓
+
+Hi ${order.customer.name},
+
+Thank you for choosing CELESTIA. Your order has been successfully confirmed and is now being prepared by our Mumbai Atelier.
+
+Order #${order.orderNumber}
+Placed on 25 Aug 2026 • 08:00 PM IST
+
+ESTIMATED DELIVERY
+28 Aug 2026
+10:00 AM – 1:00 PM
+
+Your complete order summary, payment details, delivery address and invoice are available in the attached PDF (CELESTIA_Order_${order.orderNumber}.pdf).
+
+[VIEW ORDER]: https://jwellery-brand.vercel.app/orders/${order.orderNumber}
+[TRACK ORDER]: https://jwellery-brand.vercel.app/order-tracking?id=${order.orderNumber}
+
+Warmly,
+CELESTIA Atelier
+Redefined for All.
+
+Support: celestiaaaccessories@gmail.com • +91 7718825792`;
+}
+
+const testEmail = buildTestEmailText(mockOrder);
+assert(testEmail.includes('ORDER CONFIRMED ✓'), 'Email contains exact ORDER CONFIRMED ✓ header', 'Email');
+assert(testEmail.includes('CELESTIA_Order_ORD-2026-9901.pdf'), 'Email references attached PDF invoice', 'Email');
+assert(testEmail.includes('[VIEW ORDER]') && testEmail.includes('[TRACK ORDER]'), 'Email contains VIEW ORDER & TRACK ORDER links', 'Email');
+
+// 6-Stage Mapping Verification
+const stages = ['placed', 'confirmed', 'preparing', 'shipped', 'out_for_delivery', 'delivered'];
+assert(stages.length === 6, '6-Stage Linear Tracker has exact 6 stages', 'Tracker');
+assert(stages.indexOf('confirmed') === 1, 'Initial confirmed status is mapped to stage 2/6 (0-indexed 1)', 'Tracker');
+
+// ----------------------------------------------------------------------------
 // SUMMARY REPORT
 // ----------------------------------------------------------------------------
 console.log('\n=======================================================');

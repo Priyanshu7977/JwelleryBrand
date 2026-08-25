@@ -11,17 +11,30 @@ import {
   MapPin,
   Sparkles,
   Check,
+  Download,
+  FileText,
 } from 'lucide-react';
 import { WhatsAppIcon } from '../components/ui/WhatsAppIcon';
 import { BRAND_INFO } from '../data/shopify-data';
 import { getOrderById } from '../services/orderService';
+import { downloadOrderInvoicePDF } from '../services/pdfInvoiceService';
 import { OrderMetadata } from '../types/backend';
 import { formatOrderDateIST, formatOrderTimeIST, formatTimelineStampIST } from '../utils/dateIST';
+
+const SIX_STAGE_STEPS = [
+  { id: 'placed', label: 'ORDER PLACED' },
+  { id: 'confirmed', label: 'CONFIRMED' },
+  { id: 'preparing', label: 'PREPARING' },
+  { id: 'shipped', label: 'SHIPPED' },
+  { id: 'out_for_delivery', label: 'OUT FOR DELIVERY' },
+  { id: 'delivered', label: 'DELIVERED' },
+];
 
 export const OrderDetailPage: React.FC = () => {
   const { orderId } = useParams<{ orderId: string }>();
   const [order, setOrder] = useState<OrderMetadata | null>(null);
   const [loading, setLoading] = useState(true);
+  const [isDownloadingPdf, setIsDownloadingPdf] = useState(false);
 
   useEffect(() => {
     if (orderId) {
@@ -35,6 +48,18 @@ export const OrderDetailPage: React.FC = () => {
         });
     }
   }, [orderId]);
+
+  const handleDownloadInvoice = () => {
+    if (!order) return;
+    setIsDownloadingPdf(true);
+    try {
+      downloadOrderInvoicePDF(order);
+    } catch (e) {
+      console.error('PDF download error:', e);
+    } finally {
+      setTimeout(() => setIsDownloadingPdf(false), 1000);
+    }
+  };
 
   if (loading) {
     return (
@@ -52,13 +77,13 @@ export const OrderDetailPage: React.FC = () => {
       <div className="w-full min-h-screen bg-pearl-100 pt-36 pb-32 px-4 flex items-center justify-center">
         <div className="max-w-md w-full bg-pearl-50/95 p-8 rounded-3xl border border-champagne-300/60 shadow-luxury-soft text-center space-y-6">
           <Package className="w-10 h-10 text-gold-dark mx-auto" />
-          <h2 className="font-serif-luxury text-2xl text-obsidian">Order Not Found</h2>
+          <h2 className="font-serif-luxury text-2xl text-obsidian font-bold">Order Not Found</h2>
           <p className="text-xs text-obsidian/70">
             We could not find an order matching reference "{orderId}".
           </p>
           <Link
             to="/account/orders"
-            className="inline-block px-6 py-3 rounded-full bg-obsidian text-pearl-100 text-xs uppercase font-mono tracking-widest font-bold hover:bg-obsidian-200"
+            className="inline-block px-6 py-3.5 rounded-full bg-obsidian text-pearl-100 text-xs uppercase font-mono tracking-widest font-bold hover:bg-obsidian-200"
           >
             Back to Orders
           </Link>
@@ -71,69 +96,64 @@ export const OrderDetailPage: React.FC = () => {
   const formattedDate = formatOrderDateIST(orderDate);
   const formattedTime = formatOrderTimeIST(orderDate);
 
-  const packDate = new Date(orderDate.getTime() + 2.5 * 3600 * 1000);
-  const shipDate = new Date(orderDate.getTime() + 5.5 * 3600 * 1000);
-  const outDeliveryDate = new Date(orderDate.getTime() + 48 * 3600 * 1000);
-  const deliveredDate = new Date(orderDate.getTime() + 54 * 3600 * 1000);
+  const getStageIndex = (status: string) => {
+    switch (status) {
+      case 'placed':
+        return 0;
+      case 'confirmed':
+        return 1;
+      case 'packed':
+      case 'preparing':
+        return 2;
+      case 'shipped':
+        return 3;
+      case 'out_for_delivery':
+        return 4;
+      case 'delivered':
+        return 5;
+      default:
+        return 1;
+    }
+  };
 
-  const timelineSteps = [
-    {
-      title: 'Order Confirmed',
-      timestamp: formatTimelineStampIST(orderDate),
-      description: 'Order placed & payment verified in Mumbai Atelier queue.',
-      status: 'completed',
-    },
-    {
-      title: 'Order Packed',
-      timestamp: `${formatOrderDateIST(packDate)} • Estimated by ${formatOrderTimeIST(packDate)}`,
-      description: 'Anti-tarnish wax seal applied with custom velvet box packaging.',
-      status: ['packed', 'shipped', 'out_for_delivery', 'delivered'].includes(order.fulfillmentStatus) ? 'completed' : 'pending',
-    },
-    {
-      title: 'Order Shipped',
-      timestamp: `${formatOrderDateIST(shipDate)} • Estimated by ${formatOrderTimeIST(shipDate)}`,
-      description: 'Airway bill generated and handed over to express delivery network.',
-      status: ['shipped', 'out_for_delivery', 'delivered'].includes(order.fulfillmentStatus) ? 'completed' : 'pending',
-    },
-    {
-      title: 'Out for Delivery',
-      timestamp: `${formatOrderDateIST(outDeliveryDate)} • Expected between 10:00 AM – 1:00 PM`,
-      description: 'Courier specialist dispatched for contactless doorstep handover.',
-      status: ['out_for_delivery', 'delivered'].includes(order.fulfillmentStatus) ? 'completed' : 'pending',
-    },
-    {
-      title: 'Delivered',
-      timestamp: `${order.estimatedDelivery?.estimatedDateFormatted || formatOrderDateIST(deliveredDate)} • Expected between 10:00 AM – 8:00 PM IST`,
-      description: 'Safely delivered with contactless signature verification.',
-      status: order.fulfillmentStatus === 'delivered' ? 'completed' : 'pending',
-    },
-  ];
+  const currentStageIndex = getStageIndex(order.fulfillmentStatus);
 
   return (
     <div className="w-full min-h-screen bg-pearl-100 pt-36 sm:pt-40 md:pt-44 pb-32 px-4 sm:px-8 md:px-12 selection:bg-champagne-300">
       <div className="max-w-4xl mx-auto space-y-8">
         
-        <Link
-          to="/account/orders"
-          className="inline-flex items-center gap-2 text-xs uppercase font-mono tracking-widest text-obsidian/70 hover:text-obsidian transition-colors"
-        >
-          <ArrowLeft className="w-3.5 h-3.5" />
-          <span>Back to All Orders</span>
-        </Link>
+        <div className="flex items-center justify-between">
+          <Link
+            to="/account/orders"
+            className="inline-flex items-center gap-2 text-xs uppercase font-mono tracking-widest text-obsidian/70 hover:text-obsidian transition-colors font-bold"
+          >
+            <ArrowLeft className="w-3.5 h-3.5" />
+            <span>Back to All Orders</span>
+          </Link>
+
+          <button
+            onClick={handleDownloadInvoice}
+            disabled={isDownloadingPdf}
+            className="px-4 py-2 bg-white hover:bg-champagne-100 text-obsidian border border-champagne-300 rounded-full text-xs font-mono font-bold uppercase tracking-wider flex items-center gap-2 transition-all shadow-xs cursor-pointer"
+          >
+            <Download className={`w-3.5 h-3.5 text-gold-dark ${isDownloadingPdf ? 'animate-bounce' : ''}`} />
+            <span>{isDownloadingPdf ? 'Downloading...' : 'Download Invoice'}</span>
+          </button>
+        </div>
 
         <div className="bg-pearl-50/95 p-6 sm:p-10 md:p-12 rounded-3xl border border-champagne-300/60 shadow-luxury-soft space-y-8">
           
           {/* Order Header */}
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-champagne-300/40 pb-6">
             <div>
-              <span className="text-[10px] uppercase font-mono tracking-monumental text-gold-dark font-bold">
-                Atelier Receipt
+              <span className="text-[10px] uppercase font-mono tracking-widest text-gold-dark font-bold">
+                Atelier Order Receipt
               </span>
-              <h1 className="font-serif-luxury text-3xl sm:text-4xl text-obsidian">
-                {order.orderNumber}
+              <h1 className="font-serif-luxury text-3xl sm:text-4xl text-obsidian font-bold">
+                #{order.orderNumber}
               </h1>
               <p className="text-xs text-obsidian/60 font-sans mt-0.5">
-                Placed on {formattedDate} at {formattedTime} • Payment: {order.financialStatus.toUpperCase()}
+                Placed on {formattedDate} at {formattedTime} • Payment: {order.financialStatus.toUpperCase()} ({order.paymentMethod})
               </p>
             </div>
 
@@ -157,62 +177,66 @@ export const OrderDetailPage: React.FC = () => {
               </p>
             </div>
 
-            <Link
-              to={`/order-tracking?id=${order.orderNumber}`}
-              className="px-6 py-2.5 rounded-full bg-obsidian text-pearl-100 text-xs uppercase font-mono tracking-widest font-bold hover:bg-obsidian-200 transition-all flex items-center justify-center gap-2 shadow-sm shrink-0"
-            >
-              <Truck className="w-4 h-4 text-champagne-300" />
-              <span>Track Live Parcel</span>
-            </Link>
+            <div className="flex items-center gap-2 shrink-0">
+              <button
+                onClick={handleDownloadInvoice}
+                className="px-4 py-2.5 rounded-full bg-white hover:bg-champagne-100 text-obsidian border border-champagne-300 text-xs font-mono uppercase tracking-wider font-bold transition-all flex items-center gap-1.5 shadow-xs cursor-pointer"
+              >
+                <Download className="w-3.5 h-3.5 text-gold-dark" />
+                <span>Invoice</span>
+              </button>
+
+              <Link
+                to={`/order-tracking?id=${order.orderNumber}`}
+                className="px-5 py-2.5 rounded-full bg-obsidian text-pearl-100 text-xs uppercase font-mono tracking-widest font-bold hover:bg-obsidian-200 transition-all flex items-center justify-center gap-2 shadow-sm shrink-0"
+              >
+                <Truck className="w-4 h-4 text-champagne-300" />
+                <span>Track Parcel</span>
+              </Link>
+            </div>
           </div>
 
-          {/* Timeline Milestones */}
-          <div className="p-6 bg-white/95 rounded-2xl border border-champagne-300/60 shadow-sm space-y-6">
+          {/* 6-Stage Progress Pipeline */}
+          <div className="p-6 bg-white/95 rounded-2xl border border-champagne-300/60 shadow-sm space-y-4">
             <div className="flex items-center justify-between border-b border-champagne-300/40 pb-3">
-              <h3 className="font-serif-luxury text-lg text-obsidian font-bold">
-                Delivery Timeline
+              <h3 className="font-serif-luxury text-base text-obsidian font-bold">
+                Fulfillment Status
               </h3>
               <span className="text-xs font-mono text-gold-dark font-semibold">
-                Airway Bill: {order.trackingNumber}
+                AWB: {order.trackingNumber} ({order.carrier})
               </span>
             </div>
 
-            <div className="relative pl-7 space-y-6 before:absolute before:left-3 before:top-2 before:bottom-2 before:w-0.5 before:bg-champagne-300">
-              {timelineSteps.map((step, idx) => {
-                const isCompleted = step.status === 'completed';
+            <div className="grid grid-cols-2 sm:grid-cols-6 gap-2">
+              {SIX_STAGE_STEPS.map((step, idx) => {
+                const isPassed = idx < currentStageIndex;
+                const isCurrent = idx === currentStageIndex;
+
                 return (
-                  <div key={idx} className="relative flex items-start gap-4">
+                  <div
+                    key={step.id}
+                    className={`p-2.5 rounded-xl border flex flex-col items-center justify-center text-center space-y-1 transition-all ${
+                      isCurrent
+                        ? 'bg-obsidian border-gold-dark text-pearl-100 shadow-md ring-1 ring-gold-dark'
+                        : isPassed
+                        ? 'bg-emerald-50 border-emerald-300 text-emerald-900'
+                        : 'bg-pearl-50/60 border-champagne-200 text-obsidian/40 opacity-70'
+                    }`}
+                  >
                     <div
-                      className={`absolute -left-7 top-0.5 w-6 h-6 rounded-full flex items-center justify-center text-xs font-mono font-bold ring-4 ring-pearl-50 ${
-                        isCompleted
-                          ? 'bg-emerald-700 text-white shadow-sm'
-                          : 'bg-pearl-100 text-obsidian/40 border border-champagne-300'
+                      className={`w-5 h-5 rounded-full flex items-center justify-center text-[9px] font-bold ${
+                        isCurrent
+                          ? 'bg-gold-dark text-obsidian'
+                          : isPassed
+                          ? 'bg-emerald-700 text-white'
+                          : 'bg-champagne-200 text-obsidian/50'
                       }`}
                     >
-                      {isCompleted ? '✓' : '○'}
+                      {isPassed ? '✓' : idx + 1}
                     </div>
-
-                    <div className="space-y-0.5 flex-1">
-                      <div className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-1">
-                        <h4
-                          className={`font-serif text-base ${
-                            isCompleted ? 'text-obsidian font-bold' : 'text-obsidian/60'
-                          }`}
-                        >
-                          {isCompleted ? `✓ ${step.title}` : `○ ${step.title}`}
-                        </h4>
-                        <span
-                          className={`font-mono text-xs ${
-                            isCompleted ? 'text-emerald-800 font-bold' : 'text-gold-dark font-medium'
-                          }`}
-                        >
-                          {step.timestamp}
-                        </span>
-                      </div>
-                      <p className="text-xs text-obsidian/65 font-sans">
-                        {step.description}
-                      </p>
-                    </div>
+                    <span className="text-[8px] font-mono font-bold tracking-tight leading-tight">
+                      {step.label}
+                    </span>
                   </div>
                 );
               })}
@@ -320,3 +344,5 @@ export const OrderDetailPage: React.FC = () => {
     </div>
   );
 };
+
+export default OrderDetailPage;
