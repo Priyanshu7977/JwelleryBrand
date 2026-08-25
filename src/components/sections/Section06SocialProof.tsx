@@ -65,7 +65,7 @@ export const Section06SocialProof: React.FC = () => {
               <span className="w-1.5 h-1.5 rounded-full bg-gold-dark" />
               <span className="text-xs font-serif text-obsidian/60">Reviews 🧿✨</span>
             </div>
-            <h2 className="font-serif-luxury text-4xl sm:text-6xl md:text-7xl text-obsidian uppercase font-normal leading-[0.95]">
+            <h2 className="font-serif-luxury text-4xl sm:text-6xl md:text-7xl text-obsidian font-normal leading-[0.95]">
               Praised by <span className="font-zapfino text-champagne-400 font-normal tracking-normal capitalize inline-block text-[32px] sm:text-[48px] md:text-[56px] leading-[0.9] px-1">Those Who Wear It</span>.
             </h2>
           </div>

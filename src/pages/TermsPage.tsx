@@ -10,8 +10,8 @@ export const TermsPage: React.FC = () => {
           <span className="text-[10px] uppercase tracking-monumental text-gold-dark font-semibold">
             Legal Agreements
           </span>
-          <h1 className="font-serif-luxury text-4xl sm:text-6xl text-obsidian uppercase">
-            TERMS & <span className="font-semibold text-gold-dark">CONDITIONS</span>.
+          <h1 className="font-serif-luxury text-4xl sm:text-6xl text-obsidian">
+            Terms & <span className="font-semibold text-gold-dark">Conditions</span>.
           </h1>
           <p className="text-xs text-obsidian/60 font-sans">
             Last Updated: August 2026 • Mumbai Studio Atelier

@@ -82,8 +82,8 @@ export const BlogPage: React.FC = () => {
                   <span>The Celestia Journal • Style Notes & Care</span>
                 </div>
 
-                <h1 className="text-3xl sm:text-4xl md:text-5xl text-obsidian font-bold uppercase leading-[1.08] font-serif-luxury">
-                  STORIES & <span className="font-zapfino text-champagne-400 font-normal tracking-normal capitalize inline-block text-[34px] sm:text-[46px] md:text-[54px] leading-[0.9] px-1">Lookbooks</span>.
+                <h1 className="text-3xl sm:text-4xl md:text-5xl text-obsidian font-bold leading-[1.08] font-serif-luxury">
+                  Stories & <span className="font-zapfino text-champagne-400 font-normal tracking-normal capitalize inline-block text-[34px] sm:text-[46px] md:text-[54px] leading-[0.9] px-1">Lookbooks</span>.
                 </h1>
 
                 <p className="text-xs sm:text-sm text-obsidian-soft font-sans leading-relaxed">

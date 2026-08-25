@@ -336,7 +336,7 @@ export const ProductDetailPage: React.FC = () => {
                 </span>
               </div>
 
-              <h1 className="text-2xl sm:text-4xl text-obsidian font-bold uppercase leading-tight">
+              <h1 className="text-2xl sm:text-4xl text-obsidian font-bold leading-tight">
                 {product.title}
               </h1>
 
@@ -600,8 +600,8 @@ export const ProductDetailPage: React.FC = () => {
                 <span className="text-[10px] font-mono uppercase tracking-widest text-gold-dark font-bold block">
                   Verified Atelier Experiences
                 </span>
-                <h3 className="text-2xl sm:text-3xl font-bold text-obsidian uppercase">
-                  CLIENT <span className="font-semibold text-gold-dark">Reflections</span>.
+                <h3 className="text-2xl sm:text-3xl font-bold text-obsidian">
+                  Client <span className="font-zapfino text-champagne-400 font-normal tracking-normal capitalize inline-block text-[28px] sm:text-[36px] leading-[0.9] px-1">Reflections</span>.
                 </h3>
               </div>
 
@@ -671,8 +671,8 @@ export const ProductDetailPage: React.FC = () => {
                 <span className="text-[10px] uppercase font-mono tracking-widest text-gold-dark font-bold">
                   Curated Companions
                 </span>
-                <h3 className="text-2xl sm:text-3xl font-bold text-obsidian uppercase">
-                  COMPLETE THE <span className="font-semibold text-gold-dark">Suite</span>.
+                <h3 className="text-2xl sm:text-3xl font-bold text-obsidian">
+                  Complete the <span className="font-zapfino text-champagne-400 font-normal tracking-normal capitalize inline-block text-[28px] sm:text-[36px] leading-[0.9] px-1">Suite</span>.
                 </h3>
               </div>
               <Link to="/shop" className="text-xs font-bold uppercase tracking-widest text-obsidian hover:text-gold-dark transition-colors flex items-center gap-1">

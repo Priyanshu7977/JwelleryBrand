@@ -48,7 +48,7 @@ export const CollectionDetailPage: React.FC = () => {
               <span className="text-xs text-obsidian/60 font-medium font-sans">{collection.subtitle}</span>
             </div>
 
-            <h1 className="text-3xl sm:text-5xl md:text-6xl text-obsidian font-bold uppercase leading-tight">
+            <h1 className="text-3xl sm:text-5xl md:text-6xl text-obsidian font-bold leading-tight">
               {collection.title}
             </h1>
 

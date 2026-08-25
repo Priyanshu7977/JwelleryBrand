@@ -46,8 +46,8 @@ export const RegisterPage: React.FC = () => {
           <span className="text-[10px] uppercase tracking-monumental text-gold-dark font-semibold">
             Private Circle
           </span>
-          <h1 className="font-serif-luxury text-3xl md:text-4xl text-obsidian uppercase">
-            CREATE <span className="font-semibold text-gold-dark">ACCOUNT</span>.
+          <h1 className="font-serif-luxury text-3xl md:text-4xl text-obsidian">
+            Create <span className="font-semibold text-gold-dark">account</span>.
           </h1>
           <p className="text-xs text-obsidian/60 font-sans max-w-xs mx-auto">
             Join the Celestia family for exclusive drops, order tracking, and custom hamper archiving.

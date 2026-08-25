@@ -113,8 +113,8 @@ export const AccountPage: React.FC = () => {
             <span className="text-xs uppercase font-mono tracking-widest text-gold-dark font-bold">
               Private Atelier Portal
             </span>
-            <h1 className="font-serif-luxury text-3xl sm:text-5xl md:text-6xl text-obsidian uppercase">
-              YOUR <span className="font-semibold text-gold-dark">ACCOUNT</span>.
+            <h1 className="font-serif-luxury text-3xl sm:text-5xl md:text-6xl text-obsidian">
+              Your <span className="font-semibold text-gold-dark">Account</span>.
             </h1>
             <p className="text-sm text-obsidian-soft font-sans max-w-md mx-auto leading-relaxed">
               Sign in to manage your dispatches, view saved addresses, track custom celebration hampers, or view your private wishlist.
@@ -169,8 +169,8 @@ export const AccountPage: React.FC = () => {
             <span className="text-xs uppercase font-mono tracking-widest text-gold-dark font-bold">
               Private Hub • {user.tier}
             </span>
-            <h1 className="font-serif-luxury text-4xl sm:text-6xl text-obsidian uppercase">
-              HELLO, <span className="font-semibold text-gold-dark">{user.name.split(' ')[0]}</span>.
+            <h1 className="font-serif-luxury text-4xl sm:text-6xl text-obsidian">
+              Hello, <span className="font-semibold text-gold-dark">{user.name.split(' ')[0]}</span>.
             </h1>
           </div>
 

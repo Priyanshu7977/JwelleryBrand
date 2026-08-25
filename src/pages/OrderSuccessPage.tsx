@@ -192,8 +192,8 @@ export const OrderSuccessPage: React.FC = () => {
               <span>Order Confirmed • #{order.orderNumber}</span>
             </div>
 
-            <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-obsidian uppercase leading-tight">
-              Thank You, <span className="font-semibold text-gold-dark">{order.customer.name.split(' ')[0]}</span>.
+            <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-obsidian leading-tight">
+              Thank you, <span className="font-semibold text-gold-dark">{order.customer.name.split(' ')[0]}</span>.
             </h1>
 
             <p className="text-xs sm:text-sm text-obsidian/75 leading-relaxed">

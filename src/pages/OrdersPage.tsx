@@ -38,8 +38,8 @@ export const OrdersPage: React.FC = () => {
           <span className="text-[10px] uppercase tracking-monumental text-gold-dark font-semibold">
             Atelier Dispatches
           </span>
-          <h1 className="font-serif-luxury text-4xl sm:text-6xl text-obsidian uppercase">
-            YOUR <span className="font-semibold text-gold-dark">ORDERS</span>.
+          <h1 className="font-serif-luxury text-4xl sm:text-6xl text-obsidian">
+            Your <span className="font-semibold text-gold-dark">Orders</span>.
           </h1>
         </div>
 

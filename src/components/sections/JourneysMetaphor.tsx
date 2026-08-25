@@ -19,7 +19,7 @@ export const JourneysMetaphor: React.FC = () => {
             <span>The Journey Metaphor</span>
           </div>
 
-          <h2 className="font-serif-luxury text-4xl sm:text-6xl md:text-7xl text-obsidian uppercase font-normal leading-[0.95]">
+          <h2 className="font-serif-luxury text-4xl sm:text-6xl md:text-7xl text-obsidian font-normal leading-[0.95]">
             <AnimatedCounter target={1000} suffix="+" /> <span className="font-zapfino text-champagne-400 font-normal tracking-normal capitalize inline-block text-[34px] sm:text-[50px] md:text-[60px] leading-[0.9] px-1">Journeys</span>.
           </h2>
 

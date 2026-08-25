@@ -24,8 +24,8 @@ export const AboutPage: React.FC = () => {
             </span>
           </div>
 
-          <h1 className="font-serif-luxury text-5xl sm:text-7xl md:text-8xl text-obsidian font-normal uppercase leading-[0.92]">
-            THE SOUL OF <span className="font-zapfino text-champagne-400 font-normal tracking-normal capitalize inline-block text-[44px] sm:text-[68px] md:text-[84px] leading-[0.9] px-1">Celestia</span>.
+          <h1 className="font-serif-luxury text-5xl sm:text-7xl md:text-8xl text-obsidian font-normal leading-[0.92]">
+            The soul of <span className="font-zapfino text-champagne-400 font-normal tracking-normal capitalize inline-block text-[44px] sm:text-[68px] md:text-[84px] leading-[0.9] px-1">Celestia</span>.
           </h1>
 
           <p className="font-serif text-xl sm:text-2xl text-obsidian/85 leading-relaxed">

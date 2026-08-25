@@ -91,7 +91,7 @@ export const CartDrawer: React.FC = () => {
                 <ShoppingBag className="w-4 h-4" />
               </div>
               <div>
-                <h2 className="font-serif-luxury text-xl sm:text-2xl tracking-wide text-obsidian uppercase font-bold leading-none">
+                <h2 className="font-serif-luxury text-xl sm:text-2xl tracking-wide text-obsidian font-bold leading-none">
                   Your Curated Bag
                 </h2>
                 <p className="text-[10px] sm:text-[11px] text-obsidian-soft font-sans font-medium">
