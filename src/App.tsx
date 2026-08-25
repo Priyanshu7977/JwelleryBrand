@@ -13,6 +13,9 @@ import { ScrollToTop } from './components/layout/ScrollToTop';
 import { CinematicAtelierOpening } from './components/ui/CinematicAtelierOpening';
 import { RouteTransition } from './components/layout/RouteTransition';
 import { FlyToCartAnimation } from './components/ui/FlyToCartAnimation';
+import { DynamicTabTitle } from './components/ui/DynamicTabTitle';
+import { LuxuryStardustCursor } from './components/ui/LuxuryStardustCursor';
+import { LiveShopperActivityToast } from './components/ui/LiveShopperActivityToast';
 import { CheckCircle2 } from 'lucide-react';
 import Lenis from 'lenis';
 
@@ -174,6 +177,11 @@ const AppShell: React.FC = () => {
         <ConciergeModal />
         <CelestiaEntranceModal />
         <ToastNotification />
+
+        {/* Bonkers-Style Signature Interactive Animations & Delights */}
+        <DynamicTabTitle />
+        <LuxuryStardustCursor />
+        <LiveShopperActivityToast />
 
         {/* Global Progressive Footer */}
         <Footer />
