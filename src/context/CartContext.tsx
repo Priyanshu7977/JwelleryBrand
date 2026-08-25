@@ -202,6 +202,10 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const finalPayable = Math.max(0, subtotal - discountAmount);
 
   const applyCoupon = (rawCode: string): { success: boolean; message: string } => {
+    if (/[^a-zA-Z0-9]/.test(rawCode.trim())) {
+      return { success: false, message: 'Invalid characters. Coupon codes only contain letters and numbers.' };
+    }
+
     const clean = rawCode.replace(/[^a-zA-Z0-9]/g, '').trim().toUpperCase();
     if (!clean) {
       return { success: false, message: 'Please enter a valid coupon code (alphanumeric only).' };

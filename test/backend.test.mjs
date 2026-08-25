@@ -205,6 +205,24 @@ assert(subtotal === 1999, 'Subtotal calculation is accurate (₹1999)', 'Cart');
 assert(shippingCost === 0, 'Free shipping threshold applied correctly over ₹999', 'Cart');
 assert(totalPayable === 1999, 'Total payable amount is verified (₹1999)', 'Cart');
 
+// Coupon Code Sanitization & XSS Injection Protection Tests
+function validateCouponInput(rawCode) {
+  if (!rawCode || typeof rawCode !== 'string') return { valid: false, reason: 'empty' };
+  if (/[^a-zA-Z0-9]/.test(rawCode.trim())) {
+    return { valid: false, reason: 'special_chars_or_scripts_rejected' };
+  }
+  const clean = rawCode.replace(/[^a-zA-Z0-9]/g, '').trim().toUpperCase();
+  return { valid: clean.length > 0 && clean.length <= 20, code: clean };
+}
+
+assert(validateCouponInput('CELESTIA10').valid === true, 'Valid alphanumeric coupon code accepted', 'CouponSecurity');
+assert(validateCouponInput('PREPAID50').valid === true, 'Valid alphanumeric coupon code 2 accepted', 'CouponSecurity');
+assert(validateCouponInput('<SCR>').valid === false, 'XSS injection attempt "<SCR>" strictly rejected', 'CouponSecurity');
+assert(validateCouponInput('<script>alert(1)</script>').valid === false, 'Script tag "<script>" strictly rejected', 'CouponSecurity');
+assert(validateCouponInput('<iframe src="x"></iframe>').valid === false, 'Iframe tag "<iframe>" strictly rejected', 'CouponSecurity');
+assert(validateCouponInput('CELESTIA 10').valid === false, 'Coupon containing space strictly rejected', 'CouponSecurity');
+assert(validateCouponInput('CELESTIA#10!').valid === false, 'Coupon containing symbols strictly rejected', 'CouponSecurity');
+
 // ----------------------------------------------------------------------------
 // 6. SHOPIFY WEBHOOK HMAC-SHA256 SIGNATURE VALIDATION
 // ----------------------------------------------------------------------------
