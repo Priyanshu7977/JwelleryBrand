@@ -90,6 +90,22 @@ export const OrderSuccessPage: React.FC = () => {
     }
   }, [orderId, order]);
 
+  // Automated WhatsApp Dispatch: automatically trigger WhatsApp confirmation window for the customer
+  useEffect(() => {
+    if (order?.customer?.phone && order?.orderNumber) {
+      const autoTimer = setTimeout(() => {
+        try {
+          const digits = (order.customer.phone || '').replace(/\D/g, '');
+          const cleanPhone = digits.length === 10 ? `91${digits}` : digits.length === 12 && digits.startsWith('91') ? digits : '917718825792';
+          const msg = encodeURIComponent(`*CELESTIA ATELIER • ORDER CONFIRMATION* ✨\n\nDear ${order.customer.name},\n\nThank you for choosing CELESTIA. Your order has been successfully placed and confirmed with our Mumbai Atelier!\n\n📋 *Order Summary:*\n• Order ID: #${order.orderNumber}\n• Total Amount: ₹${order.total}\n• Payment Method: ${order.paymentMethod} (${order.financialStatus.toUpperCase()})\n• Estimated Delivery: ${order.estimatedDelivery?.estimatedDateFormatted || '2-3 Business Days'}\n• Tracking AWB: ${order.trackingNumber || 'MUM-EXP-LIVE'}\n\n📦 *Track your order live:*\nhttps://jwellery-brand.vercel.app/order-tracking?id=${order.orderNumber}\n\n📄 *PDF Tax Invoice:* Available in your account & online portal.\n\nWarm regards,\nCELESTIA Atelier Mumbai 💎`);
+          window.open(`https://wa.me/${cleanPhone}?text=${msg}`, '_blank');
+        } catch {}
+      }, 1500);
+
+      return () => clearTimeout(autoTimer);
+    }
+  }, [order?.orderNumber]);
+
   const handleDownloadInvoice = () => {
     if (!order) return;
     setIsDownloadingPdf(true);

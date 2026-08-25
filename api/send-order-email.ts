@@ -24,7 +24,7 @@ export default async function handler(req: ApiRequest, res: ApiResponse) {
     const ATELIER_SUPPORT_EMAIL = process.env.ATELIER_SUPPORT_EMAIL || 'celestiaaaccessories@gmail.com';
     const SENDER_EMAIL = process.env.SENDER_EMAIL || 'Celestia Atelier <orders@celestiaamor.in>';
 
-    // 1. If RESEND_API_KEY is configured in Vercel environment variables, dispatch via Resend API
+    // 1. Resend REST API
     if (RESEND_API_KEY) {
       try {
         const payload: Record<string, any> = {
@@ -82,7 +82,98 @@ export default async function handler(req: ApiRequest, res: ApiResponse) {
       }
     }
 
-    // 2. Clean fallback logging when running in local development or before live email credentials are set
+    // 2. Brevo / Sendinblue REST API (BREVO_API_KEY or SIB_API_KEY)
+    const BREVO_API_KEY = process.env.BREVO_API_KEY || process.env.SIB_API_KEY || '';
+    if (BREVO_API_KEY) {
+      try {
+        const brevoResponse = await fetch('https://api.brevo.com/v3/smtp/email', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'api-key': BREVO_API_KEY,
+          },
+          body: JSON.stringify({
+            sender: { name: 'Celestia Atelier', email: 'orders@celestiaamor.in' },
+            to: [{ email: targetEmail, name: order?.customer?.name || 'Valued Patron' }],
+            subject: subject || `CELESTIA • Order #${order?.orderNumber} Confirmed`,
+            htmlContent: html,
+            textContent: text,
+          }),
+        });
+        if (brevoResponse.ok) {
+          const brevoData = await brevoResponse.json();
+          return res.status(200).json({
+            success: true,
+            provider: 'brevo',
+            messageId: brevoData.messageId,
+            message: 'Transactional email dispatched successfully via Brevo ✨',
+          });
+        }
+      } catch (brevoErr) {
+        console.warn('[SendOrderEmail] Brevo dispatch exception:', brevoErr);
+      }
+    }
+
+    // 3. SendGrid REST API (SENDGRID_API_KEY)
+    const SENDGRID_API_KEY = process.env.SENDGRID_API_KEY || '';
+    if (SENDGRID_API_KEY) {
+      try {
+        const sgResponse = await fetch('https://api.sendgrid.com/v3/mail/send', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${SENDGRID_API_KEY}`,
+          },
+          body: JSON.stringify({
+            personalizations: [{ to: [{ email: targetEmail }] }],
+            from: { email: 'orders@celestiaamor.in', name: 'Celestia Luxury Atelier' },
+            subject: subject || `CELESTIA • Order #${order?.orderNumber} Confirmed`,
+            content: [
+              { type: 'text/plain', value: text },
+              { type: 'text/html', value: html },
+            ],
+          }),
+        });
+        if (sgResponse.ok || sgResponse.status === 202) {
+          return res.status(200).json({
+            success: true,
+            provider: 'sendgrid',
+            message: 'Transactional email dispatched successfully via SendGrid ✨',
+          });
+        }
+      } catch (sgErr) {
+        console.warn('[SendOrderEmail] SendGrid dispatch exception:', sgErr);
+      }
+    }
+
+    // 4. Web3Forms Gateway (WEB3FORMS_ACCESS_KEY)
+    const WEB3FORMS_KEY = process.env.WEB3FORMS_ACCESS_KEY || process.env.WEB3FORMS_KEY || '';
+    if (WEB3FORMS_KEY) {
+      try {
+        const w3fResponse = await fetch('https://api.web3forms.com/submit', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            access_key: WEB3FORMS_KEY,
+            to_email: targetEmail,
+            subject: subject || `CELESTIA • Order #${order?.orderNumber} Confirmed`,
+            message: text,
+            from_name: 'Celestia Luxury Atelier',
+          }),
+        });
+        if (w3fResponse.ok) {
+          return res.status(200).json({
+            success: true,
+            provider: 'web3forms',
+            message: 'Transactional notification dispatched successfully via Web3Forms ✨',
+          });
+        }
+      } catch (w3fErr) {
+        console.warn('[SendOrderEmail] Web3Forms dispatch exception:', w3fErr);
+      }
+    }
+
+    // 5. Clean fallback logging when running in local development or before live email credentials are set
     console.log(`[SendOrderEmail] [${type || 'order_confirmed'}] Processed for ${targetEmail}`);
     
     return res.status(200).json({
