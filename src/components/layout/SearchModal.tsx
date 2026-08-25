@@ -40,7 +40,17 @@ export const SearchModal: React.FC = () => {
               autoFocus
               placeholder="Search jewellery, bangles, custom hampers..."
               value={query}
-              onChange={(e) => setQuery(e.target.value)}
+              onBeforeInput={(e: any) => {
+                if (e.data && /[<>]/.test(e.data)) {
+                  e.preventDefault();
+                }
+              }}
+              onKeyDown={(e) => {
+                if (e.key === '<' || e.key === '>') {
+                  e.preventDefault();
+                }
+              }}
+              onChange={(e) => setQuery(e.target.value.replace(/[<>]/g, ''))}
               className="w-full bg-transparent font-serif-luxury text-xl md:text-2xl text-obsidian placeholder:text-obsidian/40 focus:outline-none"
             />
           </div>

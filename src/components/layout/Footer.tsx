@@ -45,7 +45,7 @@ export const Footer: React.FC = () => {
             </div>
 
             <h2 className="text-3xl sm:text-5xl md:text-6xl text-[#FAF7F0] tracking-[0.05em] uppercase font-normal leading-tight max-w-4xl mx-auto">
-              WHERE TIMELESS <span className="font-semibold text-[#D8C39A]">CHARM</span> MEETS EVERYDAY <span className="font-semibold text-[#D8C39A]">GRACE</span>.
+              WHERE TIMELESS <span className="font-zapfino text-[#D8C39A] font-normal tracking-normal capitalize inline-block text-[34px] sm:text-[50px] md:text-[60px] leading-[0.9] px-1">Charm</span> MEETS EVERYDAY <span className="font-zapfino text-[#D8C39A] font-normal tracking-normal capitalize inline-block text-[34px] sm:text-[50px] md:text-[60px] leading-[0.9] px-1">Grace</span>.
             </h2>
           </div>
         </RevealOnScroll>

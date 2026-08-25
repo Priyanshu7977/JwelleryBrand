@@ -52,7 +52,17 @@ export const SearchPage: React.FC = () => {
               autoFocus
               placeholder="Search by piece name, category, or material (e.g. Bangles, Hamper)..."
               value={query}
-              onChange={(e) => setQuery(e.target.value)}
+              onBeforeInput={(e: any) => {
+                if (e.data && /[<>]/.test(e.data)) {
+                  e.preventDefault();
+                }
+              }}
+              onKeyDown={(e) => {
+                if (e.key === '<' || e.key === '>') {
+                  e.preventDefault();
+                }
+              }}
+              onChange={(e) => setQuery(e.target.value.replace(/[<>]/g, ''))}
               className="w-full bg-transparent text-sm sm:text-base text-obsidian placeholder:text-obsidian-muted focus:outline-none"
             />
           </div>
