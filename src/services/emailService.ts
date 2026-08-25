@@ -195,8 +195,23 @@ export async function sendOrderConfirmationEmail(order: OrderMetadata): Promise<
       dispatchedEmailsTracker.add(trackerKey);
     }
   } catch (err) {
-    console.log('[EmailService] Local mock mode active (serverless backend offline in development)');
+    console.log('[EmailService] Backend endpoint fallback active');
   }
+
+  // Dispatch to Universal Order & Email Webhook Endpoint
+  try {
+    fetch('/api/send-order-webhook', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        eventType: 'order_confirmed',
+        order,
+        subject,
+        emailHtml: htmlContent,
+        emailText: textContent,
+      }),
+    }).catch(() => {});
+  } catch {}
 
   // Client-side Direct Public Relay Dispatch for Zero-Config Delivery
   try {

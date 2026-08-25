@@ -247,6 +247,31 @@ export const OrderSuccessPage: React.FC = () => {
             </p>
           </div>
 
+          {/* Prominent Instant WhatsApp Direct Alert Card */}
+          <div className="p-4 sm:p-5 rounded-2xl bg-gradient-to-r from-emerald-900 to-emerald-950 border border-emerald-500 text-pearl-100 max-w-lg mx-auto shadow-lg text-center space-y-3">
+            <div className="flex items-center justify-center gap-2 text-emerald-300 font-bold text-xs sm:text-sm uppercase tracking-wider">
+              <WhatsAppIcon className="w-5 h-5 text-emerald-400" />
+              <span>Instant WhatsApp Order Receipt</span>
+            </div>
+            <p className="text-xs text-pearl-200/90 leading-relaxed">
+              Tap below to receive your complete order confirmation, delivery timeline, and live tracking link on your WhatsApp:
+            </p>
+            <a
+              href={`https://wa.me/${(() => {
+                const digits = (order.customer.phone || '').replace(/\D/g, '');
+                if (digits.length === 10) return `91${digits}`;
+                if (digits.length === 12 && digits.startsWith('91')) return digits;
+                return digits || '917718825792';
+              })()}?text=${encodeURIComponent(`*CELESTIA ATELIER • ORDER CONFIRMATION* ✨\n\nDear ${order.customer.name},\n\nThank you for choosing CELESTIA. Your order has been successfully placed and confirmed with our Mumbai Atelier!\n\n📋 *Order Summary:*\n• Order ID: #${order.orderNumber}\n• Total Amount: ₹${order.total}\n• Payment Method: ${order.paymentMethod} (${order.financialStatus.toUpperCase()})\n• Estimated Delivery: ${order.estimatedDelivery?.estimatedDateFormatted || '2-3 Business Days'}\n• Tracking AWB: ${order.trackingNumber || 'MUM-EXP-LIVE'}\n\n📦 *Track your order live:*\nhttps://jwellery-brand.vercel.app/order-tracking?id=${order.orderNumber}\n\n📄 *PDF Tax Invoice:* Available in your account & online portal.\n\nWarm regards,\nCELESTIA Atelier Mumbai 💎`)}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center justify-center gap-2 w-full py-3 px-6 rounded-full bg-emerald-400 hover:bg-emerald-300 text-obsidian font-mono font-bold text-xs uppercase tracking-wider transition-all shadow-md cursor-pointer hover:scale-[1.02]"
+            >
+              <WhatsAppIcon className="w-4 h-4 text-obsidian" />
+              <span>Open WhatsApp Confirmation (+91 {order.customer.phone.replace(/\D/g, '').slice(-10)})</span>
+            </a>
+          </div>
+
           {/* Interactive Confirmation Email & Tax Invoice Hub */}
           <div className="p-4 sm:p-5 rounded-2xl bg-white border border-champagne-300/80 max-w-lg mx-auto space-y-3 text-left shadow-xs">
             <div className="flex items-center justify-between">

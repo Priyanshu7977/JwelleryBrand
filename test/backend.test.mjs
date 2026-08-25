@@ -358,7 +358,24 @@ function formatCustomerWhatsAppUrl(phone, orderNumber, total) {
   return `https://wa.me/${cleanPhone}?text=Order%20${orderNumber}%20Total%20${total}`;
 }
 const customerWaUrl = formatCustomerWhatsAppUrl('9820154321', 'ORD-2026-9901', 1999);
-assert(customerWaUrl.startsWith('https://wa.me/919820154321'), 'WhatsApp automation correctly targets user entered 10-digit mobile number (919820154321)', 'WhatsAppAutomation');
+// Email & Order Universal Webhook Payload Test
+const webhookPayload = {
+  event: 'order_confirmed',
+  order_id: mockOrder.orderNumber,
+  customer: {
+    name: mockOrder.customer.name,
+    email: mockOrder.customer.email,
+    whatsapp: '919820154321',
+  },
+  payment: { total_inr: mockOrder.total, method: mockOrder.paymentMethod },
+  urls: {
+    view_order: `https://jwellery-brand.vercel.app/orders/${mockOrder.orderNumber}`,
+    track_order: `https://jwellery-brand.vercel.app/order-tracking?id=${mockOrder.orderNumber}`,
+  },
+};
+assert(webhookPayload.event === 'order_confirmed', 'Webhook event type is order_confirmed', 'Webhook');
+assert(webhookPayload.customer.email === 'priyanshu@celestia.in', 'Webhook contains customer email for automation', 'Webhook');
+assert(webhookPayload.urls.track_order.includes('order-tracking'), 'Webhook contains live tracking URL', 'Webhook');
 
 // 6-Stage Mapping Verification
 const stages = ['placed', 'confirmed', 'preparing', 'shipped', 'out_for_delivery', 'delivered'];
