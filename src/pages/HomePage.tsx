@@ -6,6 +6,7 @@ import { ObjectsOfAffection } from '../components/sections/ObjectsOfAffection';
 import { Section05Gifting } from '../components/sections/Section05Gifting';
 import { ThePersonBehindCelestia } from '../components/sections/ThePersonBehindCelestia';
 import { Section07Instagram } from '../components/sections/Section07Instagram';
+import { SectionBlogShowcase } from '../components/sections/SectionBlogShowcase';
 import { Section08FinalMoment } from '../components/sections/Section08FinalMoment';
 
 export const HomePage: React.FC = () => {
@@ -32,7 +33,10 @@ export const HomePage: React.FC = () => {
       {/* 07: Community Lookbook & Instagram Highlights */}
       <Section07Instagram />
 
-      {/* 08: Final Brand Moment & Manifesto */}
+      {/* 08: From The Blog & Editorial Style Guides (Bonkers Corner Style) */}
+      <SectionBlogShowcase />
+
+      {/* 09: Final Brand Moment & Manifesto */}
       <Section08FinalMoment />
     </div>
   );

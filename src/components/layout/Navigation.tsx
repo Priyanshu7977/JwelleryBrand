@@ -266,7 +266,7 @@ export const Navigation: React.FC = () => {
               Community
             </NavLink>
 
-            {/* Gazette / Blog */}
+            {/* Blog / Journal */}
             <NavLink
               to="/blog"
               className={({ isActive }) =>
@@ -275,7 +275,7 @@ export const Navigation: React.FC = () => {
                 }`
               }
             >
-              Gazette
+              Blogs
             </NavLink>
 
             {/* Contact */}
@@ -591,7 +591,7 @@ export const Navigation: React.FC = () => {
                     }`
                   }
                 >
-                  The Gazette & Style Notes
+                  Blogs & Style Guides
                 </NavLink>
 
                 <NavLink
