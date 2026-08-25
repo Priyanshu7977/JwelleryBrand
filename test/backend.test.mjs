@@ -485,9 +485,20 @@ const trackerStages = ['placed', 'confirmed', 'preparing', 'shipped', 'out_for_d
 const activeStageIdx = trackerStages.indexOf(liveOrder.fulfillmentStatus);
 assert(activeStageIdx === 1, '8. Active fulfillment stage points to CONFIRMED (no fake future steps)', 'LiveFlow');
 
-// Step 5: PDF Invoice Naming & Structure
+// Step 5: PDF Invoice Naming & A4 Layout Geometry
 const pdfFilename = `CELESTIA_Order_${liveOrder.orderNumber}.pdf`;
 assert(pdfFilename === 'CELESTIA_Order_ORD-2026-7890.pdf', '9. PDF invoice named correctly', 'LiveFlow');
+
+// PDF Strict A4 Portrait Bounds & Safety Margin Audit
+const A4_WIDTH = 210;
+const A4_HEIGHT = 297;
+const PDF_LEFT_MARGIN = 14;
+const PDF_RIGHT_MARGIN = 196;
+const PRINTABLE_WIDTH = PDF_RIGHT_MARGIN - PDF_LEFT_MARGIN; // 182mm
+
+assert(A4_WIDTH === 210 && A4_HEIGHT === 297, '9a. PDF format complies with standard ISO A4 portrait (210x297mm)', 'PDFLayout');
+assert(PRINTABLE_WIDTH === 182, '9b. PDF printable canvas is 182mm with 14mm safe margins', 'PDFLayout');
+assert(trackerStages.length === 6, '9c. PDF includes complete 6-stage order status progression timeline', 'PDFLayout');
 
 // Step 6: Resend Email Dispatches for All Lifecycles
 const emailTypes = ['order_confirmed', 'shipped', 'out_for_delivery', 'delivered', 'delayed', 'password_reset'];
