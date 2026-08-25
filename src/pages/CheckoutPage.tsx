@@ -259,7 +259,7 @@ export const CheckoutPage: React.FC = () => {
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="space-y-1 sm:col-span-2">
                   <label className="text-[11px] uppercase font-mono tracking-wider text-obsidian-soft font-bold block">
-                    Full Name *
+                    Full Name * (Letters Only)
                   </label>
                   <div className="flex items-center gap-2 px-3.5 h-11 bg-pearl-50 rounded-xl border border-champagne-300 focus-within:border-gold-dark">
                     <User className="w-4 h-4 text-gold-dark shrink-0" />
@@ -268,7 +268,9 @@ export const CheckoutPage: React.FC = () => {
                       required
                       placeholder="e.g. Priyanshu Sharma"
                       value={name}
-                      onChange={(e) => setName(e.target.value)}
+                      onChange={(e) => setName(e.target.value.replace(/[^a-zA-Z\s'-]/g, ''))}
+                      pattern="[a-zA-Z\s'-]+"
+                      title="Name must only contain letters"
                       className="w-full bg-transparent text-xs sm:text-sm font-sans text-obsidian focus:outline-none placeholder:text-obsidian/40"
                     />
                   </div>
@@ -285,7 +287,7 @@ export const CheckoutPage: React.FC = () => {
                       required
                       placeholder="name@email.com"
                       value={email}
-                      onChange={(e) => setEmail(e.target.value)}
+                      onChange={(e) => setEmail(e.target.value.trim())}
                       className="w-full bg-transparent text-xs sm:text-sm font-sans text-obsidian focus:outline-none placeholder:text-obsidian/40"
                     />
                   </div>
@@ -293,16 +295,19 @@ export const CheckoutPage: React.FC = () => {
 
                 <div className="space-y-1">
                   <label className="text-[11px] uppercase font-mono tracking-wider text-obsidian-soft font-bold block">
-                    Mobile Phone * (For WhatsApp updates)
+                    Mobile Phone * (Numbers Only)
                   </label>
                   <div className="flex items-center gap-2 px-3.5 h-11 bg-pearl-50 rounded-xl border border-champagne-300 focus-within:border-gold-dark">
                     <Phone className="w-4 h-4 text-gold-dark shrink-0" />
                     <input
                       type="tel"
+                      inputMode="tel"
                       required
                       placeholder="+91 98765 43210"
                       value={phone}
-                      onChange={(e) => setPhone(e.target.value)}
+                      onChange={(e) => setPhone(e.target.value.replace(/[^0-9+\s-]/g, '').slice(0, 16))}
+                      pattern="[0-9+\s-]{10,16}"
+                      title="Phone number must only contain digits"
                       className="w-full bg-transparent text-xs sm:text-sm font-sans text-obsidian focus:outline-none placeholder:text-obsidian/40"
                     />
                   </div>
@@ -327,15 +332,16 @@ export const CheckoutPage: React.FC = () => {
 
                 <div className="space-y-1">
                   <label className="text-[11px] uppercase font-mono tracking-wider text-obsidian-soft font-bold block">
-                    PIN Code *
+                    PIN Code * (6 Digits)
                   </label>
                   <input
                     type="text"
+                    inputMode="numeric"
                     required
                     placeholder="400001"
                     maxLength={6}
                     value={pincode}
-                    onChange={(e) => handlePincodeChange(e.target.value)}
+                    onChange={(e) => handlePincodeChange(e.target.value.replace(/\D/g, '').slice(0, 6))}
                     className="w-full h-11 px-3.5 bg-pearl-50 rounded-xl border border-champagne-300 focus:outline-none focus:border-gold-dark text-xs sm:text-sm font-mono text-obsidian"
                   />
                 </div>

@@ -49,26 +49,49 @@ export const ContactPage: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!formData.name.trim() || !formData.email.trim() || !formData.message.trim()) {
-      showToast("Please fill in your name, email, and message.");
+    const cleanName = formData.name.trim();
+    const cleanEmail = formData.email.trim();
+    const cleanPhone = formData.phone.trim();
+    const cleanMessage = formData.message.trim();
+
+    if (!cleanName || cleanName.length < 2) {
+      showToast("Please enter your name (letters only).");
+      return;
+    }
+
+    if (!cleanEmail || !cleanEmail.includes('@') || !cleanEmail.includes('.')) {
+      showToast("Please enter a valid email address.");
+      return;
+    }
+
+    if (cleanPhone) {
+      const digits = cleanPhone.replace(/\D/g, '');
+      if (digits.length < 10) {
+        showToast("Please enter a valid 10-digit mobile/WhatsApp number.");
+        return;
+      }
+    }
+
+    if (!cleanMessage || cleanMessage.length < 5) {
+      showToast("Please write a message with at least 5 characters.");
       return;
     }
 
     setIsSubmitting(true);
     try {
       await contactService.submitInquiry({
-        name: formData.name,
-        email: formData.email,
-        phone: formData.phone,
+        name: cleanName,
+        email: cleanEmail,
+        phone: cleanPhone,
         topic: 'General Atelier Inquiry',
-        message: formData.message
+        message: cleanMessage
       });
       setIsSubmitted(true);
       showToast("Your message has been sent to our Mumbai Atelier ✨");
       setFormData({ name: '', email: '', phone: '', message: '' });
       setTimeout(() => setIsSubmitted(false), 5000);
     } catch {
-      const text = `Hello Celestia Atelier! ✨%0A%0A*Name:* ${encodeURIComponent(formData.name)}%0A*Email:* ${encodeURIComponent(formData.email)}%0A*Phone:* ${encodeURIComponent(formData.phone)}%0A*Message:* ${encodeURIComponent(formData.message)}`;
+      const text = `Hello Celestia Atelier! ✨%0A%0A*Name:* ${encodeURIComponent(cleanName)}%0A*Email:* ${encodeURIComponent(cleanEmail)}%0A*Phone:* ${encodeURIComponent(cleanPhone)}%0A*Message:* ${encodeURIComponent(cleanMessage)}`;
       window.open(`https://wa.me/917718825792?text=${text}`, '_blank');
       showToast("Opening WhatsApp to connect directly with our atelier ✨");
     } finally {
@@ -271,13 +294,18 @@ export const ContactPage: React.FC = () => {
             <div className="lg:col-span-7">
               <form onSubmit={handleSubmit} className="space-y-3.5">
                 <div className="space-y-1">
-                  <label className="text-[11px] uppercase font-mono font-bold text-obsidian/80">Full Name *</label>
+                  <label className="text-[11px] uppercase font-mono font-bold text-obsidian/80">Full Name * (Letters Only)</label>
                   <input
                     type="text"
                     value={formData.name}
-                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                    placeholder="Your Name"
+                    onChange={(e) => {
+                      const textOnly = e.target.value.replace(/[^a-zA-Z\s'-]/g, '');
+                      setFormData({ ...formData, name: textOnly });
+                    }}
+                    placeholder="e.g. Radhika Sharma"
                     required
+                    pattern="[a-zA-Z\s'-]+"
+                    title="Full name must only contain letters"
                     className="w-full px-4 py-2.5 rounded-xl bg-pearl-50 border border-champagne-300/70 text-xs text-obsidian focus:outline-none focus:border-gold-dark transition-all"
                   />
                 </div>
@@ -296,12 +324,18 @@ export const ContactPage: React.FC = () => {
                   </div>
 
                   <div className="space-y-1">
-                    <label className="text-[11px] uppercase font-mono font-bold text-obsidian/80">Phone / WhatsApp</label>
+                    <label className="text-[11px] uppercase font-mono font-bold text-obsidian/80">Phone / WhatsApp (Numbers Only)</label>
                     <input
                       type="tel"
+                      inputMode="tel"
                       value={formData.phone}
-                      onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                      onChange={(e) => {
+                        const numericOnly = e.target.value.replace(/[^0-9+\s-]/g, '').slice(0, 16);
+                        setFormData({ ...formData, phone: numericOnly });
+                      }}
                       placeholder="+91 98765 43210"
+                      pattern="[0-9+\s-]{10,16}"
+                      title="Phone number must only contain digits"
                       className="w-full px-4 py-2.5 rounded-xl bg-pearl-50 border border-champagne-300/70 text-xs text-obsidian focus:outline-none focus:border-gold-dark transition-all"
                     />
                   </div>
