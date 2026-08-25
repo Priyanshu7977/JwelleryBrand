@@ -170,7 +170,7 @@ export const BlogPage: React.FC = () => {
                       </span>
                     </div>
 
-                    <h2 className="font-serif-luxury text-xl sm:text-2xl lg:text-3xl text-obsidian font-bold uppercase leading-snug group-hover:text-gold-dark transition-colors">
+                    <h2 className="font-serif-luxury text-xl sm:text-2xl lg:text-3xl text-obsidian font-bold leading-snug group-hover:text-gold-dark transition-colors">
                       {featuredPost.title}
                     </h2>
 
@@ -283,7 +283,7 @@ export const BlogPage: React.FC = () => {
                     <Gift className="w-3 h-3" />
                     <span>The Gifting Gazette</span>
                   </div>
-                  <h3 className="font-serif-luxury text-xl sm:text-2xl text-obsidian font-bold uppercase leading-snug">
+                  <h3 className="font-serif-luxury text-xl sm:text-2xl text-obsidian font-bold leading-snug">
                     Unboxing Emotional Memories with Polaroids & Wax Seals
                   </h3>
                   <p className="text-xs sm:text-sm text-obsidian-soft leading-relaxed">
@@ -325,8 +325,8 @@ export const BlogPage: React.FC = () => {
               <span className="text-[10px] font-mono uppercase tracking-widest text-gold-dark font-bold">
                 Join The Reading Circle
               </span>
-              <h2 className="font-serif-luxury text-2xl sm:text-3xl uppercase font-bold text-pearl-50">
-                STYLING NOTES & <span className="font-light italic text-gold-light">Secret Drops</span>.
+              <h2 className="font-serif-luxury text-2xl sm:text-3xl font-bold text-pearl-50">
+                Styling notes & <span className="font-zapfino text-champagne-300 font-normal tracking-normal capitalize inline-block text-[26px] sm:text-[32px] leading-[0.9] px-1">Secret drops</span>.
               </h2>
               <p className="text-xs sm:text-sm text-pearl-200/80 font-sans leading-relaxed">
                 Receive weekly jewellery stacking masterclasses, private unboxing previews, and early VIP access to limited artisan drops.

@@ -99,7 +99,7 @@ export const BlogPostDetailPage: React.FC = () => {
               </span>
             </div>
 
-            <h1 className="text-3xl sm:text-5xl md:text-6xl text-obsidian font-bold uppercase leading-tight font-serif-luxury">
+            <h1 className="text-3xl sm:text-5xl md:text-6xl text-obsidian font-bold leading-tight font-serif-luxury">
               {post.title}
             </h1>
 
@@ -143,7 +143,7 @@ export const BlogPostDetailPage: React.FC = () => {
           {/* Body Sections */}
           {post.content.sections.map((sec, idx) => (
             <div key={idx} className="space-y-4 pt-4">
-              <h2 className="font-serif-luxury text-2xl sm:text-3xl text-obsidian font-bold uppercase tracking-tight">
+              <h2 className="font-serif-luxury text-2xl sm:text-3xl text-obsidian font-bold tracking-tight">
                 {sec.heading}
               </h2>
 
@@ -180,8 +180,8 @@ export const BlogPostDetailPage: React.FC = () => {
           <div className="p-6 sm:p-8 rounded-3xl bg-white border border-champagne-300/80 shadow-md space-y-4">
             <div className="flex items-center gap-2 border-b border-champagne-200 pb-3">
               <Sparkles className="w-4 h-4 text-gold-dark" />
-              <h3 className="text-sm uppercase font-mono tracking-widest text-obsidian font-bold">
-                Shop The Pieces Featured in this Article
+              <h3 className="text-sm font-mono tracking-widest text-obsidian font-bold">
+                Shop the pieces featured in this article
               </h3>
             </div>
 
@@ -238,8 +238,8 @@ export const BlogPostDetailPage: React.FC = () => {
         {/* Related Articles Carousel */}
         {relatedPosts.length > 0 && (
           <div className="space-y-6 pt-6 border-t border-champagne-300/60">
-            <h3 className="font-serif-luxury text-2xl sm:text-3xl text-obsidian font-bold uppercase">
-              More Stories from the Gazette
+            <h3 className="font-serif-luxury text-2xl sm:text-3xl text-obsidian font-bold">
+              More stories from the Gazette
             </h3>
 
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6">

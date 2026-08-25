@@ -114,7 +114,7 @@ export const OrderSuccessPage: React.FC = () => {
             <Package className="w-8 h-8" />
           </div>
           <div className="space-y-2">
-            <h2 className="text-2xl font-bold text-obsidian uppercase">Order Information</h2>
+            <h2 className="text-2xl font-bold text-obsidian">Order Information</h2>
             <p className="text-xs text-obsidian/70">
               We couldn't locate this specific order in the active session. You can review all your dispatches in your account.
             </p>
@@ -264,7 +264,7 @@ export const OrderSuccessPage: React.FC = () => {
             {/* Items Purchased Box */}
             <div className="bg-white rounded-3xl border border-champagne-300/70 shadow-sm p-6 space-y-4">
               <div className="flex items-center justify-between border-b border-champagne-300/40 pb-3">
-                <h3 className="text-base font-bold text-obsidian uppercase">
+                <h3 className="text-base font-bold text-obsidian">
                   Atelier Pieces ({order.items.reduce((acc, i) => acc + i.quantity, 0)})
                 </h3>
                 <span className="text-[11px] font-mono text-gold-dark font-semibold">
@@ -361,7 +361,7 @@ export const OrderSuccessPage: React.FC = () => {
             
             {/* Financial Summary Card */}
             <div className="bg-white rounded-3xl border border-champagne-300/80 shadow-luxury-soft p-6 space-y-4">
-              <h3 className="text-base font-bold text-obsidian uppercase border-b border-champagne-300/40 pb-3">
+              <h3 className="text-base font-bold text-obsidian border-b border-champagne-300/40 pb-3">
                 Payment Breakdown
               </h3>
 
@@ -379,7 +379,7 @@ export const OrderSuccessPage: React.FC = () => {
                 </div>
 
                 <div className="pt-3 border-t border-champagne-200 flex justify-between items-baseline">
-                  <span className="text-sm font-bold text-obsidian uppercase">Total Paid</span>
+                  <span className="text-sm font-bold text-obsidian">Total Paid</span>
                   <span className="text-2xl font-bold text-obsidian font-mono">
                     ₹{order.total}
                   </span>
@@ -422,7 +422,7 @@ export const OrderSuccessPage: React.FC = () => {
             <div className="bg-white rounded-3xl border border-champagne-300/70 shadow-sm p-6 space-y-4">
               <div className="flex items-center justify-between border-b border-champagne-300/40 pb-3">
                 <div>
-                  <h4 className="text-sm font-bold text-obsidian uppercase">Delivery Progress</h4>
+                  <h4 className="text-sm font-bold text-obsidian">Delivery Progress</h4>
                   <p className="text-[10px] text-obsidian-soft font-mono">Courier: {order.carrier}</p>
                 </div>
                 <span className="text-[10px] font-mono font-bold bg-champagne-100 text-obsidian px-2.5 py-1 rounded-full">

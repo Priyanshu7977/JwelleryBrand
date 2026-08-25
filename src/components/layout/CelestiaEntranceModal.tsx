@@ -171,7 +171,7 @@ export const CelestiaEntranceModal: React.FC = () => {
             <span>Celestia Atelier Circle</span>
           </div>
 
-          <h2 className="font-serif-luxury text-3xl sm:text-4xl text-[#FAF7F0] tracking-tight uppercase leading-none pt-1">
+          <h2 className="font-serif-luxury text-3xl sm:text-4xl text-[#FAF7F0] tracking-tight leading-none pt-1">
             CEL<span className="italic font-light lowercase text-[#D8C39A]">estia</span>
           </h2>
 

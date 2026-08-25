@@ -220,7 +220,7 @@ export const CheckoutPage: React.FC = () => {
             <ShoppingBag className="w-8 h-8" />
           </div>
           <div className="space-y-2">
-            <h2 className="font-serif-luxury text-3xl text-obsidian uppercase font-bold">Your Bag is Empty</h2>
+            <h2 className="font-serif-luxury text-3xl text-obsidian font-bold">Your Bag is Empty</h2>
             <p className="text-xs text-obsidian/60 font-sans">
               Please add your favourite fine jewellery or celebration hampers to proceed with checkout.
             </p>

@@ -65,8 +65,8 @@ export const ConciergeModal: React.FC = () => {
             <span className="text-[10px] uppercase tracking-monumental text-gold-dark font-semibold">
               Mumbai Atelier Desk
             </span>
-            <h2 className="font-serif-luxury text-2xl sm:text-3xl text-obsidian uppercase">
-              HOW CAN WE <span className="font-semibold text-gold-dark">HELP?</span>
+            <h2 className="font-serif-luxury text-2xl sm:text-3xl text-obsidian">
+              How can we <span className="font-semibold text-gold-dark">help?</span>
             </h2>
             <p className="text-xs text-obsidian/60 font-sans">
               Personalized assistance from our team • Active 10:00 — 20:00 IST

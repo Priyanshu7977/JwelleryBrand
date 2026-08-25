@@ -52,7 +52,7 @@ export const OrderDetailPage: React.FC = () => {
       <div className="w-full min-h-screen bg-pearl-100 pt-36 pb-32 px-4 flex items-center justify-center">
         <div className="max-w-md w-full bg-pearl-50/95 p-8 rounded-3xl border border-champagne-300/60 shadow-luxury-soft text-center space-y-6">
           <Package className="w-10 h-10 text-gold-dark mx-auto" />
-          <h2 className="font-serif-luxury text-2xl text-obsidian uppercase">Order Not Found</h2>
+          <h2 className="font-serif-luxury text-2xl text-obsidian">Order Not Found</h2>
           <p className="text-xs text-obsidian/70">
             We could not find an order matching reference "{orderId}".
           </p>

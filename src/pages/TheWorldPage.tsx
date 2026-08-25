@@ -107,7 +107,7 @@ export const TheWorldPage: React.FC = () => {
                   <span className="text-xs text-obsidian/60 font-medium">Mumbai Studio Origins</span>
                 </div>
 
-                <h2 className="text-xl sm:text-3xl font-bold text-obsidian uppercase leading-snug">
+                <h2 className="text-xl sm:text-3xl font-bold text-obsidian leading-snug">
                   The Person Behind <span className="font-semibold text-gold-dark">Celestia</span>.
                 </h2>
               </div>
@@ -156,7 +156,7 @@ export const TheWorldPage: React.FC = () => {
             <span className="text-[10px] sm:text-[11px] uppercase font-mono tracking-widest text-gold-dark font-bold">
               Our Five Core Principles
             </span>
-            <h3 className="text-xl sm:text-3xl font-bold text-obsidian uppercase">
+            <h3 className="text-xl sm:text-3xl font-bold text-obsidian">
               How We Craft Every Moment
             </h3>
           </div>

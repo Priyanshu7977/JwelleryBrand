@@ -60,8 +60,8 @@ export const WishlistPage: React.FC = () => {
             </div>
 
             <div className="space-y-2 max-w-md mx-auto">
-              <h2 className="text-2xl font-bold text-obsidian uppercase">
-                Your Wishlist is Empty
+              <h2 className="text-2xl font-bold text-obsidian">
+                Your wishlist is empty
               </h2>
               <p className="text-xs sm:text-sm text-obsidian-soft">
                 Browse our curated realms and tap the heart icon on any piece to save it to your private atelier collection.

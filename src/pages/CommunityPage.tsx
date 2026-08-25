@@ -143,7 +143,7 @@ export const CommunityPage: React.FC = () => {
             <span className="text-[11px] uppercase font-mono tracking-widest text-gold-dark font-bold">
               Real Voices from Real Homes
             </span>
-            <h2 className="text-2xl sm:text-4xl font-bold text-obsidian uppercase">
+            <h2 className="text-2xl sm:text-4xl font-bold text-obsidian">
               Loved by 1,000+ Patrons
             </h2>
             <p className="text-xs text-obsidian-soft">

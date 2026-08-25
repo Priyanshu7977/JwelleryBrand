@@ -144,7 +144,7 @@ export const ProductDetailPage: React.FC = () => {
         <div className="fixed inset-0 z-[200] bg-obsidian/80 backdrop-blur-sm flex items-center justify-center p-4">
           <div className="bg-white rounded-3xl max-w-md w-full p-6 sm:p-7 space-y-4 border border-champagne-300 shadow-2xl animate-fade-in">
             <div className="flex items-center justify-between border-b border-champagne-300/60 pb-3">
-              <h3 className="text-base font-bold text-obsidian uppercase">Bangle Sizing Guide</h3>
+              <h3 className="text-base font-bold text-obsidian">Bangle Sizing Guide</h3>
               <button onClick={() => setIsSizeGuideOpen(false)} className="p-1 rounded-full hover:bg-champagne-100 text-obsidian">
                 <X className="w-5 h-5" />
               </button>

@@ -43,8 +43,8 @@ export const BehindCelestiaModal: React.FC<{ isOpen: boolean; onClose: () => voi
             <Sparkles className="w-3.5 h-3.5" />
             <span>Secret Archive Unlocked</span>
           </div>
-          <h2 className="font-serif-luxury text-3xl sm:text-4xl text-obsidian uppercase">
-            BEHIND <span className="font-semibold text-gold-dark">CELESTIA</span>.
+          <h2 className="font-serif-luxury text-3xl sm:text-4xl text-obsidian">
+            Behind <span className="font-semibold text-gold-dark">Celestia</span>.
           </h2>
           <p className="text-xs text-obsidian/65 font-sans">
             A glimpse into the tactile craftsmanship inside our Mumbai atelier.
