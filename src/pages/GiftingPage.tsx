@@ -76,16 +76,16 @@ export const GiftingPage: React.FC = () => {
             Curate your custom celebration gift box. Choose your velvet box, assemble jewellery, and include a personalized retro Polaroid note.
           </p>
 
-          {/* Occasion Filter Tabs */}
-          <div className="flex flex-wrap items-center justify-center gap-1.5 pt-1.5">
+          {/* Occasion Filter Tabs - Stretched in One Clean Horizontal Line */}
+          <div className="flex items-center justify-start sm:justify-center gap-2 pt-2.5 overflow-x-auto scrollbar-none w-full max-w-4xl mx-auto px-1">
             {occasions.map((occ) => (
               <button
                 key={occ.id}
                 onClick={() => setSelectedOccasion(occ.id)}
-                className={`px-3 py-1 rounded-full text-[11px] uppercase font-bold tracking-wider transition-all ${
+                className={`px-4 py-1.5 rounded-full text-[11px] sm:text-xs uppercase font-mono tracking-wider font-bold shrink-0 whitespace-nowrap transition-all cursor-pointer ${
                   selectedOccasion === occ.id
-                    ? 'bg-obsidian text-pearl-100 shadow-sm'
-                    : 'bg-white text-obsidian border border-champagne-300/60 hover:bg-champagne-100'
+                    ? 'bg-obsidian text-pearl-100 shadow-md'
+                    : 'bg-white text-obsidian-soft border border-champagne-300/80 hover:border-gold-dark hover:text-obsidian'
                 }`}
               >
                 {occ.label}
