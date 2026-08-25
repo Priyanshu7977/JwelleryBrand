@@ -57,25 +57,25 @@ export const LuxuryStardustCursor: React.FC = () => {
       lastX = e.clientX;
       lastY = e.clientY;
 
-      // Spawn 2-3 stardust sparks
-      const count = Math.min(3, Math.floor(dist / 8) + 1);
+      // Spawn 1-2 stardust sparks per movement
+      const count = Math.min(2, Math.floor(dist / 12) + 1);
       for (let i = 0; i < count; i++) {
         const baseColor = GOLD_COLORS[Math.floor(Math.random() * GOLD_COLORS.length)];
         particles.push({
-          x: e.clientX + (Math.random() - 0.5) * 8,
-          y: e.clientY + (Math.random() - 0.5) * 8,
-          size: Math.random() * 2.5 + 1.2,
-          speedX: (Math.random() - 0.5) * 1.2,
-          speedY: Math.random() * 0.8 + 0.3, // slow gentle fall
+          x: e.clientX + (Math.random() - 0.5) * 6,
+          y: e.clientY + (Math.random() - 0.5) * 6,
+          size: Math.random() * 2.2 + 1.2,
+          speedX: (Math.random() - 0.5) * 0.4, // gentle, slow horizontal drift
+          speedY: Math.random() * 0.25 + 0.1,  // slow, gentle floating fall
           color: baseColor,
-          alpha: 0.9,
-          decay: Math.random() * 0.025 + 0.02,
+          alpha: 0.95,
+          decay: Math.random() * 0.005 + 0.004, // stays visible for ~2.5 to 3.5 seconds
         });
       }
 
-      // Limit particle array size
-      if (particles.length > 60) {
-        particles = particles.slice(-60);
+      // Allow a rich lingering trail
+      if (particles.length > 120) {
+        particles = particles.slice(-120);
       }
     };
 
@@ -88,6 +88,8 @@ export const LuxuryStardustCursor: React.FC = () => {
         const p = particles[i];
         p.x += p.speedX;
         p.y += p.speedY;
+        p.speedX *= 0.985; // smooth friction
+        p.speedY *= 0.985;
         p.alpha -= p.decay;
 
         if (p.alpha <= 0) {
@@ -100,15 +102,15 @@ export const LuxuryStardustCursor: React.FC = () => {
         ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
         ctx.fill();
 
-        // Cross sparkle star flare
-        if (p.size > 2) {
-          ctx.strokeStyle = `${p.color}${p.alpha * 0.6})`;
-          ctx.lineWidth = 0.6;
+        // Cross sparkle star flare on radiant particles
+        if (p.size > 1.8) {
+          ctx.strokeStyle = `${p.color}${p.alpha * 0.55})`;
+          ctx.lineWidth = 0.5;
           ctx.beginPath();
-          ctx.moveTo(p.x - p.size * 1.5, p.y);
-          ctx.lineTo(p.x + p.size * 1.5, p.y);
-          ctx.moveTo(p.x, p.y - p.size * 1.5);
-          ctx.lineTo(p.x, p.y + p.size * 1.5);
+          ctx.moveTo(p.x - p.size * 1.6, p.y);
+          ctx.lineTo(p.x + p.size * 1.6, p.y);
+          ctx.moveTo(p.x, p.y - p.size * 1.6);
+          ctx.lineTo(p.x, p.y + p.size * 1.6);
           ctx.stroke();
         }
       }
