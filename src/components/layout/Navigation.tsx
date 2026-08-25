@@ -362,18 +362,18 @@ export const Navigation: React.FC = () => {
         </div>
 
         {/* ================================================================= */}
-        {/* SHOP MEGA MENU PANEL (Desktop)                                    */}
+        {/* SHOP MEGA MENU PANEL (Desktop - Dark Luxury with White Typography)*/}
         {/* ================================================================= */}
         {hoveredMenu === 'shop' && (
           <div
-            className="hidden lg:block max-w-5xl mx-auto mt-2 p-8 bg-pearl-50/98 backdrop-blur-xl rounded-3xl border border-champagne-300/80 shadow-2xl animate-fade-in"
+            className="hidden lg:block max-w-5xl mx-auto mt-2 p-8 bg-[#181411]/98 backdrop-blur-2xl rounded-3xl border border-[#D8C39A]/40 shadow-2xl animate-fade-in text-[#FAF7F0]"
             onMouseEnter={() => setHoveredMenu('shop')}
             onMouseLeave={() => setHoveredMenu(null)}
           >
             <div className="grid grid-cols-12 gap-8 items-center">
               
               <div className="col-span-7 space-y-3">
-                <div className="flex items-center gap-2 text-[10px] uppercase tracking-monumental text-gold-dark font-semibold border-b border-champagne-300/30 pb-2">
+                <div className="flex items-center gap-2 text-[10px] uppercase tracking-monumental text-[#D8C39A] font-semibold border-b border-[#D8C39A]/30 pb-2">
                   <Compass className="w-3.5 h-3.5" />
                   <span>The Real Celestia Catalogue</span>
                 </div>
@@ -384,23 +384,39 @@ export const Navigation: React.FC = () => {
                       key={cat.title}
                       to={cat.url}
                       onMouseEnter={() => setActiveCategoryIndex(idx)}
-                      className={`flex items-center justify-between p-3 rounded-2xl transition-all ${
+                      className={`group flex items-center justify-between p-3 rounded-2xl transition-all ${
                         activeCategoryIndex === idx
-                          ? 'bg-champagne-100/80 text-obsidian font-semibold shadow-sm translate-x-1'
-                          : 'text-obsidian/70 hover:text-obsidian hover:bg-white/60'
+                          ? 'bg-[#D8C39A] text-[#181411] font-semibold shadow-md translate-x-1'
+                          : 'text-white hover:text-[#D8C39A] hover:bg-white/10'
                       }`}
                     >
                       <div>
-                        <p className="font-serif-luxury text-lg leading-tight">{cat.title}</p>
-                        <p className="text-[11px] text-obsidian/60 font-sans font-normal">{cat.description}</p>
+                        <p
+                          className={`font-serif-luxury text-lg leading-tight ${
+                            activeCategoryIndex === idx ? 'text-[#181411] font-bold' : 'text-white group-hover:text-[#D8C39A]'
+                          }`}
+                        >
+                          {cat.title}
+                        </p>
+                        <p
+                          className={`text-[11px] font-sans ${
+                            activeCategoryIndex === idx ? 'text-[#181411]/85 font-medium' : 'text-white/80 group-hover:text-white'
+                          }`}
+                        >
+                          {cat.description}
+                        </p>
                       </div>
-                      <ArrowRight className={`w-4 h-4 transition-opacity ${activeCategoryIndex === idx ? 'opacity-100 text-gold-dark' : 'opacity-0'}`} />
+                      <ArrowRight
+                        className={`w-4 h-4 transition-all ${
+                          activeCategoryIndex === idx ? 'opacity-100 text-[#181411]' : 'opacity-0 text-white/60'
+                        }`}
+                      />
                     </Link>
                   ))}
                 </div>
               </div>
 
-              <div className="col-span-5 bg-white p-5 rounded-3xl border border-champagne-300/60 shadow-luxury-soft space-y-4">
+              <div className="col-span-5 bg-[#251F1B] p-5 rounded-3xl border border-[#D8C39A]/40 shadow-xl space-y-4 text-left">
                 <div className="aspect-[4/3] rounded-2xl overflow-hidden bg-sand">
                   <img
                     src={currentMegaProduct.images.hero}
@@ -409,21 +425,21 @@ export const Navigation: React.FC = () => {
                   />
                 </div>
                 <div className="space-y-1">
-                  <span className="text-[9px] uppercase font-mono tracking-widest text-gold-dark font-bold">
+                  <span className="text-[9px] uppercase font-mono tracking-widest text-[#D8C39A] font-bold">
                     Signature Highlight
                   </span>
-                  <h4 className="font-serif-luxury text-lg text-obsidian font-semibold leading-snug">
+                  <h4 className="font-serif-luxury text-lg text-white font-semibold leading-snug">
                     {currentMegaProduct.title}
                   </h4>
-                  <p className="text-xs text-obsidian/70 line-clamp-2">
+                  <p className="text-xs text-white/75 line-clamp-2">
                     {currentMegaProduct.description}
                   </p>
                 </div>
-                <div className="flex items-center justify-between pt-2 border-t border-champagne-200">
-                  <span className="font-serif text-lg text-obsidian font-bold">₹{currentMegaProduct.price}</span>
+                <div className="flex items-center justify-between pt-2 border-t border-[#D8C39A]/30">
+                  <span className="font-serif text-lg text-[#D8C39A] font-bold">₹{currentMegaProduct.price}</span>
                   <Link
                     to={`/product/${currentMegaProduct.handle}`}
-                    className="text-xs uppercase font-mono tracking-widest text-gold-dark font-bold hover:underline flex items-center gap-1"
+                    className="text-xs uppercase font-mono tracking-widest text-[#D8C39A] hover:text-white font-bold hover:underline flex items-center gap-1 transition-colors"
                   >
                     <span>View Piece</span>
                     <ArrowRight className="w-3.5 h-3.5" />
@@ -436,20 +452,20 @@ export const Navigation: React.FC = () => {
         )}
 
         {/* ================================================================= */}
-        {/* COLLECTIONS PREVIEW PANEL (Desktop)                               */}
+        {/* COLLECTIONS PREVIEW PANEL (Desktop - Dark Luxury with White Text) */}
         {/* ================================================================= */}
         {hoveredMenu === 'collections' && (
           <div
-            className="hidden lg:block max-w-5xl mx-auto mt-2 p-8 bg-pearl-50/98 backdrop-blur-xl rounded-3xl border border-champagne-300/80 shadow-2xl animate-fade-in"
+            className="hidden lg:block max-w-5xl mx-auto mt-2 p-8 bg-[#181411]/98 backdrop-blur-2xl rounded-3xl border border-[#D8C39A]/40 shadow-2xl animate-fade-in text-[#FAF7F0]"
             onMouseEnter={() => setHoveredMenu('collections')}
             onMouseLeave={() => setHoveredMenu(null)}
           >
             <div className="space-y-6">
-              <div className="flex items-center justify-between border-b border-champagne-300/30 pb-2">
-                <span className="text-[10px] uppercase tracking-monumental text-gold-dark font-semibold">
+              <div className="flex items-center justify-between border-b border-[#D8C39A]/30 pb-2">
+                <span className="text-[10px] uppercase tracking-monumental text-[#D8C39A] font-semibold">
                   Five Curated Realms
                 </span>
-                <Link to="/collections" className="text-xs uppercase tracking-widest text-obsidian hover:text-gold-dark font-medium">
+                <Link to="/collections" className="text-xs uppercase tracking-widest text-[#D8C39A] hover:text-white font-medium transition-colors">
                   View All Collections Index →
                 </Link>
               </div>
@@ -459,7 +475,7 @@ export const Navigation: React.FC = () => {
                   <Link
                     key={col.id}
                     to={`/collections/${col.handle}`}
-                    className="group flex flex-col gap-2 p-2.5 rounded-2xl bg-white border border-champagne-300/60 shadow-sm hover:shadow-luxury-soft transition-all"
+                    className="group flex flex-col gap-2 p-2.5 rounded-2xl bg-[#251F1B] border border-[#D8C39A]/30 shadow-sm hover:border-[#D8C39A] hover:shadow-xl transition-all text-left"
                   >
                     <div className="aspect-[4/5] rounded-xl overflow-hidden bg-sand">
                       <img
@@ -469,8 +485,8 @@ export const Navigation: React.FC = () => {
                       />
                     </div>
                     <div className="space-y-0.5">
-                      <span className="text-[8px] font-mono uppercase text-gold-dark font-bold">Realm 0{i + 1}</span>
-                      <p className="font-serif text-xs font-semibold text-obsidian group-hover:text-gold-dark transition-colors line-clamp-1">
+                      <span className="text-[8px] font-mono uppercase text-[#D8C39A] font-bold">Realm 0{i + 1}</span>
+                      <p className="font-serif text-xs font-semibold text-white group-hover:text-[#D8C39A] transition-colors line-clamp-1">
                         {col.title}
                       </p>
                     </div>
