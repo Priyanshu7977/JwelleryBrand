@@ -186,8 +186,8 @@ export const CartDrawer: React.FC = () => {
                     {/* Thumbnail */}
                     <div className="w-16 h-16 sm:w-18 sm:h-18 rounded-lg overflow-hidden bg-sand shrink-0 border border-champagne-200">
                       <img
-                        src={item.product.images.hero}
-                        alt={item.product.images.alt}
+                        src={item.product.images?.hero || item.product.images?.detail || (item.product as any).imageUrl || '/images/placeholder.jpg'}
+                        alt={item.product.images?.alt || item.product.title}
                         className="w-full h-full object-cover"
                       />
                     </div>

@@ -141,36 +141,46 @@ export const CartPage: React.FC = () => {
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
             
             {/* Products List (8 Cols) */}
-            <div className="lg:col-span-8 space-y-4">
+            <div className="lg:col-span-8 space-y-3 sm:space-y-4">
               {cart.map((item) => (
                 <div
                   key={item.product.id}
-                  className="flex flex-col sm:flex-row gap-4 p-4 sm:p-5 rounded-2xl bg-white border border-champagne-300/60 shadow-xs hover:border-gold-dark transition-all"
+                  className="flex flex-row items-start sm:items-center gap-3.5 sm:gap-5 p-3.5 sm:p-5 rounded-2xl bg-white border border-champagne-300/60 shadow-xs hover:border-gold-dark transition-all"
                 >
-                  <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-xl overflow-hidden bg-sand shrink-0 border border-champagne-200">
+                  {/* Product Thumbnail */}
+                  <div className="w-20 h-20 sm:w-28 sm:h-28 rounded-xl overflow-hidden bg-sand shrink-0 border border-champagne-200 aspect-square">
                     <img
-                      src={item.product.images.hero}
-                      alt={item.product.title}
+                      src={item.product.images?.hero || item.product.images?.detail || (item.product as any).imageUrl || '/images/placeholder.jpg'}
+                      alt={item.product.images?.alt || item.product.title}
                       className="w-full h-full object-cover"
                     />
                   </div>
 
-                  <div className="flex-1 flex flex-col justify-between space-y-3">
-                    <div className="flex justify-between items-start gap-4">
-                      <div>
-                        <h3 className="font-serif-luxury text-base sm:text-lg text-obsidian font-bold leading-snug">
+                  {/* Product Details */}
+                  <div className="flex-1 min-w-0 flex flex-col justify-between space-y-2 sm:space-y-3">
+                    <div className="flex justify-between items-start gap-2">
+                      <div className="min-w-0">
+                        <h3 className="font-serif-luxury text-sm sm:text-lg text-obsidian font-bold leading-snug line-clamp-2">
                           {item.product.title}
                         </h3>
-                        <p className="font-serif text-sm text-gold-dark font-bold mt-0.5">
-                          ₹{item.product.price}
-                        </p>
+                        <div className="flex items-center gap-2 mt-0.5 sm:mt-1">
+                          <span className="font-serif text-xs sm:text-base text-gold-dark font-bold">
+                            ₹{item.product.price}
+                          </span>
+                          {item.product.compareAtPrice && item.product.compareAtPrice > item.product.price && (
+                            <span className="text-[10px] sm:text-xs text-obsidian/40 line-through">
+                              ₹{item.product.compareAtPrice}
+                            </span>
+                          )}
+                        </div>
+
                         {item.selectedPersonalisation?.boxType && (
-                          <p className="text-xs text-obsidian-soft mt-1 font-sans">
+                          <p className="text-[11px] sm:text-xs text-obsidian-soft mt-0.5 sm:mt-1 font-sans line-clamp-1">
                             Gift Box: {item.selectedPersonalisation.boxType}
                           </p>
                         )}
                         {item.selectedPersonalisation?.customNote && (
-                          <p className="text-xs text-gold-dark font-medium italic mt-0.5">
+                          <p className="text-[10px] sm:text-xs text-gold-dark font-medium italic mt-0.5 line-clamp-1">
                             Note: "{item.selectedPersonalisation.customNote}"
                           </p>
                         )}
@@ -178,36 +188,41 @@ export const CartPage: React.FC = () => {
 
                       <button
                         onClick={() => removeFromCart(item.product.id)}
-                        className="text-obsidian/40 hover:text-rose-600 transition-colors p-1 cursor-pointer"
+                        className="text-obsidian/40 hover:text-rose-600 transition-colors p-1 cursor-pointer shrink-0"
                         aria-label="Remove item"
                         title="Remove piece"
                       >
-                        <Trash2 className="w-4 h-4" />
+                        <Trash2 className="w-4 h-4 sm:w-4.5 sm:h-4.5" />
                       </button>
                     </div>
 
-                    <div className="flex items-center justify-between pt-2 border-t border-champagne-200">
-                      <div className="flex items-center border border-champagne-300 rounded-full bg-pearl-50">
+                    <div className="flex items-center justify-between pt-2 border-t border-champagne-200/80">
+                      {/* Quantity Stepper */}
+                      <div className="flex items-center border border-champagne-300 rounded-full bg-pearl-50 h-7 sm:h-8">
                         <button
                           onClick={() => updateQuantity(item.product.id, item.quantity - 1)}
-                          className="p-1.5 text-obsidian/60 hover:text-obsidian transition-colors cursor-pointer"
+                          className="px-2 text-obsidian/60 hover:text-obsidian transition-colors cursor-pointer"
                           aria-label="Decrease quantity"
                         >
-                          <Minus className="w-3.5 h-3.5" />
+                          <Minus className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
                         </button>
-                        <span className="px-3 text-xs font-mono font-bold text-obsidian">{item.quantity}</span>
+                        <span className="px-2 sm:px-3 text-xs font-mono font-bold text-obsidian">{item.quantity}</span>
                         <button
                           onClick={() => updateQuantity(item.product.id, item.quantity + 1)}
-                          className="p-1.5 text-obsidian/60 hover:text-obsidian transition-colors cursor-pointer"
+                          className="px-2 text-obsidian/60 hover:text-obsidian transition-colors cursor-pointer"
                           aria-label="Increase quantity"
                         >
-                          <Plus className="w-3.5 h-3.5" />
+                          <Plus className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
                         </button>
                       </div>
 
-                      <span className="font-mono text-sm font-bold text-obsidian">
-                        ₹{item.product.price * item.quantity}
-                      </span>
+                      {/* Line Item Total */}
+                      <div className="text-right">
+                        <span className="text-[10px] text-obsidian-soft uppercase font-mono block sm:inline sm:mr-1">Total:</span>
+                        <span className="font-mono text-xs sm:text-base font-bold text-obsidian">
+                          ₹{item.product.price * item.quantity}
+                        </span>
+                      </div>
                     </div>
                   </div>
                 </div>
