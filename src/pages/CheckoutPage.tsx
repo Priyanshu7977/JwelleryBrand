@@ -117,6 +117,17 @@ export const CheckoutPage: React.FC = () => {
     setTimeout(() => setUpiCopied(false), 2500);
   };
 
+  const sanitizeAddressText = (val: string): string => {
+    return val
+      .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '')
+      .replace(/<iframe\b[^<]*(?:(?!<\/iframe>)<[^<]*)*<\/iframe>/gi, '')
+      .replace(/<[^>]*>/g, '')
+      .replace(/[<>]/g, '')
+      .replace(/javascript:/gi, '')
+      .replace(/onerror\s*=/gi, '')
+      .replace(/onload\s*=/gi, '');
+  };
+
   const handleApplyCoupon = (code: string) => {
     const res = applyCoupon(code);
     if (res.success) {
@@ -147,8 +158,9 @@ export const CheckoutPage: React.FC = () => {
       return;
     }
 
-    if (!street.trim() || !pincode.trim() || pincode.replace(/\D/g, '').length !== 6) {
-      showToast("Please fill in a valid delivery address and 6-digit PIN code.");
+    const cleanStreet = sanitizeAddressText(street).trim();
+    if (!cleanStreet || cleanStreet.length < 5 || !pincode.trim() || pincode.replace(/\D/g, '').length !== 6) {
+      showToast("Please fill in a valid delivery address (HTML, scripts & iframes not allowed) and 6-digit PIN code.");
       return;
     }
 
@@ -388,7 +400,28 @@ export const CheckoutPage: React.FC = () => {
                       required
                       placeholder="e.g. 402, Sea Crest Towers, Worli Sea Face"
                       value={street}
-                      onChange={(e) => setStreet(e.target.value)}
+                      onBeforeInput={(e: any) => {
+                        if (e.data && /[<>]/.test(e.data)) {
+                          e.preventDefault();
+                        }
+                      }}
+                      onKeyDown={(e) => {
+                        if (e.key === '<' || e.key === '>') {
+                          e.preventDefault();
+                        }
+                      }}
+                      onPaste={(e) => {
+                        e.preventDefault();
+                        const paste = e.clipboardData.getData('text');
+                        const clean = sanitizeAddressText(paste);
+                        setStreet(sanitizeAddressText(street + clean));
+                      }}
+                      onInput={(e: React.FormEvent<HTMLInputElement>) => {
+                        const clean = sanitizeAddressText(e.currentTarget.value);
+                        e.currentTarget.value = clean;
+                        setStreet(clean);
+                      }}
+                      onChange={(e) => setStreet(sanitizeAddressText(e.target.value))}
                       className="w-full bg-transparent text-xs sm:text-sm font-sans text-obsidian focus:outline-none placeholder:text-obsidian/40"
                     />
                   </div>

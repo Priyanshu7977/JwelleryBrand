@@ -54,6 +54,17 @@ export const AccountPage: React.FC = () => {
     pincode: '',
   });
 
+  const sanitizeAddressText = (val: string): string => {
+    return val
+      .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '')
+      .replace(/<iframe\b[^<]*(?:(?!<\/iframe>)<[^<]*)*<\/iframe>/gi, '')
+      .replace(/<[^>]*>/g, '')
+      .replace(/[<>]/g, '')
+      .replace(/javascript:/gi, '')
+      .replace(/onerror\s*=/gi, '')
+      .replace(/onload\s*=/gi, '');
+  };
+
   const handleLogout = () => {
     logout();
     showToast("Signed out of Celestia Atelier");
@@ -62,15 +73,16 @@ export const AccountPage: React.FC = () => {
 
   const handleSaveAddress = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!newAddress.street || !newAddress.pincode) {
-      showToast("Please fill in the street address and pincode.");
+    const cleanStreet = sanitizeAddressText(newAddress.street).trim();
+    if (!cleanStreet || cleanStreet.length < 5 || !newAddress.pincode) {
+      showToast("Please fill in a valid street address (HTML, scripts & iframes not allowed) and pincode.");
       return;
     }
     const currentAddresses = user?.savedAddresses || [];
     const created = {
       id: `addr-${Date.now()}`,
       label: newAddress.label,
-      street: newAddress.street,
+      street: cleanStreet,
       city: newAddress.city,
       state: newAddress.state,
       pincode: newAddress.pincode,
@@ -433,7 +445,28 @@ export const AccountPage: React.FC = () => {
                     type="text"
                     required
                     value={newAddress.street}
-                    onChange={(e) => setNewAddress({ ...newAddress, street: e.target.value })}
+                    onBeforeInput={(e: any) => {
+                      if (e.data && /[<>]/.test(e.data)) {
+                        e.preventDefault();
+                      }
+                    }}
+                    onKeyDown={(e) => {
+                      if (e.key === '<' || e.key === '>') {
+                        e.preventDefault();
+                      }
+                    }}
+                    onPaste={(e) => {
+                      e.preventDefault();
+                      const paste = e.clipboardData.getData('text');
+                      const clean = sanitizeAddressText(paste);
+                      setNewAddress(prev => ({ ...prev, street: sanitizeAddressText(prev.street + clean) }));
+                    }}
+                    onInput={(e: React.FormEvent<HTMLInputElement>) => {
+                      const clean = sanitizeAddressText(e.currentTarget.value);
+                      e.currentTarget.value = clean;
+                      setNewAddress(prev => ({ ...prev, street: clean }));
+                    }}
+                    onChange={(e) => setNewAddress({ ...newAddress, street: sanitizeAddressText(e.target.value) })}
                     placeholder="Building, Flat, Street, Area"
                     className="w-full px-3.5 py-2 rounded-xl bg-white border border-champagne-300 text-xs text-obsidian focus:outline-none"
                   />
