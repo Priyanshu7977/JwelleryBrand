@@ -319,17 +319,17 @@ export const CartPage: React.FC = () => {
               <div className="space-y-2.5 pt-2">
                 <button
                   onClick={() => navigate('/checkout')}
-                  className="btn-primary w-full h-12 flex items-center justify-center gap-2 font-bold uppercase tracking-wider text-xs sm:text-sm shadow-md cursor-pointer"
+                  className="btn-primary w-full min-h-[48px] h-12 flex items-center justify-center gap-2 font-bold uppercase tracking-wider text-xs sm:text-sm shadow-md cursor-pointer"
                 >
                   <span>Proceed to Express Checkout</span>
-                  <ArrowRight className="w-4 h-4" />
+                  <ArrowRight className="w-4 h-4 shrink-0" />
                 </button>
 
                 <button
                   onClick={checkoutViaWhatsApp}
-                  className="w-full h-11 border border-emerald-600/60 bg-emerald-50/70 hover:bg-emerald-100 text-emerald-900 text-xs uppercase font-bold tracking-wider rounded-full transition-all flex items-center justify-center gap-2 cursor-pointer"
+                  className="w-full min-h-[48px] h-12 border border-emerald-600/60 bg-emerald-50/70 hover:bg-emerald-100 text-emerald-900 text-xs uppercase font-bold tracking-wider rounded-full transition-all flex items-center justify-center gap-2 cursor-pointer shadow-xs"
                 >
-                  <MessageCircle className="w-4 h-4 text-emerald-700" />
+                  <MessageCircle className="w-4 h-4 text-emerald-700 shrink-0" />
                   <span>Order via WhatsApp Concierge</span>
                 </button>
               </div>

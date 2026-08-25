@@ -140,19 +140,19 @@ export const ThePersonBehindCelestia: React.FC = () => {
             <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 pt-2">
               <Link
                 to="/the-world"
-                className="h-11 px-6 rounded-full bg-champagne-300 hover:bg-champagne-200 text-obsidian text-xs uppercase tracking-widest font-bold active:scale-[0.98] transition-all inline-flex items-center justify-center gap-2 shadow-lg"
+                className="min-h-[48px] h-12 px-7 rounded-full bg-champagne-300 hover:bg-champagne-200 text-obsidian text-xs uppercase tracking-widest font-bold active:scale-[0.98] transition-all inline-flex items-center justify-center gap-2 shadow-lg cursor-pointer"
               >
                 <span>Discover The Full Story</span>
-                <ArrowRight className="w-3.5 h-3.5" />
+                <ArrowRight className="w-3.5 h-3.5 shrink-0" />
               </Link>
 
               <a
                 href={BRAND_INFO.instagramUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="h-11 px-6 rounded-full border border-champagne-400/40 hover:bg-champagne-400/20 text-pearl-50 text-xs uppercase tracking-widest font-bold active:scale-[0.98] transition-all inline-flex items-center justify-center gap-2"
+                className="min-h-[48px] h-12 px-7 rounded-full border border-champagne-400/40 hover:bg-champagne-400/20 text-pearl-50 text-xs uppercase tracking-widest font-bold active:scale-[0.98] transition-all inline-flex items-center justify-center gap-2 cursor-pointer"
               >
-                <Instagram className="w-3.5 h-3.5 text-champagne-300" />
+                <Instagram className="w-3.5 h-3.5 text-champagne-300 shrink-0" />
                 <span>@celestiaamor.in</span>
               </a>
             </div>

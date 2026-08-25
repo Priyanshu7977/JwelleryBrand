@@ -39,23 +39,24 @@ export const Section08FinalMoment: React.FC = () => {
           </p>
 
           {/* CTAs */}
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-3">
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-3.5 pt-3 max-w-md sm:max-w-none mx-auto w-full">
             <MagneticButton
               variant="primary"
               size="lg"
               onClick={() => {
                 document.querySelector('#section-reveal')?.scrollIntoView({ behavior: 'smooth' });
               }}
+              className="w-full sm:w-auto min-h-[48px] h-12 sm:h-14"
             >
               <span>Explore Celestia Collections</span>
             </MagneticButton>
 
             <button
               onClick={scrollToTop}
-              className="h-12 px-7 rounded-full border border-champagne-300/80 hover:bg-champagne-100/60 active:scale-[0.98] text-obsidian text-xs uppercase tracking-widest font-bold transition-all flex items-center justify-center gap-2"
+              className="w-full sm:w-auto min-h-[48px] h-12 sm:h-14 px-8 rounded-full border border-champagne-300/80 hover:bg-champagne-100/60 active:scale-[0.98] text-obsidian text-xs uppercase tracking-widest font-bold transition-all flex items-center justify-center gap-2 cursor-pointer shadow-xs"
             >
               <span>Back to Top</span>
-              <ArrowUp className="w-3.5 h-3.5" />
+              <ArrowUp className="w-3.5 h-3.5 shrink-0" />
             </button>
           </div>
 

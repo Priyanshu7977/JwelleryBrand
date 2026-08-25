@@ -218,26 +218,27 @@ export const FindYourCelestia: React.FC = () => {
                 )}
               </div>
 
-              <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-2">
+              <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-2">
                 <button
                   onClick={() => addToCart(matchedProduct, 1)}
-                  className="w-full sm:w-auto px-8 py-3.5 bg-obsidian text-pearl-100 rounded-full text-xs uppercase tracking-widest font-semibold hover:bg-obsidian-200 transition-all flex items-center justify-center gap-2 shadow-md"
+                  className="w-full sm:w-auto min-h-[48px] h-12 px-8 bg-obsidian text-pearl-100 rounded-full text-xs uppercase tracking-widest font-bold hover:bg-obsidian-200 transition-all flex items-center justify-center gap-2 shadow-md cursor-pointer"
                 >
-                  <ShoppingBag className="w-4 h-4" />
+                  <ShoppingBag className="w-4 h-4 shrink-0" />
                   <span>Add Matched Piece to Bag</span>
                 </button>
 
                 <Link
                   to={`/product/${matchedProduct.handle}`}
-                  className="w-full sm:w-auto px-6 py-3.5 border border-champagne-300/80 rounded-full text-xs uppercase tracking-widest text-obsidian hover:bg-champagne-100/60 transition-colors"
+                  className="w-full sm:w-auto min-h-[48px] h-12 px-7 border border-champagne-300/80 rounded-full text-xs uppercase tracking-widest font-bold text-obsidian hover:bg-champagne-100/60 transition-colors flex items-center justify-center cursor-pointer shadow-xs"
                 >
-                  Inspect Full Details
+                  <span>Inspect Full Details</span>
                 </Link>
 
                 <button
                   onClick={() => setStep(1)}
-                  className="p-3 text-obsidian/50 hover:text-obsidian rounded-full"
+                  className="w-12 h-12 min-w-[48px] min-h-[48px] border border-champagne-300/60 hover:bg-champagne-100 text-obsidian/70 hover:text-obsidian rounded-full flex items-center justify-center shrink-0 transition-colors cursor-pointer"
                   title="Retake Finder"
+                  aria-label="Retake Finder"
                 >
                   <RefreshCw className="w-4 h-4" />
                 </button>

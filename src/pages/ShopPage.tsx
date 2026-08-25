@@ -191,10 +191,10 @@ export const ShopPage: React.FC = () => {
                       )}
                     </div>
 
-                    <div className="flex gap-1.5">
+                    <div className="flex gap-2">
                       <button
                         onClick={() => handleQuickAdd(prod)}
-                        className="flex-1 h-9 bg-obsidian text-pearl-100 text-xs uppercase font-bold tracking-wider rounded-full hover:bg-obsidian-200 active:scale-[0.98] transition-all flex items-center justify-center gap-1.5 shadow-sm"
+                        className="flex-1 min-h-[40px] h-10 bg-obsidian text-pearl-100 text-xs uppercase font-bold tracking-wider rounded-full hover:bg-obsidian-200 active:scale-[0.98] transition-all flex items-center justify-center gap-1.5 shadow-sm cursor-pointer"
                       >
                         <ShoppingBag className="w-3.5 h-3.5" />
                         <span>{addedId === prod.id ? 'Added!' : 'Add to Bag'}</span>
@@ -202,7 +202,7 @@ export const ShopPage: React.FC = () => {
 
                       <button
                         onClick={() => setQuickViewProduct(prod)}
-                        className="w-9 h-9 border border-champagne-300/80 hover:bg-champagne-100 active:scale-[0.98] rounded-full text-obsidian transition-all flex items-center justify-center shrink-0"
+                        className="w-10 h-10 min-w-[40px] min-h-[40px] border border-champagne-300/80 hover:bg-champagne-100 active:scale-[0.98] rounded-full text-obsidian transition-all flex items-center justify-center shrink-0 cursor-pointer"
                         title="Quick View"
                       >
                         <Eye className="w-3.5 h-3.5" />

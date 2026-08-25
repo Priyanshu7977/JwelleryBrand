@@ -171,17 +171,18 @@ export const Section03Collections: React.FC = () => {
 
                       <div className="pt-2 border-t border-champagne-300/40 flex items-center justify-between">
                         <span className="text-base font-bold text-obsidian">₹{prod.price}</span>
-                        <div className="flex gap-1.5">
+                        <div className="flex gap-2">
                           <button
                             onClick={() => addToCart(prod, 1)}
-                            className="px-3 h-8 bg-obsidian text-pearl-100 text-[10px] uppercase font-bold tracking-wider rounded-full hover:bg-obsidian-200 active:scale-[0.98] transition-all flex items-center gap-1"
+                            className="px-3.5 h-9 min-h-[36px] bg-obsidian text-pearl-100 text-[11px] uppercase font-bold tracking-wider rounded-full hover:bg-obsidian-200 active:scale-[0.98] transition-all flex items-center gap-1.5 cursor-pointer shadow-xs"
                           >
-                            <ShoppingBag className="w-3 h-3" />
+                            <ShoppingBag className="w-3.5 h-3.5" />
                             <span>Add</span>
                           </button>
                           <button
                             onClick={() => setQuickViewProduct(prod)}
-                            className="w-8 h-8 border border-champagne-300/80 hover:bg-champagne-100 active:scale-[0.98] rounded-full text-obsidian transition-all flex items-center justify-center shrink-0"
+                            className="w-9 h-9 min-w-[36px] min-h-[36px] border border-champagne-300/80 hover:bg-champagne-100 active:scale-[0.98] rounded-full text-obsidian transition-all flex items-center justify-center shrink-0 cursor-pointer"
+                            title="Quick View"
                           >
                             <Eye className="w-3.5 h-3.5" />
                           </button>

@@ -179,18 +179,18 @@ export const Section02Reveal: React.FC = () => {
             <div className="flex flex-col sm:flex-row gap-3 pt-2">
               <button
                 onClick={() => addToCart(heroProduct, 1)}
-                className="btn-primary group flex-1 h-12 shadow-lg hover:shadow-xl active:scale-[0.98] transition-all flex items-center justify-center gap-2 text-xs uppercase font-bold tracking-widest"
+                className="btn-primary group w-full sm:flex-1 min-h-[48px] h-12 shadow-lg hover:shadow-xl active:scale-[0.98] transition-all flex items-center justify-center gap-2 text-xs uppercase font-bold tracking-widest cursor-pointer"
               >
-                <ShoppingBag className="w-4 h-4" />
+                <ShoppingBag className="w-4 h-4 shrink-0" />
                 <span>Add To Bag • ₹{heroProduct.price}</span>
               </button>
 
               <button
                 onClick={() => setQuickViewProduct(heroProduct)}
-                className="btn-secondary group px-6 h-12 active:scale-[0.98] transition-all flex items-center justify-center gap-2 text-xs uppercase font-bold tracking-widest"
+                className="btn-secondary group w-full sm:w-auto px-6 min-h-[48px] h-12 active:scale-[0.98] transition-all flex items-center justify-center gap-2 text-xs uppercase font-bold tracking-widest cursor-pointer"
               >
                 <span>Inspect Suite</span>
-                <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform duration-300" />
+                <ArrowRight className="w-3.5 h-3.5 shrink-0 group-hover:translate-x-1 transition-transform duration-300" />
               </button>
             </div>
 

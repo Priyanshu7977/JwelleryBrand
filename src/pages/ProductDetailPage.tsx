@@ -448,9 +448,9 @@ export const ProductDetailPage: React.FC = () => {
 
                 <button
                   onClick={handleAdd}
-                  className="btn-primary flex-1 h-12 text-xs sm:text-sm uppercase font-bold tracking-widest flex items-center justify-center gap-2 shadow-lg hover:shadow-xl active:scale-[0.98] transition-all"
+                  className="btn-primary flex-1 min-h-[48px] h-12 text-xs sm:text-sm uppercase font-bold tracking-widest flex items-center justify-center gap-2 shadow-lg hover:shadow-xl active:scale-[0.98] transition-all cursor-pointer"
                 >
-                  <ShoppingBag className="w-4 h-4" />
+                  <ShoppingBag className="w-4 h-4 shrink-0" />
                   <span>{isAdded ? 'Added to Bag! ✨' : `Add To Bag • ₹${product.price * quantity}`}</span>
                 </button>
               </div>
@@ -458,18 +458,18 @@ export const ProductDetailPage: React.FC = () => {
               {/* Direct WhatsApp Concierge Order Button */}
               <button
                 onClick={handleWhatsAppOrder}
-                className="w-full h-11 border border-emerald-600/70 bg-emerald-50/80 hover:bg-emerald-100/90 text-emerald-950 text-xs uppercase font-bold tracking-wider rounded-full transition-all flex items-center justify-center gap-2 shadow-sm"
+                className="w-full min-h-[48px] h-12 border border-emerald-600/70 bg-emerald-50/80 hover:bg-emerald-100/90 text-emerald-950 text-xs uppercase font-bold tracking-wider rounded-full transition-all flex items-center justify-center gap-2 shadow-sm cursor-pointer"
               >
-                <MessageCircle className="w-4 h-4 text-emerald-700" />
+                <MessageCircle className="w-4 h-4 text-emerald-700 shrink-0" />
                 <span>Direct Order via WhatsApp Concierge</span>
               </button>
 
               <button
                 onClick={handleBuyNow}
-                className="w-full h-10 border border-champagne-400/80 bg-white hover:bg-champagne-100 text-obsidian text-xs uppercase font-bold tracking-wider rounded-full transition-all flex items-center justify-center gap-2 shadow-xs"
+                className="w-full min-h-[48px] h-12 border border-champagne-400/80 bg-white hover:bg-champagne-100 text-obsidian text-xs uppercase font-bold tracking-wider rounded-full transition-all flex items-center justify-center gap-2 shadow-xs cursor-pointer"
               >
                 <span>Instant Checkout</span>
-                <ArrowRight className="w-3.5 h-3.5" />
+                <ArrowRight className="w-3.5 h-3.5 shrink-0" />
               </button>
             </div>
 
