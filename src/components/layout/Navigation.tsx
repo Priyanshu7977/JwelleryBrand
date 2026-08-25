@@ -142,7 +142,7 @@ export const Navigation: React.FC = () => {
         {/* Floating Main Header with Exact Padding below Announcement Bar */}
         <div className="w-full pointer-events-auto pt-2 sm:pt-2.5 px-4 sm:px-6 md:px-10 lg:px-14">
           <div
-            className={`max-w-7xl mx-auto grid grid-cols-[180px_1fr_180px] xl:grid-cols-[220px_1fr_220px] items-center transition-all duration-300 rounded-full px-4 sm:px-6 py-2 sm:py-2.5 ${
+            className={`max-w-7xl mx-auto flex items-center justify-between transition-all duration-300 rounded-full px-4 sm:px-6 py-2 sm:py-2.5 ${
               isScrolled
                 ? 'glass-pearl shadow-luxury-soft border border-champagne-300/80'
                 : 'bg-pearl-50/95 backdrop-blur-md border border-champagne-300/70 shadow-sm'
@@ -152,7 +152,7 @@ export const Navigation: React.FC = () => {
           {/* ================================================================= */}
           {/* 1. LEFT COLUMN: Logo at Left Corner                               */}
           {/* ================================================================= */}
-          <div className="flex items-center justify-start gap-3">
+          <div className="flex items-center justify-start gap-2.5 sm:gap-3 shrink-0">
             
             {/* Mobile Hamburger Button */}
             <div className="flex items-center lg:hidden">
@@ -191,7 +191,7 @@ export const Navigation: React.FC = () => {
           {/* ================================================================= */}
           {/* 2. CENTER COLUMN: Mathematical Center-Aligned Navigation Links     */}
           {/* ================================================================= */}
-          <nav className="hidden lg:flex items-center justify-center gap-4 xl:gap-6 px-2">
+          <nav className="hidden lg:flex items-center justify-center gap-3.5 xl:gap-6 2xl:gap-8 px-2 lg:px-4 shrink min-w-0">
             
             {/* Shop Link with Mega Menu */}
             <div
@@ -201,7 +201,7 @@ export const Navigation: React.FC = () => {
               <NavLink
                 to="/shop"
                 className={({ isActive }) =>
-                  `text-[11px] uppercase tracking-widest-luxury transition-colors font-semibold whitespace-nowrap ${
+                  `text-[10px] xl:text-[11px] uppercase tracking-widest-luxury transition-colors font-semibold whitespace-nowrap ${
                     isActive ? 'text-gold-dark font-bold' : 'text-obsidian hover:text-gold-dark'
                   }`
                 }
@@ -218,7 +218,7 @@ export const Navigation: React.FC = () => {
               <NavLink
                 to="/collections"
                 className={({ isActive }) =>
-                  `text-[11px] uppercase tracking-widest-luxury transition-colors font-semibold whitespace-nowrap ${
+                  `text-[10px] xl:text-[11px] uppercase tracking-widest-luxury transition-colors font-semibold whitespace-nowrap ${
                     isActive ? 'text-gold-dark font-bold' : 'text-obsidian hover:text-gold-dark'
                   }`
                 }
@@ -231,7 +231,7 @@ export const Navigation: React.FC = () => {
             <NavLink
               to="/gifting"
               className={({ isActive }) =>
-                `text-[11px] uppercase tracking-widest-luxury transition-colors font-semibold whitespace-nowrap ${
+                `text-[10px] xl:text-[11px] uppercase tracking-widest-luxury transition-colors font-semibold whitespace-nowrap ${
                   isActive ? 'text-gold-dark font-bold' : 'text-obsidian hover:text-gold-dark'
                 }`
               }
@@ -243,7 +243,7 @@ export const Navigation: React.FC = () => {
             <NavLink
               to="/the-world"
               className={({ isActive }) =>
-                `text-[11px] uppercase tracking-widest-luxury transition-colors font-semibold whitespace-nowrap ${
+                `text-[10px] xl:text-[11px] uppercase tracking-widest-luxury transition-colors font-semibold whitespace-nowrap ${
                   isActive ? 'text-gold-dark font-bold' : 'text-obsidian hover:text-gold-dark'
                 }`
               }
@@ -255,7 +255,7 @@ export const Navigation: React.FC = () => {
             <NavLink
               to="/community"
               className={({ isActive }) =>
-                `text-[11px] uppercase tracking-widest-luxury transition-colors font-semibold whitespace-nowrap ${
+                `text-[10px] xl:text-[11px] uppercase tracking-widest-luxury transition-colors font-semibold whitespace-nowrap ${
                   isActive ? 'text-gold-dark font-bold' : 'text-obsidian hover:text-gold-dark'
                 }`
               }
@@ -267,7 +267,7 @@ export const Navigation: React.FC = () => {
             <NavLink
               to="/contact"
               className={({ isActive }) =>
-                `text-[11px] uppercase tracking-widest-luxury transition-colors font-semibold whitespace-nowrap ${
+                `text-[10px] xl:text-[11px] uppercase tracking-widest-luxury transition-colors font-semibold whitespace-nowrap ${
                   isActive ? 'text-gold-dark font-bold' : 'text-obsidian hover:text-gold-dark'
                 }`
               }
@@ -279,7 +279,7 @@ export const Navigation: React.FC = () => {
           {/* ================================================================= */}
           {/* 3. RIGHT COLUMN: Compact Utilities & Bag Trigger                  */}
           {/* ================================================================= */}
-          <div className="flex items-center justify-end gap-1 sm:gap-1.5 md:gap-2">
+          <div className="flex items-center justify-end gap-1 sm:gap-1.5 md:gap-2 shrink-0">
             
             {/* Search Icon */}
             <Link
