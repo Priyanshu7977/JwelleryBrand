@@ -61,6 +61,27 @@ export const LoginPage: React.FC = () => {
                 required
                 placeholder="you@email.com"
                 value={email}
+                onBeforeInput={(e: any) => {
+                  if (e.data && /[<>]/.test(e.data)) {
+                    e.preventDefault();
+                    showToast("HTML, script and iframe tags are not permitted.");
+                  }
+                }}
+                onKeyDown={(e) => {
+                  if (e.key === '<' || e.key === '>') {
+                    e.preventDefault();
+                    showToast("HTML, script and iframe tags are not permitted.");
+                  }
+                }}
+                onPaste={(e) => {
+                  e.preventDefault();
+                  const paste = e.clipboardData.getData('text');
+                  const clean = sanitizeEmail(paste);
+                  if (paste.includes('<') || paste.toLowerCase().includes('script') || paste.toLowerCase().includes('iframe')) {
+                    showToast("HTML, script and iframe tags are not permitted.");
+                  }
+                  setEmail(sanitizeEmail(email + clean));
+                }}
                 onChange={(e) => setEmail(sanitizeEmail(e.target.value))}
                 className="w-full bg-transparent text-sm font-sans text-obsidian focus:outline-none placeholder:text-obsidian/40"
               />
@@ -83,6 +104,27 @@ export const LoginPage: React.FC = () => {
                 required
                 placeholder="••••••••"
                 value={password}
+                onBeforeInput={(e: any) => {
+                  if (e.data && /[<>]/.test(e.data)) {
+                    e.preventDefault();
+                    showToast("HTML, script and iframe tags are not permitted.");
+                  }
+                }}
+                onKeyDown={(e) => {
+                  if (e.key === '<' || e.key === '>') {
+                    e.preventDefault();
+                    showToast("HTML, script and iframe tags are not permitted.");
+                  }
+                }}
+                onPaste={(e) => {
+                  e.preventDefault();
+                  const paste = e.clipboardData.getData('text');
+                  const clean = sanitizePassword(paste);
+                  if (paste.includes('<') || paste.toLowerCase().includes('script') || paste.toLowerCase().includes('iframe')) {
+                    showToast("HTML, script and iframe tags are not permitted.");
+                  }
+                  setPassword(sanitizePassword(password + clean));
+                }}
                 onChange={(e) => setPassword(sanitizePassword(e.target.value))}
                 className="w-full bg-transparent text-sm font-sans text-obsidian focus:outline-none placeholder:text-obsidian/40"
               />

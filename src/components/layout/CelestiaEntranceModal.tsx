@@ -243,6 +243,27 @@ export const CelestiaEntranceModal: React.FC = () => {
                   required
                   placeholder="name@email.com"
                   value={email}
+                  onBeforeInput={(e: any) => {
+                    if (e.data && /[<>]/.test(e.data)) {
+                      e.preventDefault();
+                      setErrorMessage("HTML, script and iframe tags are not permitted.");
+                    }
+                  }}
+                  onKeyDown={(e) => {
+                    if (e.key === '<' || e.key === '>') {
+                      e.preventDefault();
+                      setErrorMessage("HTML, script and iframe tags are not permitted.");
+                    }
+                  }}
+                  onPaste={(e) => {
+                    e.preventDefault();
+                    const paste = e.clipboardData.getData('text');
+                    const clean = sanitizeEmail(paste);
+                    if (paste.includes('<') || paste.toLowerCase().includes('script') || paste.toLowerCase().includes('iframe')) {
+                      setErrorMessage("HTML, script and iframe tags are not permitted.");
+                    }
+                    setEmail(sanitizeEmail(email + clean));
+                  }}
                   onChange={(e) => {
                     const clean = sanitizeEmail(e.target.value);
                     if (e.target.value.includes('<') || e.target.value.toLowerCase().includes('script') || e.target.value.toLowerCase().includes('iframe')) {
@@ -268,6 +289,27 @@ export const CelestiaEntranceModal: React.FC = () => {
                   required
                   placeholder="••••••••"
                   value={password}
+                  onBeforeInput={(e: any) => {
+                    if (e.data && /[<>]/.test(e.data)) {
+                      e.preventDefault();
+                      setErrorMessage("HTML, script and iframe tags are not permitted.");
+                    }
+                  }}
+                  onKeyDown={(e) => {
+                    if (e.key === '<' || e.key === '>') {
+                      e.preventDefault();
+                      setErrorMessage("HTML, script and iframe tags are not permitted.");
+                    }
+                  }}
+                  onPaste={(e) => {
+                    e.preventDefault();
+                    const paste = e.clipboardData.getData('text');
+                    const clean = sanitizePassword(paste);
+                    if (paste.includes('<') || paste.toLowerCase().includes('script') || paste.toLowerCase().includes('iframe')) {
+                      setErrorMessage("HTML, script and iframe tags are not permitted.");
+                    }
+                    setPassword(sanitizePassword(password + clean));
+                  }}
                   onChange={(e) => {
                     const clean = sanitizePassword(e.target.value);
                     if (e.target.value.includes('<') || e.target.value.toLowerCase().includes('script') || e.target.value.toLowerCase().includes('iframe')) {
@@ -317,6 +359,27 @@ export const CelestiaEntranceModal: React.FC = () => {
                   required
                   placeholder="e.g. Radhika Sharma"
                   value={name}
+                  onBeforeInput={(e: any) => {
+                    if (e.data && /[<>]/.test(e.data)) {
+                      e.preventDefault();
+                      setErrorMessage("HTML, script and iframe tags are not permitted.");
+                    }
+                  }}
+                  onKeyDown={(e) => {
+                    if (e.key === '<' || e.key === '>') {
+                      e.preventDefault();
+                      setErrorMessage("HTML, script and iframe tags are not permitted.");
+                    }
+                  }}
+                  onPaste={(e) => {
+                    e.preventDefault();
+                    const paste = e.clipboardData.getData('text');
+                    const clean = sanitizeGeneralText(paste);
+                    if (paste.includes('<') || paste.toLowerCase().includes('script') || paste.toLowerCase().includes('iframe')) {
+                      setErrorMessage("HTML, script and iframe tags are not permitted.");
+                    }
+                    setName(sanitizeGeneralText(name + clean));
+                  }}
                   onChange={(e) => {
                     const clean = sanitizeGeneralText(e.target.value);
                     if (e.target.value.includes('<') || e.target.value.toLowerCase().includes('script') || e.target.value.toLowerCase().includes('iframe')) {
@@ -342,6 +405,27 @@ export const CelestiaEntranceModal: React.FC = () => {
                   required
                   placeholder="name@email.com"
                   value={email}
+                  onBeforeInput={(e: any) => {
+                    if (e.data && /[<>]/.test(e.data)) {
+                      e.preventDefault();
+                      setErrorMessage("HTML, script and iframe tags are not permitted.");
+                    }
+                  }}
+                  onKeyDown={(e) => {
+                    if (e.key === '<' || e.key === '>') {
+                      e.preventDefault();
+                      setErrorMessage("HTML, script and iframe tags are not permitted.");
+                    }
+                  }}
+                  onPaste={(e) => {
+                    e.preventDefault();
+                    const paste = e.clipboardData.getData('text');
+                    const clean = sanitizeEmail(paste);
+                    if (paste.includes('<') || paste.toLowerCase().includes('script') || paste.toLowerCase().includes('iframe')) {
+                      setErrorMessage("HTML, script and iframe tags are not permitted.");
+                    }
+                    setEmail(sanitizeEmail(email + clean));
+                  }}
                   onChange={(e) => {
                     const clean = sanitizeEmail(e.target.value);
                     if (e.target.value.includes('<') || e.target.value.toLowerCase().includes('script') || e.target.value.toLowerCase().includes('iframe')) {
@@ -366,6 +450,16 @@ export const CelestiaEntranceModal: React.FC = () => {
                   type="tel"
                   placeholder="+91 98765 43210"
                   value={phone}
+                  onBeforeInput={(e: any) => {
+                    if (e.data && /[a-zA-Z<>]/.test(e.data)) {
+                      e.preventDefault();
+                    }
+                  }}
+                  onKeyDown={(e) => {
+                    if (e.key.length === 1 && !/[0-9+\s\-()]/.test(e.key)) {
+                      e.preventDefault();
+                    }
+                  }}
                   onChange={(e) => setPhone(sanitizePhone(e.target.value))}
                   className="w-full bg-transparent text-sm font-sans text-[#FAF7F0] focus:outline-none placeholder:text-[#FAF7F0]/40"
                 />
@@ -383,6 +477,27 @@ export const CelestiaEntranceModal: React.FC = () => {
                   required
                   placeholder="Minimum 4 characters"
                   value={password}
+                  onBeforeInput={(e: any) => {
+                    if (e.data && /[<>]/.test(e.data)) {
+                      e.preventDefault();
+                      setErrorMessage("HTML, script and iframe tags are not permitted.");
+                    }
+                  }}
+                  onKeyDown={(e) => {
+                    if (e.key === '<' || e.key === '>') {
+                      e.preventDefault();
+                      setErrorMessage("HTML, script and iframe tags are not permitted.");
+                    }
+                  }}
+                  onPaste={(e) => {
+                    e.preventDefault();
+                    const paste = e.clipboardData.getData('text');
+                    const clean = sanitizePassword(paste);
+                    if (paste.includes('<') || paste.toLowerCase().includes('script') || paste.toLowerCase().includes('iframe')) {
+                      setErrorMessage("HTML, script and iframe tags are not permitted.");
+                    }
+                    setPassword(sanitizePassword(password + clean));
+                  }}
                   onChange={(e) => {
                     const clean = sanitizePassword(e.target.value);
                     if (e.target.value.includes('<') || e.target.value.toLowerCase().includes('script') || e.target.value.toLowerCase().includes('iframe')) {
