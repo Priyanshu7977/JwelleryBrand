@@ -44,6 +44,10 @@
     font-family: 'Montserrat', sans-serif;
     letter-spacing: 0.08em;
   }
+
+  .font-zapfino {
+    font-family: 'Zapfino', 'Alex Brush', 'Great Vibes', 'Pinyon Script', 'Playfair Display', cursive, serif !important;
+  }
 }
 
 /* Hardware Acceleration & Butter-smooth 60-120fps Rendering */

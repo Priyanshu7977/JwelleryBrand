@@ -80,6 +80,7 @@ export default {
         sans: ['"Montserrat"', 'Inter', 'system-ui', 'sans-serif'],
         serif: ['"Montserrat"', 'Cinzel', '"Cormorant Garamond"', 'serif'],
         display: ['"Montserrat"', 'Cinzel', 'sans-serif'],
+        zapfino: ['"Zapfino"', '"Alex Brush"', '"Great Vibes"', '"Pinyon Script"', 'cursive', 'serif'],
       },
       letterSpacing: {
         'widest-luxury': '0.25em',
