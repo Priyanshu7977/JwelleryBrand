@@ -301,10 +301,20 @@ export const ContactPage: React.FC = () => {
                   <input
                     type="text"
                     value={formData.name}
+                    onBeforeInput={(e: any) => {
+                      if (e.data && /[0-9]/.test(e.data)) {
+                        e.preventDefault();
+                      }
+                    }}
                     onKeyDown={(e) => {
                       if (/[0-9]/.test(e.key) && !e.ctrlKey && !e.metaKey) {
                         e.preventDefault();
                       }
+                    }}
+                    onInput={(e: React.FormEvent<HTMLInputElement>) => {
+                      const clean = e.currentTarget.value.replace(/[^a-zA-Z\s'-]/g, '');
+                      e.currentTarget.value = clean;
+                      setFormData(prev => ({ ...prev, name: clean }));
                     }}
                     onPaste={(e) => {
                       e.preventDefault();
@@ -318,6 +328,7 @@ export const ContactPage: React.FC = () => {
                     }}
                     placeholder="e.g. Radhika Sharma"
                     required
+                    autoComplete="name"
                     pattern="[a-zA-Z\s'-]+"
                     title="Full name must only contain letters"
                     className="w-full px-4 py-2.5 rounded-xl bg-pearl-50 border border-champagne-300/70 text-xs text-obsidian focus:outline-none focus:border-gold-dark transition-all"
@@ -333,6 +344,7 @@ export const ContactPage: React.FC = () => {
                       onChange={(e) => setFormData({ ...formData, email: e.target.value.trim() })}
                       placeholder="you@example.com"
                       required
+                      autoComplete="email"
                       className="w-full px-4 py-2.5 rounded-xl bg-pearl-50 border border-champagne-300/70 text-xs text-obsidian focus:outline-none focus:border-gold-dark transition-all"
                     />
                   </div>
@@ -346,10 +358,20 @@ export const ContactPage: React.FC = () => {
                       type="tel"
                       inputMode="tel"
                       value={formData.phone}
+                      onBeforeInput={(e: any) => {
+                        if (e.data && /[a-zA-Z]/.test(e.data)) {
+                          e.preventDefault();
+                        }
+                      }}
                       onKeyDown={(e) => {
                         if (/[a-zA-Z]/.test(e.key) && !e.ctrlKey && !e.metaKey) {
                           e.preventDefault();
                         }
+                      }}
+                      onInput={(e: React.FormEvent<HTMLInputElement>) => {
+                        const clean = e.currentTarget.value.replace(/[^0-9+\s-]/g, '').slice(0, 16);
+                        e.currentTarget.value = clean;
+                        setFormData(prev => ({ ...prev, phone: clean }));
                       }}
                       onPaste={(e) => {
                         e.preventDefault();
@@ -362,6 +384,7 @@ export const ContactPage: React.FC = () => {
                         setFormData({ ...formData, phone: numericOnly });
                       }}
                       placeholder="+91 98765 43210"
+                      autoComplete="tel"
                       pattern="[0-9+\s-]{10,16}"
                       title="Phone number must only contain digits"
                       className="w-full px-4 py-2.5 rounded-xl bg-pearl-50 border border-champagne-300/70 text-xs text-obsidian focus:outline-none focus:border-gold-dark transition-all"
