@@ -52,28 +52,30 @@ export const LuxuryStardustCursor: React.FC = () => {
 
     const handleMouseMove = (e: MouseEvent) => {
       const dist = Math.hypot(e.clientX - lastX, e.clientY - lastY);
-      // High distance threshold to prevent clustering and ropes
-      if (dist < 38) return;
+      if (dist < 4) return; // throttle small movements
 
       lastX = e.clientX;
       lastY = e.clientY;
 
-      // Spawn only 1 tiny micro-glint
-      const baseColor = GOLD_COLORS[Math.floor(Math.random() * GOLD_COLORS.length)];
-      particles.push({
-        x: e.clientX + (Math.random() - 0.5) * 2,
-        y: e.clientY + (Math.random() - 0.5) * 2,
-        size: Math.random() * 0.8 + 0.8, // subtle 0.8 - 1.6px diamond speck
-        speedX: (Math.random() - 0.5) * 0.3,
-        speedY: (Math.random() - 0.5) * 0.3,
-        color: baseColor,
-        alpha: 0.85,
-        decay: 0.065, // flashes and dissolves in ~0.25 seconds (15 frames)
-      });
+      // Spawn 2-3 stardust sparks
+      const count = Math.min(3, Math.floor(dist / 8) + 1);
+      for (let i = 0; i < count; i++) {
+        const baseColor = GOLD_COLORS[Math.floor(Math.random() * GOLD_COLORS.length)];
+        particles.push({
+          x: e.clientX + (Math.random() - 0.5) * 8,
+          y: e.clientY + (Math.random() - 0.5) * 8,
+          size: Math.random() * 2.5 + 1.2,
+          speedX: (Math.random() - 0.5) * 1.2,
+          speedY: Math.random() * 0.8 + 0.3, // slow gentle fall
+          color: baseColor,
+          alpha: 0.9,
+          decay: Math.random() * 0.025 + 0.02,
+        });
+      }
 
-      // Strict limit: at most 6 particles across the entire screen
-      if (particles.length > 6) {
-        particles = particles.slice(-6);
+      // Limit particle array size
+      if (particles.length > 60) {
+        particles = particles.slice(-60);
       }
     };
 
@@ -98,10 +100,10 @@ export const LuxuryStardustCursor: React.FC = () => {
         ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
         ctx.fill();
 
-        // Tiny elegant 4-point cross glint
-        if (p.size > 1.2 && p.alpha > 0.4) {
-          ctx.strokeStyle = `${p.color}${p.alpha * 0.5})`;
-          ctx.lineWidth = 0.4;
+        // Cross sparkle star flare
+        if (p.size > 2) {
+          ctx.strokeStyle = `${p.color}${p.alpha * 0.6})`;
+          ctx.lineWidth = 0.6;
           ctx.beginPath();
           ctx.moveTo(p.x - p.size * 1.5, p.y);
           ctx.lineTo(p.x + p.size * 1.5, p.y);
