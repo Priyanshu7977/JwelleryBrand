@@ -1,4 +1,6 @@
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
+import { supabase, isSupabaseConfigured } from '../lib/supabase';
+import { sendPasswordResetEmail } from '../services/emailService';
 
 export interface UserProfile {
   id: string;
@@ -310,9 +312,25 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const forgotPassword = async (email: string) => {
-    if (!email || !email.includes('@')) {
+    const cleanEmail = email.trim().toLowerCase();
+    if (!cleanEmail || !cleanEmail.includes('@')) {
       return { success: false };
     }
+
+    // 1. If Supabase is configured, trigger password reset email via Supabase Auth
+    if (isSupabaseConfigured() && supabase) {
+      try {
+        await supabase.auth.resetPasswordForEmail(cleanEmail, {
+          redirectTo: `${window.location.origin}/login`,
+        });
+      } catch (err) {
+        console.warn('[AuthContext] Supabase resetPassword attempt:', err);
+      }
+    }
+
+    // 2. Dispatch transactional email via Resend / internal engine
+    sendPasswordResetEmail(cleanEmail).catch(() => {});
+
     return { success: true };
   };
 

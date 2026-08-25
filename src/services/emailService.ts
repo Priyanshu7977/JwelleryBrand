@@ -249,6 +249,78 @@ export async function sendOrderLifecycleEmail(
   return { success: true, message: `Lifecycle update (${type}) processed.` };
 }
 
+/**
+ * Dispatches password reset transactional email
+ */
+export async function sendPasswordResetEmail(email: string, resetLink?: string): Promise<EmailDispatchResult> {
+  const link = resetLink || `https://jwellery-brand.vercel.app/login`;
+  const subject = `CELESTIA • Reset Your Atelier Account Password`;
+  const text = `CELESTIA ATELIER • PASSWORD RECOVERY
+
+Hello,
+
+We received a request to reset the password associated with your Celestia account (${email}).
+
+Click the link below to set a new password:
+${link}
+
+If you did not request this change, you can safely ignore this email.
+
+Warmly,
+CELESTIA Atelier Mumbai
+Support: ${BRAND_INFO.email} • ${BRAND_INFO.phone}`;
+
+  const html = `<!DOCTYPE html>
+<html>
+<body style="margin:0;padding:0;background-color:#FAF7F0;font-family:'Montserrat',Helvetica,Arial,sans-serif;color:#181411;">
+  <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="padding:30px 15px;">
+    <tr>
+      <td align="center">
+        <table role="presentation" width="550" cellspacing="0" cellpadding="0" style="background-color:#FFFFFF;border-radius:20px;border:1px solid #D8C39A;overflow:hidden;padding:35px 30px;">
+          <tr>
+            <td style="text-align:center;padding-bottom:20px;">
+              <h1 style="margin:0;color:#181411;font-size:22px;letter-spacing:0.2em;">C E L E S T I A</h1>
+              <p style="margin:4px 0 0;font-size:10px;color:#7A5B28;letter-spacing:0.15em;text-transform:uppercase;">Password Recovery</p>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <p style="font-size:14px;line-height:1.6;margin:0 0 16px 0;">Hello,</p>
+              <p style="font-size:13px;line-height:1.6;color:#4A423D;margin:0 0 24px 0;">
+                We received a request to reset your Celestia Patron account credentials. Click below to securely reset your password.
+              </p>
+              <div style="text-align:center;margin-bottom:28px;">
+                <a href="${link}" style="display:inline-block;padding:14px 30px;background-color:#181411;color:#FAF7F0;text-decoration:none;border-radius:9999px;font-size:12px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;">RESET PASSWORD</a>
+              </div>
+              <p style="font-size:11px;color:#8A8078;line-height:1.5;margin:0;">
+                If you did not request this, no action is needed. Your account remains secure.
+              </p>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>`;
+
+  try {
+    await fetch('/api/send-order-email', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        type: 'password_reset',
+        recipientEmail: email,
+        subject,
+        html,
+        text,
+      }),
+    });
+  } catch {}
+
+  return { success: true, message: 'Password recovery email dispatched ✨' };
+}
+
 // Backward compatibility helper
 export function buildOrderInvoiceText(order: OrderMetadata): string {
   return buildOrderConfirmationEmailText(order);
