@@ -258,14 +258,20 @@ export const OrderSuccessPage: React.FC = () => {
                 <span>Open in Gmail</span>
               </a>
 
+              {/* Customer WhatsApp Notification Automation Link (Directed to User's Entered Phone Number) */}
               <a
-                href={`https://wa.me/917718825792?text=${encodeURIComponent(`Hello Celestia Atelier! ✨\n\nI just placed Order *#${order.orderNumber}* on your website for ₹${order.total}.\n\n*Order Details:*\n• Customer: ${order.customer.name}\n• Phone: ${order.customer.phone}\n• Payment: ${order.paymentMethod}\n• Status: ${order.financialStatus.toUpperCase()}\n\nPlease confirm my order and share dispatch tracking here. Thank you! 💎`)}`}
+                href={`https://wa.me/${(() => {
+                  const digits = (order.customer.phone || '').replace(/\D/g, '');
+                  if (digits.length === 10) return `91${digits}`;
+                  if (digits.length === 12 && digits.startsWith('91')) return digits;
+                  return digits || '917718825792';
+                })()}?text=${encodeURIComponent(`*CELESTIA ATELIER • ORDER CONFIRMATION* ✨\n\nDear ${order.customer.name},\n\nThank you for choosing CELESTIA. Your order has been successfully placed and confirmed with our Mumbai Atelier!\n\n📋 *Order Summary:*\n• Order ID: #${order.orderNumber}\n• Total Amount: ₹${order.total}\n• Payment Method: ${order.paymentMethod} (${order.financialStatus.toUpperCase()})\n• Estimated Delivery: ${order.estimatedDelivery?.estimatedDateFormatted || '2-3 Business Days'}\n• Tracking AWB: ${order.trackingNumber || 'MUM-EXP-LIVE'}\n\n📦 *Track your order live:*\nhttps://jwellery-brand.vercel.app/order-tracking?id=${order.orderNumber}\n\n📄 *PDF Tax Invoice:* Available in your account & online portal.\n\nWarm regards,\nCELESTIA Atelier Mumbai 💎`)}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="px-3.5 py-1.5 rounded-full bg-emerald-800 hover:bg-emerald-900 text-pearl-50 text-xs font-mono font-bold transition-all flex items-center gap-1.5 shadow-xs"
               >
                 <WhatsAppIcon className="w-3.5 h-3.5" />
-                <span>Notify via WhatsApp (+91 7718825792)</span>
+                <span>Send to My WhatsApp (+91 {order.customer.phone.replace(/\D/g, '').slice(-10)})</span>
               </a>
 
               <button

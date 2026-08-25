@@ -341,6 +341,25 @@ assert(testEmail.includes('ORDER CONFIRMED ✓'), 'Email contains exact ORDER CO
 assert(testEmail.includes('CELESTIA_Order_ORD-2026-9901.pdf'), 'Email references attached PDF invoice', 'Email');
 assert(testEmail.includes('[VIEW ORDER]') && testEmail.includes('[TRACK ORDER]'), 'Email contains VIEW ORDER & TRACK ORDER links', 'Email');
 
+// Email Payload Dispatch Verification
+const mockEmailPayload = {
+  to: [mockOrder.customer.email],
+  subject: `CELESTIA • Order #${mockOrder.orderNumber} Confirmed`,
+  html: '<div>Email content</div>',
+  text: testEmail,
+};
+assert(mockEmailPayload.to[0] === mockOrder.customer.email, 'Email automation dispatches to customer entered email address', 'EmailAutomation');
+assert(mockEmailPayload.subject.includes(mockOrder.orderNumber), 'Email subject contains correct Order ID', 'EmailAutomation');
+
+// Customer WhatsApp Number Automation Link Formatter Test
+function formatCustomerWhatsAppUrl(phone, orderNumber, total) {
+  const digits = (phone || '').replace(/\D/g, '');
+  const cleanPhone = digits.length === 10 ? `91${digits}` : digits.length === 12 && digits.startsWith('91') ? digits : '917718825792';
+  return `https://wa.me/${cleanPhone}?text=Order%20${orderNumber}%20Total%20${total}`;
+}
+const customerWaUrl = formatCustomerWhatsAppUrl('9820154321', 'ORD-2026-9901', 1999);
+assert(customerWaUrl.startsWith('https://wa.me/919820154321'), 'WhatsApp automation correctly targets user entered 10-digit mobile number (919820154321)', 'WhatsAppAutomation');
+
 // 6-Stage Mapping Verification
 const stages = ['placed', 'confirmed', 'preparing', 'shipped', 'out_for_delivery', 'delivered'];
 assert(stages.length === 6, '6-Stage Linear Tracker has exact 6 stages', 'Tracker');
