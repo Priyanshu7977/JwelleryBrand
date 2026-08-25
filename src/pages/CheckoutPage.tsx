@@ -26,7 +26,12 @@ import {
   Tag,
   Zap,
   Clock,
-  Shield
+  Shield,
+  Smartphone,
+  Building2,
+  ChevronRight,
+  AlertCircle,
+  HelpCircle
 } from 'lucide-react';
 
 export const CheckoutPage: React.FC = () => {
@@ -56,10 +61,19 @@ export const CheckoutPage: React.FC = () => {
   const [pincode, setPincode] = useState(user?.savedAddresses?.[0]?.pincode || '400001');
   
   const [shippingMethod, setShippingMethod] = useState<'standard' | 'same-day'>('standard');
-  const [paymentMethod, setPaymentMethod] = useState<'upi' | 'card' | 'cod' | 'whatsapp'>('upi');
+  const [paymentMethod, setPaymentMethod] = useState<'upi' | 'card' | 'simpl' | 'cod' | 'whatsapp'>('upi');
+  const [selectedUpiApp, setSelectedUpiApp] = useState<'gpay' | 'phonepe' | 'paytm' | 'cred' | 'qr'>('gpay');
   const [upiCopied, setUpiCopied] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
   const [couponCodeInput, setCouponCodeInput] = useState('');
+  const [showQrModal, setShowQrModal] = useState(false);
+
+  // Card Form State
+  const [cardNumber, setCardNumber] = useState('');
+  const [cardExpiry, setCardExpiry] = useState('');
+  const [cardCvv, setCardCvv] = useState('');
+  const [cardName, setCardName] = useState('');
+  const [selectedBank, setSelectedBank] = useState('HDFC');
 
   // Sync user profile if available
   useEffect(() => {
@@ -100,15 +114,40 @@ export const CheckoutPage: React.FC = () => {
     } else if (pin.startsWith('380')) {
       setCity('Ahmedabad');
       setState('Gujarat');
+    } else if (pin.startsWith('411')) {
+      setCity('Pune');
+      setState('Maharashtra');
+    } else if (pin.startsWith('302')) {
+      setCity('Jaipur');
+      setState('Rajasthan');
     }
   };
 
   const isMumbai = pincode.startsWith('400') || pincode.startsWith('401') || city.toLowerCase().includes('mumbai');
 
+  // Bonkers Corner Style Dynamic Pricing & Discounts
   const freeShippingThreshold = BRAND_INFO.freeShippingThreshold || 999;
   const shippingCost = finalPayable >= freeShippingThreshold || finalPayable === 0 ? 0 : 99;
   const sameDayExtra = shippingMethod === 'same-day' ? 100 : 0;
-  const grandTotal = finalPayable + shippingCost + sameDayExtra;
+  
+  // Extra ₹50 Instant Discount for UPI/Prepaid payments (Like Bonkers Corner / GoKwik)
+  const upiInstantDiscount = paymentMethod === 'upi' && finalPayable >= 200 ? 50 : 0;
+  
+  const grandTotal = Math.max(0, finalPayable - upiInstantDiscount + shippingCost + sameDayExtra);
+
+  // Dynamic UPI Deep Link
+  const upiDeepLink = `upi://pay?pa=7718825792@okaxis&pn=Celestia%20Luxury%20Atelier&am=${grandTotal}&cu=INR&tn=Celestia%20Order`;
+  const dynamicQrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${encodeURIComponent(upiDeepLink)}&margin=8`;
+
+  // Detect Card Brand
+  const getCardBrand = (num: string) => {
+    const clean = num.replace(/\D/g, '');
+    if (clean.startsWith('4')) return 'Visa';
+    if (/^(5[1-5]|2[2-7])/.test(clean)) return 'MasterCard';
+    if (/^(60|65|81|82|508)/.test(clean)) return 'RuPay';
+    if (/^(34|37)/.test(clean)) return 'Amex';
+    return null;
+  };
 
   const handleCopyUPI = () => {
     navigator.clipboard.writeText('7718825792@okaxis');
@@ -160,7 +199,7 @@ export const CheckoutPage: React.FC = () => {
 
     const cleanStreet = sanitizeAddressText(street).trim();
     if (!cleanStreet || cleanStreet.length < 5 || !pincode.trim() || pincode.replace(/\D/g, '').length !== 6) {
-      showToast("Please fill in a valid delivery address (HTML, scripts & iframes not allowed) and 6-digit PIN code.");
+      showToast("Please fill in a valid delivery address and 6-digit PIN code.");
       return;
     }
 
@@ -184,10 +223,10 @@ export const CheckoutPage: React.FC = () => {
 
       const newOrder = await createOrder({
         customer: {
-          name,
-          email,
-          phone,
-          address: `${street}, ${city}, ${state} - ${pincode}`,
+          name: cleanName,
+          email: cleanEmail,
+          phone: cleanPhoneDigits,
+          address: `${cleanStreet}, ${city}, ${state} - ${pincode}`,
         },
         items: orderItems,
         subtotal,
@@ -227,7 +266,7 @@ export const CheckoutPage: React.FC = () => {
           </div>
           <Link
             to="/shop"
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-obsidian text-pearl-100 text-xs uppercase tracking-widest font-bold hover:bg-obsidian-200 transition-all shadow-md"
+            className="inline-flex items-center gap-2 px-6 py-3.5 rounded-full bg-obsidian text-pearl-100 text-xs uppercase tracking-widest font-bold hover:bg-obsidian-200 transition-all shadow-md"
           >
             <span>Explore Collection</span>
             <ArrowRight className="w-4 h-4" />
@@ -238,7 +277,7 @@ export const CheckoutPage: React.FC = () => {
   }
 
   return (
-    <div className="w-full min-h-screen bg-pearl-100 pt-32 sm:pt-36 md:pt-40 pb-32 px-4 sm:px-8 md:px-12 lg:px-20 selection:bg-champagne-300">
+    <div className="w-full min-h-screen bg-pearl-100 pt-32 sm:pt-36 md:pt-40 pb-36 px-4 sm:px-8 md:px-12 lg:px-20 selection:bg-champagne-300">
       <div className="max-w-7xl mx-auto space-y-8 sm:space-y-10">
         
         {/* Back Button & Header */}
@@ -246,39 +285,58 @@ export const CheckoutPage: React.FC = () => {
           <div className="space-y-1.5">
             <div className="flex items-center gap-2">
               <span className="text-[10px] sm:text-xs uppercase font-mono tracking-widest text-gold-dark font-bold">
-                Frictionless Checkout Portal
+                1-Click Fast Checkout Portal
               </span>
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
-              <span className="text-[11px] text-emerald-800 font-sans font-semibold">256-Bit SSL Encrypted</span>
+              <span className="px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 text-[10px] font-mono font-bold flex items-center gap-1">
+                <Zap className="w-3 h-3 text-emerald-600" />
+                <span>GoKwik Powered</span>
+              </span>
             </div>
-            <h1 className="site-main-title text-obsidian font-serif-luxury">
-              Express <span className="font-zapfino text-champagne-400 font-normal tracking-normal lowercase inline-block px-1">checkout</span>
+            <h1 className="font-serif-luxury text-3xl sm:text-4xl text-obsidian font-bold">
+              Complete Your Order
             </h1>
           </div>
 
           <Link
-            to="/shop"
-            className="inline-flex items-center gap-2 text-xs font-mono uppercase text-obsidian/70 hover:text-gold-dark transition-colors self-start sm:self-auto"
+            to="/cart"
+            className="inline-flex items-center gap-2 text-xs uppercase tracking-wider text-obsidian-soft hover:text-gold-dark transition-colors font-semibold"
           >
             <ArrowLeft className="w-4 h-4" />
-            <span>Return to Boutique</span>
+            <span>Return to Curated Bag</span>
           </Link>
         </div>
 
-        {/* 2-Column Responsive Checkout Grid */}
+        {/* Dynamic Bonkers Corner Style Trust Banner */}
+        <div className="p-3.5 sm:p-4 rounded-2xl bg-gradient-to-r from-champagne-100/90 via-pearl-50 to-champagne-100/90 border border-champagne-300/80 shadow-xs flex flex-wrap items-center justify-between gap-3 text-xs">
+          <div className="flex items-center gap-2 text-obsidian font-medium">
+            <Zap className="w-4 h-4 text-gold-dark shrink-0" />
+            <span><strong>Special Offer:</strong> Extra ₹50 Instant Discount automatically on <strong>UPI / Prepaid</strong></span>
+          </div>
+          <div className="flex items-center gap-3 text-[11px] font-mono text-obsidian/70">
+            <span className="flex items-center gap-1"><ShieldCheck className="w-3.5 h-3.5 text-emerald-700" /> 100% Secure Gateway</span>
+            <span className="hidden md:inline">•</span>
+            <span className="hidden md:flex items-center gap-1"><Truck className="w-3.5 h-3.5 text-gold-dark" /> Same-Day Mumbai Air Dispatch</span>
+          </div>
+        </div>
+
+        {/* Main 2-Column Checkout Layout */}
         <form onSubmit={handlePlaceOrder} className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
           
-          {/* LEFT COLUMN: Customer Details & Payment Options (7 Cols) */}
+          {/* LEFT COLUMN: Steps 1, 2, 3 (7 Cols) */}
           <div className="lg:col-span-7 space-y-6 sm:space-y-8">
             
-            {/* Step 1: Customer Contact & Delivery Info */}
+            {/* Step 1: Customer Contact & Delivery Details */}
             <div className="bg-white/95 p-6 sm:p-8 rounded-3xl border border-champagne-300/60 shadow-xs space-y-5">
               <div className="flex items-center justify-between border-b border-champagne-200 pb-3">
                 <div className="flex items-center gap-2 text-sm uppercase font-mono tracking-wider text-gold-dark font-bold">
                   <User className="w-4 h-4" />
-                  <span>1. Contact & Shipping Address</span>
+                  <span>1. Delivery Address & Contact</span>
                 </div>
-                <span className="text-[11px] text-obsidian-soft font-sans font-medium">Guest or Member</span>
+                {user && (
+                  <span className="text-[10px] uppercase font-mono text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full font-bold">
+                    Patron Profile Loaded
+                  </span>
+                )}
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -292,35 +350,14 @@ export const CheckoutPage: React.FC = () => {
                     <input
                       type="text"
                       required
-                      placeholder="e.g. Priyanshu Sharma"
+                      placeholder="e.g. Radhika Sharma"
                       value={name}
-                      onBeforeInput={(e: any) => {
-                        if (e.data && /[0-9]/.test(e.data)) {
-                          e.preventDefault();
-                        }
-                      }}
-                      onKeyDown={(e) => {
-                        // Allow control/editing keys: Backspace, Delete, Arrows, Tab, Enter, etc.
-                        if (e.key.length > 1 || e.ctrlKey || e.metaKey) return;
-                        if (!/[a-zA-Z\s'-]/.test(e.key)) {
-                          e.preventDefault();
-                        }
-                      }}
                       onInput={(e: React.FormEvent<HTMLInputElement>) => {
                         const clean = e.currentTarget.value.replace(/[^a-zA-Z\s'-]/g, '');
                         e.currentTarget.value = clean;
                         setName(clean);
                       }}
-                      onPaste={(e) => {
-                        e.preventDefault();
-                        const paste = e.clipboardData.getData('text');
-                        const clean = paste.replace(/[^a-zA-Z\s'-]/g, '');
-                        setName((name + clean).replace(/[^a-zA-Z\s'-]/g, ''));
-                      }}
                       onChange={(e) => setName(e.target.value.replace(/[^a-zA-Z\s'-]/g, ''))}
-                      autoComplete="name"
-                      pattern="[a-zA-Z\s'-]+"
-                      title="Name must only contain letters"
                       className="w-full bg-transparent text-xs sm:text-sm font-sans text-obsidian focus:outline-none placeholder:text-obsidian/40"
                     />
                   </div>
@@ -338,7 +375,6 @@ export const CheckoutPage: React.FC = () => {
                       placeholder="name@email.com"
                       value={email}
                       onChange={(e) => setEmail(e.target.value.replace(/[<>'"\s]/g, '').trim())}
-                      autoComplete="email"
                       className="w-full bg-transparent text-xs sm:text-sm font-sans text-obsidian focus:outline-none placeholder:text-obsidian/40"
                     />
                   </div>
@@ -355,35 +391,14 @@ export const CheckoutPage: React.FC = () => {
                       type="tel"
                       inputMode="tel"
                       required
-                      placeholder="+91 98765 43210"
+                      placeholder="9876543210"
                       value={phone}
-                      onBeforeInput={(e: any) => {
-                        if (e.data && /[a-zA-Z]/.test(e.data)) {
-                          e.preventDefault();
-                        }
-                      }}
-                      onKeyDown={(e) => {
-                        // Allow control/editing keys: Backspace, Delete, Arrows, Tab, Enter, etc.
-                        if (e.key.length > 1 || e.ctrlKey || e.metaKey) return;
-                        if (!/[0-9+\s-]/.test(e.key)) {
-                          e.preventDefault();
-                        }
-                      }}
                       onInput={(e: React.FormEvent<HTMLInputElement>) => {
-                        const clean = e.currentTarget.value.replace(/[^0-9+\s-]/g, '').slice(0, 16);
+                        const clean = e.currentTarget.value.replace(/[^0-9]/g, '').slice(0, 10);
                         e.currentTarget.value = clean;
                         setPhone(clean);
                       }}
-                      onPaste={(e) => {
-                        e.preventDefault();
-                        const paste = e.clipboardData.getData('text');
-                        const clean = paste.replace(/[^0-9+\s-]/g, '').slice(0, 16);
-                        setPhone(clean);
-                      }}
-                      onChange={(e) => setPhone(e.target.value.replace(/[^0-9+\s-]/g, '').slice(0, 16))}
-                      autoComplete="tel"
-                      pattern="[0-9+\s-]{10,16}"
-                      title="Phone number must only contain digits"
+                      onChange={(e) => setPhone(e.target.value.replace(/[^0-9]/g, '').slice(0, 10))}
                       className="w-full bg-transparent text-xs sm:text-sm font-sans text-obsidian focus:outline-none placeholder:text-obsidian/40"
                     />
                   </div>
@@ -400,22 +415,6 @@ export const CheckoutPage: React.FC = () => {
                       required
                       placeholder="e.g. 402, Sea Crest Towers, Worli Sea Face"
                       value={street}
-                      onBeforeInput={(e: any) => {
-                        if (e.data && /[<>]/.test(e.data)) {
-                          e.preventDefault();
-                        }
-                      }}
-                      onKeyDown={(e) => {
-                        if (e.key === '<' || e.key === '>') {
-                          e.preventDefault();
-                        }
-                      }}
-                      onPaste={(e) => {
-                        e.preventDefault();
-                        const paste = e.clipboardData.getData('text');
-                        const clean = sanitizeAddressText(paste);
-                        setStreet(sanitizeAddressText(street + clean));
-                      }}
                       onInput={(e: React.FormEvent<HTMLInputElement>) => {
                         const clean = sanitizeAddressText(e.currentTarget.value);
                         e.currentTarget.value = clean;
@@ -438,18 +437,6 @@ export const CheckoutPage: React.FC = () => {
                     placeholder="400001"
                     maxLength={6}
                     value={pincode}
-                    onBeforeInput={(e: any) => {
-                      if (e.data && /[^0-9]/.test(e.data)) {
-                        e.preventDefault();
-                      }
-                    }}
-                    onKeyDown={(e) => {
-                      // Allow control/editing keys: Backspace, Delete, Arrows, Tab, Enter, etc.
-                      if (e.key.length > 1 || e.ctrlKey || e.metaKey) return;
-                      if (!/[0-9]/.test(e.key)) {
-                        e.preventDefault();
-                      }
-                    }}
                     onInput={(e: React.FormEvent<HTMLInputElement>) => {
                       const clean = e.currentTarget.value.replace(/\D/g, '').slice(0, 6);
                       e.currentTarget.value = clean;
@@ -472,7 +459,7 @@ export const CheckoutPage: React.FC = () => {
               </div>
             </div>
 
-            {/* Step 2: Delivery Method Selection */}
+            {/* Step 2: Delivery Speed Selection */}
             <div className="bg-white/95 p-6 sm:p-8 rounded-3xl border border-champagne-300/60 shadow-xs space-y-4">
               <div className="flex items-center gap-2 text-sm uppercase font-mono tracking-wider text-gold-dark font-bold border-b border-champagne-200 pb-3">
                 <Truck className="w-4 h-4" />
@@ -540,28 +527,28 @@ export const CheckoutPage: React.FC = () => {
               </div>
             </div>
 
-            {/* Step 3: GoKwik-Style Payment Method Selection */}
-            <div className="bg-white/95 p-6 sm:p-8 rounded-3xl border border-champagne-300/60 shadow-xs space-y-4">
+            {/* Step 3: Bonkers Corner Style Payment Gateway */}
+            <div className="bg-white/95 p-6 sm:p-8 rounded-3xl border border-champagne-300/60 shadow-xs space-y-5">
               <div className="flex items-center justify-between border-b border-champagne-200 pb-3">
                 <div className="flex items-center gap-2 text-sm uppercase font-mono tracking-wider text-gold-dark font-bold">
                   <CreditCard className="w-4 h-4" />
-                  <span>3. Payment Gateway</span>
+                  <span>3. Payment Gateway & Options</span>
                 </div>
-                <div className="flex items-center gap-1 text-[10px] font-mono text-emerald-800">
-                  <ShieldCheck className="w-3.5 h-3.5" />
-                  <span>Verified & Protected</span>
+                <div className="flex items-center gap-1.5 text-[10px] font-mono text-emerald-800 bg-emerald-50 px-2.5 py-1 rounded-full font-bold">
+                  <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />
+                  <span>256-Bit Bank Grade SSL</span>
                 </div>
               </div>
 
               {/* Payment Methods Grid */}
-              <div className="space-y-3">
+              <div className="space-y-3.5">
                 
-                {/* 1. UPI Fast Pay */}
+                {/* 1. UPI Fast Pay (Bonkers Corner Top Option) */}
                 <div
                   onClick={() => setPaymentMethod('upi')}
-                  className={`p-4 rounded-2xl border transition-all cursor-pointer space-y-3 ${
+                  className={`p-4 sm:p-5 rounded-2xl border transition-all cursor-pointer space-y-4 ${
                     paymentMethod === 'upi'
-                      ? 'border-gold-dark bg-champagne-100/50 shadow-sm'
+                      ? 'border-gold-dark bg-gradient-to-b from-champagne-100/70 to-pearl-50 shadow-md ring-1 ring-gold-dark/40'
                       : 'border-champagne-300/80 hover:bg-pearl-50'
                   }`}
                 >
@@ -575,71 +562,107 @@ export const CheckoutPage: React.FC = () => {
                         className="accent-gold-dark"
                       />
                       <div>
-                        <p className="font-serif-luxury text-sm text-obsidian font-bold">UPI Fast Pay (GPay / PhonePe / Paytm / QR)</p>
-                        <p className="text-xs text-obsidian-soft">Instant verification & faster dispatch</p>
+                        <div className="flex items-center gap-2">
+                          <p className="font-serif-luxury text-sm sm:text-base text-obsidian font-bold">UPI Instant Pay</p>
+                          <span className="text-[10px] uppercase font-mono tracking-wider bg-emerald-600 text-white px-2 py-0.5 rounded-full font-bold">
+                            Extra ₹50 Off
+                          </span>
+                        </div>
+                        <p className="text-xs text-obsidian-soft mt-0.5">Google Pay, PhonePe, Paytm, CRED, BHIM & QR Code</p>
                       </div>
                     </div>
-                    <span className="text-[10px] uppercase font-mono tracking-wider bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded-full font-bold">
-                      Zero Fees
-                    </span>
+                    <Smartphone className="w-5 h-5 text-gold-dark shrink-0" />
                   </div>
 
                   {paymentMethod === 'upi' && (
-                    <div className="p-3.5 bg-white rounded-xl border border-champagne-300/80 space-y-3 animate-fade-in text-xs font-sans">
-                      <div className="flex flex-col sm:flex-row items-center justify-between gap-3 p-3 bg-pearl-50 rounded-lg border border-champagne-200">
-                        <div>
-                          <p className="text-[10px] uppercase font-mono text-obsidian-soft font-bold">Celestia Official Atelier UPI ID:</p>
-                          <p className="font-mono text-sm text-obsidian font-bold">7718825792@okaxis</p>
+                    <div className="p-4 bg-white rounded-2xl border border-champagne-300 shadow-inner space-y-4 animate-fade-in text-xs">
+                      
+                      {/* Popular UPI Apps Intent Buttons (Bonkers Corner Style) */}
+                      <div className="space-y-2">
+                        <p className="text-[11px] font-mono text-obsidian-soft uppercase font-bold tracking-wider">
+                          Select Instant UPI App:
+                        </p>
+                        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                          {[
+                            { id: 'gpay', name: 'Google Pay', icon: '⚡', color: 'border-blue-300 hover:bg-blue-50' },
+                            { id: 'phonepe', name: 'PhonePe', icon: '🟣', color: 'border-purple-300 hover:bg-purple-50' },
+                            { id: 'paytm', name: 'Paytm UPI', icon: '🔵', color: 'border-cyan-300 hover:bg-cyan-50' },
+                            { id: 'cred', name: 'CRED UPI', icon: '💎', color: 'border-amber-300 hover:bg-amber-50' },
+                          ].map((app) => (
+                            <button
+                              key={app.id}
+                              type="button"
+                              onClick={() => setSelectedUpiApp(app.id as any)}
+                              className={`py-2.5 px-3 rounded-xl border flex items-center justify-center gap-2 transition-all font-sans font-bold text-xs cursor-pointer ${
+                                selectedUpiApp === app.id
+                                  ? 'border-gold-dark bg-champagne-100 text-obsidian shadow-sm'
+                                  : `bg-pearl-50 text-obsidian/80 ${app.color}`
+                              }`}
+                            >
+                              <span>{app.icon}</span>
+                              <span>{app.name}</span>
+                            </button>
+                          ))}
                         </div>
-                        <button
-                          type="button"
-                          onClick={handleCopyUPI}
-                          className="px-3.5 py-1.5 bg-obsidian text-pearl-100 text-xs font-mono font-bold rounded-full hover:bg-obsidian-200 transition-colors flex items-center gap-1.5 cursor-pointer shrink-0"
-                        >
-                          {upiCopied ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
-                          <span>{upiCopied ? 'Copied!' : 'Copy UPI ID'}</span>
-                        </button>
                       </div>
-                      <p className="text-[11px] text-obsidian-soft text-center">
-                        You can also pay directly after placing the order via the instant WhatsApp receipt or UPI prompt.
-                      </p>
+
+                      {/* Direct UPI App Trigger / Dynamic QR Code Section */}
+                      <div className="p-4 bg-pearl-50 rounded-xl border border-champagne-200 flex flex-col sm:flex-row items-center justify-between gap-4">
+                        
+                        {/* Dynamic Scannable QR Code */}
+                        <div className="flex flex-col items-center text-center space-y-1.5 shrink-0">
+                          <div className="p-2 bg-white rounded-xl border border-champagne-300 shadow-sm">
+                            <img
+                              src={dynamicQrUrl}
+                              alt="Scan & Pay via Any UPI App"
+                              className="w-28 h-28 object-contain"
+                            />
+                          </div>
+                          <span className="text-[10px] font-mono text-obsidian-soft font-bold">
+                            Scan with Any UPI App
+                          </span>
+                        </div>
+
+                        {/* UPI Details & 1-Click Pay */}
+                        <div className="flex-1 space-y-2.5 text-left w-full">
+                          <div>
+                            <span className="text-[10px] uppercase font-mono text-gold-dark font-bold block">
+                              Celestia Verified Merchant ID:
+                            </span>
+                            <div className="flex items-center justify-between gap-2 mt-1 p-2 bg-white rounded-lg border border-champagne-200">
+                              <span className="font-mono text-xs text-obsidian font-bold">7718825792@okaxis</span>
+                              <button
+                                type="button"
+                                onClick={handleCopyUPI}
+                                className="px-2.5 py-1 bg-obsidian text-pearl-100 text-[11px] font-mono font-bold rounded-md hover:bg-obsidian-200 transition-colors flex items-center gap-1 cursor-pointer shrink-0"
+                              >
+                                {upiCopied ? <Check className="w-3 h-3 text-emerald-400" /> : <Copy className="w-3 h-3" />}
+                                <span>{upiCopied ? 'Copied' : 'Copy'}</span>
+                              </button>
+                            </div>
+                          </div>
+
+                          {/* Mobile Direct Pay Link */}
+                          <a
+                            href={upiDeepLink}
+                            className="w-full py-2 px-4 rounded-xl bg-emerald-800 hover:bg-emerald-900 text-pearl-100 text-xs font-mono font-bold flex items-center justify-center gap-2 transition-all shadow-xs"
+                          >
+                            <Zap className="w-3.5 h-3.5 text-champagne-300" />
+                            <span>Launch {selectedUpiApp.toUpperCase()} on Mobile (₹{grandTotal})</span>
+                          </a>
+                        </div>
+                      </div>
+
                     </div>
                   )}
                 </div>
 
-                {/* 2. Cash on Delivery (COD) */}
-                <div
-                  onClick={() => setPaymentMethod('cod')}
-                  className={`p-4 rounded-2xl border transition-all cursor-pointer ${
-                    paymentMethod === 'cod'
-                      ? 'border-gold-dark bg-champagne-100/50 shadow-sm'
-                      : 'border-champagne-300/80 hover:bg-pearl-50'
-                  }`}
-                >
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-3">
-                      <input
-                        type="radio"
-                        name="paymentMethod"
-                        checked={paymentMethod === 'cod'}
-                        onChange={() => setPaymentMethod('cod')}
-                        className="accent-gold-dark"
-                      />
-                      <div>
-                        <p className="font-serif-luxury text-sm text-obsidian font-bold">Cash on Delivery (COD)</p>
-                        <p className="text-xs text-obsidian-soft">Pay at your doorstep with Cash or UPI upon unboxing</p>
-                      </div>
-                    </div>
-                    <span className="text-xs font-mono text-obsidian font-bold">₹0 Prepay</span>
-                  </div>
-                </div>
-
-                {/* 3. Cards & Net Banking */}
+                {/* 2. Credit & Debit Cards (Razorpay / Cashfree Style) */}
                 <div
                   onClick={() => setPaymentMethod('card')}
-                  className={`p-4 rounded-2xl border transition-all cursor-pointer ${
+                  className={`p-4 sm:p-5 rounded-2xl border transition-all cursor-pointer space-y-4 ${
                     paymentMethod === 'card'
-                      ? 'border-gold-dark bg-champagne-100/50 shadow-sm'
+                      ? 'border-gold-dark bg-gradient-to-b from-champagne-100/70 to-pearl-50 shadow-md ring-1 ring-gold-dark/40'
                       : 'border-champagne-300/80 hover:bg-pearl-50'
                   }`}
                 >
@@ -653,20 +676,101 @@ export const CheckoutPage: React.FC = () => {
                         className="accent-gold-dark"
                       />
                       <div>
-                        <p className="font-serif-luxury text-sm text-obsidian font-bold">Credit / Debit Cards & Net Banking</p>
-                        <p className="text-xs text-obsidian-soft">Visa, Mastercard, RuPay, Diners, American Express</p>
+                        <p className="font-serif-luxury text-sm sm:text-base text-obsidian font-bold">Credit / Debit Card & NetBanking</p>
+                        <p className="text-xs text-obsidian-soft mt-0.5">Visa, Mastercard, RuPay, Amex & 50+ Banks</p>
                       </div>
                     </div>
-                    <CreditCard className="w-5 h-5 text-obsidian/60" />
+                    <CreditCard className="w-5 h-5 text-obsidian/70 shrink-0" />
                   </div>
+
+                  {paymentMethod === 'card' && (
+                    <div className="p-4 bg-white rounded-2xl border border-champagne-300 shadow-inner space-y-3.5 animate-fade-in text-xs">
+                      
+                      <div className="space-y-1">
+                        <label className="text-[10px] uppercase font-mono tracking-wider text-obsidian-soft font-bold block">
+                          Card Number
+                        </label>
+                        <div className="flex items-center gap-2 px-3.5 h-11 bg-pearl-50 rounded-xl border border-champagne-300 focus-within:border-gold-dark">
+                          <CreditCard className="w-4 h-4 text-gold-dark shrink-0" />
+                          <input
+                            type="text"
+                            inputMode="numeric"
+                            placeholder="4532 •••• •••• 8890"
+                            maxLength={19}
+                            value={cardNumber}
+                            onChange={(e) => {
+                              const v = e.target.value.replace(/\D/g, '').slice(0, 16);
+                              const parts = v.match(/.{1,4}/g) || [];
+                              setCardNumber(parts.join(' '));
+                            }}
+                            className="w-full bg-transparent text-xs sm:text-sm font-mono text-obsidian focus:outline-none placeholder:text-obsidian/40"
+                          />
+                          {getCardBrand(cardNumber) && (
+                            <span className="px-2 py-0.5 bg-champagne-200 text-obsidian font-mono text-[10px] font-bold rounded">
+                              {getCardBrand(cardNumber)}
+                            </span>
+                          )}
+                        </div>
+                      </div>
+
+                      <div className="grid grid-cols-2 gap-3">
+                        <div className="space-y-1">
+                          <label className="text-[10px] uppercase font-mono tracking-wider text-obsidian-soft font-bold block">
+                            Expiry (MM/YY)
+                          </label>
+                          <input
+                            type="text"
+                            placeholder="12/28"
+                            maxLength={5}
+                            value={cardExpiry}
+                            onChange={(e) => {
+                              let v = e.target.value.replace(/\D/g, '').slice(0, 4);
+                              if (v.length >= 3) v = `${v.slice(0, 2)}/${v.slice(2)}`;
+                              setCardExpiry(v);
+                            }}
+                            className="w-full h-11 px-3.5 bg-pearl-50 rounded-xl border border-champagne-300 text-xs font-mono text-obsidian focus:outline-none focus:border-gold-dark"
+                          />
+                        </div>
+
+                        <div className="space-y-1">
+                          <label className="text-[10px] uppercase font-mono tracking-wider text-obsidian-soft font-bold flex items-center justify-between">
+                            <span>CVV</span>
+                            <span className="text-[9px] text-obsidian/50">3-4 digits</span>
+                          </label>
+                          <input
+                            type="password"
+                            placeholder="•••"
+                            maxLength={4}
+                            value={cardCvv}
+                            onChange={(e) => setCardCvv(e.target.value.replace(/\D/g, '').slice(0, 4))}
+                            className="w-full h-11 px-3.5 bg-pearl-50 rounded-xl border border-champagne-300 text-xs font-mono text-obsidian focus:outline-none focus:border-gold-dark"
+                          />
+                        </div>
+                      </div>
+
+                      <div className="space-y-1">
+                        <label className="text-[10px] uppercase font-mono tracking-wider text-obsidian-soft font-bold block">
+                          Cardholder Name
+                        </label>
+                        <input
+                          type="text"
+                          placeholder="Name as printed on card"
+                          value={cardName}
+                          onChange={(e) => setCardName(e.target.value.toUpperCase())}
+                          className="w-full h-11 px-3.5 bg-pearl-50 rounded-xl border border-champagne-300 text-xs font-sans text-obsidian focus:outline-none focus:border-gold-dark"
+                        />
+                      </div>
+
+                    </div>
+                  )}
                 </div>
 
-                {/* 4. Instant WhatsApp Concierge */}
+                {/* 3. Pay Later / Simpl Style (Bonkers Corner Feature) */}
                 <div
-                  onClick={() => setPaymentMethod('whatsapp')}
-                  className={`p-4 rounded-2xl border transition-all cursor-pointer ${
-                    paymentMethod === 'whatsapp'
-                      ? 'border-gold-dark bg-champagne-100/50 shadow-sm'
+                  onClick={() => setPaymentMethod('simpl')}
+                  className={`p-4 sm:p-5 rounded-2xl border transition-all cursor-pointer space-y-3 ${
+                    paymentMethod === 'simpl'
+                      ? 'border-gold-dark bg-gradient-to-b from-champagne-100/70 to-pearl-50 shadow-md ring-1 ring-gold-dark/40'
                       : 'border-champagne-300/80 hover:bg-pearl-50'
                   }`}
                 >
@@ -675,17 +779,65 @@ export const CheckoutPage: React.FC = () => {
                       <input
                         type="radio"
                         name="paymentMethod"
-                        checked={paymentMethod === 'whatsapp'}
-                        onChange={() => setPaymentMethod('whatsapp')}
+                        checked={paymentMethod === 'simpl'}
+                        onChange={() => setPaymentMethod('simpl')}
                         className="accent-gold-dark"
                       />
                       <div>
-                        <p className="font-serif-luxury text-sm text-obsidian font-bold">WhatsApp Concierge Assisted Pay</p>
-                        <p className="text-xs text-obsidian-soft">Chat with our Mumbai studio manager for custom billing</p>
+                        <div className="flex items-center gap-2">
+                          <p className="font-serif-luxury text-sm sm:text-base text-obsidian font-bold">Simpl 1-Click Pay Later</p>
+                          <span className="text-[10px] font-mono text-emerald-800 bg-emerald-100 px-2 py-0.5 rounded-full font-bold">
+                            3 Interest-Free Splits
+                          </span>
+                        </div>
+                        <p className="text-xs text-obsidian-soft mt-0.5">Pay in 3 payments of ₹{Math.round(grandTotal / 3)}/month with 0% interest</p>
                       </div>
                     </div>
-                    <MessageCircle className="w-5 h-5 text-emerald-600" />
+                    <span className="text-xs font-mono font-bold text-gold-dark">SIMPL</span>
                   </div>
+                </div>
+
+                {/* 4. Cash on Delivery (COD) */}
+                <div
+                  onClick={() => setPaymentMethod('cod')}
+                  className={`p-4 sm:p-5 rounded-2xl border transition-all cursor-pointer space-y-3 ${
+                    paymentMethod === 'cod'
+                      ? 'border-gold-dark bg-gradient-to-b from-champagne-100/70 to-pearl-50 shadow-md ring-1 ring-gold-dark/40'
+                      : 'border-champagne-300/80 hover:bg-pearl-50'
+                  }`}
+                >
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                      <input
+                        type="radio"
+                        name="paymentMethod"
+                        checked={paymentMethod === 'cod'}
+                        onChange={() => setPaymentMethod('cod')}
+                        className="accent-gold-dark"
+                      />
+                      <div>
+                        <p className="font-serif-luxury text-sm sm:text-base text-obsidian font-bold">Cash on Delivery (COD)</p>
+                        <p className="text-xs text-obsidian-soft mt-0.5">Pay via Cash or UPI at your doorstep upon unboxing</p>
+                      </div>
+                    </div>
+                    <span className="text-xs font-mono text-obsidian font-bold">₹0 Prepay</span>
+                  </div>
+
+                  {paymentMethod === 'cod' && (
+                    <div className="p-3 bg-amber-50 rounded-xl border border-amber-200 text-xs text-amber-900 flex items-center justify-between gap-3 animate-fade-in">
+                      <span>💡 <strong>Tip:</strong> Pay via UPI now to save an extra ₹50 instantly!</span>
+                      <button
+                        type="button"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setPaymentMethod('upi');
+                        }}
+                        className="px-2.5 py-1 rounded-full bg-gold-dark text-pearl-100 text-[10px] font-mono font-bold uppercase shrink-0"
+                      >
+                        Switch to UPI
+                      </button>
+                    </div>
+                  )}
                 </div>
 
               </div>
@@ -699,136 +851,102 @@ export const CheckoutPage: React.FC = () => {
             <div className="bg-white/95 p-6 sm:p-8 rounded-3xl border border-champagne-300/60 shadow-luxury-soft space-y-6">
               
               <div className="flex items-center justify-between border-b border-champagne-200 pb-3">
-                <div className="flex items-center gap-2 text-sm uppercase font-mono tracking-wider text-gold-dark font-bold">
-                  <ShoppingBag className="w-4 h-4" />
-                  <span>Order Summary ({totalItems})</span>
-                </div>
-                <Link to="/cart" className="text-xs font-mono text-obsidian hover:text-gold-dark underline font-bold">
-                  Edit Bag
-                </Link>
+                <span className="text-sm uppercase font-mono tracking-wider text-gold-dark font-bold">
+                  Order Summary ({totalItems} {totalItems === 1 ? 'Item' : 'Items'})
+                </span>
+                <span className="text-xs font-mono text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded-full font-bold">
+                  100% Guaranteed
+                </span>
               </div>
 
-              {/* Items Preview */}
-              <div className="space-y-3 max-h-64 overflow-y-auto pr-1 scrollbar-thin">
+              {/* Items List with Thumbnails */}
+              <div className="max-h-60 overflow-y-auto space-y-3 pr-1 scrollbar-thin">
                 {cart.map((item) => (
-                  <div key={item.product.id} className="flex gap-3 items-center justify-between text-xs">
-                    <div className="flex items-center gap-2.5">
-                      <div className="w-12 h-12 rounded-xl overflow-hidden bg-sand shrink-0 border border-champagne-200">
-                        <img
-                          src={item.product.images.hero}
-                          alt={item.product.title}
-                          className="w-full h-full object-cover"
-                        />
-                      </div>
-                      <div>
-                        <p className="font-serif-luxury text-sm text-obsidian font-bold line-clamp-1">{item.product.title}</p>
-                        <p className="text-[10px] font-mono text-obsidian-soft">Qty: {item.quantity}</p>
-                      </div>
+                  <div key={item.product.id} className="flex items-center gap-3 pb-3 border-b border-champagne-200/50">
+                    <img
+                      src={item.product.images.hero}
+                      alt={item.product.title}
+                      className="w-14 h-14 rounded-xl object-cover bg-sand shrink-0 border border-champagne-300/60"
+                    />
+                    <div className="flex-1 min-w-0">
+                      <p className="font-serif-luxury text-xs text-obsidian font-bold truncate">
+                        {item.product.title}
+                      </p>
+                      <p className="text-[11px] text-obsidian-soft">Qty: {item.quantity}</p>
                     </div>
-                    <span className="font-mono font-bold text-obsidian">₹{item.product.price * item.quantity}</span>
+                    <span className="font-mono text-xs font-bold text-obsidian">
+                      ₹{item.product.price * item.quantity}
+                    </span>
                   </div>
                 ))}
               </div>
 
-              {/* Promo Code Input & Chips */}
-              <div className="pt-2 border-t border-champagne-200 space-y-2">
-                <label className="text-[11px] uppercase font-mono tracking-wider text-obsidian-soft font-bold block">
-                  Discount Code
-                </label>
-                {appliedCoupon ? (
+              {/* Coupon Code Applicator */}
+              <div className="space-y-2 pt-1">
+                <div className="flex gap-2">
+                  <div className="flex-1 flex items-center gap-2 px-3.5 h-11 bg-pearl-50 rounded-xl border border-champagne-300 focus-within:border-gold-dark">
+                    <Tag className="w-4 h-4 text-gold-dark shrink-0" />
+                    <input
+                      type="text"
+                      placeholder="Coupon Code (e.g. CELESTIA10)"
+                      value={couponCodeInput}
+                      onChange={(e) => setCouponCodeInput(e.target.value.toUpperCase())}
+                      className="w-full bg-transparent text-xs font-mono text-obsidian focus:outline-none placeholder:text-obsidian/40"
+                    />
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => handleApplyCoupon(couponCodeInput)}
+                    className="px-5 h-11 bg-champagne-200 hover:bg-gold-dark hover:text-pearl-50 text-obsidian text-xs uppercase font-mono font-bold rounded-xl transition-colors cursor-pointer"
+                  >
+                    Apply
+                  </button>
+                </div>
+
+                {appliedCoupon && (
                   <div className="flex items-center justify-between p-2.5 bg-emerald-50 rounded-xl border border-emerald-200 text-xs">
                     <div className="flex items-center gap-1.5 text-emerald-800 font-medium">
-                      <Tag className="w-3.5 h-3.5 text-emerald-600" />
-                      <span><strong>{appliedCoupon.code}</strong> (-₹{discountAmount})</span>
+                      <Check className="w-4 h-4 text-emerald-600" />
+                      <span><strong>{appliedCoupon.code}</strong> applied (-₹{discountAmount})</span>
                     </div>
                     <button
                       type="button"
                       onClick={removeCoupon}
-                      className="text-xs text-rose-600 font-bold hover:underline cursor-pointer"
+                      className="text-xs text-rose-600 hover:underline font-bold cursor-pointer"
                     >
                       Remove
                     </button>
                   </div>
-                ) : (
-                  <div className="space-y-2">
-                    <div className="flex items-center gap-2">
-                      <input
-                        type="text"
-                        placeholder="e.g. CELESTIA10"
-                        value={couponCodeInput}
-                        onBeforeInput={(e: any) => {
-                          if (e.data && /[^a-zA-Z0-9]/.test(e.data)) {
-                            e.preventDefault();
-                          }
-                        }}
-                        onKeyDown={(e) => {
-                          if (e.key.length > 1 || e.ctrlKey || e.metaKey) return;
-                          if (!/[a-zA-Z0-9]/.test(e.key)) {
-                            e.preventDefault();
-                          }
-                        }}
-                        onPaste={(e) => {
-                          e.preventDefault();
-                          const paste = e.clipboardData.getData('text');
-                          const clean = paste.replace(/[^a-zA-Z0-9]/g, '').toUpperCase().slice(0, 20);
-                          setCouponCodeInput(clean);
-                        }}
-                        onInput={(e: React.FormEvent<HTMLInputElement>) => {
-                          const clean = e.currentTarget.value.replace(/[^a-zA-Z0-9]/g, '').toUpperCase().slice(0, 20);
-                          e.currentTarget.value = clean;
-                          setCouponCodeInput(clean);
-                        }}
-                        onChange={(e) => {
-                          const clean = e.target.value.replace(/[^a-zA-Z0-9]/g, '').toUpperCase().slice(0, 20);
-                          setCouponCodeInput(clean);
-                        }}
-                        maxLength={20}
-                        pattern="[a-zA-Z0-9]+"
-                        title="Discount codes only contain letters and numbers"
-                        className="flex-1 h-10 px-3 bg-pearl-50 rounded-xl border border-champagne-300 text-xs font-mono uppercase text-obsidian focus:outline-none focus:border-gold-dark"
-                      />
-                      <button
-                        type="button"
-                        onClick={() => handleApplyCoupon(couponCodeInput)}
-                        className="h-10 px-4 bg-obsidian text-pearl-100 text-xs uppercase font-mono font-bold rounded-xl hover:bg-obsidian-200 transition-colors cursor-pointer"
-                      >
-                        Apply
-                      </button>
-                    </div>
-
-                    <div className="flex flex-wrap gap-1.5">
-                      {POPULAR_COUPONS.map((c) => (
-                        <button
-                          key={c.code}
-                          type="button"
-                          onClick={() => handleApplyCoupon(c.code)}
-                          className="px-2.5 py-1 bg-champagne-100/70 hover:bg-champagne-200 border border-champagne-300 text-[10px] font-mono text-gold-dark font-bold rounded-lg transition-colors cursor-pointer"
-                        >
-                          +{c.code} ({c.description})
-                        </button>
-                      ))}
-                    </div>
-                  </div>
                 )}
               </div>
 
-              {/* Price Calculation Table */}
-              <div className="pt-3 border-t border-champagne-200 space-y-2 text-xs">
+              {/* Price Calculations Breakdown */}
+              <div className="space-y-2 pt-2 border-t border-champagne-200 text-xs">
                 <div className="flex justify-between text-obsidian-soft">
                   <span>Bag Subtotal</span>
                   <span className="font-mono font-medium text-obsidian">₹{subtotal}</span>
                 </div>
 
                 {discountAmount > 0 && (
-                  <div className="flex justify-between text-emerald-700 font-bold">
-                    <span>Discount ({appliedCoupon?.code})</span>
+                  <div className="flex justify-between text-emerald-700 font-medium">
+                    <span>Coupon Discount ({appliedCoupon?.code})</span>
                     <span className="font-mono">-₹{discountAmount}</span>
                   </div>
                 )}
 
+                {upiInstantDiscount > 0 && (
+                  <div className="flex justify-between text-emerald-700 font-bold bg-emerald-50 p-1.5 rounded-lg border border-emerald-200">
+                    <span className="flex items-center gap-1">
+                      <Zap className="w-3.5 h-3.5 text-emerald-600" />
+                      <span>Instant UPI Prepaid Discount</span>
+                    </span>
+                    <span className="font-mono">-₹{upiInstantDiscount}</span>
+                  </div>
+                )}
+
                 <div className="flex justify-between text-obsidian-soft">
-                  <span>Shipping & Delivery</span>
-                  <span className="font-mono font-medium">
+                  <span>Express Shipping</span>
+                  <span className="font-mono">
                     {shippingCost === 0 ? (
                       <span className="text-emerald-700 font-bold">FREE</span>
                     ) : (
@@ -837,7 +955,7 @@ export const CheckoutPage: React.FC = () => {
                   </span>
                 </div>
 
-                {shippingMethod === 'same-day' && (
+                {sameDayExtra > 0 && (
                   <div className="flex justify-between text-gold-dark font-medium">
                     <span>Mumbai Same-Day Priority Courier</span>
                     <span className="font-mono">+₹100</span>
@@ -846,8 +964,8 @@ export const CheckoutPage: React.FC = () => {
 
                 <div className="flex justify-between items-baseline pt-3 border-t border-champagne-300 text-obsidian">
                   <div>
-                    <span className="font-serif-luxury text-lg font-bold">Total Amount Payable</span>
-                    <span className="text-[10px] text-obsidian-soft block">(All Indian taxes & duties included)</span>
+                    <span className="font-serif-luxury text-base sm:text-lg font-bold">Total Amount</span>
+                    <span className="text-[10px] text-obsidian-soft block">(Incl. of GST & all Indian taxes)</span>
                   </div>
                   <span className="font-mono font-bold text-2xl text-gold-dark">
                     ₹{grandTotal}
@@ -855,35 +973,35 @@ export const CheckoutPage: React.FC = () => {
                 </div>
               </div>
 
-              {/* High-Converting Direct Submit Button */}
+              {/* Main Submit Button (Bonkers Corner Style High-Conversion CTA) */}
               <button
                 type="submit"
                 disabled={isProcessing}
-                className="w-full h-14 bg-obsidian hover:bg-obsidian-200 text-pearl-100 rounded-full text-xs sm:text-sm uppercase tracking-widest font-bold transition-all shadow-xl flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50 group"
+                className="w-full min-h-[50px] py-4 px-6 rounded-full bg-obsidian text-pearl-100 hover:bg-obsidian-200 transition-all font-sans text-xs uppercase tracking-widest font-bold shadow-xl hover:shadow-2xl active:scale-[0.98] flex items-center justify-center gap-2 cursor-pointer group"
               >
                 {isProcessing ? (
-                  <div className="flex items-center gap-2">
-                    <div className="w-4 h-4 border-2 border-pearl-100 border-t-transparent rounded-full animate-spin" />
-                    <span>Confirming Order...</span>
-                  </div>
+                  <span className="flex items-center gap-2">
+                    <div className="w-4 h-4 border-2 border-champagne-300 border-t-transparent rounded-full animate-spin" />
+                    <span>Processing Secure Gateway...</span>
+                  </span>
                 ) : (
                   <>
                     <Lock className="w-4 h-4 text-gold-dark" />
-                    <span>Place Order • ₹{grandTotal}</span>
+                    <span>Pay ₹{grandTotal} • Place Order</span>
                     <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                   </>
                 )}
               </button>
 
-              {/* Guarantees */}
-              <div className="grid grid-cols-2 gap-2 pt-2 text-[10px] font-mono text-obsidian-soft border-t border-champagne-200">
-                <div className="flex items-center gap-1.5">
-                  <Shield className="w-3.5 h-3.5 text-gold-dark shrink-0" />
+              {/* Trust Badges Bar */}
+              <div className="grid grid-cols-2 gap-3 pt-2 text-[10px] font-mono text-obsidian-soft text-center">
+                <div className="p-2.5 bg-pearl-50 rounded-xl border border-champagne-200 flex flex-col items-center justify-center gap-1">
+                  <ShieldCheck className="w-4 h-4 text-gold-dark" />
                   <span>100% Anti-Tarnish</span>
                 </div>
-                <div className="flex items-center gap-1.5">
-                  <Clock className="w-3.5 h-3.5 text-gold-dark shrink-0" />
-                  <span>7-Day Returns</span>
+                <div className="p-2.5 bg-pearl-50 rounded-xl border border-champagne-200 flex flex-col items-center justify-center gap-1">
+                  <Truck className="w-4 h-4 text-emerald-700" />
+                  <span>Mumbai Studio Dispatch</span>
                 </div>
               </div>
 
@@ -894,6 +1012,32 @@ export const CheckoutPage: React.FC = () => {
         </form>
 
       </div>
+
+      {/* Mobile Fixed 1-Tap Checkout Footer Bar (Bonkers Corner Style) */}
+      <div className="lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-t border-champagne-300/80 p-3 sm:p-4 shadow-2xl flex items-center justify-between gap-4">
+        <div>
+          <span className="text-[10px] uppercase font-mono text-obsidian-soft block">Grand Total</span>
+          <span className="font-mono text-lg sm:text-xl font-bold text-gold-dark leading-none">
+            ₹{grandTotal}
+          </span>
+        </div>
+
+        <button
+          onClick={handlePlaceOrder}
+          disabled={isProcessing}
+          className="flex-1 min-h-[48px] py-3.5 px-6 rounded-full bg-obsidian text-pearl-100 text-xs uppercase font-mono font-bold tracking-wider flex items-center justify-center gap-2 shadow-lg active:scale-[0.98] transition-all cursor-pointer"
+        >
+          {isProcessing ? (
+            <span>Processing...</span>
+          ) : (
+            <>
+              <Lock className="w-3.5 h-3.5 text-gold-dark" />
+              <span>Pay ₹{grandTotal} • Place Order →</span>
+            </>
+          )}
+        </button>
+      </div>
+
     </div>
   );
 };

@@ -16,7 +16,8 @@ import {
   Gift,
   Lock,
   ChevronRight,
-  Flame
+  Flame,
+  Zap
 } from 'lucide-react';
 import { useCart, POPULAR_COUPONS } from '../../context/CartContext';
 import { BRAND_INFO, FEATURED_PRODUCTS } from '../../data/shopify-data';
@@ -431,6 +432,17 @@ export const CartDrawer: React.FC = () => {
                   ₹{grandTotal}
                 </span>
               </div>
+            </div>
+
+            {/* Bonkers Corner Style Prepaid Discount Badge */}
+            <div className="p-2.5 bg-gradient-to-r from-emerald-50 to-champagne-100/60 rounded-2xl border border-emerald-300/80 flex items-center justify-between text-xs text-emerald-950">
+              <span className="flex items-center gap-1.5 font-medium">
+                <Zap className="w-4 h-4 text-emerald-600 shrink-0" />
+                <span>Extra ₹50 Off on UPI / Prepaid</span>
+              </span>
+              <span className="font-mono font-bold text-emerald-700 bg-emerald-100 px-2 py-0.5 rounded-full text-[10px] uppercase">
+                1-Click Pay
+              </span>
             </div>
 
             {/* CTAs */}
