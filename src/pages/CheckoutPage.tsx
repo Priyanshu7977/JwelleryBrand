@@ -129,13 +129,26 @@ export const CheckoutPage: React.FC = () => {
   const handlePlaceOrder = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!name.trim() || !email.trim() || !phone.trim() || !street.trim() || !pincode.trim()) {
-      showToast("Please fill in all contact and shipping details.");
+    const cleanName = name.replace(/[^a-zA-Z\s'-]/g, '').trim();
+    if (!cleanName || cleanName.length < 2) {
+      showToast("Please enter a valid full name (letters only).");
       return;
     }
 
-    if (phone.replace(/\D/g, '').length < 10) {
-      showToast("Please enter a valid 10-digit mobile number.");
+    const cleanEmail = email.trim();
+    if (!cleanEmail || !cleanEmail.includes('@') || !cleanEmail.includes('.')) {
+      showToast("Please enter a valid email address.");
+      return;
+    }
+
+    const cleanPhoneDigits = phone.replace(/\D/g, '');
+    if (cleanPhoneDigits.length < 10) {
+      showToast("Please enter a valid 10-digit mobile number (numbers only).");
+      return;
+    }
+
+    if (!street.trim() || !pincode.trim() || pincode.replace(/\D/g, '').length !== 6) {
+      showToast("Please fill in a valid delivery address and 6-digit PIN code.");
       return;
     }
 
@@ -258,8 +271,9 @@ export const CheckoutPage: React.FC = () => {
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="space-y-1 sm:col-span-2">
-                  <label className="text-[11px] uppercase font-mono tracking-wider text-obsidian-soft font-bold block">
-                    Full Name * (Letters Only)
+                  <label className="text-[11px] uppercase font-mono tracking-wider text-obsidian-soft font-bold flex items-center justify-between">
+                    <span>Full Name *</span>
+                    <span className="text-[10px] text-obsidian-soft/70 font-normal">Letters only</span>
                   </label>
                   <div className="flex items-center gap-2 px-3.5 h-11 bg-pearl-50 rounded-xl border border-champagne-300 focus-within:border-gold-dark">
                     <User className="w-4 h-4 text-gold-dark shrink-0" />
@@ -268,7 +282,29 @@ export const CheckoutPage: React.FC = () => {
                       required
                       placeholder="e.g. Priyanshu Sharma"
                       value={name}
+                      onBeforeInput={(e: any) => {
+                        if (e.data && /[0-9]/.test(e.data)) {
+                          e.preventDefault();
+                        }
+                      }}
+                      onKeyDown={(e) => {
+                        if (/[0-9]/.test(e.key) && !e.ctrlKey && !e.metaKey) {
+                          e.preventDefault();
+                        }
+                      }}
+                      onInput={(e: React.FormEvent<HTMLInputElement>) => {
+                        const clean = e.currentTarget.value.replace(/[^a-zA-Z\s'-]/g, '');
+                        e.currentTarget.value = clean;
+                        setName(clean);
+                      }}
+                      onPaste={(e) => {
+                        e.preventDefault();
+                        const paste = e.clipboardData.getData('text');
+                        const clean = paste.replace(/[^a-zA-Z\s'-]/g, '');
+                        setName((name + clean).replace(/[^a-zA-Z\s'-]/g, ''));
+                      }}
                       onChange={(e) => setName(e.target.value.replace(/[^a-zA-Z\s'-]/g, ''))}
+                      autoComplete="name"
                       pattern="[a-zA-Z\s'-]+"
                       title="Name must only contain letters"
                       className="w-full bg-transparent text-xs sm:text-sm font-sans text-obsidian focus:outline-none placeholder:text-obsidian/40"
@@ -288,14 +324,16 @@ export const CheckoutPage: React.FC = () => {
                       placeholder="name@email.com"
                       value={email}
                       onChange={(e) => setEmail(e.target.value.trim())}
+                      autoComplete="email"
                       className="w-full bg-transparent text-xs sm:text-sm font-sans text-obsidian focus:outline-none placeholder:text-obsidian/40"
                     />
                   </div>
                 </div>
 
                 <div className="space-y-1">
-                  <label className="text-[11px] uppercase font-mono tracking-wider text-obsidian-soft font-bold block">
-                    Mobile Phone * (Numbers Only)
+                  <label className="text-[11px] uppercase font-mono tracking-wider text-obsidian-soft font-bold flex items-center justify-between">
+                    <span>Mobile Phone *</span>
+                    <span className="text-[10px] text-obsidian-soft/70 font-normal">Digits only</span>
                   </label>
                   <div className="flex items-center gap-2 px-3.5 h-11 bg-pearl-50 rounded-xl border border-champagne-300 focus-within:border-gold-dark">
                     <Phone className="w-4 h-4 text-gold-dark shrink-0" />
@@ -305,7 +343,29 @@ export const CheckoutPage: React.FC = () => {
                       required
                       placeholder="+91 98765 43210"
                       value={phone}
+                      onBeforeInput={(e: any) => {
+                        if (e.data && /[a-zA-Z]/.test(e.data)) {
+                          e.preventDefault();
+                        }
+                      }}
+                      onKeyDown={(e) => {
+                        if (/[a-zA-Z]/.test(e.key) && !e.ctrlKey && !e.metaKey) {
+                          e.preventDefault();
+                        }
+                      }}
+                      onInput={(e: React.FormEvent<HTMLInputElement>) => {
+                        const clean = e.currentTarget.value.replace(/[^0-9+\s-]/g, '').slice(0, 16);
+                        e.currentTarget.value = clean;
+                        setPhone(clean);
+                      }}
+                      onPaste={(e) => {
+                        e.preventDefault();
+                        const paste = e.clipboardData.getData('text');
+                        const clean = paste.replace(/[^0-9+\s-]/g, '').slice(0, 16);
+                        setPhone(clean);
+                      }}
                       onChange={(e) => setPhone(e.target.value.replace(/[^0-9+\s-]/g, '').slice(0, 16))}
+                      autoComplete="tel"
                       pattern="[0-9+\s-]{10,16}"
                       title="Phone number must only contain digits"
                       className="w-full bg-transparent text-xs sm:text-sm font-sans text-obsidian focus:outline-none placeholder:text-obsidian/40"
@@ -341,6 +401,21 @@ export const CheckoutPage: React.FC = () => {
                     placeholder="400001"
                     maxLength={6}
                     value={pincode}
+                    onBeforeInput={(e: any) => {
+                      if (e.data && /[^0-9]/.test(e.data)) {
+                        e.preventDefault();
+                      }
+                    }}
+                    onKeyDown={(e) => {
+                      if (/[a-zA-Z]/.test(e.key) && !e.ctrlKey && !e.metaKey) {
+                        e.preventDefault();
+                      }
+                    }}
+                    onInput={(e: React.FormEvent<HTMLInputElement>) => {
+                      const clean = e.currentTarget.value.replace(/\D/g, '').slice(0, 6);
+                      e.currentTarget.value = clean;
+                      handlePincodeChange(clean);
+                    }}
                     onChange={(e) => handlePincodeChange(e.target.value.replace(/\D/g, '').slice(0, 6))}
                     className="w-full h-11 px-3.5 bg-pearl-50 rounded-xl border border-champagne-300 focus:outline-none focus:border-gold-dark text-xs sm:text-sm font-mono text-obsidian"
                   />
