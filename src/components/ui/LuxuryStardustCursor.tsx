@@ -52,30 +52,27 @@ export const LuxuryStardustCursor: React.FC = () => {
 
     const handleMouseMove = (e: MouseEvent) => {
       const dist = Math.hypot(e.clientX - lastX, e.clientY - lastY);
-      if (dist < 4) return; // throttle small movements
+      if (dist < 10) return; // only spawn on distinct cursor movements
 
       lastX = e.clientX;
       lastY = e.clientY;
 
-      // Spawn 2-3 lively stardust sparks per movement
-      const count = Math.min(3, Math.floor(dist / 8) + 1);
-      for (let i = 0; i < count; i++) {
-        const baseColor = GOLD_COLORS[Math.floor(Math.random() * GOLD_COLORS.length)];
-        particles.push({
-          x: e.clientX + (Math.random() - 0.5) * 7,
-          y: e.clientY + (Math.random() - 0.5) * 7,
-          size: Math.random() * 2.3 + 1.2,
-          speedX: (Math.random() - 0.5) * 0.85, // lively, snappy horizontal burst
-          speedY: Math.random() * 0.5 + 0.2,    // energetic downward sparkle fall
-          color: baseColor,
-          alpha: 0.95,
-          decay: Math.random() * 0.002 + 0.007, // crisp, bright shimmer
-        });
-      }
+      // Spawn only 1 single subtle sparkle
+      const baseColor = GOLD_COLORS[Math.floor(Math.random() * GOLD_COLORS.length)];
+      particles.push({
+        x: e.clientX + (Math.random() - 0.5) * 4,
+        y: e.clientY + (Math.random() - 0.5) * 4,
+        size: Math.random() * 1.4 + 0.8,
+        speedX: (Math.random() - 0.5) * 0.6,
+        speedY: Math.random() * 0.35 + 0.15,
+        color: baseColor,
+        alpha: 0.9,
+        decay: Math.random() * 0.008 + 0.022, // quick, clean fade out in ~0.8 to 1.0 second
+      });
 
-      // Keep active particle trail
-      if (particles.length > 100) {
-        particles = particles.slice(-100);
+      // Strict limit to keep screen clean and uncluttered
+      if (particles.length > 20) {
+        particles = particles.slice(-20);
       }
     };
 
@@ -88,8 +85,8 @@ export const LuxuryStardustCursor: React.FC = () => {
         const p = particles[i];
         p.x += p.speedX;
         p.y += p.speedY;
-        p.speedX *= 0.975; // dynamic, responsive motion
-        p.speedY *= 0.975;
+        p.speedX *= 0.96;
+        p.speedY *= 0.96;
         p.alpha -= p.decay;
 
         if (p.alpha <= 0) {
@@ -102,15 +99,15 @@ export const LuxuryStardustCursor: React.FC = () => {
         ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
         ctx.fill();
 
-        // Cross sparkle star flare on radiant particles
-        if (p.size > 1.8) {
-          ctx.strokeStyle = `${p.color}${p.alpha * 0.55})`;
-          ctx.lineWidth = 0.5;
+        // Subtle glint on larger particles only
+        if (p.size > 1.6 && p.alpha > 0.4) {
+          ctx.strokeStyle = `${p.color}${p.alpha * 0.4})`;
+          ctx.lineWidth = 0.4;
           ctx.beginPath();
-          ctx.moveTo(p.x - p.size * 1.6, p.y);
-          ctx.lineTo(p.x + p.size * 1.6, p.y);
-          ctx.moveTo(p.x, p.y - p.size * 1.6);
-          ctx.lineTo(p.x, p.y + p.size * 1.6);
+          ctx.moveTo(p.x - p.size * 1.2, p.y);
+          ctx.lineTo(p.x + p.size * 1.2, p.y);
+          ctx.moveTo(p.x, p.y - p.size * 1.2);
+          ctx.lineTo(p.x, p.y + p.size * 1.2);
           ctx.stroke();
         }
       }
