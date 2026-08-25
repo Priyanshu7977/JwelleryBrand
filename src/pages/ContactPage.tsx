@@ -21,37 +21,46 @@ import {
 } from 'lucide-react';
 import { RevealOnScroll } from '../components/motion/RevealOnScroll';
 
-// Official WhatsApp Brand Logo
-const OfficialWhatsAppIcon: React.FC<{ className?: string }> = ({ className = "w-10 h-10" }) => (
-  <svg className={className} viewBox="0 0 24 24" fill="none">
-    <circle cx="12" cy="12" r="12" fill="#25D366" />
+// Official WhatsApp Brand Logo (from whatsapp.com brand assets)
+const OfficialWhatsAppIcon: React.FC<{ className?: string }> = ({ className = "w-11 h-11" }) => (
+  <svg className={className} viewBox="0 0 48 48" fill="none">
+    {/* WhatsApp Green Speech Bubble with Tail */}
     <path
-      d="M17.5 14.36c-.25-.12-1.46-.72-1.69-.8-.23-.09-.39-.13-.56.12-.17.25-.65.8-.8.97-.15.17-.3.19-.55.07-.25-.13-1.07-.39-2.03-1.25-.75-.67-1.26-1.5-1.41-1.75-.15-.25-.02-.39.11-.51.11-.11.25-.29.37-.44.13-.15.17-.25.26-.42.08-.17.04-.32-.02-.44-.06-.13-.56-1.34-.77-1.84-.2-.48-.4-.42-.56-.43h-.48c-.16 0-.42.06-.65.31-.23.25-.87.85-.87 2.08s.89 2.41 1.01 2.58c.13.17 1.76 2.68 4.25 3.76.59.26 1.06.41 1.42.53.6.19 1.14.16 1.57.1.48-.07 1.46-.6 1.67-1.18.2-.58.2-1.08.14-1.19-.06-.11-.22-.17-.47-.29z"
+      d="M24 4C12.95 4 4 12.95 4 24C4 27.52 4.92 30.82 6.53 33.68L4.1 43.9L14.6 41.52C17.38 43.08 20.59 44 24 44C35.05 44 44 35.05 44 24C44 12.95 35.05 4 24 4Z"
+      fill="#25D366"
+    />
+    {/* WhatsApp White Phone Handset */}
+    <path
+      d="M35.22 29.83C34.73 29.58 32.32 28.39 31.87 28.23C31.42 28.06 31.1 27.98 30.77 28.47C30.44 28.97 29.52 30.05 29.23 30.38C28.95 30.71 28.66 30.75 28.17 30.5C27.68 30.25 26.09 29.73 24.2 28.04C22.73 26.73 21.73 25.11 21.44 24.62C21.16 24.13 21.41 23.86 21.66 23.61C21.88 23.39 22.15 23.03 22.4 22.74C22.64 22.45 22.73 22.25 22.89 21.92C23.05 21.59 22.97 21.31 22.85 21.06C22.73 20.81 21.75 18.4 21.34 17.41C20.94 16.45 20.54 16.58 20.24 16.56H19.29C18.97 16.56 18.44 16.68 17.99 17.18C17.54 17.67 16.27 18.86 16.27 21.28C16.27 23.7 18.03 26.01 18.28 26.34C18.52 26.67 21.74 31.64 26.65 33.76C27.82 34.26 28.74 34.56 29.45 34.79C30.63 35.16 31.7 35.11 32.55 34.98C33.5 34.84 35.47 33.79 35.88 32.63C36.29 31.47 36.29 30.49 36.17 30.28C36.05 30.08 35.72 29.95 35.22 29.83Z"
       fill="#FFFFFF"
     />
   </svg>
 );
 
-// Official Google Gmail Brand Logo
-const OfficialGmailIcon: React.FC<{ className?: string }> = ({ className = "w-6 h-6" }) => (
-  <svg className={className} viewBox="0 0 24 24" fill="none">
-    <path
-      d="M20.5 5.5v13a1.5 1.5 0 0 1-1.5 1.5H18V10.2L12 14.7 6 10.2V20H5a1.5 1.5 0 0 1-1.5-1.5v-13c0-1.7 1.9-2.7 3.3-1.6L12 8.7l5.2-3.8c1.4-1.1 3.3-.1 3.3 1.6z"
-      fill="#4285F4"
-    />
-    <path d="M12 14.7l6-4.5V4l-6 4.5L6 4v6.2l6 4.5z" fill="#EA4335" />
-    <path d="M18 4l2.5 1.8c.6.4 1 1.2 1 2V4h-3.5z" fill="#FBBC05" />
-    <path d="M6 4L3.5 5.8c-.6.4-1 1.2-1 2V4H6z" fill="#34A853" />
-  </svg>
+// Official Google Gmail Brand Logo Tile
+const OfficialGmailIcon: React.FC<{ className?: string }> = ({ className = "w-11 h-11" }) => (
+  <div className={`${className} rounded-2xl bg-white border border-champagne-300/80 shadow-xs flex items-center justify-center p-2.5`}>
+    <svg className="w-full h-full" viewBox="0 0 24 24" fill="none">
+      <path
+        d="M20.5 5.5v13a1.5 1.5 0 0 1-1.5 1.5H18V10.2L12 14.7 6 10.2V20H5a1.5 1.5 0 0 1-1.5-1.5v-13c0-1.7 1.9-2.7 3.3-1.6L12 8.7l5.2-3.8c1.4-1.1 3.3-.1 3.3 1.6z"
+        fill="#4285F4"
+      />
+      <path d="M12 14.7l6-4.5V4l-6 4.5L6 4v6.2l6 4.5z" fill="#EA4335" />
+      <path d="M18 4l2.5 1.8c.6.4 1 1.2 1 2V4h-3.5z" fill="#FBBC05" />
+      <path d="M6 4L3.5 5.8c-.6.4-1 1.2-1 2V4H6z" fill="#34A853" />
+    </svg>
+  </div>
 );
 
-// Official Phone / Call Logo
-const OfficialPhoneIcon: React.FC<{ className?: string }> = ({ className = "w-10 h-10" }) => (
-  <svg className={className} viewBox="0 0 24 24" fill="none">
-    <circle cx="12" cy="12" r="12" fill="#1C1917" />
+// Official Android Phone / Google Dialer Logo
+const OfficialAndroidDialerIcon: React.FC<{ className?: string }> = ({ className = "w-11 h-11" }) => (
+  <svg className={className} viewBox="0 0 48 48" fill="none">
+    {/* Android Dialer Blue Squircle */}
+    <rect width="48" height="48" rx="14" fill="#1A73E8" />
+    {/* Android Dialer Handset */}
     <path
-      d="M7.8 9.9c1.3 2.5 3.3 4.5 5.8 5.8l1.9-1.9c.2-.2.6-.3.9-.2 1 .3 2 .5 3.1.5.5 0 .9.4.9.9v3c0 .5-.4.9-.9.9-8.8 0-16-7.2-16-16 0-.5.4-.9.9-.9h3c.5 0 .9.4.9.9 0 1.1.2 2.1.5 3.1.1.3 0 .7-.2.9l-1.9 1.9z"
-      fill="#F5EFE6"
+      d="M34.2 28.7C32.7 28.7 31.25 28.46 29.89 28.01C29.46 27.86 28.97 27.97 28.64 28.3L26.31 31.1C22.82 29.33 19.95 26.46 18.17 22.97L20.98 20.64C21.32 20.3 21.43 19.82 21.29 19.38C20.84 18.02 20.6 16.57 20.6 15.07C20.6 14.36 20.01 13.77 19.3 13.77H15.53C14.82 13.77 14 14.3 14 15.53C14 26.56 22.71 35.27 33.74 35.27C34.94 35.27 35.5 34.45 35.5 33.74V29.97C35.5 29.26 34.91 28.7 34.2 28.7Z"
+      fill="#FFFFFF"
     />
   </svg>
 );
@@ -233,7 +242,7 @@ export const ContactPage: React.FC = () => {
 
             {/* Direct Channels Quick Bar below Map */}
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5 pt-2">
-              {/* WhatsApp */}
+              {/* Official WhatsApp */}
               <a
                 href={BRAND_INFO.whatsappUrl}
                 target="_blank"
@@ -241,7 +250,7 @@ export const ContactPage: React.FC = () => {
                 className="p-4 rounded-2xl bg-white/95 border border-emerald-300/80 hover:border-emerald-500 hover:shadow-md hover:bg-emerald-50/40 transition-all flex items-center justify-between group shadow-xs"
               >
                 <div className="flex items-center gap-3.5">
-                  <OfficialWhatsAppIcon className="w-10 h-10 shrink-0 drop-shadow-sm group-hover:scale-105 transition-transform" />
+                  <OfficialWhatsAppIcon className="w-11 h-11 shrink-0 drop-shadow-sm group-hover:scale-105 transition-transform" />
                   <div>
                     <span className="text-[10px] uppercase font-mono font-bold text-emerald-800 tracking-wider block">
                       WhatsApp Concierge
@@ -254,15 +263,13 @@ export const ContactPage: React.FC = () => {
                 <ArrowUpRight className="w-4 h-4 text-emerald-700 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
               </a>
 
-              {/* Email / Gmail */}
+              {/* Official Email / Gmail */}
               <a
                 href={`mailto:${BRAND_INFO.email}`}
                 className="p-4 rounded-2xl bg-white/95 border border-champagne-300/80 hover:border-gold-dark hover:shadow-md hover:bg-amber-50/40 transition-all flex items-center justify-between group shadow-xs"
               >
                 <div className="flex items-center gap-3.5">
-                  <div className="w-10 h-10 rounded-xl bg-pearl-100 border border-champagne-200/80 flex items-center justify-center shrink-0 shadow-xs group-hover:scale-105 transition-transform">
-                    <OfficialGmailIcon className="w-6 h-6" />
-                  </div>
+                  <OfficialGmailIcon className="w-11 h-11 shrink-0 drop-shadow-sm group-hover:scale-105 transition-transform" />
                   <div>
                     <span className="text-[10px] uppercase font-mono font-bold text-obsidian-soft tracking-wider block">
                       Email Atelier
@@ -275,15 +282,15 @@ export const ContactPage: React.FC = () => {
                 <ArrowUpRight className="w-4 h-4 text-gold-dark group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
               </a>
 
-              {/* Phone */}
+              {/* Official Android Phone Helpline */}
               <a
                 href={`tel:${BRAND_INFO.phone}`}
-                className="p-4 rounded-2xl bg-white/95 border border-champagne-300/80 hover:border-obsidian hover:shadow-md hover:bg-pearl-100/60 transition-all flex items-center justify-between group shadow-xs"
+                className="p-4 rounded-2xl bg-white/95 border border-sky-300/80 hover:border-sky-500 hover:shadow-md hover:bg-sky-50/40 transition-all flex items-center justify-between group shadow-xs"
               >
                 <div className="flex items-center gap-3.5">
-                  <OfficialPhoneIcon className="w-10 h-10 shrink-0 drop-shadow-sm group-hover:scale-105 transition-transform" />
+                  <OfficialAndroidDialerIcon className="w-11 h-11 shrink-0 drop-shadow-sm group-hover:scale-105 transition-transform" />
                   <div>
-                    <span className="text-[10px] uppercase font-mono font-bold text-obsidian/80 tracking-wider block">
+                    <span className="text-[10px] uppercase font-mono font-bold text-sky-900 tracking-wider block">
                       Direct Helpline
                     </span>
                     <span className="text-xs font-mono font-bold text-obsidian block">
@@ -291,7 +298,7 @@ export const ContactPage: React.FC = () => {
                     </span>
                   </div>
                 </div>
-                <ArrowUpRight className="w-4 h-4 text-obsidian group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+                <ArrowUpRight className="w-4 h-4 text-sky-700 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
               </a>
             </div>
 
