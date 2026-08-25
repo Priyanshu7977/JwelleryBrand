@@ -55,6 +55,8 @@ export default async function handler(req: ApiRequest, res: ApiResponse) {
           console.warn('[SendOrderEmail] Custom domain dispatch failed, retrying with onboarding@resend.dev:', errText);
 
           payload.from = 'Celestia Atelier <onboarding@resend.dev>';
+          delete payload.bcc; // Resend test sandbox rejects BCC
+
           resendResponse = await fetch('https://api.resend.com/emails', {
             method: 'POST',
             headers: {

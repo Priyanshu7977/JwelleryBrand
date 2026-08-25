@@ -258,6 +258,16 @@ export const OrderSuccessPage: React.FC = () => {
                 <span>Open in Gmail</span>
               </a>
 
+              <a
+                href={`https://wa.me/917718825792?text=${encodeURIComponent(`Hello Celestia Atelier! ✨\n\nI just placed Order *#${order.orderNumber}* on your website for ₹${order.total}.\n\n*Order Details:*\n• Customer: ${order.customer.name}\n• Phone: ${order.customer.phone}\n• Payment: ${order.paymentMethod}\n• Status: ${order.financialStatus.toUpperCase()}\n\nPlease confirm my order and share dispatch tracking here. Thank you! 💎`)}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="px-3.5 py-1.5 rounded-full bg-emerald-800 hover:bg-emerald-900 text-pearl-50 text-xs font-mono font-bold transition-all flex items-center gap-1.5 shadow-xs"
+              >
+                <WhatsAppIcon className="w-3.5 h-3.5" />
+                <span>Notify via WhatsApp (+91 7718825792)</span>
+              </a>
+
               <button
                 onClick={handleDownloadInvoice}
                 disabled={isDownloadingPdf}

@@ -264,14 +264,14 @@ export function generateOrderInvoicePDF(order: OrderMetadata): jsPDF {
     const isCurrent = idx === currentStageIndex;
 
     if (isCompleted) {
-      // Completed Stage (Emerald Filled Circle with Checkmark)
+      // Completed Stage (Emerald Filled Circle with Vector Checkmark)
       doc.setFillColor(16, 120, 80);
       doc.setDrawColor(16, 120, 80);
       doc.circle(nodeX, nodeCenterY, 2.5, 'FD');
-      doc.setFont('helvetica', 'bold');
-      doc.setFontSize(5);
-      doc.setTextColor(255, 255, 255);
-      doc.text('✓', nodeX, nodeCenterY + 0.8, { align: 'center' });
+      doc.setDrawColor(255, 255, 255);
+      doc.setLineWidth(0.4);
+      doc.line(nodeX - 1.0, nodeCenterY, nodeX - 0.2, nodeCenterY + 0.8);
+      doc.line(nodeX - 0.2, nodeCenterY + 0.8, nodeX + 1.1, nodeCenterY - 0.7);
     } else if (isCurrent) {
       // Active Current Stage (Obsidian Circle with Gold Accent)
       doc.setFillColor(24, 20, 17);
@@ -416,7 +416,7 @@ export function generateOrderInvoicePDF(order: OrderMetadata): jsPDF {
 
   // Left Card: Authenticity Seal & Warranty (x: 14mm to 102mm)
   const sealWidth = 88;
-  const sealHeight = 35;
+  const sealHeight = 31;
   doc.setFillColor(250, 247, 240);
   doc.setDrawColor(216, 195, 154);
   doc.roundedRect(leftMargin, blockStartY, sealWidth, sealHeight, 2, 2, 'FD');
@@ -435,10 +435,19 @@ export function generateOrderInvoicePDF(order: OrderMetadata): jsPDF {
   );
   doc.text(sealText, leftMargin + 4, blockStartY + 10.5);
 
+  // Clean vector badge icon
+  const badgeY = blockStartY + 25.5;
+  doc.setFillColor(16, 120, 80);
+  doc.circle(leftMargin + 6, badgeY, 1.8, 'F');
+  doc.setDrawColor(255, 255, 255);
+  doc.setLineWidth(0.4);
+  doc.line(leftMargin + 5.2, badgeY, leftMargin + 5.8, badgeY + 0.6);
+  doc.line(leftMargin + 5.8, badgeY + 0.6, leftMargin + 6.8, badgeY - 0.6);
+
   doc.setFont('helvetica', 'bold');
   doc.setFontSize(6.5);
   doc.setTextColor(16, 120, 80);
-  doc.text('✓ 100% Anti-Tarnish Guarantee • Mumbai Handcrafted', leftMargin + 4, blockStartY + 31);
+  doc.text('100% Anti-Tarnish Guarantee • Mumbai Handcrafted', leftMargin + 9.5, badgeY + 0.8);
 
   // Right Card: Financial Calculation & Grand Total Summary (x: 108mm to 196mm)
   const summaryX = 108;
