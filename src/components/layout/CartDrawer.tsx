@@ -296,7 +296,35 @@ export const CartDrawer: React.FC = () => {
                             type="text"
                             placeholder="Enter Promo Code (e.g. CELESTIA10)"
                             value={couponInput}
-                            onChange={(e) => setCouponInput(e.target.value.toUpperCase())}
+                            onBeforeInput={(e: any) => {
+                              if (e.data && /[^a-zA-Z0-9]/.test(e.data)) {
+                                e.preventDefault();
+                              }
+                            }}
+                            onKeyDown={(e) => {
+                              if (e.key.length > 1 || e.ctrlKey || e.metaKey) return;
+                              if (!/[a-zA-Z0-9]/.test(e.key)) {
+                                e.preventDefault();
+                              }
+                            }}
+                            onPaste={(e) => {
+                              e.preventDefault();
+                              const paste = e.clipboardData.getData('text');
+                              const clean = paste.replace(/[^a-zA-Z0-9]/g, '').toUpperCase().slice(0, 20);
+                              setCouponInput(clean);
+                            }}
+                            onInput={(e: React.FormEvent<HTMLInputElement>) => {
+                              const clean = e.currentTarget.value.replace(/[^a-zA-Z0-9]/g, '').toUpperCase().slice(0, 20);
+                              e.currentTarget.value = clean;
+                              setCouponInput(clean);
+                            }}
+                            onChange={(e) => {
+                              const clean = e.target.value.replace(/[^a-zA-Z0-9]/g, '').toUpperCase().slice(0, 20);
+                              setCouponInput(clean);
+                            }}
+                            maxLength={20}
+                            pattern="[a-zA-Z0-9]+"
+                            title="Promo codes only contain letters and numbers"
                             className="flex-1 h-9 px-3 text-xs font-mono uppercase bg-pearl-50 rounded-xl border border-champagne-300 focus:outline-none focus:border-gold-dark text-obsidian"
                           />
                           <button

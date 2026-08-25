@@ -756,7 +756,35 @@ export const CheckoutPage: React.FC = () => {
                         type="text"
                         placeholder="e.g. CELESTIA10"
                         value={couponCodeInput}
-                        onChange={(e) => setCouponCodeInput(e.target.value.toUpperCase())}
+                        onBeforeInput={(e: any) => {
+                          if (e.data && /[^a-zA-Z0-9]/.test(e.data)) {
+                            e.preventDefault();
+                          }
+                        }}
+                        onKeyDown={(e) => {
+                          if (e.key.length > 1 || e.ctrlKey || e.metaKey) return;
+                          if (!/[a-zA-Z0-9]/.test(e.key)) {
+                            e.preventDefault();
+                          }
+                        }}
+                        onPaste={(e) => {
+                          e.preventDefault();
+                          const paste = e.clipboardData.getData('text');
+                          const clean = paste.replace(/[^a-zA-Z0-9]/g, '').toUpperCase().slice(0, 20);
+                          setCouponCodeInput(clean);
+                        }}
+                        onInput={(e: React.FormEvent<HTMLInputElement>) => {
+                          const clean = e.currentTarget.value.replace(/[^a-zA-Z0-9]/g, '').toUpperCase().slice(0, 20);
+                          e.currentTarget.value = clean;
+                          setCouponCodeInput(clean);
+                        }}
+                        onChange={(e) => {
+                          const clean = e.target.value.replace(/[^a-zA-Z0-9]/g, '').toUpperCase().slice(0, 20);
+                          setCouponCodeInput(clean);
+                        }}
+                        maxLength={20}
+                        pattern="[a-zA-Z0-9]+"
+                        title="Discount codes only contain letters and numbers"
                         className="flex-1 h-10 px-3 bg-pearl-50 rounded-xl border border-champagne-300 text-xs font-mono uppercase text-obsidian focus:outline-none focus:border-gold-dark"
                       />
                       <button

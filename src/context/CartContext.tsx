@@ -202,9 +202,9 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const finalPayable = Math.max(0, subtotal - discountAmount);
 
   const applyCoupon = (rawCode: string): { success: boolean; message: string } => {
-    const clean = rawCode.trim().toUpperCase();
+    const clean = rawCode.replace(/[^a-zA-Z0-9]/g, '').trim().toUpperCase();
     if (!clean) {
-      return { success: false, message: 'Please enter a coupon code.' };
+      return { success: false, message: 'Please enter a valid coupon code (alphanumeric only).' };
     }
 
     const found = POPULAR_COUPONS.find(c => c.code === clean);
