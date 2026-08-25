@@ -52,7 +52,7 @@ export const Section01Arrival: React.FC = () => {
         <div className="max-w-xl lg:max-w-2xl space-y-3 text-left">
           <h1 className="text-3xl sm:text-5xl md:text-6xl font-bold tracking-tight text-white leading-[1.08] drop-shadow-2xl">
             Handcrafted <br />
-            <span className="font-zapfino text-champagne-300 font-normal tracking-normal lowercase inline-block text-[50px] sm:text-[75px] md:text-[100px] leading-[0.9] py-2.5 drop-shadow-2xl">
+            <span className="font-zapfino text-champagne-300 font-normal tracking-normal lowercase inline-block py-2.5 drop-shadow-2xl">
               fine jewellery
             </span> <br />
             redefined for all.

@@ -44,7 +44,7 @@ export const Footer: React.FC = () => {
               <span>The Mumbai Atelier MMXXVI</span>
             </div>
 
-            <h2 className="text-3xl sm:text-5xl md:text-6xl text-[#FAF7F0] tracking-[0.05em] font-normal leading-tight max-w-4xl mx-auto">
+            <h2 className="text-3xl sm:text-5xl md:text-6xl text-[#FAF7F0] font-bold leading-[1.08] max-w-4xl mx-auto">
               Where timeless <span className="font-zapfino text-[#D8C39A] font-normal tracking-normal lowercase inline-block px-1">charm</span> meets everyday <span className="font-zapfino text-[#D8C39A] font-normal tracking-normal lowercase inline-block px-1">grace</span>.
             </h2>
           </div>

@@ -45,12 +45,15 @@
     letter-spacing: 0.08em;
   }
 
-  .font-zapfino {
-    font-family: 'Zapfino', 'Alex Brush', 'Great Vibes', 'Pinyon Script', cursive, serif !important;
-    font-size: 1.38em;
-    line-height: 0.85;
-    vertical-align: -0.04em;
-  }
+}
+
+.font-zapfino {
+  font-family: 'Alex Brush', 'Great Vibes', 'Zapfino', 'Pinyon Script', cursive, serif !important;
+  font-size: 1.88em !important;
+  line-height: 0.75 !important;
+  display: inline-block !important;
+  vertical-align: -0.06em !important;
+  font-weight: 400 !important;
 }
 
 /* Hardware Acceleration & Butter-smooth 60-120fps Rendering */
