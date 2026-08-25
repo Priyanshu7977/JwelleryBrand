@@ -5,7 +5,7 @@ type ApiResponse = ServerResponse & { status: (code: number) => ApiResponse; jso
 
 /**
  * Serverless Transactional Email Endpoint for Celestia Luxury Atelier
- * (100% FormSubmit-free. Integrates with Resend REST API via RESEND_API_KEY)
+ * (100% FormSubmit-free. Integrates with Resend REST API via RESEND_API_KEY with auto-failover)
  */
 export default async function handler(req: ApiRequest, res: ApiResponse) {
   if (req.method !== 'POST') {
@@ -40,7 +40,7 @@ export default async function handler(req: ApiRequest, res: ApiResponse) {
           payload.attachments = attachments;
         }
 
-        const resendResponse = await fetch('https://api.resend.com/emails', {
+        let resendResponse = await fetch('https://api.resend.com/emails', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -48,6 +48,22 @@ export default async function handler(req: ApiRequest, res: ApiResponse) {
           },
           body: JSON.stringify(payload),
         });
+
+        // Auto-retry with onboarding@resend.dev if custom domain is not yet verified on Resend
+        if (!resendResponse.ok) {
+          const errText = await resendResponse.text();
+          console.warn('[SendOrderEmail] Custom domain dispatch failed, retrying with onboarding@resend.dev:', errText);
+
+          payload.from = 'Celestia Atelier <onboarding@resend.dev>';
+          resendResponse = await fetch('https://api.resend.com/emails', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${RESEND_API_KEY}`,
+            },
+            body: JSON.stringify(payload),
+          });
+        }
 
         if (resendResponse.ok) {
           const resendData = await resendResponse.json();
@@ -58,9 +74,6 @@ export default async function handler(req: ApiRequest, res: ApiResponse) {
             type: type || 'order_confirmed',
             message: 'Transactional email dispatched successfully via Resend ✨',
           });
-        } else {
-          const errText = await resendResponse.text();
-          console.warn('[SendOrderEmail] Resend API responded with error:', errText);
         }
       } catch (resendErr) {
         console.warn('[SendOrderEmail] Resend dispatch attempt exception:', resendErr);

@@ -1,5 +1,4 @@
 import jsPDF from 'jspdf';
-import autoTable from 'jspdf-autotable';
 import { OrderMetadata } from '../types/backend';
 import { BRAND_INFO } from '../data/shopify-data';
 import { formatOrderDateIST, formatOrderTimeIST } from '../utils/dateIST';
@@ -7,6 +6,7 @@ import { formatOrderDateIST, formatOrderTimeIST } from '../utils/dateIST';
 /**
  * Generates an official, luxury A4 PDF Invoice / Order Confirmation document
  * matching Celestia Atelier brand aesthetics (Obsidian, Champagne Gold, Ivory).
+ * (Pure native vector jsPDF engine — zero external plugin dependencies for 100% reliability).
  */
 export function generateOrderInvoicePDF(order: OrderMetadata): jsPDF {
   const doc = new jsPDF({
@@ -15,207 +15,248 @@ export function generateOrderInvoicePDF(order: OrderMetadata): jsPDF {
     format: 'a4',
   });
 
-  const pageWidth = doc.internal.pageSize.getWidth();
-  const pageHeight = doc.internal.pageSize.getHeight();
+  const pageWidth = doc.internal.pageSize.getWidth(); // ~210mm
+  const pageHeight = doc.internal.pageSize.getHeight(); // ~297mm
   const orderDate = new Date(order.createdAt);
   const formattedDate = formatOrderDateIST(orderDate);
   const formattedTime = formatOrderTimeIST(orderDate);
 
-  // 1. Luxury Header Bar (Obsidian Background)
+  // 0. Base Page Background (Crisp Clean Luxury Canvas)
+  doc.setFillColor(255, 255, 255);
+  doc.rect(0, 0, pageWidth, pageHeight, 'F');
+
+  // 1. Luxury Header Banner (Obsidian Background)
   doc.setFillColor(24, 20, 17); // Obsidian #181411
-  doc.rect(0, 0, pageWidth, 40, 'F');
+  doc.rect(0, 0, pageWidth, 38, 'F');
 
   // Gold Accent Strip
   doc.setFillColor(216, 195, 154); // Gold #D8C39A
-  doc.rect(0, 40, pageWidth, 1.5, 'F');
+  doc.rect(0, 38, pageWidth, 1.5, 'F');
 
-  // Header Title
+  // Brand Name & Heritage Subtitle
   doc.setFont('helvetica', 'bold');
   doc.setFontSize(22);
   doc.setTextColor(250, 247, 240); // Pearl Ivory #FAF7F0
-  doc.text('C E L E S T I A', 15, 18);
+  doc.text('C E L E S T I A', 15, 17);
 
   doc.setFont('helvetica', 'normal');
   doc.setFontSize(8);
   doc.setTextColor(216, 195, 154);
-  doc.text('FINE JEWELLERY & BESPOKE ATELIER • MUMBAI', 15, 25);
+  doc.text('FINE JEWELLERY & BESPOKE ATELIER • MUMBAI', 15, 24);
   doc.setTextColor(200, 200, 200);
-  doc.text('Redefined for All.', 15, 30);
+  doc.text('Redefined for All. • MMXXVI', 15, 29);
 
-  // Invoice / Confirmation Label on Right
+  // Document Heading on Right
   doc.setFont('helvetica', 'bold');
-  doc.setFontSize(14);
+  doc.setFontSize(12);
   doc.setTextColor(250, 247, 240);
-  doc.text('TAX INVOICE & ORDER CONFIRMATION', pageWidth - 15, 18, { align: 'right' });
+  doc.text('TAX INVOICE & ORDER RECEIPT', pageWidth - 15, 17, { align: 'right' });
 
   doc.setFont('helvetica', 'normal');
-  doc.setFontSize(9);
+  doc.setFontSize(8.5);
   doc.setTextColor(216, 195, 154);
-  doc.text(`Order #${order.orderNumber}`, pageWidth - 15, 25, { align: 'right' });
+  doc.text(`Order #${order.orderNumber}`, pageWidth - 15, 24, { align: 'right' });
   doc.setTextColor(200, 200, 200);
-  doc.text(`${formattedDate} • ${formattedTime}`, pageWidth - 15, 30, { align: 'right' });
+  doc.text(`${formattedDate} • ${formattedTime}`, pageWidth - 15, 29, { align: 'right' });
 
-  // 2. Customer & Atelier Meta Block
-  let y = 50;
+  // 2. Customer Details & Fulfillment Summary Blocks
+  const startY = 48;
 
-  // Left Column: Customer & Delivery Destination
+  // Box 1: Billed & Shipped To (Left)
+  doc.setFillColor(250, 247, 240); // Pearl #FAF7F0
+  doc.setDrawColor(230, 220, 200);
+  doc.roundedRect(15, startY, 86, 38, 2, 2, 'FD');
+
   doc.setFont('helvetica', 'bold');
-  doc.setFontSize(10);
+  doc.setFontSize(8.5);
+  doc.setTextColor(122, 91, 40); // Gold
+  doc.text('BILLED & SHIPPED TO:', 19, startY + 6);
+
+  doc.setFont('helvetica', 'bold');
+  doc.setFontSize(9.5);
   doc.setTextColor(24, 20, 17);
-  doc.text('BILLED & SHIPPED TO:', 15, y);
+  doc.text(order.customer.name, 19, startY + 12);
+
+  doc.setFont('helvetica', 'normal');
+  doc.setFontSize(8);
+  doc.setTextColor(80, 70, 65);
+  const addressLines = doc.splitTextToSize(order.customer.address, 78);
+  doc.text(addressLines.slice(0, 2), 19, startY + 17);
+  doc.text(`Phone: ${order.customer.phone}`, 19, startY + 28);
+  doc.text(`Email: ${order.customer.email}`, 19, startY + 33);
+
+  // Box 2: Fulfillment & Payment Details (Right)
+  const rightBoxX = 109;
+  doc.setFillColor(250, 247, 240);
+  doc.setDrawColor(230, 220, 200);
+  doc.roundedRect(rightBoxX, startY, 86, 38, 2, 2, 'FD');
 
   doc.setFont('helvetica', 'bold');
-  doc.setFontSize(10);
-  doc.setTextColor(60, 50, 45);
-  doc.text(order.customer.name, 15, y + 6);
+  doc.setFontSize(8.5);
+  doc.setTextColor(122, 91, 40);
+  doc.text('FULFILLMENT & PAYMENT:', rightBoxX + 4, startY + 6);
+
+  doc.setFont('helvetica', 'normal');
+  doc.setFontSize(8);
+  doc.setTextColor(80, 70, 65);
+  
+  doc.text('Payment Mode:', rightBoxX + 4, startY + 12);
+  doc.setFont('helvetica', 'bold');
+  doc.setTextColor(24, 20, 17);
+  doc.text(`${order.paymentMethod} (${order.financialStatus.toUpperCase()})`, rightBoxX + 28, startY + 12);
+
+  doc.setFont('helvetica', 'normal');
+  doc.setTextColor(80, 70, 65);
+  doc.text('Dispatch Courier:', rightBoxX + 4, startY + 18);
+  doc.setFont('helvetica', 'bold');
+  doc.setTextColor(24, 20, 17);
+  doc.text(`${order.shippingMethod}`, rightBoxX + 28, startY + 18);
+
+  doc.setFont('helvetica', 'normal');
+  doc.setTextColor(80, 70, 65);
+  doc.text('Est. Delivery:', rightBoxX + 4, startY + 24);
+  doc.setFont('helvetica', 'bold');
+  doc.setTextColor(16, 120, 80); // Emerald
+  doc.text(`${order.estimatedDelivery?.estimatedDateFormatted || '2-3 Business Days'}`, rightBoxX + 28, startY + 24);
+
+  doc.setFont('helvetica', 'normal');
+  doc.setTextColor(80, 70, 65);
+  doc.text('AWB Tracking:', rightBoxX + 4, startY + 30);
+  doc.setFont('helvetica', 'bold');
+  doc.setTextColor(122, 91, 40);
+  doc.text(`${order.trackingNumber || 'MUM-EXP-LIVE'} (${order.carrier || 'Atelier Courier'})`, rightBoxX + 28, startY + 30);
+
+  // 3. Itemized Products Table (Pure Vector Geometry)
+  const tableX = 15;
+  let currentY = 94;
+  const tableWidth = pageWidth - 30; // 180mm
+
+  // Table Header Row
+  doc.setFillColor(24, 20, 17); // Obsidian
+  doc.rect(tableX, currentY, tableWidth, 8, 'F');
+
+  doc.setFont('helvetica', 'bold');
+  doc.setFontSize(8);
+  doc.setTextColor(250, 247, 240);
+  doc.text('#', tableX + 3, currentY + 5.5);
+  doc.text('ITEM DESCRIPTION & BESPOKE CUSTOMIZATION', tableX + 12, currentY + 5.5);
+  doc.text('QTY', tableX + 115, currentY + 5.5, { align: 'center' });
+  doc.text('UNIT PRICE', tableX + 145, currentY + 5.5, { align: 'right' });
+  doc.text('AMOUNT', tableX + tableWidth - 3, currentY + 5.5, { align: 'right' });
+
+  currentY += 8;
+
+  // Table Rows
+  order.items.forEach((item, index) => {
+    const isEven = index % 2 === 1;
+    const rowHeight = item.boxType || item.customNotes ? 14 : 9;
+
+    // Zebra striping
+    if (isEven) {
+      doc.setFillColor(252, 250, 246);
+      doc.rect(tableX, currentY, tableWidth, rowHeight, 'F');
+    }
+
+    // Row Bottom Border
+    doc.setDrawColor(235, 228, 215);
+    doc.line(tableX, currentY + rowHeight, tableX + tableWidth, currentY + rowHeight);
+
+    // Item Index
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(8);
+    doc.setTextColor(100, 90, 85);
+    doc.text(`${index + 1}`, tableX + 3, currentY + 5.5);
+
+    // Item Title
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(8.5);
+    doc.setTextColor(24, 20, 17);
+    doc.text(item.title, tableX + 12, currentY + 5.5);
+
+    // Packaging & Custom Notes Subtext
+    let subY = currentY + 9.5;
+    if (item.boxType) {
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(7.5);
+      doc.setTextColor(122, 91, 40);
+      doc.text(`Packaging: ${item.boxType}`, tableX + 12, subY);
+      subY += 4;
+    }
+    if (item.customNotes) {
+      doc.setFont('helvetica', 'italic');
+      doc.setFontSize(7);
+      doc.setTextColor(90, 80, 75);
+      doc.text(`Note: "${item.customNotes}"`, tableX + 12, subY);
+    }
+
+    // Qty
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(8.5);
+    doc.setTextColor(24, 20, 17);
+    doc.text(`${item.quantity}`, tableX + 115, currentY + 5.5, { align: 'center' });
+
+    // Unit Price
+    doc.text(`INR ${item.price.toLocaleString('en-IN')}`, tableX + 145, currentY + 5.5, { align: 'right' });
+
+    // Line Total
+    doc.setFont('helvetica', 'bold');
+    doc.text(`INR ${(item.price * item.quantity).toLocaleString('en-IN')}`, tableX + tableWidth - 3, currentY + 5.5, { align: 'right' });
+
+    currentY += rowHeight;
+  });
+
+  // 4. Financial Calculations Box
+  currentY += 6;
+  const summaryBlockX = pageWidth - 85;
 
   doc.setFont('helvetica', 'normal');
   doc.setFontSize(8.5);
   doc.setTextColor(90, 80, 75);
-  
-  // Wrap address neatly
-  const splitAddress = doc.splitTextToSize(order.customer.address, 85);
-  doc.text(splitAddress, 15, y + 11);
-  
-  const addressHeight = splitAddress.length * 4.5;
-  doc.text(`Phone: ${order.customer.phone}`, 15, y + 11 + addressHeight);
-  doc.text(`Email: ${order.customer.email}`, 15, y + 16 + addressHeight);
 
-  // Right Column: Atelier Details & Fulfillment Summary
-  const rightX = 115;
-  doc.setFont('helvetica', 'bold');
-  doc.setFontSize(10);
-  doc.setTextColor(24, 20, 17);
-  doc.text('FULFILLMENT & PAYMENT SUMMARY:', rightX, y);
+  doc.text('Subtotal:', summaryBlockX, currentY);
+  doc.text(`INR ${order.subtotal.toLocaleString('en-IN')}`, pageWidth - 15, currentY, { align: 'right' });
+  currentY += 5;
 
-  doc.setFont('helvetica', 'normal');
-  doc.setFontSize(8.5);
-  doc.setTextColor(60, 50, 45);
-  doc.text(`Payment Method: `, rightX, y + 6);
-  doc.setFont('helvetica', 'bold');
-  doc.text(`${order.paymentMethod} (${order.financialStatus.toUpperCase()})`, rightX + 30, y + 6);
-
-  doc.setFont('helvetica', 'normal');
-  doc.text(`Shipping Method: `, rightX, y + 11);
-  doc.setFont('helvetica', 'bold');
-  doc.text(`${order.shippingMethod}`, rightX + 30, y + 11);
-
-  doc.setFont('helvetica', 'normal');
-  doc.text(`Estimated Delivery: `, rightX, y + 16);
-  doc.setFont('helvetica', 'bold');
-  doc.setTextColor(16, 120, 80); // Emerald
-  doc.text(`${order.estimatedDelivery?.estimatedDateFormatted || '2-3 Business Days'}`, rightX + 30, y + 16);
-
-  if (order.trackingNumber) {
-    doc.setFont('helvetica', 'normal');
-    doc.setTextColor(60, 50, 45);
-    doc.text(`Tracking AWB: `, rightX, y + 21);
-    doc.setFont('helvetica', 'bold');
-    doc.setTextColor(122, 91, 40); // Gold
-    doc.text(`${order.trackingNumber} (${order.carrier})`, rightX + 30, y + 21);
-  }
-
-  // 3. Itemized Products Table
-  const tableStartY = Math.max(y + 24 + addressHeight, 82);
-
-  const tableBody = order.items.map((item, idx) => {
-    let description = item.title;
-    if (item.boxType) description += `\nPackaging: ${item.boxType}`;
-    if (item.customNotes) description += `\nCustom Note: "${item.customNotes}"`;
-
-    return [
-      idx + 1,
-      description,
-      item.quantity,
-      `INR ${item.price.toLocaleString('en-IN')}`,
-      `INR ${(item.price * item.quantity).toLocaleString('en-IN')}`,
-    ];
-  });
-
-  autoTable(doc, {
-    startY: tableStartY,
-    head: [['#', 'Item Description & Bespoke Customization', 'Qty', 'Unit Price', 'Total Amount']],
-    body: tableBody,
-    theme: 'grid',
-    headStyles: {
-      fillColor: [24, 20, 17],
-      textColor: [250, 247, 240],
-      fontStyle: 'bold',
-      fontSize: 8.5,
-      halign: 'left',
-    },
-    columnStyles: {
-      0: { cellWidth: 10, halign: 'center' },
-      1: { cellWidth: 'auto' },
-      2: { cellWidth: 15, halign: 'center' },
-      3: { cellWidth: 28, halign: 'right' },
-      4: { cellWidth: 32, halign: 'right', fontStyle: 'bold' },
-    },
-    styles: {
-      font: 'helvetica',
-      fontSize: 8.5,
-      cellPadding: 4,
-      textColor: [30, 26, 23],
-      lineColor: [230, 220, 200],
-      lineWidth: 0.2,
-    },
-    alternateRowStyles: {
-      fillColor: [251, 249, 245],
-    },
-    margin: { left: 15, right: 15 },
-  });
-
-  // 4. Financial Calculations Box
-  const finalY = (doc as any).lastAutoTable.finalY + 8;
-  const summaryX = pageWidth - 80;
-
-  doc.setFontSize(8.5);
-  doc.setFont('helvetica', 'normal');
-  doc.setTextColor(80, 70, 65);
-
-  doc.text('Subtotal:', summaryX, finalY);
-  doc.text(`INR ${order.subtotal.toLocaleString('en-IN')}`, pageWidth - 15, finalY, { align: 'right' });
-
-  doc.text('Shipping & Handling:', summaryX, finalY + 5);
+  doc.text('Express Shipping:', summaryBlockX, currentY);
   doc.text(
     order.shippingCost === 0 ? 'FREE (INR 0)' : `INR ${order.shippingCost.toLocaleString('en-IN')}`,
     pageWidth - 15,
-    finalY + 5,
+    currentY,
     { align: 'right' }
   );
+  currentY += 5;
 
   const discount = order.subtotal + order.shippingCost - order.total;
   if (discount > 0) {
     doc.setTextColor(16, 120, 80);
-    doc.text('Special Instant Discount:', summaryX, finalY + 10);
-    doc.text(`- INR ${discount.toLocaleString('en-IN')}`, pageWidth - 15, finalY + 10, { align: 'right' });
+    doc.text('Special Instant Discount:', summaryBlockX, currentY);
+    doc.text(`- INR ${discount.toLocaleString('en-IN')}`, pageWidth - 15, currentY, { align: 'right' });
+    currentY += 5;
   }
 
-  // Grand Total Box
-  const totalBoxY = finalY + (discount > 0 ? 15 : 10);
+  // Grand Total Highlight Pill
+  currentY += 2;
   doc.setFillColor(243, 235, 219); // Champagne #F3EBDB
-  doc.roundedRect(summaryX - 5, totalBoxY - 4, 70, 12, 2, 2, 'F');
   doc.setDrawColor(216, 195, 154);
-  doc.roundedRect(summaryX - 5, totalBoxY - 4, 70, 12, 2, 2, 'D');
+  doc.roundedRect(summaryBlockX - 4, currentY - 3.5, 74, 11, 2, 2, 'FD');
 
   doc.setFont('helvetica', 'bold');
-  doc.setFontSize(10.5);
+  doc.setFontSize(10);
   doc.setTextColor(24, 20, 17);
-  doc.text('Grand Total:', summaryX, totalBoxY + 3.5);
+  doc.text('Grand Total:', summaryBlockX, currentY + 3.5);
   doc.setTextColor(122, 91, 40);
-  doc.text(`INR ${order.total.toLocaleString('en-IN')}`, pageWidth - 15, totalBoxY + 3.5, { align: 'right' });
+  doc.text(`INR ${order.total.toLocaleString('en-IN')}`, pageWidth - 15, currentY + 3.5, { align: 'right' });
 
-  // 5. Unboxing Guarantee & Warranty Badge
-  const badgeY = Math.max(totalBoxY + 22, pageHeight - 45);
-  
+  // 5. Unboxing Guarantee & Warranty Seal (Bottom Box)
+  const sealY = pageHeight - 48;
   doc.setFillColor(250, 247, 240);
   doc.setDrawColor(216, 195, 154);
-  doc.roundedRect(15, badgeY, pageWidth - 30, 20, 3, 3, 'FD');
+  doc.roundedRect(15, sealY, pageWidth - 30, 22, 2.5, 2.5, 'FD');
 
   doc.setFont('helvetica', 'bold');
   doc.setFontSize(8.5);
   doc.setTextColor(122, 91, 40);
-  doc.text('CELESTIA ATELIER AUTHENTICITY & 100% ANTI-TARNISH SEAL', 20, badgeY + 6);
+  doc.text('CELESTIA ATELIER AUTHENTICITY & 100% ANTI-TARNISH SEAL', 20, sealY + 6.5);
 
   doc.setFont('helvetica', 'normal');
   doc.setFontSize(7.5);
@@ -223,17 +264,17 @@ export function generateOrderInvoicePDF(order: OrderMetadata): jsPDF {
   doc.text(
     'Every piece is individually handcrafted in Mumbai with hypoallergenic, anti-tarnish stainless steel & 18K gold vermeil. Please record an uncut unboxing video upon arrival for our 7-day hassle-free replacement warranty.',
     20,
-    badgeY + 11,
+    sealY + 12,
     { maxWidth: pageWidth - 40 }
   );
 
-  // 6. Footer Information
-  doc.setFontSize(7.5);
-  doc.setTextColor(130, 120, 115);
+  // 6. Atelier Signature & Support Footer
+  doc.setFontSize(7);
+  doc.setTextColor(140, 130, 125);
   doc.text(
-    `Questions or inquiries? WhatsApp Concierge: +91 7718825792 | Email: ${BRAND_INFO.email} | Mumbai Atelier 400050`,
+    `Questions or inquiries? WhatsApp Concierge: +91 7718825792 • Email: ${BRAND_INFO.email} • Bandra West Atelier, Mumbai 400050`,
     pageWidth / 2,
-    pageHeight - 10,
+    pageHeight - 12,
     { align: 'center' }
   );
 
@@ -241,18 +282,31 @@ export function generateOrderInvoicePDF(order: OrderMetadata): jsPDF {
 }
 
 /**
- * Triggers instant download of the PDF invoice in the browser
+ * Triggers instant, reliable download of the PDF invoice in the browser
  */
 export function downloadOrderInvoicePDF(order: OrderMetadata): void {
-  const doc = generateOrderInvoicePDF(order);
-  const filename = `CELESTIA_Order_${order.orderNumber}.pdf`;
-  doc.save(filename);
-}
-
-/**
- * Generates PDF binary data as base64 or blob for email attachments
- */
-export function getOrderInvoiceBlob(order: OrderMetadata): Blob {
-  const doc = generateOrderInvoicePDF(order);
-  return doc.output('blob');
+  try {
+    const doc = generateOrderInvoicePDF(order);
+    const filename = `CELESTIA_Order_${order.orderNumber}.pdf`;
+    
+    // Use standard jsPDF save
+    doc.save(filename);
+  } catch (err) {
+    console.error('[PDF Engine] Error saving PDF, falling back to blob open:', err);
+    // Fallback: Open generated blob in new window for direct print/save
+    try {
+      const doc = generateOrderInvoicePDF(order);
+      const blob = doc.output('blob');
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `CELESTIA_Order_${order.orderNumber}.pdf`;
+      link.target = '_blank';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    } catch (fallbackErr) {
+      console.error('[PDF Engine] Fallback failed:', fallbackErr);
+    }
+  }
 }

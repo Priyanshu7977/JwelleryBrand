@@ -49,6 +49,7 @@ export const OrderSuccessPage: React.FC = () => {
   const [order, setOrder] = useState<OrderMetadata | null>(stateOrder || null);
   const [loading, setLoading] = useState<boolean>(!stateOrder);
   const [isDownloadingPdf, setIsDownloadingPdf] = useState(false);
+  const [emailInfo, setEmailInfo] = useState<{ gmailUrl?: string; mailtoUrl?: string } | null>(null);
 
   // Trigger celebration confetti on mount
   useEffect(() => {
@@ -70,14 +71,22 @@ export const OrderSuccessPage: React.FC = () => {
         .then((fetched) => {
           setOrder(fetched);
           if (fetched) {
-            sendOrderConfirmationEmail(fetched).catch(() => {});
+            sendOrderConfirmationEmail(fetched)
+              .then((res) => {
+                if (res?.gmailUrl) setEmailInfo({ gmailUrl: res.gmailUrl, mailtoUrl: res.mailtoUrl });
+              })
+              .catch(() => {});
           }
         })
         .finally(() => {
           setLoading(false);
         });
     } else if (order) {
-      sendOrderConfirmationEmail(order).catch(() => {});
+      sendOrderConfirmationEmail(order)
+        .then((res) => {
+          if (res?.gmailUrl) setEmailInfo({ gmailUrl: res.gmailUrl, mailtoUrl: res.mailtoUrl });
+        })
+        .catch(() => {});
     }
   }, [orderId, order]);
 
@@ -89,7 +98,7 @@ export const OrderSuccessPage: React.FC = () => {
     } catch (e) {
       console.error('PDF download error:', e);
     } finally {
-      setTimeout(() => setIsDownloadingPdf(false), 1000);
+      setTimeout(() => setIsDownloadingPdf(false), 800);
     }
   };
 
@@ -220,6 +229,44 @@ export const OrderSuccessPage: React.FC = () => {
             <p className="text-xs font-mono font-semibold text-emerald-800">
               {deliveryTimeWindow}
             </p>
+          </div>
+
+          {/* Interactive Confirmation Email & Tax Invoice Hub */}
+          <div className="p-4 sm:p-5 rounded-2xl bg-white border border-champagne-300/80 max-w-lg mx-auto space-y-3 text-left shadow-xs">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2 text-obsidian font-bold text-xs sm:text-sm">
+                <Mail className="w-4 h-4 text-gold-dark shrink-0" />
+                <span>Confirmation Dispatched</span>
+              </div>
+              <span className="text-[10px] font-mono text-emerald-800 bg-emerald-100 px-2 py-0.5 rounded-full font-bold">
+                Sent to {order.customer.email.split('@')[0]}...
+              </span>
+            </div>
+
+            <p className="text-xs text-obsidian-soft leading-relaxed">
+              Your official order receipt has been prepared for <strong className="text-obsidian">{order.customer.email}</strong> with attached invoice <code className="text-[11px] font-mono bg-champagne-100/70 px-1.5 py-0.5 rounded text-gold-dark font-bold">CELESTIA_Order_{order.orderNumber}.pdf</code>.
+            </p>
+
+            <div className="flex flex-wrap items-center gap-2 pt-1">
+              <a
+                href={emailInfo?.gmailUrl || `https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(order.customer.email)}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="px-3.5 py-1.5 rounded-full bg-obsidian text-pearl-100 hover:bg-obsidian-200 text-xs font-mono font-bold transition-all flex items-center gap-1.5 shadow-xs"
+              >
+                <Mail className="w-3.5 h-3.5 text-gold-dark" />
+                <span>Open in Gmail</span>
+              </a>
+
+              <button
+                onClick={handleDownloadInvoice}
+                disabled={isDownloadingPdf}
+                className="px-3.5 py-1.5 rounded-full bg-champagne-100 hover:bg-champagne-200 text-obsidian border border-champagne-300 text-xs font-mono font-bold transition-all flex items-center gap-1.5 shadow-xs cursor-pointer"
+              >
+                <Download className={`w-3.5 h-3.5 text-gold-dark ${isDownloadingPdf ? 'animate-bounce' : ''}`} />
+                <span>{isDownloadingPdf ? 'Generating PDF...' : 'Download Invoice PDF'}</span>
+              </button>
+            </div>
           </div>
 
           {/* ======================================================================= */}
