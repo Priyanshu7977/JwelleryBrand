@@ -266,6 +266,18 @@ export const Navigation: React.FC = () => {
               Community
             </NavLink>
 
+            {/* Gazette / Blog */}
+            <NavLink
+              to="/blog"
+              className={({ isActive }) =>
+                `text-[11px] uppercase tracking-widest-luxury transition-colors font-semibold whitespace-nowrap ${
+                  isActive ? 'text-gold-dark font-bold' : 'text-obsidian hover:text-gold-dark'
+                }`
+              }
+            >
+              Gazette
+            </NavLink>
+
             {/* Contact */}
             <NavLink
               to="/contact"
@@ -569,6 +581,17 @@ export const Navigation: React.FC = () => {
                   }
                 >
                   Community & Instagram
+                </NavLink>
+
+                <NavLink
+                  to="/blog"
+                  className={({ isActive }) =>
+                    `block text-base uppercase tracking-widest font-serif transition-colors ${
+                      isActive ? 'text-gold-dark font-bold' : 'text-obsidian hover:text-gold-dark'
+                    }`
+                  }
+                >
+                  The Gazette & Style Notes
                 </NavLink>
 
                 <NavLink

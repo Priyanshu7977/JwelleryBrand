@@ -40,6 +40,8 @@ const AccountPage = lazy(() => import('./pages/AccountPage').then(m => ({ defaul
 const OrdersPage = lazy(() => import('./pages/OrdersPage').then(m => ({ default: m.OrdersPage })));
 const OrderDetailPage = lazy(() => import('./pages/OrderDetailPage').then(m => ({ default: m.OrderDetailPage })));
 const OrderTrackingPage = lazy(() => import('./pages/OrderTrackingPage').then(m => ({ default: m.OrderTrackingPage })));
+const BlogPage = lazy(() => import('./pages/BlogPage').then(m => ({ default: m.BlogPage })));
+const BlogPostDetailPage = lazy(() => import('./pages/BlogPostDetailPage').then(m => ({ default: m.BlogPostDetailPage })));
 const ShippingReturnsPage = lazy(() => import('./pages/ShippingReturnsPage').then(m => ({ default: m.ShippingReturnsPage })));
 const TermsPage = lazy(() => import('./pages/TermsPage').then(m => ({ default: m.TermsPage })));
 const PrivacyPage = lazy(() => import('./pages/PrivacyPage').then(m => ({ default: m.PrivacyPage })));
@@ -151,6 +153,11 @@ const AppShell: React.FC = () => {
               <Route path="/track" element={<OrderTrackingPage />} />
               <Route path="/order-tracking" element={<OrderTrackingPage />} />
               <Route path="/order-tracking/:trackingId" element={<OrderTrackingPage />} />
+              <Route path="/blog" element={<BlogPage />} />
+              <Route path="/blogs" element={<BlogPage />} />
+              <Route path="/blogs/news" element={<BlogPage />} />
+              <Route path="/blog/:slug" element={<BlogPostDetailPage />} />
+              <Route path="/blogs/:slug" element={<BlogPostDetailPage />} />
               <Route path="/shipping-returns" element={<ShippingReturnsPage />} />
               <Route path="/terms" element={<TermsPage />} />
               <Route path="/privacy" element={<PrivacyPage />} />
