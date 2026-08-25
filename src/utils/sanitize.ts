@@ -1,4 +1,4 @@
-﻿/**
+/**
  * Celestia Atelier Security & Input Sanitization Utilities
  * Prevents XSS, script injection, iframe embedding, and malicious tag execution across all input fields.
  */
@@ -49,3 +49,18 @@ export const sanitizePassword = (val: string): string => {
     .replace(/<iframe\b[^<]*(?:(?!<\/iframe>)<[^<]*)*<\/iframe>/gi, '')
     .replace(/[<>]/g, '');
 };
+
+/**
+ * Strict Alphanumeric Coupon Sanitizer
+ * Strips all HTML tags, script, iframe, symbols, punctuation, spaces, quotes, brackets (< > / \ " ' = ` ; etc.)
+ * Strictly preserves ONLY letters (A-Z) and numbers (0-9).
+ */
+export const sanitizeCouponCode = (val: string): string => {
+  if (!val) return '';
+  return val
+    .replace(/<[^>]*>/g, '')
+    .replace(/[^a-zA-Z0-9]/g, '')
+    .toUpperCase()
+    .slice(0, 20);
+};
+

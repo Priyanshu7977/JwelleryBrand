@@ -22,6 +22,7 @@ import {
 import { WhatsAppIcon } from '../ui/WhatsAppIcon';
 import { useCart, POPULAR_COUPONS } from '../../context/CartContext';
 import { BRAND_INFO, FEATURED_PRODUCTS } from '../../data/shopify-data';
+import { sanitizeCouponCode } from '../../utils/sanitize';
 
 export const CartDrawer: React.FC = () => {
   const navigate = useNavigate();
@@ -62,7 +63,13 @@ export const CartDrawer: React.FC = () => {
   const grandTotal = finalPayable + shippingCost;
 
   const handleApplyCoupon = (codeToApply: string) => {
-    const res = applyCoupon(codeToApply);
+    const clean = sanitizeCouponCode(codeToApply);
+    setCouponInput(clean);
+    if (!clean) {
+      showToast("Please enter a valid coupon code (letters and numbers only).");
+      return;
+    }
+    const res = applyCoupon(clean);
     if (res.success) {
       setCouponInput('');
     } else {
@@ -304,28 +311,45 @@ export const CartDrawer: React.FC = () => {
                               }
                             }}
                             onKeyDown={(e) => {
-                              if (e.key.length > 1 || e.ctrlKey || e.metaKey) return;
-                              if (!/[a-zA-Z0-9]/.test(e.key)) {
+                              if (['Backspace', 'Delete', 'ArrowLeft', 'ArrowRight', 'Tab', 'Enter', 'Escape'].includes(e.key) || e.ctrlKey || e.metaKey) {
+                                return;
+                              }
+                              if (!/^[a-zA-Z0-9]$/.test(e.key)) {
                                 e.preventDefault();
+                                e.stopPropagation();
+                              }
+                            }}
+                            onKeyUp={(e) => {
+                              const clean = sanitizeCouponCode(e.currentTarget.value);
+                              if (e.currentTarget.value !== clean) {
+                                e.currentTarget.value = clean;
+                                setCouponInput(clean);
                               }
                             }}
                             onPaste={(e) => {
                               e.preventDefault();
-                              const paste = e.clipboardData.getData('text');
-                              const clean = paste.replace(/[^a-zA-Z0-9]/g, '').toUpperCase().slice(0, 20);
+                              const paste = e.clipboardData.getData('text') || '';
+                              const clean = sanitizeCouponCode(paste);
                               setCouponInput(clean);
                             }}
                             onInput={(e: React.FormEvent<HTMLInputElement>) => {
-                              const clean = e.currentTarget.value.replace(/[^a-zA-Z0-9]/g, '').toUpperCase().slice(0, 20);
+                              const clean = sanitizeCouponCode(e.currentTarget.value);
                               e.currentTarget.value = clean;
                               setCouponInput(clean);
                             }}
                             onChange={(e) => {
-                              const clean = e.target.value.replace(/[^a-zA-Z0-9]/g, '').toUpperCase().slice(0, 20);
+                              const clean = sanitizeCouponCode(e.target.value);
+                              setCouponInput(clean);
+                            }}
+                            onBlur={(e) => {
+                              const clean = sanitizeCouponCode(e.target.value);
                               setCouponInput(clean);
                             }}
                             maxLength={20}
                             pattern="[a-zA-Z0-9]+"
+                            autoComplete="off"
+                            autoCorrect="off"
+                            spellCheck={false}
                             title="Promo codes only contain letters and numbers"
                             className="flex-1 h-8 px-2.5 text-xs font-mono uppercase bg-pearl-50 rounded-lg border border-champagne-300 focus:outline-none focus:border-gold-dark text-obsidian"
                           />

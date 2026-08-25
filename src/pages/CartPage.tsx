@@ -17,6 +17,7 @@ import {
 } from 'lucide-react';
 import { WhatsAppIcon } from '../components/ui/WhatsAppIcon';
 import { SEOHead } from '../components/seo/SEOHead';
+import { sanitizeCouponCode } from '../utils/sanitize';
 
 export const CartPage: React.FC = () => {
   const navigate = useNavigate();
@@ -48,7 +49,13 @@ export const CartPage: React.FC = () => {
   const grandTotal = finalPayable + shippingCost;
 
   const handleApplyPromo = (codeToApply: string) => {
-    const res = applyCoupon(codeToApply);
+    const clean = sanitizeCouponCode(codeToApply);
+    setPromoInput(clean);
+    if (!clean) {
+      showToast("Please enter a valid promo code (letters and numbers only).");
+      return;
+    }
+    const res = applyCoupon(clean);
     if (res.success) {
       setPromoInput('');
     } else {
@@ -269,28 +276,45 @@ export const CartPage: React.FC = () => {
                           }
                         }}
                         onKeyDown={(e) => {
-                          if (e.key.length > 1 || e.ctrlKey || e.metaKey) return;
-                          if (!/[a-zA-Z0-9]/.test(e.key)) {
+                          if (['Backspace', 'Delete', 'ArrowLeft', 'ArrowRight', 'Tab', 'Enter', 'Escape'].includes(e.key) || e.ctrlKey || e.metaKey) {
+                            return;
+                          }
+                          if (!/^[a-zA-Z0-9]$/.test(e.key)) {
                             e.preventDefault();
+                            e.stopPropagation();
+                          }
+                        }}
+                        onKeyUp={(e) => {
+                          const clean = sanitizeCouponCode(e.currentTarget.value);
+                          if (e.currentTarget.value !== clean) {
+                            e.currentTarget.value = clean;
+                            setPromoInput(clean);
                           }
                         }}
                         onPaste={(e) => {
                           e.preventDefault();
-                          const paste = e.clipboardData.getData('text');
-                          const clean = paste.replace(/[^a-zA-Z0-9]/g, '').toUpperCase().slice(0, 20);
+                          const paste = e.clipboardData.getData('text') || '';
+                          const clean = sanitizeCouponCode(paste);
                           setPromoInput(clean);
                         }}
                         onInput={(e: React.FormEvent<HTMLInputElement>) => {
-                          const clean = e.currentTarget.value.replace(/[^a-zA-Z0-9]/g, '').toUpperCase().slice(0, 20);
+                          const clean = sanitizeCouponCode(e.currentTarget.value);
                           e.currentTarget.value = clean;
                           setPromoInput(clean);
                         }}
                         onChange={(e) => {
-                          const clean = e.target.value.replace(/[^a-zA-Z0-9]/g, '').toUpperCase().slice(0, 20);
+                          const clean = sanitizeCouponCode(e.target.value);
+                          setPromoInput(clean);
+                        }}
+                        onBlur={(e) => {
+                          const clean = sanitizeCouponCode(e.target.value);
                           setPromoInput(clean);
                         }}
                         maxLength={20}
                         pattern="[a-zA-Z0-9]+"
+                        autoComplete="off"
+                        autoCorrect="off"
+                        spellCheck={false}
                         title="Promo codes only contain letters and numbers"
                         placeholder="Promo code (e.g. CELESTIA10)"
                         className="flex-1 px-3.5 py-2 rounded-xl border border-champagne-300 text-xs uppercase font-mono text-obsidian focus:outline-none focus:border-gold-dark"

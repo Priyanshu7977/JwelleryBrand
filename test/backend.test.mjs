@@ -217,9 +217,12 @@ function validateCouponInput(rawCode) {
 
 assert(validateCouponInput('CELESTIA10').valid === true, 'Valid alphanumeric coupon code accepted', 'CouponSecurity');
 assert(validateCouponInput('PREPAID50').valid === true, 'Valid alphanumeric coupon code 2 accepted', 'CouponSecurity');
+assert(validateCouponInput('<>').valid === false, 'Angle brackets "<>" strictly rejected', 'CouponSecurity');
+assert(validateCouponInput('< >').valid === false, 'Angle brackets with space "< >" strictly rejected', 'CouponSecurity');
 assert(validateCouponInput('<SCR>').valid === false, 'XSS injection attempt "<SCR>" strictly rejected', 'CouponSecurity');
 assert(validateCouponInput('<script>alert(1)</script>').valid === false, 'Script tag "<script>" strictly rejected', 'CouponSecurity');
 assert(validateCouponInput('<iframe src="x"></iframe>').valid === false, 'Iframe tag "<iframe>" strictly rejected', 'CouponSecurity');
+assert(validateCouponInput('javascript:alert(1)').valid === false, 'Javascript pseudo-protocol strictly rejected', 'CouponSecurity');
 assert(validateCouponInput('CELESTIA 10').valid === false, 'Coupon containing space strictly rejected', 'CouponSecurity');
 assert(validateCouponInput('CELESTIA#10!').valid === false, 'Coupon containing symbols strictly rejected', 'CouponSecurity');
 
