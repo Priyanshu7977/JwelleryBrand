@@ -4,6 +4,14 @@ import { BRAND_INFO, FEATURED_PRODUCTS, HAMPER_BOX_OPTIONS } from '../data/shopi
 import { atelierSound } from '../utils/audioAtelier';
 import confetti from 'canvas-confetti';
 
+export interface AppliedCoupon {
+  code: string;
+  type: 'percent' | 'flat' | 'shipping';
+  value: number;
+  description: string;
+  minOrder?: number;
+}
+
 interface CartContextType {
   cart: CartItem[];
   addToCart: (product: Product, quantity?: number, personalisation?: CartItem['selectedPersonalisation']) => void;
@@ -12,6 +20,11 @@ interface CartContextType {
   clearCart: () => void;
   totalItems: number;
   subtotal: number;
+  discountAmount: number;
+  finalPayable: number;
+  appliedCoupon: AppliedCoupon | null;
+  applyCoupon: (code: string) => { success: boolean; message: string };
+  removeCoupon: () => void;
   isCartOpen: boolean;
   setIsCartOpen: (open: boolean) => void;
   quickViewProduct: Product | null;
@@ -33,6 +46,14 @@ interface CartContextType {
 }
 
 const CART_STORAGE_KEY = 'celestia_cart_items';
+const COUPON_STORAGE_KEY = 'celestia_applied_coupon';
+
+export const POPULAR_COUPONS: AppliedCoupon[] = [
+  { code: 'CELESTIA10', type: 'percent', value: 10, description: '10% OFF Entire Order' },
+  { code: 'FIRSTBUY', type: 'flat', value: 150, description: '₹150 Flat Off (Min. ₹499)', minOrder: 499 },
+  { code: 'ROYAL500', type: 'flat', value: 500, description: '₹500 Flat Off (Min. ₹1,999)', minOrder: 1999 },
+  { code: 'BONKERSTYLE', type: 'percent', value: 15, description: '15% Streetwear Drop Discount' }
+];
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
 
@@ -43,7 +64,15 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
       const saved = localStorage.getItem(CART_STORAGE_KEY);
       if (saved) return JSON.parse(saved);
     } catch {}
-    return []; // Clean empty baseline
+    return [];
+  });
+
+  const [appliedCoupon, setAppliedCoupon] = useState<AppliedCoupon | null>(() => {
+    try {
+      const saved = localStorage.getItem(COUPON_STORAGE_KEY);
+      if (saved) return JSON.parse(saved);
+    } catch {}
+    return null;
   });
 
   const [isCartOpen, setIsCartOpen] = useState(false);
@@ -56,12 +85,22 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [selectedHamperBox, setSelectedHamperBox] = useState<HamperBoxOption>(HAMPER_BOX_OPTIONS[0]);
   const [polaroidNote, setPolaroidNote] = useState<string>("To my favourite person, shining always ✨");
 
-  // Persist single global cart to localStorage
+  // Persist single global cart & coupon to localStorage
   useEffect(() => {
     try {
       localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(cart));
     } catch {}
   }, [cart]);
+
+  useEffect(() => {
+    try {
+      if (appliedCoupon) {
+        localStorage.setItem(COUPON_STORAGE_KEY, JSON.stringify(appliedCoupon));
+      } else {
+        localStorage.removeItem(COUPON_STORAGE_KEY);
+      }
+    } catch {}
+  }, [appliedCoupon]);
 
   const showToast = (msg: string) => {
     setToastMessage(msg);
@@ -135,8 +174,10 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const clearCart = () => {
     setCart([]);
+    setAppliedCoupon(null);
     try {
       localStorage.removeItem(CART_STORAGE_KEY);
+      localStorage.removeItem(COUPON_STORAGE_KEY);
     } catch {}
   };
 
@@ -145,6 +186,48 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
     (total, item) => total + item.product.price * item.quantity,
     0
   );
+
+  // Calculate discount
+  let discountAmount = 0;
+  if (appliedCoupon && subtotal > 0) {
+    if (appliedCoupon.minOrder && subtotal < appliedCoupon.minOrder) {
+      discountAmount = 0;
+    } else if (appliedCoupon.type === 'percent') {
+      discountAmount = Math.round((subtotal * appliedCoupon.value) / 100);
+    } else if (appliedCoupon.type === 'flat') {
+      discountAmount = Math.min(subtotal, appliedCoupon.value);
+    }
+  }
+
+  const finalPayable = Math.max(0, subtotal - discountAmount);
+
+  const applyCoupon = (rawCode: string): { success: boolean; message: string } => {
+    const clean = rawCode.trim().toUpperCase();
+    if (!clean) {
+      return { success: false, message: 'Please enter a coupon code.' };
+    }
+
+    const found = POPULAR_COUPONS.find(c => c.code === clean);
+    if (!found) {
+      return { success: false, message: `Coupon code "${clean}" is invalid.` };
+    }
+
+    if (found.minOrder && subtotal < found.minOrder) {
+      return {
+        success: false,
+        message: `Add ₹${found.minOrder - subtotal} more to unlock "${clean}".`
+      };
+    }
+
+    setAppliedCoupon(found);
+    showToast(`✨ Coupon "${found.code}" applied!`);
+    return { success: true, message: `Coupon "${found.code}" applied successfully!` };
+  };
+
+  const removeCoupon = () => {
+    setAppliedCoupon(null);
+    showToast('Coupon removed');
+  };
 
   // Derived directly from the single global cart to prevent parallel detached states
   const hamperItems = cart.map(item => item.product);
@@ -166,7 +249,10 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
       return;
     }
     const itemList = cart.map(i => `• ${i.product.title} (x${i.quantity}) - ₹${i.product.price * i.quantity}`).join('%0A');
-    const msg = `Hello%20Celestia%20Team!%20✨%0A%0AI%20would%20like%20to%20place%20an%20order%20for:%0A${itemList}%0A%0A*Total%20Order%20Value:*%20₹${subtotal}%0A*Shipping:*%20${subtotal >= BRAND_INFO.freeShippingThreshold ? 'FREE%20Express' : '₹99'}%0A%0APlease%20confirm%20availability%20for%20Same-Day%20Mumbai%20/%20Pan-India%20dispatch.`;
+    const discountLine = discountAmount > 0 ? `%0A*Discount Applied (${appliedCoupon?.code}):* -₹${discountAmount}` : '';
+    const shippingLine = `%0A*Shipping:* ${finalPayable >= BRAND_INFO.freeShippingThreshold ? 'FREE Express' : '₹99'}`;
+    const totalLine = `%0A*Total Order Value:* ₹${finalPayable + (finalPayable >= BRAND_INFO.freeShippingThreshold ? 0 : 99)}`;
+    const msg = `Hello%20Celestia%20Team!%20✨%0A%0AI%20would%20like%20to%20place%20an%20order%20for:%0A${itemList}${discountLine}${shippingLine}${totalLine}%0A%0APlease%20confirm%20availability%20for%20Same-Day%20Mumbai%20/%20Pan-India%20dispatch.`;
     window.open(`https://wa.me/917718825792?text=${msg}`, '_blank');
   };
 
@@ -180,6 +266,11 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
         clearCart,
         totalItems,
         subtotal,
+        discountAmount,
+        finalPayable,
+        appliedCoupon,
+        applyCoupon,
+        removeCoupon,
         isCartOpen,
         setIsCartOpen,
         quickViewProduct,
