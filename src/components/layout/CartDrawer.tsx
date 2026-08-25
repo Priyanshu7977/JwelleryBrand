@@ -83,10 +83,10 @@ export const CartDrawer: React.FC = () => {
       />
 
       {/* Slide-over Drawer Panel */}
-      <div className="relative w-full max-w-md bg-pearl-100 h-full shadow-2xl flex flex-col justify-between z-10 border-l border-champagne-300/60 selection:bg-champagne-300">
+      <div className="relative w-full max-w-full sm:max-w-md bg-pearl-100 h-full h-[100dvh] max-h-[100dvh] shadow-2xl flex flex-col overflow-hidden z-10 border-l border-champagne-300/60 selection:bg-champagne-300">
         
         {/* Drawer Header */}
-        <div className="p-4 sm:p-5 border-b border-champagne-300/40 bg-pearl-50">
+        <div className="p-3.5 sm:p-5 border-b border-champagne-300/40 bg-pearl-50 shrink-0">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2.5">
               <div className="w-8 h-8 rounded-full bg-champagne-100 flex items-center justify-center text-gold-dark shadow-xs">
@@ -151,7 +151,7 @@ export const CartDrawer: React.FC = () => {
         </div>
 
         {/* Item List Container */}
-        <div className="flex-1 overflow-y-auto p-4 sm:p-5 space-y-3.5 scrollbar-thin">
+        <div className="flex-1 min-h-0 overflow-y-auto overscroll-contain p-3.5 sm:p-5 space-y-3.5 scrollbar-thin pb-6">
           {cart.length === 0 ? (
             <div className="h-full flex flex-col items-center justify-center text-center p-6 space-y-4">
               <div className="w-20 h-20 rounded-full bg-champagne-100/70 border border-champagne-300/60 flex items-center justify-center text-gold-dark shadow-sm">
@@ -398,9 +398,9 @@ export const CartDrawer: React.FC = () => {
 
         {/* Footer Checkout Summary */}
         {cart.length > 0 && (
-          <div className="p-4 sm:p-5 bg-pearl-50 border-t border-champagne-300/40 space-y-3.5">
+          <div className="p-3.5 sm:p-5 bg-pearl-50 border-t border-champagne-300/40 space-y-2.5 sm:space-y-3.5 shrink-0">
             {/* Price Calculations */}
-            <div className="space-y-1.5 text-xs">
+            <div className="space-y-1 sm:space-y-1.5 text-xs">
               <div className="flex justify-between text-obsidian-soft">
                 <span>Subtotal</span>
                 <span className="font-mono font-medium text-obsidian">₹{subtotal}</span>
@@ -424,21 +424,21 @@ export const CartDrawer: React.FC = () => {
                 </span>
               </div>
 
-              <div className="flex justify-between items-baseline pt-2 border-t border-champagne-300/40 text-obsidian">
+              <div className="flex justify-between items-baseline pt-1.5 sm:pt-2 border-t border-champagne-300/40 text-obsidian">
                 <div>
-                  <span className="font-serif-luxury text-base font-bold">Estimated Total</span>
+                  <span className="font-serif-luxury text-sm sm:text-base font-bold">Estimated Total</span>
                   <span className="text-[10px] text-obsidian-soft block">(Incl. of all Indian taxes)</span>
                 </div>
-                <span className="font-mono font-bold text-xl text-gold-dark">
+                <span className="font-mono font-bold text-lg sm:text-xl text-gold-dark">
                   ₹{grandTotal}
                 </span>
               </div>
             </div>
 
             {/* Bonkers Corner Style Prepaid Discount Badge */}
-            <div className="p-2.5 bg-gradient-to-r from-emerald-50 to-champagne-100/60 rounded-2xl border border-emerald-300/80 flex items-center justify-between text-xs text-emerald-950">
-              <span className="flex items-center gap-1.5 font-medium">
-                <Zap className="w-4 h-4 text-emerald-600 shrink-0" />
+            <div className="p-2 sm:p-2.5 bg-gradient-to-r from-emerald-50 to-champagne-100/60 rounded-2xl border border-emerald-300/80 flex items-center justify-between text-xs text-emerald-950">
+              <span className="flex items-center gap-1.5 font-medium text-[11px] sm:text-xs">
+                <Zap className="w-3.5 sm:w-4 h-3.5 sm:h-4 text-emerald-600 shrink-0" />
                 <span>Extra ₹50 Off on UPI / Prepaid</span>
               </span>
               <span className="font-mono font-bold text-emerald-700 bg-emerald-100 px-2 py-0.5 rounded-full text-[10px] uppercase">
@@ -447,14 +447,14 @@ export const CartDrawer: React.FC = () => {
             </div>
 
             {/* CTAs */}
-            <div className="space-y-2 pt-1">
-              {/* Primary GoKwik-Style Direct Checkout */}
+            <div className="space-y-1.5 sm:space-y-2 pt-0.5 sm:pt-1">
+              {/* Primary Direct Checkout */}
               <button
                 onClick={() => {
                   setIsCartOpen(false);
                   navigate('/checkout');
                 }}
-                className="w-full min-h-[48px] h-12 flex items-center justify-between px-6 rounded-full bg-obsidian text-pearl-100 hover:bg-obsidian-200 transition-all font-sans text-xs uppercase tracking-widest font-bold shadow-lg cursor-pointer group"
+                className="w-full min-h-[44px] sm:min-h-[48px] h-11 sm:h-12 flex items-center justify-between px-5 sm:px-6 rounded-full bg-obsidian text-pearl-100 hover:bg-obsidian-200 transition-all font-sans text-xs uppercase tracking-widest font-bold shadow-lg cursor-pointer group"
               >
                 <div className="flex items-center gap-2">
                   <Lock className="w-3.5 h-3.5 text-gold-dark shrink-0" />
@@ -469,9 +469,9 @@ export const CartDrawer: React.FC = () => {
               {/* Instant WhatsApp Checkout */}
               <button
                 onClick={checkoutViaWhatsApp}
-                className="w-full min-h-[48px] h-12 flex items-center justify-center gap-2.5 px-6 rounded-full bg-emerald-800 text-pearl-50 hover:bg-emerald-900 transition-all font-sans text-xs uppercase tracking-widest font-bold shadow-sm cursor-pointer"
+                className="w-full min-h-[44px] sm:min-h-[48px] h-11 sm:h-12 flex items-center justify-center gap-2 px-5 sm:px-6 rounded-full bg-emerald-800 text-pearl-50 hover:bg-emerald-900 transition-all font-sans text-xs uppercase tracking-widest font-bold shadow-sm cursor-pointer"
               >
-                <WhatsAppIcon className="w-5 h-5 shrink-0" />
+                <WhatsAppIcon className="w-4 sm:w-5 h-4 sm:h-5 shrink-0" />
                 <span>Instant WhatsApp Checkout</span>
               </button>
             </div>
