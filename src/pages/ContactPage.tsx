@@ -21,6 +21,41 @@ import {
 } from 'lucide-react';
 import { RevealOnScroll } from '../components/motion/RevealOnScroll';
 
+// Official WhatsApp Brand Logo
+const OfficialWhatsAppIcon: React.FC<{ className?: string }> = ({ className = "w-10 h-10" }) => (
+  <svg className={className} viewBox="0 0 24 24" fill="none">
+    <circle cx="12" cy="12" r="12" fill="#25D366" />
+    <path
+      d="M17.5 14.36c-.25-.12-1.46-.72-1.69-.8-.23-.09-.39-.13-.56.12-.17.25-.65.8-.8.97-.15.17-.3.19-.55.07-.25-.13-1.07-.39-2.03-1.25-.75-.67-1.26-1.5-1.41-1.75-.15-.25-.02-.39.11-.51.11-.11.25-.29.37-.44.13-.15.17-.25.26-.42.08-.17.04-.32-.02-.44-.06-.13-.56-1.34-.77-1.84-.2-.48-.4-.42-.56-.43h-.48c-.16 0-.42.06-.65.31-.23.25-.87.85-.87 2.08s.89 2.41 1.01 2.58c.13.17 1.76 2.68 4.25 3.76.59.26 1.06.41 1.42.53.6.19 1.14.16 1.57.1.48-.07 1.46-.6 1.67-1.18.2-.58.2-1.08.14-1.19-.06-.11-.22-.17-.47-.29z"
+      fill="#FFFFFF"
+    />
+  </svg>
+);
+
+// Official Google Gmail Brand Logo
+const OfficialGmailIcon: React.FC<{ className?: string }> = ({ className = "w-6 h-6" }) => (
+  <svg className={className} viewBox="0 0 24 24" fill="none">
+    <path
+      d="M20.5 5.5v13a1.5 1.5 0 0 1-1.5 1.5H18V10.2L12 14.7 6 10.2V20H5a1.5 1.5 0 0 1-1.5-1.5v-13c0-1.7 1.9-2.7 3.3-1.6L12 8.7l5.2-3.8c1.4-1.1 3.3-.1 3.3 1.6z"
+      fill="#4285F4"
+    />
+    <path d="M12 14.7l6-4.5V4l-6 4.5L6 4v6.2l6 4.5z" fill="#EA4335" />
+    <path d="M18 4l2.5 1.8c.6.4 1 1.2 1 2V4h-3.5z" fill="#FBBC05" />
+    <path d="M6 4L3.5 5.8c-.6.4-1 1.2-1 2V4H6z" fill="#34A853" />
+  </svg>
+);
+
+// Official Phone / Call Logo
+const OfficialPhoneIcon: React.FC<{ className?: string }> = ({ className = "w-10 h-10" }) => (
+  <svg className={className} viewBox="0 0 24 24" fill="none">
+    <circle cx="12" cy="12" r="12" fill="#1C1917" />
+    <path
+      d="M7.8 9.9c1.3 2.5 3.3 4.5 5.8 5.8l1.9-1.9c.2-.2.6-.3.9-.2 1 .3 2 .5 3.1.5.5 0 .9.4.9.9v3c0 .5-.4.9-.9.9-8.8 0-16-7.2-16-16 0-.5.4-.9.9-.9h3c.5 0 .9.4.9.9 0 1.1.2 2.1.5 3.1.1.3 0 .7-.2.9l-1.9 1.9z"
+      fill="#F5EFE6"
+    />
+  </svg>
+);
+
 export const ContactPage: React.FC = () => {
   const { showToast } = useCart();
 
@@ -197,20 +232,18 @@ export const ContactPage: React.FC = () => {
             </div>
 
             {/* Direct Channels Quick Bar below Map */}
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-2">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5 pt-2">
               {/* WhatsApp */}
               <a
                 href={BRAND_INFO.whatsappUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="p-3.5 rounded-2xl bg-emerald-50/70 border border-emerald-300/70 hover:bg-emerald-100/80 transition-all flex items-center justify-between group"
+                className="p-4 rounded-2xl bg-white/95 border border-emerald-300/80 hover:border-emerald-500 hover:shadow-md hover:bg-emerald-50/40 transition-all flex items-center justify-between group shadow-xs"
               >
-                <div className="flex items-center gap-3">
-                  <div className="w-9 h-9 rounded-xl bg-emerald-800 text-pearl-100 flex items-center justify-center shrink-0 shadow-sm">
-                    <MessageCircle className="w-4 h-4" />
-                  </div>
+                <div className="flex items-center gap-3.5">
+                  <OfficialWhatsAppIcon className="w-10 h-10 shrink-0 drop-shadow-sm group-hover:scale-105 transition-transform" />
                   <div>
-                    <span className="text-[10px] uppercase font-mono font-bold text-emerald-900 block">
+                    <span className="text-[10px] uppercase font-mono font-bold text-emerald-800 tracking-wider block">
                       WhatsApp Concierge
                     </span>
                     <span className="text-xs font-mono font-bold text-obsidian block">
@@ -218,20 +251,20 @@ export const ContactPage: React.FC = () => {
                     </span>
                   </div>
                 </div>
-                <ArrowUpRight className="w-4 h-4 text-emerald-800 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+                <ArrowUpRight className="w-4 h-4 text-emerald-700 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
               </a>
 
-              {/* Email */}
+              {/* Email / Gmail */}
               <a
                 href={`mailto:${BRAND_INFO.email}`}
-                className="p-3.5 rounded-2xl bg-amber-50/70 border border-amber-300/70 hover:bg-amber-100/80 transition-all flex items-center justify-between group"
+                className="p-4 rounded-2xl bg-white/95 border border-champagne-300/80 hover:border-gold-dark hover:shadow-md hover:bg-amber-50/40 transition-all flex items-center justify-between group shadow-xs"
               >
-                <div className="flex items-center gap-3">
-                  <div className="w-9 h-9 rounded-xl bg-gold-dark text-pearl-100 flex items-center justify-center shrink-0 shadow-sm">
-                    <Mail className="w-4 h-4" />
+                <div className="flex items-center gap-3.5">
+                  <div className="w-10 h-10 rounded-xl bg-pearl-100 border border-champagne-200/80 flex items-center justify-center shrink-0 shadow-xs group-hover:scale-105 transition-transform">
+                    <OfficialGmailIcon className="w-6 h-6" />
                   </div>
                   <div>
-                    <span className="text-[10px] uppercase font-mono font-bold text-amber-900 block">
+                    <span className="text-[10px] uppercase font-mono font-bold text-obsidian-soft tracking-wider block">
                       Email Atelier
                     </span>
                     <span className="text-xs font-mono font-bold text-obsidian block truncate max-w-[150px]">
@@ -245,14 +278,12 @@ export const ContactPage: React.FC = () => {
               {/* Phone */}
               <a
                 href={`tel:${BRAND_INFO.phone}`}
-                className="p-3.5 rounded-2xl bg-pearl-50 border border-champagne-300/80 hover:bg-champagne-100/80 transition-all flex items-center justify-between group"
+                className="p-4 rounded-2xl bg-white/95 border border-champagne-300/80 hover:border-obsidian hover:shadow-md hover:bg-pearl-100/60 transition-all flex items-center justify-between group shadow-xs"
               >
-                <div className="flex items-center gap-3">
-                  <div className="w-9 h-9 rounded-xl bg-obsidian text-pearl-100 flex items-center justify-center shrink-0 shadow-sm">
-                    <Phone className="w-4 h-4" />
-                  </div>
+                <div className="flex items-center gap-3.5">
+                  <OfficialPhoneIcon className="w-10 h-10 shrink-0 drop-shadow-sm group-hover:scale-105 transition-transform" />
                   <div>
-                    <span className="text-[10px] uppercase font-mono font-bold text-obsidian/70 block">
+                    <span className="text-[10px] uppercase font-mono font-bold text-obsidian/80 tracking-wider block">
                       Direct Helpline
                     </span>
                     <span className="text-xs font-mono font-bold text-obsidian block">
