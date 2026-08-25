@@ -112,6 +112,9 @@ export const BlogPostDetailPage: React.FC = () => {
               <img
                 src={post.author.avatar}
                 alt={post.author.name}
+                onError={(e) => {
+                  e.currentTarget.src = '/assets/founder/founder-01.jpg';
+                }}
                 className="w-10 h-10 rounded-full object-cover border-2 border-gold-dark"
               />
               <div>
@@ -130,6 +133,9 @@ export const BlogPostDetailPage: React.FC = () => {
             <img
               src={post.coverImage}
               alt={post.title}
+              onError={(e) => {
+                e.currentTarget.src = '/assets/products/pink-blue-bangles.jpg';
+              }}
               className="w-full h-full object-cover"
             />
           </div>
