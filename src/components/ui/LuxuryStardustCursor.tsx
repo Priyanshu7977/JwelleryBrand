@@ -65,17 +65,17 @@ export const LuxuryStardustCursor: React.FC = () => {
           x: e.clientX + (Math.random() - 0.5) * 6,
           y: e.clientY + (Math.random() - 0.5) * 6,
           size: Math.random() * 2.2 + 1.2,
-          speedX: (Math.random() - 0.5) * 0.28, // gentle, slow ambient drift
-          speedY: Math.random() * 0.15 + 0.05,  // slow dreamy floating fall
+          speedX: (Math.random() - 0.5) * 0.32, // gentle, slow ambient drift
+          speedY: Math.random() * 0.18 + 0.06,  // slow dreamy floating fall
           color: baseColor,
-          alpha: 0.98,
-          decay: Math.random() * 0.0018 + 0.0022, // stays visible for full ~6 seconds (360 frames @ 60fps)
+          alpha: 0.96,
+          decay: Math.random() * 0.0008 + 0.0032, // stays visible for exactly 4.5 seconds (~270 frames @ 60fps)
         });
       }
 
-      // Allow a rich lingering 6-second trail
-      if (particles.length > 260) {
-        particles = particles.slice(-260);
+      // Allow a rich lingering 4.5-second trail
+      if (particles.length > 180) {
+        particles = particles.slice(-180);
       }
     };
 
