@@ -83,19 +83,11 @@ export const SectionBlogShowcase: React.FC = () => {
                   </div>
                 </div>
 
-                {/* Footer with Author & CTA */}
+                {/* Footer with CTA */}
                 <div className="px-5 sm:px-6 pb-5 sm:pb-6 pt-3 border-t border-champagne-200 flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    <img
-                      src={post.author.avatar}
-                      alt={post.author.name}
-                      onError={(e) => {
-                        e.currentTarget.src = '/assets/founder/founder-01.jpg';
-                      }}
-                      className="w-6 h-6 rounded-full object-cover border border-champagne-300"
-                    />
-                    <span className="text-[11px] font-medium text-obsidian">{post.author.name}</span>
-                  </div>
+                  <span className="text-[10px] uppercase font-mono tracking-wider text-obsidian-soft/80 font-semibold">
+                    Celestia Journal
+                  </span>
 
                   <span className="text-xs uppercase font-mono tracking-widest text-gold-dark font-bold flex items-center gap-1 group-hover:translate-x-1 transition-transform">
                     <span>Read Guide</span>

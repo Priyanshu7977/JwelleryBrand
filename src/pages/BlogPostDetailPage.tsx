@@ -107,22 +107,11 @@ export const BlogPostDetailPage: React.FC = () => {
               {post.subtitle}
             </p>
 
-            {/* Author Profile */}
-            <div className="flex items-center gap-3 pt-3 border-t border-champagne-200">
-              <img
-                src={post.author.avatar}
-                alt={post.author.name}
-                onError={(e) => {
-                  e.currentTarget.src = '/assets/founder/founder-01.jpg';
-                }}
-                className="w-10 h-10 rounded-full object-cover border-2 border-gold-dark"
-              />
-              <div>
-                <p className="text-xs sm:text-sm font-bold text-obsidian">{post.author.name}</p>
-                <p className="text-[11px] text-obsidian-soft font-mono">
-                  {post.author.role} • {post.publishDate}
-                </p>
-              </div>
+            {/* Publication Meta */}
+            <div className="flex items-center gap-3 pt-3 border-t border-champagne-200 text-xs font-mono uppercase tracking-wider text-obsidian-soft">
+              <span>The Celestia Journal</span>
+              <span>•</span>
+              <span>Published {post.publishDate}</span>
             </div>
           </div>
         </RevealOnScroll>

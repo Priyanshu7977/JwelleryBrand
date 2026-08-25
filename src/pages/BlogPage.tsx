@@ -179,20 +179,9 @@ export const BlogPage: React.FC = () => {
                     </p>
 
                     <div className="pt-4 border-t border-champagne-200/80 flex items-center justify-between">
-                      <div className="flex items-center gap-2.5">
-                        <img
-                          src={featuredPost.author.avatar}
-                          alt={featuredPost.author.name}
-                          onError={(e) => {
-                            e.currentTarget.src = '/assets/founder/founder-01.jpg';
-                          }}
-                          className="w-8 h-8 rounded-full object-cover border border-gold-dark shadow-xs"
-                        />
-                        <div>
-                          <p className="text-xs font-bold text-obsidian">{featuredPost.author.name}</p>
-                          <p className="text-[10px] text-obsidian-soft font-mono">{featuredPost.author.role}</p>
-                        </div>
-                      </div>
+                      <span className="text-[11px] font-mono uppercase tracking-wider text-obsidian-soft">
+                        Celestia Journal
+                      </span>
 
                       <span className="inline-flex items-center gap-1.5 text-xs font-mono uppercase tracking-wider text-gold-dark font-bold group-hover:translate-x-1 transition-transform">
                         <span>Read Full Story</span>
@@ -267,20 +256,12 @@ export const BlogPage: React.FC = () => {
 
                   {/* Footer */}
                   <div className="px-5 pb-5 pt-3 border-t border-champagne-200/80 flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                      <img
-                        src={post.author.avatar}
-                        alt={post.author.name}
-                        onError={(e) => {
-                          e.currentTarget.src = '/assets/founder/founder-01.jpg';
-                        }}
-                        className="w-6 h-6 rounded-full object-cover border border-champagne-300"
-                      />
-                      <span className="text-[11px] font-medium text-obsidian">{post.author.name}</span>
-                    </div>
+                    <span className="text-[10px] uppercase font-mono tracking-wider text-obsidian-soft/80 font-semibold">
+                      Journal Guide
+                    </span>
 
                     <span className="text-[11px] uppercase font-mono tracking-widest text-gold-dark font-bold flex items-center gap-1 group-hover:translate-x-1 transition-transform">
-                      <span>Read</span>
+                      <span>Read Guide</span>
                       <ArrowRight className="w-3 h-3" />
                     </span>
                   </div>
