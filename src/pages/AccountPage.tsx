@@ -29,7 +29,7 @@ import {
 
 export const AccountPage: React.FC = () => {
   const { showToast, addToCart, setQuickViewProduct } = useCart();
-  const { user, logout, isAuthenticated, wishlist, toggleWishlist } = useAuth();
+  const { user, logout, isAuthenticated, wishlist, toggleWishlist, openAuthModal } = useAuth();
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState<'profile' | 'orders' | 'tracking' | 'addresses' | 'wishlist' | 'preferences'>('profile');
   const [ordersList, setOrdersList] = useState<OrderMetadata[]>([]);
@@ -110,20 +110,20 @@ export const AccountPage: React.FC = () => {
           </div>
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4">
-            <Link
-              to="/login"
-              className="btn-primary w-full sm:w-auto"
+            <button
+              onClick={() => openAuthModal({ mode: 'login', reason: 'Sign in to access your orders, addresses, and member tier.' })}
+              className="btn-primary w-full sm:w-auto flex items-center justify-center gap-2 cursor-pointer"
             >
               <LogIn className="w-4 h-4" />
               <span>Sign In to Account</span>
-            </Link>
+            </button>
 
-            <Link
-              to="/register"
-              className="btn-secondary w-full sm:w-auto"
+            <button
+              onClick={() => openAuthModal({ mode: 'register', reason: 'Create a complimentary account to save your bespoke hampers and orders.' })}
+              className="btn-secondary w-full sm:w-auto flex items-center justify-center gap-2 cursor-pointer"
             >
               <span>Create Account</span>
-            </Link>
+            </button>
           </div>
 
           {/* Quick Wishlist Preview for Guest Users */}

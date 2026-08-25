@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Link, NavLink, useLocation } from 'react-router-dom';
+import { Link, NavLink, useLocation, useNavigate } from 'react-router-dom';
 import { 
   ShoppingBag, 
   Menu, 
@@ -19,6 +19,7 @@ import { FEATURED_PRODUCTS, CELESTIA_COLLECTIONS, BRAND_INFO } from '../../data/
 import { BehindCelestiaModal } from './BehindCelestiaModal';
 
 export const Navigation: React.FC = () => {
+  const navigate = useNavigate();
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [hoveredMenu, setHoveredMenu] = useState<'shop' | 'collections' | null>(null);
@@ -27,7 +28,7 @@ export const Navigation: React.FC = () => {
   const [logoClickCount, setLogoClickCount] = useState(0);
 
   const { totalItems, setIsCartOpen, setIsConciergeOpen } = useCart();
-  const { wishlistCount, isAuthenticated, user } = useAuth();
+  const { wishlistCount, isAuthenticated, user, openAuthModal } = useAuth();
   const location = useLocation();
 
   // Handle Easter Egg trigger
@@ -309,9 +310,19 @@ export const Navigation: React.FC = () => {
             </Link>
 
             {/* Account Icon */}
-            <Link
-              to="/account"
-              className="relative p-1.5 sm:p-2 text-obsidian/80 hover:text-obsidian hover:bg-champagne-100/60 rounded-full transition-all"
+            <button
+              onClick={() => {
+                if (isAuthenticated) {
+                  navigate('/account');
+                } else {
+                  openAuthModal({
+                    mode: 'login',
+                    reason: 'Sign in to access your private member bag, orders and delivery tracking.',
+                    onAuthSuccess: () => navigate('/account')
+                  });
+                }
+              }}
+              className="relative p-1.5 sm:p-2 text-obsidian/80 hover:text-obsidian hover:bg-champagne-100/60 rounded-full transition-all cursor-pointer"
               aria-label="Customer Account Portal"
               title={isAuthenticated ? `Account: ${user?.name}` : 'Sign In / Account'}
             >
@@ -319,7 +330,7 @@ export const Navigation: React.FC = () => {
               {isAuthenticated && (
                 <span className="absolute top-0.5 right-0.5 w-2 h-2 rounded-full bg-emerald-500 ring-2 ring-pearl-50" />
               )}
-            </Link>
+            </button>
 
             {/* WhatsApp Concierge (Desktop) */}
             <button

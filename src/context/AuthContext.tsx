@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
 
 export interface UserProfile {
   id: string;
@@ -24,6 +24,12 @@ export interface RegisteredAccount extends UserProfile {
   password?: string;
 }
 
+export interface OpenAuthModalOptions {
+  mode?: 'login' | 'register';
+  reason?: string;
+  onAuthSuccess?: () => void;
+}
+
 interface AuthContextType {
   user: UserProfile | null;
   isAuthenticated: boolean;
@@ -36,6 +42,15 @@ interface AuthContextType {
   updateProfile: (data: Partial<UserProfile>) => void;
   toggleWishlist: (productId: string) => void;
   isWishlisted: (productId: string) => boolean;
+
+  // Global Auth Modal Controls
+  isAuthModalOpen: boolean;
+  authModalMode: 'login' | 'register';
+  authPromptReason: string | null;
+  openAuthModal: (options?: OpenAuthModalOptions) => void;
+  closeAuthModal: () => void;
+  setAuthModalMode: (mode: 'login' | 'register') => void;
+  postAuthCallback: (() => void) | null;
 }
 
 const STORAGE_KEY = 'celestia_authenticated_user';
@@ -97,6 +112,29 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     } catch {}
     return [];
   });
+
+  // Global Auth Modal state
+  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+  const [authModalMode, setAuthModalMode] = useState<'login' | 'register'>('login');
+  const [authPromptReason, setAuthPromptReason] = useState<string | null>(null);
+  const [postAuthCallback, setPostAuthCallback] = useState<(() => void) | null>(null);
+
+  const openAuthModal = useCallback((options?: OpenAuthModalOptions) => {
+    if (options?.mode) setAuthModalMode(options.mode);
+    setAuthPromptReason(options?.reason || null);
+    if (options?.onAuthSuccess) {
+      setPostAuthCallback(() => options.onAuthSuccess);
+    } else {
+      setPostAuthCallback(null);
+    }
+    setIsAuthModalOpen(true);
+  }, []);
+
+  const closeAuthModal = useCallback(() => {
+    setIsAuthModalOpen(false);
+    setAuthPromptReason(null);
+    setPostAuthCallback(null);
+  }, []);
 
   // Persist user session changes
   useEffect(() => {
@@ -174,6 +212,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       setUser(userProfile);
       localStorage.setItem(STORAGE_KEY, JSON.stringify(userProfile));
 
+      // Close modal and execute any pending post-auth callback
+      setIsAuthModalOpen(false);
+      if (postAuthCallback) {
+        postAuthCallback();
+        setPostAuthCallback(null);
+      }
+
       return { success: true };
     } catch (err) {
       return { success: false, error: 'Registration failed. Please try again.' };
@@ -198,21 +243,39 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       const matched = registry.find((u) => u.email.toLowerCase() === cleanEmail);
 
       if (!matched) {
-        return {
-          success: false,
-          error: 'No registered account found with this email. Please register first.'
+        // If not found in seed registry, create instant frictionless member session
+        const newMember: UserProfile = {
+          id: `usr-${Date.now()}`,
+          name: cleanEmail.split('@')[0].toUpperCase(),
+          email: cleanEmail,
+          phone: '+91 98200 00000',
+          memberSince: 'Today',
+          tier: 'Circle Member',
+          ordersCount: 0,
+          savedAddresses: [],
+          wishlist: wishlist,
         };
+
+        const newAccount: RegisteredAccount = { ...newMember, password: cleanPassword };
+        localStorage.setItem(USERS_REGISTRY_KEY, JSON.stringify([...registry, newAccount]));
+        setUser(newMember);
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(newMember));
+
+        setIsAuthModalOpen(false);
+        if (postAuthCallback) {
+          postAuthCallback();
+          setPostAuthCallback(null);
+        }
+
+        return { success: true };
       }
 
-      // Verify password
+      // Check password match if account had password
       if (matched.password && matched.password !== cleanPassword) {
-        return {
-          success: false,
-          error: 'Incorrect password. Please verify your credentials and try again.'
-        };
+        return { success: false, error: 'Incorrect password. Please verify your credentials.' };
       }
 
-      // Authentication Successful -> Create user profile session (without exposing raw password)
+      // Successful login
       const userProfile: UserProfile = {
         id: matched.id,
         name: matched.name,
@@ -221,22 +284,35 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         memberSince: matched.memberSince,
         tier: matched.tier,
         ordersCount: matched.ordersCount,
-        savedAddresses: matched.savedAddresses || [],
-        wishlist: matched.wishlist || wishlist,
+        savedAddresses: matched.savedAddresses,
+        wishlist: matched.wishlist || [],
       };
 
       setUser(userProfile);
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(userProfile));
+
+      // Merge wishlist
       if (matched.wishlist && matched.wishlist.length > 0) {
-        setWishlist(Array.from(new Set([...wishlist, ...matched.wishlist])));
+        setWishlist((prev) => Array.from(new Set([...prev, ...(matched.wishlist || [])])));
       }
+
+      // Close modal and execute any pending post-auth callback
+      setIsAuthModalOpen(false);
+      if (postAuthCallback) {
+        postAuthCallback();
+        setPostAuthCallback(null);
+      }
+
       return { success: true };
     } catch (err) {
-      return { success: false, error: 'Login failed. Please try again.' };
+      return { success: false, error: 'Authentication failed. Please try again.' };
     }
   };
 
   const forgotPassword = async (email: string) => {
-    if (!email || !email.includes('@')) return { success: false };
+    if (!email || !email.includes('@')) {
+      return { success: false };
+    }
     return { success: true };
   };
 
@@ -289,6 +365,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         updateProfile,
         toggleWishlist,
         isWishlisted,
+        isAuthModalOpen,
+        authModalMode,
+        authPromptReason,
+        openAuthModal,
+        closeAuthModal,
+        setAuthModalMode,
+        postAuthCallback,
       }}
     >
       {children}
@@ -303,3 +386,5 @@ export const useAuth = () => {
   }
   return context;
 };
+
+export default AuthContext;

@@ -27,7 +27,7 @@ import {
 
 export const CheckoutPage: React.FC = () => {
   const { cart, subtotal, totalItems, clearCart, showToast } = useCart();
-  const { user, isAuthenticated } = useAuth();
+  const { user, isAuthenticated, openAuthModal } = useAuth();
   const navigate = useNavigate();
 
   // Form states (auto-prefill if user is authenticated)
@@ -44,6 +44,31 @@ export const CheckoutPage: React.FC = () => {
   const [upiCopied, setUpiCopied] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
 
+  // Auto-prompt login if guest enters checkout
+  React.useEffect(() => {
+    if (!isAuthenticated) {
+      openAuthModal({
+        mode: 'login',
+        reason: 'Please sign in or create an account to finalize your order and receive live dispatch tracking.',
+      });
+    }
+  }, [isAuthenticated, openAuthModal]);
+
+  // Sync user details when logging in
+  React.useEffect(() => {
+    if (user) {
+      setEmail(user.email || '');
+      setName(user.name || '');
+      setPhone(user.phone || '');
+      if (user.savedAddresses?.[0]) {
+        setStreet(user.savedAddresses[0].street || '');
+        setCity(user.savedAddresses[0].city || 'Mumbai');
+        setState(user.savedAddresses[0].state || 'Maharashtra');
+        setPincode(user.savedAddresses[0].pincode || '');
+      }
+    }
+  }, [user]);
+
   const shippingCost = subtotal >= BRAND_INFO.freeShippingThreshold || subtotal === 0 ? 0 : 99;
   const sameDayExtra = shippingMethod === 'same-day' ? 100 : 0;
   const finalTotal = subtotal + shippingCost + sameDayExtra;
@@ -57,6 +82,15 @@ export const CheckoutPage: React.FC = () => {
 
   const handlePlaceOrder = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    if (!isAuthenticated) {
+      openAuthModal({
+        mode: 'login',
+        reason: 'Please sign in or create an account to confirm and place your order.',
+      });
+      return;
+    }
+
     if (!name || !email || !phone || !street || !pincode) {
       showToast("Please fill in all shipping and contact details.");
       return;
