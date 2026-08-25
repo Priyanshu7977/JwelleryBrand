@@ -47,12 +47,22 @@ export const ContactPage: React.FC = () => {
     }
   };
 
+  const sanitizeMessage = (val: string): string => {
+    return val
+      .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '')
+      .replace(/<iframe\b[^<]*(?:(?!<\/iframe>)<[^<]*)*<\/iframe>/gi, '')
+      .replace(/<[^>]*>/g, '')
+      .replace(/javascript:/gi, '')
+      .replace(/onerror\s*=/gi, '')
+      .replace(/onload\s*=/gi, '');
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const cleanName = formData.name.trim();
+    const cleanName = formData.name.replace(/[^a-zA-Z\s'-]/g, '').trim();
     const cleanEmail = formData.email.trim();
     const cleanPhone = formData.phone.trim();
-    const cleanMessage = formData.message.trim();
+    const cleanMessage = sanitizeMessage(formData.message).trim();
 
     if (!cleanName || cleanName.length < 2) {
       showToast("Please enter your name (letters only).");
@@ -73,7 +83,7 @@ export const ContactPage: React.FC = () => {
     }
 
     if (!cleanMessage || cleanMessage.length < 5) {
-      showToast("Please write a message with at least 5 characters.");
+      showToast("Please write a message with at least 5 characters (scripts & HTML not allowed).");
       return;
     }
 
@@ -307,7 +317,9 @@ export const ContactPage: React.FC = () => {
                       }
                     }}
                     onKeyDown={(e) => {
-                      if (/[0-9]/.test(e.key) && !e.ctrlKey && !e.metaKey) {
+                      // Allow all control/editing keys: Backspace, Delete, Arrows, Tab, Enter, etc.
+                      if (e.key.length > 1 || e.ctrlKey || e.metaKey) return;
+                      if (!/[a-zA-Z\s'-]/.test(e.key)) {
                         e.preventDefault();
                       }
                     }}
@@ -364,7 +376,9 @@ export const ContactPage: React.FC = () => {
                         }
                       }}
                       onKeyDown={(e) => {
-                        if (/[a-zA-Z]/.test(e.key) && !e.ctrlKey && !e.metaKey) {
+                        // Allow all control/editing keys: Backspace, Delete, Arrows, Tab, Enter, etc.
+                        if (e.key.length > 1 || e.ctrlKey || e.metaKey) return;
+                        if (!/[0-9+\s-]/.test(e.key)) {
                           e.preventDefault();
                         }
                       }}
@@ -393,13 +407,33 @@ export const ContactPage: React.FC = () => {
                 </div>
 
                 <div className="space-y-1">
-                  <label className="text-[11px] uppercase font-mono font-bold text-obsidian/80">Message *</label>
+                  <label className="text-[11px] uppercase font-mono font-bold text-obsidian/80 flex items-center justify-between">
+                    <span>Message *</span>
+                    <span className="text-[10px] text-obsidian-soft/70 font-normal">Plain text only</span>
+                  </label>
                   <textarea
                     value={formData.message}
-                    onChange={(e) => setFormData({ ...formData, message: e.target.value })}
+                    onBeforeInput={(e: any) => {
+                      if (e.data && /[<>]/.test(e.data)) {
+                        e.preventDefault();
+                      }
+                    }}
+                    onKeyDown={(e) => {
+                      if (e.key === '<' || e.key === '>') {
+                        e.preventDefault();
+                      }
+                    }}
+                    onPaste={(e) => {
+                      e.preventDefault();
+                      const paste = e.clipboardData.getData('text');
+                      const clean = sanitizeMessage(paste);
+                      setFormData(prev => ({ ...prev, message: sanitizeMessage(prev.message + clean) }));
+                    }}
+                    onChange={(e) => setFormData({ ...formData, message: sanitizeMessage(e.target.value) })}
                     placeholder="How can our atelier help you today?"
                     required
                     rows={3}
+                    maxLength={1000}
                     className="w-full px-4 py-2.5 rounded-xl bg-pearl-50 border border-champagne-300/70 text-xs text-obsidian focus:outline-none focus:border-gold-dark resize-none font-sans transition-all"
                   />
                 </div>

@@ -288,7 +288,9 @@ export const CheckoutPage: React.FC = () => {
                         }
                       }}
                       onKeyDown={(e) => {
-                        if (/[0-9]/.test(e.key) && !e.ctrlKey && !e.metaKey) {
+                        // Allow control/editing keys: Backspace, Delete, Arrows, Tab, Enter, etc.
+                        if (e.key.length > 1 || e.ctrlKey || e.metaKey) return;
+                        if (!/[a-zA-Z\s'-]/.test(e.key)) {
                           e.preventDefault();
                         }
                       }}
@@ -349,7 +351,9 @@ export const CheckoutPage: React.FC = () => {
                         }
                       }}
                       onKeyDown={(e) => {
-                        if (/[a-zA-Z]/.test(e.key) && !e.ctrlKey && !e.metaKey) {
+                        // Allow control/editing keys: Backspace, Delete, Arrows, Tab, Enter, etc.
+                        if (e.key.length > 1 || e.ctrlKey || e.metaKey) return;
+                        if (!/[0-9+\s-]/.test(e.key)) {
                           e.preventDefault();
                         }
                       }}
@@ -407,7 +411,9 @@ export const CheckoutPage: React.FC = () => {
                       }
                     }}
                     onKeyDown={(e) => {
-                      if (/[a-zA-Z]/.test(e.key) && !e.ctrlKey && !e.metaKey) {
+                      // Allow control/editing keys: Backspace, Delete, Arrows, Tab, Enter, etc.
+                      if (e.key.length > 1 || e.ctrlKey || e.metaKey) return;
+                      if (!/[0-9]/.test(e.key)) {
                         e.preventDefault();
                       }
                     }}
