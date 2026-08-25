@@ -142,15 +142,20 @@ const AppShell: React.FC = () => {
               <Route path="/account/profile" element={<AccountPage />} />
               <Route path="/account/addresses" element={<AccountPage />} />
               <Route path="/account/wishlist" element={<WishlistPage />} />
-              <Route path="/account/preferences" element={<AccountPage />} />
               <Route path="/account/orders" element={<OrdersPage />} />
               <Route path="/account/orders/:orderId" element={<OrderDetailPage />} />
+              <Route path="/order/:orderId" element={<OrderDetailPage />} />
+              <Route path="/orders/:orderId" element={<OrderDetailPage />} />
+              <Route path="/tracking" element={<OrderTrackingPage />} />
+              <Route path="/tracking/:trackingId" element={<OrderTrackingPage />} />
+              <Route path="/track" element={<OrderTrackingPage />} />
               <Route path="/order-tracking" element={<OrderTrackingPage />} />
               <Route path="/order-tracking/:trackingId" element={<OrderTrackingPage />} />
               <Route path="/shipping-returns" element={<ShippingReturnsPage />} />
               <Route path="/terms" element={<TermsPage />} />
               <Route path="/privacy" element={<PrivacyPage />} />
               <Route path="/privacy-policy" element={<PrivacyPage />} />
+              <Route path="*" element={<ShopPage />} />
             </Routes>
           </Suspense>
         </main>

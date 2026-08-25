@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
 import { X, Sparkles, ShieldCheck, Truck, ShoppingBag, Heart, Check } from 'lucide-react';
 import { useCart } from '../../context/CartContext';
+import { useAuth } from '../../context/AuthContext';
 import { MagneticButton } from '../ui/MagneticButton';
 import { LuxuryBadge } from '../ui/LuxuryBadge';
 
 export const QuickViewModal: React.FC = () => {
-  const { quickViewProduct, setQuickViewProduct, addToCart } = useCart();
+  const { quickViewProduct, setQuickViewProduct, addToCart, showToast } = useCart();
+  const { toggleWishlist, isWishlisted } = useAuth();
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [isAdded, setIsAdded] = useState(false);
 
@@ -176,11 +178,27 @@ export const QuickViewModal: React.FC = () => {
               </a>
             )}
             <button
-              onClick={() => alert("Added to Celestia private wishlist")}
-              className="p-3.5 border border-champagne-300/60 rounded-full text-obsidian hover:bg-champagne-100 transition-colors"
-              aria-label="Add to wishlist"
+              onClick={() => {
+                toggleWishlist(quickViewProduct.id);
+                showToast(
+                  isWishlisted(quickViewProduct.id)
+                    ? `Removed from wishlist`
+                    : `Saved "${quickViewProduct.title}" to your private wishlist ✨`
+                );
+              }}
+              className={`p-3.5 border border-champagne-300/60 rounded-full transition-all cursor-pointer ${
+                isWishlisted(quickViewProduct.id)
+                  ? 'bg-rose-50 border-rose-300 text-rose-600'
+                  : 'text-obsidian hover:bg-champagne-100'
+              }`}
+              aria-label="Toggle wishlist"
+              title={isWishlisted(quickViewProduct.id) ? 'Remove from wishlist' : 'Save to wishlist'}
             >
-              <Heart className="w-4 h-4" />
+              <Heart
+                className={`w-4 h-4 ${
+                  isWishlisted(quickViewProduct.id) ? 'fill-rose-600 text-rose-600' : ''
+                }`}
+              />
             </button>
           </div>
 

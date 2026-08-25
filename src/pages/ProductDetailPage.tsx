@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useNavigate } from 'react-router-dom';
 import { FEATURED_PRODUCTS, BRAND_INFO } from '../data/shopify-data';
 import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
@@ -31,6 +31,7 @@ import {
 
 export const ProductDetailPage: React.FC = () => {
   const { handle } = useParams<{ handle: string }>();
+  const navigate = useNavigate();
   const { addToCart, showToast, setIsCartOpen, setQuickViewProduct } = useCart();
   const { toggleWishlist, isWishlisted } = useAuth();
 
@@ -87,7 +88,7 @@ export const ProductDetailPage: React.FC = () => {
     addToCart(product, quantity, {
       selectedSize: product.category === 'bangles' ? selectedSize : undefined,
     });
-    setIsCartOpen(true);
+    navigate('/checkout');
   };
 
   const handleWhatsAppOrder = () => {
