@@ -219,14 +219,6 @@ export const CartDrawer: React.FC = () => {
               <button
                 onClick={() => {
                   setIsCartOpen(false);
-                  if (!isAuthenticated) {
-                    openAuthModal({
-                      mode: 'login',
-                      reason: 'Please sign in or create an account to proceed with your order checkout & delivery tracking.',
-                      onAuthSuccess: () => navigate('/checkout')
-                    });
-                    return;
-                  }
                   navigate('/checkout');
                 }}
                 className="w-full h-12 flex items-center justify-center gap-2 px-6 rounded-full bg-obsidian text-pearl-100 hover:bg-obsidian-200 transition-all font-sans text-xs uppercase tracking-widest font-semibold shadow-sm cursor-pointer"

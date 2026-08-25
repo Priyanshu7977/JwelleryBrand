@@ -50,8 +50,9 @@ export const CelestiaEntranceModal: React.FC = () => {
     return () => clearTimeout(timer);
   }, [isAuthenticated]);
 
-  // Overall visibility: visible if timed popup is active OR explicit auth action triggered
-  const isOpen = (isTimedOpen || isAuthModalOpen) && !isAuthenticated;
+  // Overall visibility: visible if timed popup is active OR explicit auth action triggered (never on checkout)
+  const isCheckoutPage = location.pathname === '/checkout' || location.pathname.startsWith('/order-success');
+  const isOpen = (isTimedOpen || isAuthModalOpen) && !isAuthenticated && !isCheckoutPage;
 
   // Lock body scroll only while modal is visibly active
   useEffect(() => {

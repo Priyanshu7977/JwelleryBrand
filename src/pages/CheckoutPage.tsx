@@ -44,17 +44,7 @@ export const CheckoutPage: React.FC = () => {
   const [upiCopied, setUpiCopied] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
 
-  // Auto-prompt login if guest enters checkout
-  React.useEffect(() => {
-    if (!isAuthenticated) {
-      openAuthModal({
-        mode: 'login',
-        reason: 'Please sign in or create an account to finalize your order and receive live dispatch tracking.',
-      });
-    }
-  }, [isAuthenticated, openAuthModal]);
-
-  // Sync user details when logging in
+  // Sync user details if logged in
   React.useEffect(() => {
     if (user) {
       setEmail(user.email || '');
@@ -82,14 +72,6 @@ export const CheckoutPage: React.FC = () => {
 
   const handlePlaceOrder = async (e: React.FormEvent) => {
     e.preventDefault();
-
-    if (!isAuthenticated) {
-      openAuthModal({
-        mode: 'login',
-        reason: 'Please sign in or create an account to confirm and place your order.',
-      });
-      return;
-    }
 
     if (!name || !email || !phone || !street || !pincode) {
       showToast("Please fill in all shipping and contact details.");

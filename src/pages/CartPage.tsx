@@ -221,17 +221,7 @@ export const CartPage: React.FC = () => {
 
               <div className="space-y-2.5 pt-2">
                 <button
-                  onClick={() => {
-                    if (!isAuthenticated) {
-                      openAuthModal({
-                        mode: 'login',
-                        reason: 'Please sign in or create an account to proceed with your express checkout & delivery dispatches.',
-                        onAuthSuccess: () => navigate('/checkout')
-                      });
-                      return;
-                    }
-                    navigate('/checkout');
-                  }}
+                  onClick={() => navigate('/checkout')}
                   className="btn-primary w-full h-12 flex items-center justify-center gap-2 font-bold uppercase tracking-wider text-xs sm:text-sm shadow-md cursor-pointer"
                 >
                   <span>Proceed to Express Checkout</span>
