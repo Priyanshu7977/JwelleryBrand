@@ -413,86 +413,99 @@ export function generateOrderInvoicePDF(order: OrderMetadata): jsPDF {
   }
 
   const blockStartY = currentY;
+  const bottomCardHeight = 28;
 
-  // Left Card: Authenticity Seal & Warranty (x: 14mm to 102mm)
+  // Left Card: Authenticity Seal & Quality Guarantee (x: 14mm to 102mm)
   const sealWidth = 88;
-  const sealHeight = 31;
   doc.setFillColor(250, 247, 240);
   doc.setDrawColor(216, 195, 154);
-  doc.roundedRect(leftMargin, blockStartY, sealWidth, sealHeight, 2, 2, 'FD');
+  doc.roundedRect(leftMargin, blockStartY, sealWidth, bottomCardHeight, 2, 2, 'FD');
 
   doc.setFont('helvetica', 'bold');
   doc.setFontSize(7.5);
   doc.setTextColor(122, 91, 40);
-  doc.text('CELESTIA ATELIER AUTHENTICITY SEAL', leftMargin + 4, blockStartY + 5.5);
+  doc.text('CELESTIA ATELIER AUTHENTICITY GUARANTEE', leftMargin + 4, blockStartY + 5.2);
 
   doc.setFont('helvetica', 'normal');
-  doc.setFontSize(6.8);
+  doc.setFontSize(6.5);
   doc.setTextColor(80, 70, 65);
   const sealText = doc.splitTextToSize(
-    'Every piece is individually handcrafted in Mumbai with hypoallergenic, anti-tarnish stainless steel & 18K gold vermeil. Please record an uncut unboxing video upon arrival for our 7-day hassle-free replacement warranty.',
+    'Individually handcrafted in Mumbai with hypoallergenic anti-tarnish stainless steel & 18K gold vermeil. 7-day replacement warranty with uncut unboxing video.',
     80
   );
-  doc.text(sealText, leftMargin + 4, blockStartY + 10.5);
+  doc.text(sealText, leftMargin + 4, blockStartY + 9.5);
 
-  // Clean vector badge icon
-  const badgeY = blockStartY + 25.5;
+  // Guarantee Ribbon Pill (Inside card)
+  const ribbonY = blockStartY + 18.5;
+  const ribbonHeight = 6;
+  doc.setFillColor(240, 253, 244); // #F0FDF4
+  doc.setDrawColor(187, 247, 208); // #BBF7D0
+  doc.roundedRect(leftMargin + 3.5, ribbonY, sealWidth - 7, ribbonHeight, 1.5, 1.5, 'FD');
+
+  // Crisp Vector Green Circle with Checkmark
+  const badgeCenterX = leftMargin + 7;
+  const badgeCenterY = ribbonY + 3;
   doc.setFillColor(16, 120, 80);
-  doc.circle(leftMargin + 6, badgeY, 1.8, 'F');
+  doc.circle(badgeCenterX, badgeCenterY, 1.8, 'F');
   doc.setDrawColor(255, 255, 255);
   doc.setLineWidth(0.4);
-  doc.line(leftMargin + 5.2, badgeY, leftMargin + 5.8, badgeY + 0.6);
-  doc.line(leftMargin + 5.8, badgeY + 0.6, leftMargin + 6.8, badgeY - 0.6);
+  doc.line(badgeCenterX - 0.9, badgeCenterY, badgeCenterX - 0.2, badgeCenterY + 0.7);
+  doc.line(badgeCenterX - 0.2, badgeCenterY + 0.7, badgeCenterX + 0.9, badgeCenterY - 0.6);
 
+  // Clean Typography
   doc.setFont('helvetica', 'bold');
-  doc.setFontSize(6.5);
-  doc.setTextColor(16, 120, 80);
-  doc.text('100% Anti-Tarnish Guarantee • Mumbai Handcrafted', leftMargin + 9.5, badgeY + 0.8);
+  doc.setFontSize(6.2);
+  doc.setTextColor(21, 128, 61);
+  doc.text('100% Anti-Tarnish Guarantee • Mumbai Handcrafted', leftMargin + 10.5, ribbonY + 4.1);
 
   // Right Card: Financial Calculation & Grand Total Summary (x: 108mm to 196mm)
   const summaryX = 108;
-  let sumY = blockStartY + 4;
+  doc.setFillColor(250, 247, 240);
+  doc.setDrawColor(216, 195, 154);
+  doc.roundedRect(summaryX, blockStartY, cardWidth, bottomCardHeight, 2, 2, 'FD');
+
+  let sumY = blockStartY + 4.5;
 
   doc.setFont('helvetica', 'normal');
-  doc.setFontSize(7.5);
+  doc.setFontSize(7.2);
   doc.setTextColor(80, 70, 65);
 
   doc.text('Bag Subtotal:', summaryX + 4, sumY);
-  doc.text(`INR ${order.subtotal.toLocaleString('en-IN')}`, rightMargin - 3, sumY, { align: 'right' });
-  sumY += 4.5;
+  doc.text(`INR ${order.subtotal.toLocaleString('en-IN')}`, rightMargin - 4, sumY, { align: 'right' });
+  sumY += 4.2;
 
   doc.text('Shipping & Handling:', summaryX + 4, sumY);
   doc.text(
     order.shippingCost === 0 ? 'FREE (INR 0)' : `INR ${order.shippingCost.toLocaleString('en-IN')}`,
-    rightMargin - 3,
+    rightMargin - 4,
     sumY,
     { align: 'right' }
   );
-  sumY += 4.5;
+  sumY += 4.2;
 
   const discount = order.subtotal + order.shippingCost - order.total;
   if (discount > 0) {
     doc.setTextColor(16, 120, 80);
     doc.text('Special Instant Discount:', summaryX + 4, sumY);
-    doc.text(`- INR ${discount.toLocaleString('en-IN')}`, rightMargin - 3, sumY, { align: 'right' });
-    sumY += 4.5;
+    doc.text(`- INR ${discount.toLocaleString('en-IN')}`, rightMargin - 4, sumY, { align: 'right' });
+    sumY += 4.2;
   }
 
   // Grand Total Highlight Pill
-  sumY += 1;
-  const totalBoxHeight = 10;
+  const totalBoxHeight = 8;
+  const totalPillY = blockStartY + bottomCardHeight - totalBoxHeight - 1.5;
   doc.setFillColor(243, 235, 219); // Champagne #F3EBDB
   doc.setDrawColor(216, 195, 154);
-  doc.roundedRect(summaryX, sumY, cardWidth, totalBoxHeight, 2, 2, 'FD');
+  doc.roundedRect(summaryX + 2.5, totalPillY, cardWidth - 5, totalBoxHeight, 1.5, 1.5, 'FD');
 
   doc.setFont('helvetica', 'bold');
-  doc.setFontSize(8.5);
+  doc.setFontSize(8);
   doc.setTextColor(24, 20, 17);
-  doc.text('Grand Total (INR):', summaryX + 4, sumY + 6.2);
+  doc.text('Grand Total (INR):', summaryX + 5, totalPillY + 5.2);
 
-  doc.setFontSize(9.5);
+  doc.setFontSize(9);
   doc.setTextColor(122, 91, 40);
-  doc.text(`INR ${order.total.toLocaleString('en-IN')}`, rightMargin - 4, sumY + 6.2, { align: 'right' });
+  doc.text(`INR ${order.total.toLocaleString('en-IN')}`, rightMargin - 5.5, totalPillY + 5.2, { align: 'right' });
 
   // 6. Draw Final Page Footers across all pages
   const totalPages = doc.getNumberOfPages();
