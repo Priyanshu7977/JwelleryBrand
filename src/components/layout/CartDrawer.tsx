@@ -1,92 +1,94 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import {
-  X,
-  Plus,
-  Minus,
-  Trash2,
-  ShoppingBag,
-  ArrowRight,
-  MessageCircle,
-  Truck,
-  Sparkles,
-  Tag,
-  ShieldCheck,
-  Check,
-  Gift,
-  Lock,
+import { 
+  ShoppingBag, 
+  X, 
+  Plus, 
+  Minus, 
+  Trash2, 
+  ArrowRight, 
+  Lock, 
+  Truck, 
+  Tag, 
+  Zap, 
+  Check, 
   ChevronRight,
-  Flame,
-  Zap
+  ShieldCheck,
+  Flame
 } from 'lucide-react';
-import { WhatsAppIcon } from '../ui/WhatsAppIcon';
-import { useCart, POPULAR_COUPONS } from '../../context/CartContext';
-import { BRAND_INFO, FEATURED_PRODUCTS } from '../../data/shopify-data';
-import { sanitizeCouponCode } from '../../utils/sanitize';
+import { useCart } from '../../context/CartContext';
+import { FEATURED_PRODUCTS } from '../../data/shopify-data';
+import { Product, CartItem } from '../../types/shopify';
+
+const WhatsAppIcon = ({ className = "w-4 h-4" }: { className?: string }) => (
+  <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round" className={className}>
+    <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z" />
+  </svg>
+);
+
+const POPULAR_COUPONS = [
+  { code: 'CELESTIA10', description: '10% Off' },
+  { code: 'FIRST500', description: '₹500 Off' },
+];
+
+function sanitizeCouponCode(raw: string): string {
+  if (typeof raw !== 'string') return '';
+  return raw.replace(/[^a-zA-Z0-9]/g, '').slice(0, 20).toUpperCase();
+}
 
 export const CartDrawer: React.FC = () => {
-  const navigate = useNavigate();
-  const {
-    cart,
-    isCartOpen,
-    setIsCartOpen,
-    addToCart,
-    removeFromCart,
-    updateQuantity,
-    subtotal,
-    discountAmount,
-    finalPayable,
+  const { 
+    cart, 
+    isCartOpen, 
+    setIsCartOpen, 
+    updateQuantity, 
+    removeFromCart, 
+    subtotal, 
+    totalItems,
     appliedCoupon,
     applyCoupon,
     removeCoupon,
-    totalItems,
-    checkoutViaWhatsApp,
-    showToast
+    addToCart,
+    discountAmount,
+    finalPayable
   } = useCart();
 
+  const navigate = useNavigate();
   const [couponInput, setCouponInput] = useState('');
   const [isCouponOpen, setIsCouponOpen] = useState(false);
 
   if (!isCartOpen) return null;
 
-  // Multi-tier perks
-  const freeShippingThreshold = BRAND_INFO.freeShippingThreshold || 999;
-  const freeGiftThreshold = 1999;
-
-  const freeShippingNeeded = Math.max(0, freeShippingThreshold - subtotal);
-  const freeGiftNeeded = Math.max(0, freeGiftThreshold - subtotal);
-
-  const shippingProgress = Math.min(100, (subtotal / freeShippingThreshold) * 100);
-  const giftProgress = Math.min(100, (subtotal / freeGiftThreshold) * 100);
-
-  const shippingCost = finalPayable >= freeShippingThreshold || finalPayable === 0 ? 0 : 99;
+  const shippingThreshold = 999;
+  const freeShippingNeeded = Math.max(0, shippingThreshold - subtotal);
+  const shippingProgress = Math.min(100, (subtotal / shippingThreshold) * 100);
+  const shippingCost = subtotal >= shippingThreshold || subtotal === 0 ? 0 : 99;
   const grandTotal = finalPayable + shippingCost;
 
-  const handleApplyCoupon = (codeToApply: string) => {
-    const clean = sanitizeCouponCode(codeToApply);
-    setCouponInput(clean);
-    if (!clean) {
-      showToast("Please enter a valid coupon code (letters and numbers only).");
-      return;
-    }
-    const res = applyCoupon(clean);
-    if (res.success) {
-      setCouponInput('');
-    } else {
-      showToast(res.message);
-    }
+  // 1-Click Upsell Items
+  const upsellItems = FEATURED_PRODUCTS.filter((p: Product) => !cart.some((c: CartItem) => c.product.id === p.id)).slice(0, 3);
+
+  const handleApplyCoupon = (codeToApply?: string) => {
+    const raw = codeToApply || couponInput;
+    const clean = sanitizeCouponCode(raw);
+    if (!clean) return;
+    applyCoupon(clean);
+    setCouponInput('');
   };
 
-  // Upsell items (excluding what's already in cart)
-  const cartProductIds = cart.map((i) => i.product.id);
-  const upsellItems = FEATURED_PRODUCTS.filter((p) => !cartProductIds.includes(p.id)).slice(0, 3);
+  const checkoutViaWhatsApp = () => {
+    const phone = '917718825792';
+    const itemsList = cart.map((i: CartItem) => `• ${i.product.title} (x${i.quantity}) - ₹${i.product.price * i.quantity}`).join('\n');
+    const msg = `*CELESTIA LUXURY ATELIER • INSTANT BAG CHECKOUT* ✨\n\nI would like to place an order for:\n${itemsList}\n\n*Estimated Total:* ₹${grandTotal}\n\nPlease confirm availability and payment link! 💎`;
+    window.open(`https://wa.me/${phone}?text=${encodeURIComponent(msg)}`, '_blank');
+  };
 
   return (
-    <div className="fixed inset-0 z-[100] flex justify-end animate-fade-in">
-      {/* Backdrop */}
-      <div
+    <div className="fixed inset-0 z-50 overflow-hidden flex justify-end animate-fade-in">
+      {/* Backdrop Overlay */}
+      <div 
+        className="fixed inset-0 bg-obsidian/60 backdrop-blur-xs transition-opacity"
         onClick={() => setIsCartOpen(false)}
-        className="fixed inset-0 bg-black/60 backdrop-blur-sm transition-opacity"
       />
 
       {/* Slide-over Drawer Panel */}
@@ -118,7 +120,7 @@ export const CartDrawer: React.FC = () => {
             </button>
           </div>
 
-          {/* Dynamic Free Shipping & Gift Progress Bar */}
+          {/* Dynamic Free Shipping Progress Bar */}
           {cart.length > 0 && (
             <div className="mt-2 p-2 bg-white rounded-lg border border-champagne-300/60 shadow-xs space-y-1">
               <div className="flex items-center justify-between text-[10.5px]">
@@ -146,7 +148,7 @@ export const CartDrawer: React.FC = () => {
         </div>
 
         {/* Item List Container */}
-        <div className="flex-1 min-h-0 overflow-y-auto overscroll-contain p-3 sm:p-3.5 space-y-2.5 [&::-webkit-scrollbar]:w-1 [&::-webkit-scrollbar-thumb]:bg-champagne-300/80 [&::-webkit-scrollbar-thumb]:rounded-full">
+        <div className="flex-1 min-h-0 overflow-y-auto overscroll-contain p-3 sm:p-3.5 space-y-2.5 pb-6 [&::-webkit-scrollbar]:w-1 [&::-webkit-scrollbar-thumb]:bg-champagne-300/80 [&::-webkit-scrollbar-thumb]:rounded-full">
           {cart.length === 0 ? (
             <div className="h-full flex flex-col items-center justify-center text-center p-6 space-y-4">
               <div className="w-16 h-16 rounded-full bg-champagne-100/70 border border-champagne-300/60 flex items-center justify-center text-gold-dark shadow-sm">
@@ -173,10 +175,10 @@ export const CartDrawer: React.FC = () => {
             <>
               {/* Product List */}
               <div className="space-y-2">
-                {cart.map((item) => (
+                {cart.map((item: CartItem) => (
                   <div
                     key={item.product.id}
-                    className="flex gap-2.5 p-2 bg-white rounded-xl border border-champagne-300/60 hover:border-gold-dark transition-all shadow-xs"
+                    className="flex gap-2.5 p-2.5 bg-white rounded-xl border border-champagne-300/60 hover:border-gold-dark transition-all shadow-xs"
                   >
                     {/* Thumbnail */}
                     <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-lg overflow-hidden bg-sand shrink-0 border border-champagne-200 aspect-square">
@@ -367,37 +369,40 @@ export const CartDrawer: React.FC = () => {
                 )}
               </div>
 
-              {/* 1-Click Upsell Add-Ons Carousel */}
+              {/* 1-Click Upsell Add-Ons Horizontal Swipeable Carousel */}
               {upsellItems.length > 0 && (
-                <div className="p-2 bg-champagne-50/70 rounded-xl border border-champagne-300/50 space-y-1">
-                  <div className="flex items-center gap-1.5 text-[9.5px] font-mono uppercase tracking-wider text-obsidian font-bold">
-                    <Flame className="w-3 h-3 text-gold-dark" />
-                    <span>Frequently Added Together</span>
+                <div className="pt-1 space-y-1.5">
+                  <div className="flex items-center justify-between text-[10px] font-mono uppercase tracking-wider text-obsidian font-bold px-0.5">
+                    <span className="flex items-center gap-1">
+                      <Flame className="w-3 h-3 text-gold-dark" />
+                      <span>Complete Your Look</span>
+                    </span>
+                    <span className="text-[9px] text-obsidian/40 lowercase italic font-normal">swipe ➔</span>
                   </div>
 
-                  <div className="space-y-1">
-                    {upsellItems.map((item) => (
+                  <div className="flex gap-2 overflow-x-auto pb-1 scrollbar-none snap-x overscroll-x-contain">
+                    {upsellItems.map((item: Product) => (
                       <div
                         key={item.id}
-                        className="flex items-center justify-between gap-2 p-1 bg-white rounded-lg border border-champagne-200 shadow-xs"
+                        className="min-w-[165px] max-w-[165px] snap-start flex flex-col justify-between p-2 bg-white rounded-xl border border-champagne-300/60 shadow-xs shrink-0"
                       >
-                        <div className="flex items-center gap-1.5 min-w-0">
+                        <div className="flex items-center gap-2">
                           <img
-                            src={item.images.hero}
+                            src={item.images?.hero || (item as any).imageUrl || '/images/placeholder.jpg'}
                             alt={item.title}
-                            className="w-7 h-7 rounded object-cover bg-sand shrink-0"
+                            className="w-10 h-10 rounded-lg object-cover bg-sand shrink-0 border border-champagne-200"
                           />
                           <div className="min-w-0">
                             <p className="font-serif-luxury text-[11px] text-obsidian font-bold line-clamp-1">{item.title}</p>
-                            <p className="text-[9.5px] font-mono text-gold-dark font-bold">₹{item.price}</p>
+                            <p className="text-[10px] font-mono text-gold-dark font-bold">₹{item.price}</p>
                           </div>
                         </div>
 
                         <button
                           onClick={() => addToCart(item, 1)}
-                          className="px-2 py-0.5 bg-champagne-100 hover:bg-gold-dark hover:text-pearl-50 text-obsidian text-[8.5px] uppercase font-mono font-bold rounded-full border border-champagne-300 transition-all cursor-pointer shrink-0"
+                          className="mt-2 w-full py-1 bg-champagne-100/80 hover:bg-gold-dark hover:text-pearl-50 text-obsidian text-[9px] uppercase font-mono font-bold rounded-lg border border-champagne-300 transition-all cursor-pointer text-center"
                         >
-                          + Add
+                          + Add to Bag
                         </button>
                       </div>
                     ))}
@@ -410,7 +415,7 @@ export const CartDrawer: React.FC = () => {
 
         {/* Footer Checkout Summary */}
         {cart.length > 0 && (
-          <div className="p-3 sm:p-3.5 bg-pearl-50 border-t border-champagne-300/50 space-y-2 shrink-0 shadow-lg">
+          <div className="p-3 sm:p-3.5 pb-6 sm:pb-3.5 bg-pearl-50 border-t border-champagne-300/50 space-y-2 shrink-0 shadow-lg">
             {/* Price Calculations */}
             <div className="space-y-0.5 text-xs">
               <div className="flex justify-between items-center text-obsidian">
