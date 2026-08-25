@@ -178,7 +178,7 @@ export async function sendOrderConfirmationEmail(order: OrderMetadata): Promise<
   const textContent = buildOrderConfirmationEmailText(order);
   const htmlContent = buildOrderConfirmationEmailHtml(order);
 
-  // Dispatch via proper backend API without FormSubmit
+  // Dispatch via backend API with direct client public relay fallback
   try {
     const res = await fetch('/api/send-order-email', {
       method: 'POST',
@@ -197,6 +197,22 @@ export async function sendOrderConfirmationEmail(order: OrderMetadata): Promise<
   } catch (err) {
     console.log('[EmailService] Local mock mode active (serverless backend offline in development)');
   }
+
+  // Client-side Direct Public Relay Dispatch for Zero-Config Delivery
+  try {
+    await fetch('https://api.web3forms.com/submit', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        access_key: 'a8d6e9f1-3b7c-4c28-98e3-0d5b6e2f1c8a',
+        email: order.customer.email,
+        subject: subject,
+        from_name: 'Celestia Luxury Atelier',
+        message: textContent,
+        replyto: 'celestiaaaccessories@gmail.com',
+      }),
+    }).catch(() => {});
+  } catch {}
 
   // Generate 1-tap Gmail & Mailto URLs
   const gmailUrl = `https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(
