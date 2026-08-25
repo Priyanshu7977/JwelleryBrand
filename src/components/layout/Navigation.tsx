@@ -121,34 +121,32 @@ export const Navigation: React.FC = () => {
 
   return (
     <>
-      {/* Top Mumbai Studio Announcement Bar */}
-      <div
-        className={`fixed top-0 left-0 right-0 z-50 bg-champagne-200 text-obsidian py-1.5 px-3 sm:px-4 text-center text-[10px] sm:text-[11px] tracking-widest uppercase font-mono font-semibold flex items-center justify-center gap-2 sm:gap-3 border-b border-champagne-300 transition-all duration-500 ${
-          isShown ? 'translate-y-0 opacity-100' : '-translate-y-full opacity-0 pointer-events-none'
-        }`}
-      >
-        <span className="flex items-center gap-1">
-          <Sparkles className="w-3 h-3 text-gold-dark shrink-0" />
-          <span className="truncate">MUMBAI ATELIER • SAME-DAY HAND DELIVERY AVAILABLE</span>
-        </span>
-        <span className="hidden md:inline text-obsidian/40">•</span>
-        <span className="hidden md:inline text-obsidian font-bold">PAN-INDIA FREE EXPRESS DELIVERY &gt; ₹999</span>
-      </div>
-
-      {/* Floating Main Header with Consistent Spacing from Announcement Bar */}
+      {/* Unified Fixed Header: Announcement Bar & Floating Navigation Pill in Perfect Lockstep */}
       <header
-        className={`fixed left-0 right-0 z-50 transition-all duration-300 ${
-          isShown ? 'translate-y-0 opacity-100 pointer-events-auto' : '-translate-y-28 opacity-0 pointer-events-none'
-        } top-9 sm:top-10 md:top-11 px-4 sm:px-6 md:px-10 lg:px-14`}
+        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 pointer-events-none ${
+          isShown ? 'translate-y-0 opacity-100' : '-translate-y-full opacity-0'
+        }`}
         onMouseLeave={() => setHoveredMenu(null)}
       >
-        <div
-          className={`max-w-7xl mx-auto grid grid-cols-[180px_1fr_180px] xl:grid-cols-[220px_1fr_220px] items-center transition-all duration-300 rounded-full px-4 sm:px-6 py-2 sm:py-2.5 ${
-            isScrolled
-              ? 'glass-pearl shadow-luxury-soft border border-champagne-300/80'
-              : 'bg-pearl-50/95 backdrop-blur-md border border-champagne-300/70 shadow-sm'
-          }`}
-        >
+        {/* Top Mumbai Studio Announcement Bar */}
+        <div className="w-full pointer-events-auto bg-champagne-200 text-obsidian py-1.5 px-3 sm:px-4 text-center text-[10px] sm:text-[11px] tracking-widest uppercase font-mono font-semibold flex items-center justify-center gap-2 sm:gap-3 border-b border-champagne-300 shadow-xs">
+          <span className="flex items-center gap-1">
+            <Sparkles className="w-3 h-3 text-gold-dark shrink-0" />
+            <span className="truncate">MUMBAI ATELIER • SAME-DAY HAND DELIVERY AVAILABLE</span>
+          </span>
+          <span className="hidden md:inline text-obsidian/40">•</span>
+          <span className="hidden md:inline text-obsidian font-bold">PAN-INDIA FREE EXPRESS DELIVERY &gt; ₹999</span>
+        </div>
+
+        {/* Floating Main Header with Exact Padding below Announcement Bar */}
+        <div className="w-full pointer-events-auto pt-2 sm:pt-2.5 px-4 sm:px-6 md:px-10 lg:px-14">
+          <div
+            className={`max-w-7xl mx-auto grid grid-cols-[180px_1fr_180px] xl:grid-cols-[220px_1fr_220px] items-center transition-all duration-300 rounded-full px-4 sm:px-6 py-2 sm:py-2.5 ${
+              isScrolled
+                ? 'glass-pearl shadow-luxury-soft border border-champagne-300/80'
+                : 'bg-pearl-50/95 backdrop-blur-md border border-champagne-300/70 shadow-sm'
+            }`}
+          >
           
           {/* ================================================================= */}
           {/* 1. LEFT COLUMN: Logo at Left Corner                               */}
@@ -358,16 +356,17 @@ export const Navigation: React.FC = () => {
           </div>
 
         </div>
+      </div>
 
-        {/* ================================================================= */}
-        {/* SHOP MEGA MENU PANEL (Matching Pearl Luxury Glass Theme)          */}
-        {/* ================================================================= */}
-        {hoveredMenu === 'shop' && (
-          <div
-            className="hidden lg:block max-w-5xl mx-auto mt-2 p-8 bg-pearl-50/98 backdrop-blur-2xl rounded-3xl border border-champagne-300/80 shadow-2xl animate-fade-in text-obsidian"
-            onMouseEnter={() => setHoveredMenu('shop')}
-            onMouseLeave={() => setHoveredMenu(null)}
-          >
+      {/* ================================================================= */}
+      {/* SHOP MEGA MENU PANEL (Matching Pearl Luxury Glass Theme)          */}
+      {/* ================================================================= */}
+      {hoveredMenu === 'shop' && (
+        <div
+          className="hidden lg:block pointer-events-auto max-w-5xl mx-auto mt-2 p-8 bg-pearl-50/98 backdrop-blur-2xl rounded-3xl border border-champagne-300/80 shadow-2xl animate-fade-in text-obsidian"
+          onMouseEnter={() => setHoveredMenu('shop')}
+          onMouseLeave={() => setHoveredMenu(null)}
+        >
             <div className="grid grid-cols-12 gap-8 items-center">
               
               <div className="col-span-7 space-y-3">
@@ -454,7 +453,7 @@ export const Navigation: React.FC = () => {
         {/* ================================================================= */}
         {hoveredMenu === 'collections' && (
           <div
-            className="hidden lg:block max-w-5xl mx-auto mt-2 p-8 bg-pearl-50/98 backdrop-blur-2xl rounded-3xl border border-champagne-300/80 shadow-2xl animate-fade-in text-obsidian"
+            className="hidden lg:block pointer-events-auto max-w-5xl mx-auto mt-2 p-8 bg-pearl-50/98 backdrop-blur-2xl rounded-3xl border border-champagne-300/80 shadow-2xl animate-fade-in text-obsidian"
             onMouseEnter={() => setHoveredMenu('collections')}
             onMouseLeave={() => setHoveredMenu(null)}
           >
