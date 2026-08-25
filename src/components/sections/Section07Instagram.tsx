@@ -37,7 +37,7 @@ export const Section07Instagram: React.FC = () => {
                 <span className="text-xs text-obsidian/60 font-medium font-mono">@celestiaamor.in</span>
               </div>
               <h2 className="text-3xl sm:text-5xl md:text-6xl text-obsidian font-bold uppercase leading-tight">
-                The Live <span className="font-semibold text-gold-dark">Community Lookbook</span>.
+                The Live <span className="font-zapfino text-champagne-400 font-normal tracking-normal capitalize inline-block text-[32px] sm:text-[48px] md:text-[56px] leading-[0.9] px-1">Community Lookbook</span>.
               </h2>
             </div>
 

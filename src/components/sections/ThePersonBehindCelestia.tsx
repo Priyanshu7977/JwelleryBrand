@@ -33,7 +33,7 @@ export const ThePersonBehindCelestia: React.FC = () => {
             </div>
 
             <h2 className="text-3xl sm:text-5xl md:text-6xl text-pearl-50 uppercase font-bold leading-[1.05]">
-              FROM THE <span className="font-semibold text-champagne-200">Atelier</span>.
+              FROM THE <span className="font-zapfino text-champagne-300 font-normal tracking-normal capitalize inline-block text-[36px] sm:text-[54px] md:text-[64px] leading-[0.9] px-1">Atelier</span>.
             </h2>
 
             <p className="text-base sm:text-xl text-pearl-100 leading-relaxed max-w-2xl font-serif">

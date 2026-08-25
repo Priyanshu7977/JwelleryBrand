@@ -43,7 +43,7 @@ export const Section02Reveal: React.FC = () => {
                 </span>
               </div>
               <h2 className="text-3xl sm:text-5xl md:text-6xl text-obsidian font-bold uppercase leading-[1.05]">
-                Sculpted in <span className="font-semibold text-gold-dark">Gold</span> & Light.
+                Sculpted in <span className="font-zapfino text-champagne-400 font-normal tracking-normal capitalize inline-block text-[34px] sm:text-[50px] md:text-[60px] leading-[0.9] px-1">Gold</span> & Light.
               </h2>
             </div>
 

@@ -152,8 +152,8 @@ export const CinematicAtelierOpening: React.FC = () => {
               : 'opacity-0 translate-y-4'
           }`}
         >
-          <p className="font-serif text-xs sm:text-sm md:text-base tracking-[0.35em] sm:tracking-[0.42em] text-champagne-300 font-light uppercase">
-            REDEFINED FOR ALL.
+          <p className="font-zapfino text-xl sm:text-2xl md:text-3xl text-champagne-300 font-normal tracking-normal capitalize py-1">
+            Redefined For All.
           </p>
 
           <div className="flex items-center justify-center gap-3 pt-3">

@@ -26,7 +26,7 @@ export const Section08FinalMoment: React.FC = () => {
           <div className="space-y-3">
             <h2 className="text-4xl sm:text-6xl md:text-7xl lg:text-8xl text-obsidian font-bold leading-[0.95] tracking-tight uppercase">
               redefined <br />
-              <span className="font-semibold text-gold-dark">FOR ALL.</span>
+              <span className="font-zapfino text-champagne-400 font-normal tracking-normal capitalize inline-block text-[44px] sm:text-[68px] md:text-[84px] leading-[0.9] px-1">For All.</span>
             </h2>
 
             <p className="text-xl sm:text-2xl md:text-3xl text-obsidian/80 font-serif max-w-xl mx-auto pt-2 font-medium">

@@ -56,7 +56,7 @@ export const TheWorldPage: React.FC = () => {
           </div>
 
           <h1 className="text-3xl sm:text-5xl md:text-6xl text-obsidian font-bold uppercase leading-tight">
-            THE <span className="font-semibold text-gold-dark">World</span>.
+            THE <span className="font-zapfino text-champagne-400 font-normal tracking-normal capitalize inline-block text-[34px] sm:text-[50px] md:text-[60px] leading-[0.9] px-1">World</span>.
           </h1>
 
           <p className="text-sm sm:text-base text-obsidian-soft max-w-lg mx-auto leading-relaxed font-serif">

@@ -69,7 +69,7 @@ export const GiftingPage: React.FC = () => {
           </div>
 
           <h1 className="text-2xl sm:text-4xl md:text-5xl text-obsidian font-bold uppercase leading-tight">
-            FOR SOMEONE <span className="font-semibold text-gold-dark">SPECIAL.</span>
+            FOR SOMEONE <span className="font-zapfino text-champagne-400 font-normal tracking-normal capitalize inline-block text-[32px] sm:text-[46px] md:text-[54px] leading-[0.9] px-1">Special.</span>
           </h1>
 
           <p className="text-xs text-obsidian/75 leading-relaxed">
