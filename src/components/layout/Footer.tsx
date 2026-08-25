@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { BRAND_INFO } from '../../data/shopify-data';
 import { useCart } from '../../context/CartContext';
-import { Instagram, MessageCircle, Phone, Sparkles, Send, Check, ArrowUp, Mail, MapPin } from 'lucide-react';
+import { Instagram, Phone, Sparkles, Send, Check, ArrowUp, Mail, MapPin } from 'lucide-react';
+import { WhatsAppIcon } from '../ui/WhatsAppIcon';
 import { RevealOnScroll } from '../motion/RevealOnScroll';
 
 export const Footer: React.FC = () => {
@@ -83,10 +84,10 @@ export const Footer: React.FC = () => {
                   href={BRAND_INFO.whatsappUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="p-3 bg-[#28231F] hover:bg-emerald-950/80 border border-emerald-500/40 rounded-full transition-all text-emerald-400 shadow-md hover:scale-110"
+                  className="p-2.5 bg-[#28231F] hover:bg-emerald-950/80 border border-emerald-500/40 rounded-full transition-all text-emerald-400 shadow-md hover:scale-110 flex items-center justify-center"
                   aria-label="Celestia WhatsApp Concierge"
                 >
-                  <MessageCircle className="w-4 h-4" />
+                  <WhatsAppIcon className="w-4 h-4" />
                 </a>
                 <a
                   href={`tel:${BRAND_INFO.phone}`}

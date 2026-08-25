@@ -13,10 +13,10 @@ import {
   Check,
   ShoppingBag,
   Sparkles,
-  MessageCircle,
   BookOpen,
   Tag
 } from 'lucide-react';
+import { WhatsAppIcon } from '../components/ui/WhatsAppIcon';
 import { RevealOnScroll } from '../components/motion/RevealOnScroll';
 
 export const BlogPostDetailPage: React.FC = () => {
@@ -72,10 +72,10 @@ export const BlogPostDetailPage: React.FC = () => {
           <div className="flex items-center gap-2">
             <button
               onClick={handleWhatsAppShare}
-              className="p-2 rounded-full bg-white hover:bg-emerald-50 text-emerald-700 border border-champagne-300 transition-colors cursor-pointer"
+              className="p-1.5 rounded-full bg-white hover:bg-emerald-50 text-emerald-700 border border-champagne-300 transition-colors cursor-pointer flex items-center justify-center"
               title="Share via WhatsApp"
             >
-              <MessageCircle className="w-4 h-4" />
+              <WhatsAppIcon className="w-4 h-4" />
             </button>
             <button
               onClick={handleShare}

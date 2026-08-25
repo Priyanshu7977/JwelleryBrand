@@ -33,6 +33,7 @@ import {
   AlertCircle,
   HelpCircle
 } from 'lucide-react';
+import { WhatsAppIcon } from '../components/ui/WhatsAppIcon';
 
 export const CheckoutPage: React.FC = () => {
   const {

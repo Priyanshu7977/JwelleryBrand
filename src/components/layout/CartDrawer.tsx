@@ -19,6 +19,7 @@ import {
   Flame,
   Zap
 } from 'lucide-react';
+import { WhatsAppIcon } from '../ui/WhatsAppIcon';
 import { useCart, POPULAR_COUPONS } from '../../context/CartContext';
 import { BRAND_INFO, FEATURED_PRODUCTS } from '../../data/shopify-data';
 
@@ -468,9 +469,9 @@ export const CartDrawer: React.FC = () => {
               {/* Instant WhatsApp Checkout */}
               <button
                 onClick={checkoutViaWhatsApp}
-                className="w-full min-h-[48px] h-12 flex items-center justify-center gap-2 px-6 rounded-full bg-emerald-800 text-pearl-50 hover:bg-emerald-900 transition-all font-sans text-xs uppercase tracking-widest font-bold shadow-sm cursor-pointer"
+                className="w-full min-h-[48px] h-12 flex items-center justify-center gap-2.5 px-6 rounded-full bg-emerald-800 text-pearl-50 hover:bg-emerald-900 transition-all font-sans text-xs uppercase tracking-widest font-bold shadow-sm cursor-pointer"
               >
-                <MessageCircle className="w-4 h-4 shrink-0" />
+                <WhatsAppIcon className="w-5 h-5 shrink-0" />
                 <span>Instant WhatsApp Checkout</span>
               </button>
             </div>

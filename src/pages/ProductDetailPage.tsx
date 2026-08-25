@@ -12,7 +12,6 @@ import {
   Heart,
   ShieldCheck,
   Truck,
-  MessageCircle,
   Eye,
   Plus,
   Minus,
@@ -28,6 +27,7 @@ import {
   RotateCcw,
   Sparkle,
 } from 'lucide-react';
+import { WhatsAppIcon } from '../components/ui/WhatsAppIcon';
 
 export const ProductDetailPage: React.FC = () => {
   const { handle } = useParams<{ handle: string }>();
@@ -458,9 +458,9 @@ export const ProductDetailPage: React.FC = () => {
               {/* Direct WhatsApp Concierge Order Button */}
               <button
                 onClick={handleWhatsAppOrder}
-                className="w-full min-h-[48px] h-12 border border-emerald-600/70 bg-emerald-50/80 hover:bg-emerald-100/90 text-emerald-950 text-xs uppercase font-bold tracking-wider rounded-full transition-all flex items-center justify-center gap-2 shadow-sm cursor-pointer"
+                className="w-full min-h-[48px] h-12 border border-emerald-600/70 bg-emerald-50/80 hover:bg-emerald-100/90 text-emerald-950 text-xs uppercase font-bold tracking-wider rounded-full transition-all flex items-center justify-center gap-2.5 shadow-sm cursor-pointer"
               >
-                <MessageCircle className="w-4 h-4 text-emerald-700 shrink-0" />
+                <WhatsAppIcon className="w-5 h-5 shrink-0" />
                 <span>Direct Order via WhatsApp Concierge</span>
               </button>
 

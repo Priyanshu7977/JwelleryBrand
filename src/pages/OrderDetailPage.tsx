@@ -5,7 +5,6 @@ import {
   CheckCircle2,
   Truck,
   Video,
-  MessageCircle,
   Package,
   ShoppingBag,
   Clock,
@@ -13,6 +12,7 @@ import {
   Sparkles,
   Check,
 } from 'lucide-react';
+import { WhatsAppIcon } from '../components/ui/WhatsAppIcon';
 import { BRAND_INFO } from '../data/shopify-data';
 import { getOrderById } from '../services/orderService';
 import { OrderMetadata } from '../types/backend';
@@ -307,9 +307,9 @@ export const OrderDetailPage: React.FC = () => {
               href={`${BRAND_INFO.whatsappUrl}&text=Hello%20Celestia,%20inquiry%20regarding%20Order%20${order.orderNumber}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center justify-center gap-2 w-full py-3.5 rounded-full bg-emerald-800 text-pearl-50 text-xs uppercase font-mono tracking-widest font-semibold hover:bg-emerald-900 transition-all shadow-md"
+              className="inline-flex items-center justify-center gap-2.5 w-full py-3.5 rounded-full bg-emerald-800 text-pearl-50 text-xs uppercase font-mono tracking-widest font-semibold hover:bg-emerald-900 transition-all shadow-md"
             >
-              <MessageCircle className="w-4 h-4" />
+              <WhatsAppIcon className="w-4 h-4" />
               <span>Inquire on WhatsApp about this Dispatch</span>
             </a>
           </div>

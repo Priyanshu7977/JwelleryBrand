@@ -10,13 +10,13 @@ import {
   Package,
   Calendar,
   Phone,
-  MessageCircle,
   ExternalLink,
   ShieldCheck,
   ArrowRight,
   Send,
   AlertCircle
 } from 'lucide-react';
+import { WhatsAppIcon } from '../components/ui/WhatsAppIcon';
 import { getDeliveryTracking } from '../services/trackingService';
 import { DeliveryTracking, DeliveryStage } from '../types/backend';
 import { BRAND_INFO } from '../data/shopify-data';
@@ -284,9 +284,9 @@ export const OrderTrackingPage: React.FC = () => {
 
               <button
                 onClick={handleWhatsAppHelp}
-                className="w-full sm:w-auto px-5 py-2.5 bg-emerald-800 hover:bg-emerald-900 text-pearl-50 text-xs uppercase font-mono font-bold tracking-wider rounded-full transition-all flex items-center justify-center gap-2 cursor-pointer shadow-sm shrink-0"
+                className="w-full sm:w-auto px-5 py-2.5 bg-emerald-800 hover:bg-emerald-900 text-pearl-50 text-xs uppercase font-mono font-bold tracking-wider rounded-full transition-all flex items-center justify-center gap-2.5 cursor-pointer shadow-sm shrink-0"
               >
-                <MessageCircle className="w-4 h-4" />
+                <WhatsAppIcon className="w-4 h-4" />
                 <span>WhatsApp Courier Support</span>
               </button>
             </div>

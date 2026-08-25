@@ -10,7 +10,6 @@ import {
   Clock,
   ArrowRight,
   ShoppingBag,
-  MessageCircle,
   Video,
   ShieldCheck,
   MapPin,
@@ -23,6 +22,7 @@ import {
   Phone,
   CreditCard,
 } from 'lucide-react';
+import { WhatsAppIcon } from '../components/ui/WhatsAppIcon';
 import { getOrderById } from '../services/orderService';
 import { sendOrderConfirmationEmail, buildOrderInvoiceText } from '../services/emailService';
 import { OrderMetadata } from '../types/backend';
@@ -469,9 +469,9 @@ export const OrderSuccessPage: React.FC = () => {
                 href={`${BRAND_INFO.whatsappUrl}&text=Hello%20Celestia,%20regarding%20my%20Order%20${order.orderNumber}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-1.5 text-xs font-bold text-emerald-950 hover:underline"
+                className="inline-flex items-center gap-2 text-xs font-bold text-emerald-950 hover:underline"
               >
-                <MessageCircle className="w-4 h-4 text-emerald-700" />
+                <WhatsAppIcon className="w-4 h-4" />
                 <span>Need rush dispatch? Chat with Mumbai Atelier Desk</span>
               </a>
             </div>

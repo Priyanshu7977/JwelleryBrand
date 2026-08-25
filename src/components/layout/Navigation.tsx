@@ -13,6 +13,7 @@ import {
   MessageCircle,
   Film
 } from 'lucide-react';
+import { WhatsAppIcon } from '../ui/WhatsAppIcon';
 import { useCart } from '../../context/CartContext';
 import { useAuth } from '../../context/AuthContext';
 import { FEATURED_PRODUCTS, CELESTIA_COLLECTIONS, BRAND_INFO } from '../../data/shopify-data';
@@ -331,11 +332,11 @@ export const Navigation: React.FC = () => {
             {/* WhatsApp Concierge (Desktop) */}
             <button
               onClick={() => setIsConciergeOpen(true)}
-              className="hidden sm:flex p-2 text-emerald-800 hover:text-emerald-900 hover:bg-emerald-50 rounded-full transition-all"
+              className="hidden sm:flex p-1.5 hover:bg-emerald-50 rounded-full transition-all cursor-pointer"
               aria-label="Atelier Concierge Desk"
-              title="Atelier Concierge"
+              title="Atelier WhatsApp Concierge"
             >
-              <MessageCircle className="w-4 h-4" />
+              <WhatsAppIcon className="w-5 h-5" />
             </button>
 
             {/* Shopping Bag Trigger */}
@@ -588,10 +589,10 @@ export const Navigation: React.FC = () => {
                   setMobileMenuOpen(false);
                   setIsConciergeOpen(true);
                 }}
-                className="w-full py-2.5 px-4 rounded-full bg-emerald-800 text-pearl-100 text-xs uppercase font-bold tracking-wider flex items-center justify-center gap-2"
+                className="w-full py-3 px-4 rounded-full bg-emerald-800 hover:bg-emerald-900 text-pearl-100 text-xs uppercase font-bold tracking-wider flex items-center justify-center gap-2 shadow-sm cursor-pointer"
               >
-                <MessageCircle className="w-4 h-4" />
-                <span>Atelier Concierge</span>
+                <WhatsAppIcon className="w-4 h-4" />
+                <span>Atelier WhatsApp Concierge</span>
               </button>
 
               <div className="text-center text-[10px] text-obsidian/60 font-mono">

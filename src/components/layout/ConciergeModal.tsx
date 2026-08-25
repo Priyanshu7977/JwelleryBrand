@@ -1,7 +1,8 @@
 import React from 'react';
 import { useCart } from '../../context/CartContext';
 import { BRAND_INFO } from '../../data/shopify-data';
-import { X, MessageCircle, Mail, Sparkles, Gift, Truck, Package, Heart, Compass } from 'lucide-react';
+import { X, Mail, Sparkles, Gift, Truck, Package, Heart, Compass } from 'lucide-react';
+import { WhatsAppIcon } from '../ui/WhatsAppIcon';
 import { Link } from 'react-router-dom';
 
 export const ConciergeModal: React.FC = () => {
@@ -111,9 +112,9 @@ export const ConciergeModal: React.FC = () => {
             target="_blank"
             rel="noopener noreferrer"
             onClick={() => setIsConciergeOpen(false)}
-            className="w-full h-12 px-6 rounded-full bg-emerald-800 text-pearl-50 text-xs uppercase tracking-widest font-semibold hover:bg-emerald-900 transition-all flex items-center justify-center gap-2 shadow-sm"
+            className="w-full h-12 px-6 rounded-full bg-emerald-800 hover:bg-emerald-900 text-pearl-50 text-xs uppercase tracking-widest font-semibold transition-all flex items-center justify-center gap-2.5 shadow-sm"
           >
-            <MessageCircle className="w-4 h-4" />
+            <WhatsAppIcon className="w-5 h-5" />
             <span>Chat Directly on WhatsApp (+91 7718825792)</span>
           </a>
         </div>

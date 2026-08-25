@@ -8,7 +8,6 @@ import {
   Plus,
   Minus,
   ArrowRight,
-  MessageCircle,
   Truck,
   ShieldCheck,
   ArrowLeft,
@@ -16,6 +15,7 @@ import {
   Check,
   Gift
 } from 'lucide-react';
+import { WhatsAppIcon } from '../components/ui/WhatsAppIcon';
 
 export const CartPage: React.FC = () => {
   const navigate = useNavigate();
@@ -327,9 +327,9 @@ export const CartPage: React.FC = () => {
 
                 <button
                   onClick={checkoutViaWhatsApp}
-                  className="w-full min-h-[48px] h-12 border border-emerald-600/60 bg-emerald-50/70 hover:bg-emerald-100 text-emerald-900 text-xs uppercase font-bold tracking-wider rounded-full transition-all flex items-center justify-center gap-2 cursor-pointer shadow-xs"
+                  className="w-full min-h-[48px] h-12 border border-emerald-600/60 bg-emerald-50/70 hover:bg-emerald-100 text-emerald-900 text-xs uppercase font-bold tracking-wider rounded-full transition-all flex items-center justify-center gap-2.5 cursor-pointer shadow-xs"
                 >
-                  <MessageCircle className="w-4 h-4 text-emerald-700 shrink-0" />
+                  <WhatsAppIcon className="w-5 h-5 shrink-0" />
                   <span>Order via WhatsApp Concierge</span>
                 </button>
               </div>
