@@ -65,17 +65,17 @@ export const LuxuryStardustCursor: React.FC = () => {
           x: e.clientX + (Math.random() - 0.5) * 6,
           y: e.clientY + (Math.random() - 0.5) * 6,
           size: Math.random() * 2.2 + 1.2,
-          speedX: (Math.random() - 0.5) * 0.4, // gentle, slow horizontal drift
-          speedY: Math.random() * 0.25 + 0.1,  // slow, gentle floating fall
+          speedX: (Math.random() - 0.5) * 0.28, // gentle, slow ambient drift
+          speedY: Math.random() * 0.15 + 0.05,  // slow dreamy floating fall
           color: baseColor,
-          alpha: 0.95,
-          decay: Math.random() * 0.005 + 0.004, // stays visible for ~2.5 to 3.5 seconds
+          alpha: 0.98,
+          decay: Math.random() * 0.0018 + 0.0022, // stays visible for full ~6 seconds (360 frames @ 60fps)
         });
       }
 
-      // Allow a rich lingering trail
-      if (particles.length > 120) {
-        particles = particles.slice(-120);
+      // Allow a rich lingering 6-second trail
+      if (particles.length > 260) {
+        particles = particles.slice(-260);
       }
     };
 
@@ -88,8 +88,8 @@ export const LuxuryStardustCursor: React.FC = () => {
         const p = particles[i];
         p.x += p.speedX;
         p.y += p.speedY;
-        p.speedX *= 0.985; // smooth friction
-        p.speedY *= 0.985;
+        p.speedX *= 0.992; // smooth air resistance
+        p.speedY *= 0.992;
         p.alpha -= p.decay;
 
         if (p.alpha <= 0) {
