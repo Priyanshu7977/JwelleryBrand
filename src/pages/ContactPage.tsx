@@ -294,10 +294,24 @@ export const ContactPage: React.FC = () => {
             <div className="lg:col-span-7">
               <form onSubmit={handleSubmit} className="space-y-3.5">
                 <div className="space-y-1">
-                  <label className="text-[11px] uppercase font-mono font-bold text-obsidian/80">Full Name * (Letters Only)</label>
+                  <label className="text-[11px] uppercase font-mono font-bold text-obsidian/80 flex items-center justify-between">
+                    <span>Full Name *</span>
+                    <span className="text-[10px] text-obsidian-soft/70 font-normal">Letters only</span>
+                  </label>
                   <input
                     type="text"
                     value={formData.name}
+                    onKeyDown={(e) => {
+                      if (/[0-9]/.test(e.key) && !e.ctrlKey && !e.metaKey) {
+                        e.preventDefault();
+                      }
+                    }}
+                    onPaste={(e) => {
+                      e.preventDefault();
+                      const paste = e.clipboardData.getData('text');
+                      const clean = paste.replace(/[^a-zA-Z\s'-]/g, '');
+                      setFormData(prev => ({ ...prev, name: (prev.name + clean).replace(/[^a-zA-Z\s'-]/g, '') }));
+                    }}
                     onChange={(e) => {
                       const textOnly = e.target.value.replace(/[^a-zA-Z\s'-]/g, '');
                       setFormData({ ...formData, name: textOnly });
@@ -316,7 +330,7 @@ export const ContactPage: React.FC = () => {
                     <input
                       type="email"
                       value={formData.email}
-                      onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                      onChange={(e) => setFormData({ ...formData, email: e.target.value.trim() })}
                       placeholder="you@example.com"
                       required
                       className="w-full px-4 py-2.5 rounded-xl bg-pearl-50 border border-champagne-300/70 text-xs text-obsidian focus:outline-none focus:border-gold-dark transition-all"
@@ -324,11 +338,25 @@ export const ContactPage: React.FC = () => {
                   </div>
 
                   <div className="space-y-1">
-                    <label className="text-[11px] uppercase font-mono font-bold text-obsidian/80">Phone / WhatsApp (Numbers Only)</label>
+                    <label className="text-[11px] uppercase font-mono font-bold text-obsidian/80 flex items-center justify-between">
+                      <span>Phone / WhatsApp</span>
+                      <span className="text-[10px] text-obsidian-soft/70 font-normal">Digits only</span>
+                    </label>
                     <input
                       type="tel"
                       inputMode="tel"
                       value={formData.phone}
+                      onKeyDown={(e) => {
+                        if (/[a-zA-Z]/.test(e.key) && !e.ctrlKey && !e.metaKey) {
+                          e.preventDefault();
+                        }
+                      }}
+                      onPaste={(e) => {
+                        e.preventDefault();
+                        const paste = e.clipboardData.getData('text');
+                        const clean = paste.replace(/[^0-9+\s-]/g, '').slice(0, 16);
+                        setFormData(prev => ({ ...prev, phone: clean }));
+                      }}
                       onChange={(e) => {
                         const numericOnly = e.target.value.replace(/[^0-9+\s-]/g, '').slice(0, 16);
                         setFormData({ ...formData, phone: numericOnly });
