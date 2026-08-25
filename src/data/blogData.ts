@@ -35,7 +35,7 @@ export const BLOG_POSTS: BlogPost[] = [
     title: 'How to Style Hand-Painted Enamel Bangles with Modern Outfits',
     subtitle: 'From minimal white linen shirts to royal festive silks, master the art of effortless bangle stacking.',
     category: 'Styling',
-    coverImage: '/assets/products/pink-blue-bangles.jpg',
+    coverImage: 'https://images.unsplash.com/photo-1611591475152-47eac9c5bdfa?auto=format&fit=crop&w=1200&q=80',
     author: {
       name: 'Radhika Sharma',
       role: 'Head of Styling, Celestia Mumbai',
@@ -86,7 +86,7 @@ export const BLOG_POSTS: BlogPost[] = [
     coverImage: 'https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?auto=format&fit=crop&w=1200&q=80',
     author: {
       name: 'Aditya Mehta',
-      role: 'Master Craftsman & Metallurgist',
+      role: 'Master Metallurgist, Mumbai Atelier',
       avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&q=80',
     },
     publishDate: '20 Aug 2026',
@@ -123,7 +123,7 @@ export const BLOG_POSTS: BlogPost[] = [
     title: 'The Art of the Bespoke Hamper: Why Polaroids & Wax Seals Win Hearts',
     subtitle: 'Transforming a regular birthday or anniversary gift into an emotional unboxing memory.',
     category: 'Gifting',
-    coverImage: 'https://images.unsplash.com/photo-1513885535751-8b9238bd345a?auto=format&fit=crop&w=1200&q=80',
+    coverImage: 'https://images.unsplash.com/photo-1549465220-1a8b9238cd48?auto=format&fit=crop&w=1200&q=80',
     author: {
       name: 'Priyanshu & Team',
       role: 'Founders, Celestia Atelier',
@@ -162,7 +162,7 @@ export const BLOG_POSTS: BlogPost[] = [
   {
     id: 'blog-4',
     slug: 'inside-mumbai-atelier-craftsmanship',
-    title: 'Inside Our Mumbai Atelier: Where Traditional Meenakari Meets Contemporary Redefined Design',
+    title: 'Inside Our Mumbai Atelier: Where Traditional Meenakari Meets Contemporary Design',
     subtitle: 'A photographic journey through our workbench, raw brass shaping, and hand-enameling process.',
     category: 'Atelier Story',
     coverImage: 'https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?auto=format&fit=crop&w=1200&q=80',
