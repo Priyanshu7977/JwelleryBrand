@@ -601,7 +601,7 @@ export const ProductDetailPage: React.FC = () => {
                   Verified Atelier Experiences
                 </span>
                 <h3 className="text-2xl sm:text-3xl font-bold text-obsidian">
-                  Client <span className="font-zapfino text-champagne-400 font-normal tracking-normal lowercase inline-block text-[28px] sm:text-[36px] leading-[0.9] px-1">reflections</span>.
+                  Client <span className="font-zapfino text-champagne-400 font-normal tracking-normal lowercase inline-block px-1">reflections</span>.
                 </h3>
               </div>
 
@@ -672,7 +672,7 @@ export const ProductDetailPage: React.FC = () => {
                   Curated Companions
                 </span>
                 <h3 className="text-2xl sm:text-3xl font-bold text-obsidian">
-                  Complete the <span className="font-zapfino text-champagne-400 font-normal tracking-normal lowercase inline-block text-[28px] sm:text-[36px] leading-[0.9] px-1">suite</span>.
+                  Complete the <span className="font-zapfino text-champagne-400 font-normal tracking-normal lowercase inline-block px-1">suite</span>.
                 </h3>
               </div>
               <Link to="/shop" className="text-xs font-bold uppercase tracking-widest text-obsidian hover:text-gold-dark transition-colors flex items-center gap-1">

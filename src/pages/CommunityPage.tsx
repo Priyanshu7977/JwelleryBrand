@@ -31,8 +31,8 @@ export const CommunityPage: React.FC = () => {
                 <span className="text-xs text-obsidian/60 font-medium font-mono">@celestiaamor.in</span>
               </div>
 
-              <h1 className="text-3xl sm:text-5xl md:text-6xl text-obsidian font-bold leading-tight">
-                The live <span className="font-zapfino text-champagne-400 font-normal tracking-normal lowercase inline-block text-[34px] sm:text-[50px] md:text-[60px] leading-[0.9] px-1">circle</span>.
+              <h1 className="text-3xl sm:text-5xl md:text-6xl text-obsidian font-bold leading-[1.08]">
+                The live <span className="font-zapfino text-champagne-400 font-normal tracking-normal lowercase inline-block px-1">circle</span>.
               </h1>
 
               <p className="text-xs sm:text-sm text-obsidian/75 leading-relaxed max-w-lg">

@@ -46,7 +46,10 @@
   }
 
   .font-zapfino {
-    font-family: 'Zapfino', 'Alex Brush', 'Great Vibes', 'Pinyon Script', 'Playfair Display', cursive, serif !important;
+    font-family: 'Zapfino', 'Alex Brush', 'Great Vibes', 'Pinyon Script', cursive, serif !important;
+    font-size: 1.38em;
+    line-height: 0.85;
+    vertical-align: -0.04em;
   }
 }
 
