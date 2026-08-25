@@ -576,7 +576,7 @@ export const Navigation: React.FC = () => {
                     }`
                   }
                 >
-                  Contact Us & Map
+                  Contact Us
                 </NavLink>
               </div>
             </div>
