@@ -1,9 +1,24 @@
-import React from 'react';
 import { BRAND_INFO } from '../data/shopify-data';
+import { SEOHead } from '../components/seo/SEOHead';
+import { SEO_PAGES } from '../data/seoData';
+import { getBreadcrumbSchema } from '../utils/jsonLdSchemas';
 
 export const TermsPage: React.FC = () => {
+  const termsSEO = SEO_PAGES.terms;
+  const termsBreadcrumbs = getBreadcrumbSchema([
+    { name: 'Home', url: '/' },
+    { name: 'Terms & Conditions', url: '/terms' },
+  ]);
+
   return (
     <div className="w-full min-h-screen bg-pearl-100 pt-36 sm:pt-40 md:pt-44 pb-32 px-4 sm:px-8 md:px-12">
+      <SEOHead
+        title={termsSEO.title}
+        description={termsSEO.description}
+        keywords={termsSEO.keywords}
+        canonical={termsSEO.canonical}
+        schema={termsBreadcrumbs}
+      />
       <div className="max-w-4xl mx-auto space-y-12">
         
         <div className="space-y-4 border-b border-champagne-300/40 pb-8">

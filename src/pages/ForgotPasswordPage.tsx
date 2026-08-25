@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
 import { Mail, ArrowLeft, Send, Check } from 'lucide-react';
 import { sanitizeEmail } from '../utils/sanitize';
+import { SEOHead } from '../components/seo/SEOHead';
 
 export const ForgotPasswordPage: React.FC = () => {
   const [email, setEmail] = useState('');
@@ -21,6 +22,12 @@ export const ForgotPasswordPage: React.FC = () => {
 
   return (
     <div className="w-full min-h-screen bg-pearl-100 pt-36 sm:pt-40 md:pt-44 pb-32 px-4 sm:px-6 flex items-center justify-center">
+      <SEOHead
+        title="Reset Password | CELESTIA Atelier"
+        description="Reset your Celestia patron portal account credentials securely."
+        canonical="https://jwellery-brand.vercel.app/forgot-password"
+        noIndex={true}
+      />
       <div className="w-full max-w-md bg-pearl-50/95 p-8 md:p-10 rounded-3xl border border-champagne-300/60 shadow-luxury-soft space-y-6">
         
         <Link to="/login" className="inline-flex items-center gap-1.5 text-xs uppercase tracking-widest text-obsidian/60 hover:text-obsidian">

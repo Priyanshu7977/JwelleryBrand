@@ -20,6 +20,7 @@ import { getOrderById } from '../services/orderService';
 import { downloadOrderInvoicePDF } from '../services/pdfInvoiceService';
 import { OrderMetadata } from '../types/backend';
 import { formatOrderDateIST, formatOrderTimeIST, formatTimelineStampIST } from '../utils/dateIST';
+import { SEOHead } from '../components/seo/SEOHead';
 
 const SIX_STAGE_STEPS = [
   { id: 'placed', label: 'ORDER PLACED' },
@@ -120,6 +121,12 @@ export const OrderDetailPage: React.FC = () => {
 
   return (
     <div className="w-full min-h-screen bg-pearl-100 pt-36 sm:pt-40 md:pt-44 pb-32 px-4 sm:px-8 md:px-12 selection:bg-champagne-300">
+      <SEOHead
+        title={`Order #${order.orderNumber} Receipt | CELESTIA Atelier`}
+        description="Official order confirmation, tax invoice, and live fulfillment tracking."
+        canonical={`https://jwellery-brand.vercel.app/orders/${order.orderNumber}`}
+        noIndex={true}
+      />
       <div className="max-w-4xl mx-auto space-y-8">
         
         <div className="flex items-center justify-between">

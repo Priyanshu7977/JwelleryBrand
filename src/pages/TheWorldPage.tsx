@@ -2,8 +2,19 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { Compass, MapPin, Instagram, ArrowRight, Sparkles } from 'lucide-react';
 import { BRAND_INFO, FOUNDER_INFO } from '../data/shopify-data';
+import { SEOHead } from '../components/seo/SEOHead';
+import { SEO_PAGES } from '../data/seoData';
+import { getOrganizationSchema, getBreadcrumbSchema } from '../utils/jsonLdSchemas';
 
 export const TheWorldPage: React.FC = () => {
+  const theWorldSEO = SEO_PAGES.theWorld;
+  const theWorldSchemas = [
+    getOrganizationSchema(),
+    getBreadcrumbSchema([
+      { name: 'Home', url: '/' },
+      { name: 'The World of Celestia', url: '/the-world' },
+    ]),
+  ];
   const chapters = [
     {
       num: '01',
@@ -46,6 +57,14 @@ export const TheWorldPage: React.FC = () => {
 
   return (
     <div className="w-full min-h-screen bg-pearl-100 pt-28 sm:pt-32 md:pt-36 pb-20 px-4 sm:px-6 md:px-10 lg:px-14 selection:bg-champagne-300">
+      <SEOHead
+        title={theWorldSEO.title}
+        description={theWorldSEO.description}
+        keywords={theWorldSEO.keywords}
+        canonical={theWorldSEO.canonical}
+        ogImage={theWorldSEO.ogImage}
+        schema={theWorldSchemas}
+      />
       <div className="max-w-7xl mx-auto space-y-8 sm:space-y-10">
         
         {/* Full-Width Cinematic Header */}

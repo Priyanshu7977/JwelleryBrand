@@ -8,10 +8,28 @@ import { ThePersonBehindCelestia } from '../components/sections/ThePersonBehindC
 import { Section07Instagram } from '../components/sections/Section07Instagram';
 import { SectionBlogShowcase } from '../components/sections/SectionBlogShowcase';
 import { Section08FinalMoment } from '../components/sections/Section08FinalMoment';
+import { SEOHead } from '../components/seo/SEOHead';
+import { SEO_PAGES } from '../data/seoData';
+import { getOrganizationSchema, getWebSiteSchema, getFAQPageSchema } from '../utils/jsonLdSchemas';
 
 export const HomePage: React.FC = () => {
+  const homeSEO = SEO_PAGES.home;
+  const homeSchemas = [
+    getOrganizationSchema(),
+    getWebSiteSchema(),
+    ...(homeSEO.faqs ? [getFAQPageSchema(homeSEO.faqs)] : []),
+  ];
+
   return (
     <div className="w-full flex-1 relative">
+      <SEOHead
+        title={homeSEO.title}
+        description={homeSEO.description}
+        keywords={homeSEO.keywords}
+        canonical={homeSEO.canonical}
+        ogImage={homeSEO.ogImage}
+        schema={homeSchemas}
+      />
       {/* 01: Cinematic Product-Led Immersive Opening */}
       <Section01Arrival />
 

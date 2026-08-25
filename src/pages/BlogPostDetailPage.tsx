@@ -18,6 +18,8 @@ import {
 } from 'lucide-react';
 import { WhatsAppIcon } from '../components/ui/WhatsAppIcon';
 import { RevealOnScroll } from '../components/motion/RevealOnScroll';
+import { SEOHead } from '../components/seo/SEOHead';
+import { getArticleSchema, getBreadcrumbSchema } from '../utils/jsonLdSchemas';
 
 export const BlogPostDetailPage: React.FC = () => {
   const { slug } = useParams<{ slug: string }>();
@@ -55,8 +57,26 @@ export const BlogPostDetailPage: React.FC = () => {
     window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank');
   };
 
+  const blogPostBreadcrumb = getBreadcrumbSchema([
+    { name: 'Home', url: '/' },
+    { name: 'The Celestia Gazette', url: '/blog' },
+    { name: post.title, url: `/blog/${post.slug}` },
+  ]);
+
   return (
     <div className="w-full min-h-screen bg-pearl-100 pt-32 sm:pt-36 md:pt-40 pb-28 px-4 sm:px-6 md:px-10 lg:px-14 selection:bg-champagne-300">
+      <SEOHead
+        title={`${post.title} | The Celestia Gazette`}
+        description={post.excerpt}
+        keywords={`${post.tags.join(', ')}, Celestia Gazette, jewellery styling guide, anti tarnish Mumbai`}
+        canonical={`https://jwellery-brand.vercel.app/blog/${post.slug}`}
+        ogType="article"
+        ogImage={post.coverImage.startsWith('http') ? post.coverImage : `https://jwellery-brand.vercel.app${post.coverImage}`}
+        schema={[
+          getArticleSchema(post),
+          blogPostBreadcrumb,
+        ]}
+      />
       <div className="max-w-4xl mx-auto space-y-10 sm:space-y-12">
         
         {/* Breadcrumb & Navigation */}

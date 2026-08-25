@@ -28,6 +28,8 @@ import {
   Sparkle,
 } from 'lucide-react';
 import { WhatsAppIcon } from '../components/ui/WhatsAppIcon';
+import { SEOHead } from '../components/seo/SEOHead';
+import { getProductSchema, getBreadcrumbSchema } from '../utils/jsonLdSchemas';
 
 export const ProductDetailPage: React.FC = () => {
   const { handle } = useParams<{ handle: string }>();
@@ -186,6 +188,25 @@ export const ProductDetailPage: React.FC = () => {
           </div>
         </div>
       )}
+
+      {/* Dynamic SEO & Product Schema */}
+      <SEOHead
+        title={`${product.title} | 100% Anti-Tarnish Fine Jewellery | CELESTIA`}
+        description={product.description || `Handcrafted ${product.title} in Mumbai. 100% anti-tarnish, water-resistant, and delivered with same-day Mumbai express dispatch.`}
+        keywords={`${product.title}, buy ${product.title} online, anti tarnish ${product.category}, Celestia jewellery Mumbai`}
+        canonical={`https://jwellery-brand.vercel.app/product/${product.handle}`}
+        ogType="product"
+        ogImage={product.images?.hero ? (product.images.hero.startsWith('http') ? product.images.hero : `https://jwellery-brand.vercel.app${product.images.hero}`) : undefined}
+        schema={[
+          getProductSchema(product),
+          getBreadcrumbSchema([
+            { name: 'Home', url: '/' },
+            { name: 'Shop', url: '/shop' },
+            { name: product.category, url: `/collections/${product.category}` },
+            { name: product.title, url: `/product/${product.handle}` },
+          ]),
+        ]}
+      />
 
       <div className="max-w-7xl mx-auto space-y-10 sm:space-y-12">
         

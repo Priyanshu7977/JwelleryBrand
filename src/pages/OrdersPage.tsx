@@ -6,6 +6,7 @@ import { downloadOrderInvoicePDF } from '../services/pdfInvoiceService';
 import { OrderMetadata } from '../types/backend';
 import { useAuth } from '../context/AuthContext';
 import { formatOrderDateIST, formatOrderTimeIST } from '../utils/dateIST';
+import { SEOHead } from '../components/seo/SEOHead';
 
 export const OrdersPage: React.FC = () => {
   const { user } = useAuth();
@@ -25,6 +26,12 @@ export const OrdersPage: React.FC = () => {
 
   return (
     <div className="w-full min-h-screen bg-pearl-100 pt-36 sm:pt-40 md:pt-44 pb-32 px-4 sm:px-8 md:px-12 selection:bg-champagne-300">
+      <SEOHead
+        title="Your Orders & Dispatches | CELESTIA Atelier"
+        description="View your recent fine jewellery and bespoke hamper dispatches, track active parcels, and download invoices."
+        canonical="https://jwellery-brand.vercel.app/account/orders"
+        noIndex={true}
+      />
       <div className="max-w-7xl mx-auto space-y-12">
         
         <Link

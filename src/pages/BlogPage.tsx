@@ -21,6 +21,9 @@ import {
 } from 'lucide-react';
 import { RevealOnScroll } from '../components/motion/RevealOnScroll';
 import { useCart } from '../context/CartContext';
+import { SEOHead } from '../components/seo/SEOHead';
+import { SEO_PAGES } from '../data/seoData';
+import { getBreadcrumbSchema } from '../utils/jsonLdSchemas';
 
 const CATEGORIES = [
   'All',
@@ -32,6 +35,11 @@ const CATEGORIES = [
 ] as const;
 
 export const BlogPage: React.FC = () => {
+  const blogSEO = SEO_PAGES.blog;
+  const blogBreadcrumbs = getBreadcrumbSchema([
+    { name: 'Home', url: '/' },
+    { name: 'The Celestia Gazette', url: '/blog' },
+  ]);
   const { showToast } = useCart();
   const [selectedCategory, setSelectedCategory] = useState<string>('All');
   const [searchQuery, setSearchQuery] = useState('');
@@ -68,6 +76,14 @@ export const BlogPage: React.FC = () => {
 
   return (
     <div className="w-full min-h-screen bg-pearl-100 pt-28 sm:pt-32 pb-20 px-4 sm:px-6 md:px-10 lg:px-14 selection:bg-champagne-300">
+      <SEOHead
+        title={blogSEO.title}
+        description={blogSEO.description}
+        keywords={blogSEO.keywords}
+        canonical={blogSEO.canonical}
+        ogImage={blogSEO.ogImage}
+        schema={blogBreadcrumbs}
+      />
       <div className="max-w-7xl mx-auto space-y-10 sm:space-y-12">
         
         {/* ================================================================= */}

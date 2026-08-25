@@ -20,6 +20,9 @@ import { WhatsAppIcon } from '../components/ui/WhatsAppIcon';
 import { getDeliveryTracking } from '../services/trackingService';
 import { DeliveryTracking, DeliveryStage } from '../types/backend';
 import { BRAND_INFO } from '../data/shopify-data';
+import { SEOHead } from '../components/seo/SEOHead';
+import { SEO_PAGES } from '../data/seoData';
+import { getBreadcrumbSchema } from '../utils/jsonLdSchemas';
 
 const STAGES_ORDER: { key: DeliveryStage; label: string; icon: any }[] = [
   { key: 'confirmed', label: 'Confirmed', icon: CheckCircle2 },
@@ -78,8 +81,22 @@ export const OrderTrackingPage: React.FC = () => {
     window.open(`https://wa.me/917718825792?text=${msg}`, '_blank');
   };
 
+  const trackingSEO = SEO_PAGES.orderTracking;
+  const trackingBreadcrumbs = getBreadcrumbSchema([
+    { name: 'Home', url: '/' },
+    { name: 'Order Tracking', url: '/order-tracking' },
+  ]);
+
   return (
     <div className="w-full min-h-screen bg-pearl-100 pt-32 sm:pt-36 md:pt-40 pb-28 px-4 sm:px-6 md:px-10 lg:px-14 selection:bg-champagne-300">
+      <SEOHead
+        title={trackingSEO.title}
+        description={trackingSEO.description}
+        keywords={trackingSEO.keywords}
+        canonical={trackingSEO.canonical}
+        ogImage={trackingSEO.ogImage}
+        schema={trackingBreadcrumbs}
+      />
       <div className="max-w-4xl mx-auto space-y-8 sm:space-y-10">
         
         {/* Header & Live Search Bar */}

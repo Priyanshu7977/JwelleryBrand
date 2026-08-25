@@ -16,6 +16,7 @@ import {
   Gift
 } from 'lucide-react';
 import { WhatsAppIcon } from '../components/ui/WhatsAppIcon';
+import { SEOHead } from '../components/seo/SEOHead';
 
 export const CartPage: React.FC = () => {
   const navigate = useNavigate();
@@ -57,6 +58,12 @@ export const CartPage: React.FC = () => {
 
   return (
     <div className="w-full min-h-screen bg-pearl-100 pt-32 sm:pt-36 md:pt-40 pb-24 px-4 sm:px-6 md:px-10 lg:px-14 selection:bg-champagne-300">
+      <SEOHead
+        title="Your Shopping Bag | CELESTIA Atelier"
+        description="Review your curated fine jewellery, artisanal bangles, and bespoke gift hampers before seamless express checkout."
+        canonical="https://jwellery-brand.vercel.app/cart"
+        noIndex={true}
+      />
       <div className="max-w-7xl mx-auto space-y-10 sm:space-y-12">
         
         {/* Header */}

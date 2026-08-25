@@ -7,8 +7,16 @@ import { LuxuryBadge } from '../components/ui/LuxuryBadge';
 import { Search, ShoppingBag, Eye, Heart } from 'lucide-react';
 import { RevealOnScroll } from '../components/motion/RevealOnScroll';
 import { ProductTiltCard } from '../components/motion/ProductTiltCard';
+import { SEOHead } from '../components/seo/SEOHead';
+import { SEO_PAGES } from '../data/seoData';
+import { getBreadcrumbSchema } from '../utils/jsonLdSchemas';
 
 export const ShopPage: React.FC = () => {
+  const shopSEO = SEO_PAGES.shop;
+  const shopBreadcrumb = getBreadcrumbSchema([
+    { name: 'Home', url: '/' },
+    { name: 'Shop All', url: '/shop' },
+  ]);
   const { addToCart, setQuickViewProduct } = useCart();
   const { toggleWishlist, isWishlisted } = useAuth();
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
@@ -60,6 +68,14 @@ export const ShopPage: React.FC = () => {
 
   return (
     <div className="w-full min-h-screen bg-pearl-100 pt-28 sm:pt-32 pb-16 px-4 sm:px-6 md:px-10 lg:px-14 selection:bg-champagne-300">
+      <SEOHead
+        title={shopSEO.title}
+        description={shopSEO.description}
+        keywords={shopSEO.keywords}
+        canonical={shopSEO.canonical}
+        ogImage={shopSEO.ogImage}
+        schema={shopBreadcrumb}
+      />
       <div className="max-w-7xl mx-auto space-y-6 sm:space-y-8">
         
         {/* Compact Editorial Discovery Room Header */}

@@ -5,6 +5,8 @@ import { useCart } from '../context/CartContext';
 import { LuxuryBadge } from '../components/ui/LuxuryBadge';
 import { ArrowLeft, ShoppingBag, Eye, Compass, Heart } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
+import { SEOHead } from '../components/seo/SEOHead';
+import { getBreadcrumbSchema } from '../utils/jsonLdSchemas';
 
 export const CollectionDetailPage: React.FC = () => {
   const { handle } = useParams<{ handle: string }>();
@@ -24,8 +26,22 @@ export const CollectionDetailPage: React.FC = () => {
     setTimeout(() => setAddedId(null), 1800);
   };
 
+  const collectionBreadcrumb = getBreadcrumbSchema([
+    { name: 'Home', url: '/' },
+    { name: 'Collections', url: '/collections' },
+    { name: collection.title, url: `/collections/${collection.handle}` },
+  ]);
+
   return (
     <div className="w-full min-h-screen bg-pearl-100 pt-32 sm:pt-36 md:pt-40 pb-24 px-4 sm:px-6 md:px-10 lg:px-14 selection:bg-champagne-300">
+      <SEOHead
+        title={`${collection.title} — ${collection.subtitle} | CELESTIA Collections`}
+        description={collection.editorialNarrative || `Discover Celestia's handcrafted ${collection.title} collection in Mumbai with 100% anti-tarnish guarantee and same-day express delivery.`}
+        keywords={`${collection.title}, ${collection.tags?.join(', ')}, Celestia collections, buy jewellery Mumbai`}
+        canonical={`https://jwellery-brand.vercel.app/collections/${collection.handle}`}
+        ogImage={collection.featuredImage.startsWith('http') ? collection.featuredImage : `https://jwellery-brand.vercel.app${collection.featuredImage}`}
+        schema={collectionBreadcrumb}
+      />
       <div className="max-w-7xl mx-auto space-y-8 sm:space-y-10">
         
         {/* Back link */}

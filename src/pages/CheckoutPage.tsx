@@ -33,6 +33,7 @@ import {
   AlertCircle,
   HelpCircle
 } from 'lucide-react';
+import { SEOHead } from '../components/seo/SEOHead';
 import { WhatsAppIcon } from '../components/ui/WhatsAppIcon';
 
 export const CheckoutPage: React.FC = () => {
@@ -279,6 +280,12 @@ export const CheckoutPage: React.FC = () => {
 
   return (
     <div className="w-full min-h-screen bg-pearl-100 pt-32 sm:pt-36 md:pt-40 pb-36 px-4 sm:px-8 md:px-12 lg:px-20 selection:bg-champagne-300">
+      <SEOHead
+        title="Secure Checkout | CELESTIA Luxury Atelier"
+        description="Encrypted 256-bit SSL checkout with UPI Instant Pay, Credit Card, and Verified COD at Celestia Atelier."
+        canonical="https://jwellery-brand.vercel.app/checkout"
+        noIndex={true}
+      />
       <div className="max-w-7xl mx-auto space-y-8 sm:space-y-10">
         
         {/* Back Button & Header */}

@@ -5,6 +5,7 @@ import { useCart } from '../context/CartContext';
 import { FEATURED_PRODUCTS } from '../data/shopify-data';
 import { LuxuryBadge } from '../components/ui/LuxuryBadge';
 import { Heart, ShoppingBag, Eye, Trash2, ArrowRight, Compass } from 'lucide-react';
+import { SEOHead } from '../components/seo/SEOHead';
 
 export const WishlistPage: React.FC = () => {
   const { wishlist, toggleWishlist } = useAuth();
@@ -19,6 +20,12 @@ export const WishlistPage: React.FC = () => {
 
   return (
     <div className="w-full min-h-screen bg-pearl-100 pt-32 sm:pt-36 md:pt-40 pb-24 px-4 sm:px-6 md:px-10 lg:px-14 selection:bg-champagne-300">
+      <SEOHead
+        title="Your Saved Wishlist | CELESTIA Atelier"
+        description="View your saved fine jewellery and custom gift hampers in your private Celestia vault."
+        canonical="https://jwellery-brand.vercel.app/wishlist"
+        noIndex={true}
+      />
       <div className="max-w-7xl mx-auto space-y-10 sm:space-y-12">
         
         {/* Editorial Header */}

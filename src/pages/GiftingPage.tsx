@@ -2,8 +2,19 @@ import React, { useState } from 'react';
 import { HAMPER_BOX_OPTIONS } from '../data/shopify-data';
 import { useCart } from '../context/CartContext';
 import { Gift, Sparkles } from 'lucide-react';
+import { SEOHead } from '../components/seo/SEOHead';
+import { SEO_PAGES } from '../data/seoData';
+import { getFAQPageSchema, getBreadcrumbSchema } from '../utils/jsonLdSchemas';
 
 export const GiftingPage: React.FC = () => {
+  const giftingSEO = SEO_PAGES.gifting;
+  const giftingSchemas = [
+    getBreadcrumbSchema([
+      { name: 'Home', url: '/' },
+      { name: 'Bespoke Gifting', url: '/gifting' },
+    ]),
+    ...(giftingSEO.faqs ? [getFAQPageSchema(giftingSEO.faqs)] : []),
+  ];
   const {
     selectedHamperBox,
     setSelectedHamperBox,
@@ -59,6 +70,14 @@ export const GiftingPage: React.FC = () => {
 
   return (
     <div className="w-full min-h-screen bg-pearl-100 pt-28 sm:pt-30 md:pt-32 pb-12 px-4 sm:px-6 md:px-10 lg:px-14 selection:bg-champagne-300">
+      <SEOHead
+        title={giftingSEO.title}
+        description={giftingSEO.description}
+        keywords={giftingSEO.keywords}
+        canonical={giftingSEO.canonical}
+        ogImage={giftingSEO.ogImage}
+        schema={giftingSchemas}
+      />
       <div className="max-w-7xl mx-auto space-y-5 sm:space-y-6">
         
         {/* Compact Editorial Gifting Header */}

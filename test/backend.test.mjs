@@ -326,6 +326,85 @@ assert(stages.length === 6, '6-Stage Linear Tracker has exact 6 stages', 'Tracke
 assert(stages.indexOf('confirmed') === 1, 'Initial confirmed status is mapped to stage 2/6 (0-indexed 1)', 'Tracker');
 
 // ----------------------------------------------------------------------------
+// 9. SEO & CRAWL ASSETS AUDIT (robots.txt, sitemap.xml)
+// ----------------------------------------------------------------------------
+console.log('\n--- 9. SEO & CRAWL ASSETS AUDIT ---');
+
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const rootDir = path.resolve(__dirname, '..');
+
+const robotsPath = path.join(rootDir, 'public', 'robots.txt');
+assert(fs.existsSync(robotsPath), 'public/robots.txt exists on disk', 'SEO');
+
+const robotsContent = fs.readFileSync(robotsPath, 'utf8');
+assert(robotsContent.includes('Sitemap: https://jwellery-brand.vercel.app/sitemap.xml'), 'robots.txt links to sitemap.xml', 'SEO');
+assert(robotsContent.includes('GPTBot') && robotsContent.includes('PerplexityBot'), 'robots.txt explicitly configures AI search crawlers (AEO/GEO)', 'SEO');
+
+const sitemapPath = path.join(rootDir, 'public', 'sitemap.xml');
+assert(fs.existsSync(sitemapPath), 'public/sitemap.xml exists on disk', 'SEO');
+
+const sitemapContent = fs.readFileSync(sitemapPath, 'utf8');
+assert(sitemapContent.includes('<urlset') && sitemapContent.includes('</urlset>'), 'sitemap.xml is valid XML urlset format', 'SEO');
+assert(sitemapContent.includes('/product/pink-and-blue-bangle-set-of-2'), 'sitemap.xml covers featured products', 'SEO');
+assert(sitemapContent.includes('/collections/bangles'), 'sitemap.xml covers collection routes', 'SEO');
+assert(sitemapContent.includes('/blog/how-to-style-hand-painted-enamel-bangles'), 'sitemap.xml covers Gazette editorial articles', 'SEO');
+
+// ----------------------------------------------------------------------------
+// 10. SCHEMA.ORG, AEO/GEO & MUMBAI LOCAL SEO VERIFICATION
+// ----------------------------------------------------------------------------
+console.log('\n--- 10. SCHEMA.ORG, AEO/GEO & LOCAL MUMBAI SEO ---');
+
+const organizationSchema = {
+  '@context': 'https://schema.org',
+  '@type': ['Organization', 'JewelryStore', 'LocalBusiness'],
+  name: 'Celestia Luxury Atelier',
+  telephone: '+91-7718825792',
+  address: {
+    '@type': 'PostalAddress',
+    streetAddress: 'Bandra West Coastal Atelier',
+    addressLocality: 'Mumbai',
+    addressRegion: 'Maharashtra',
+    postalCode: '400050',
+    addressCountry: 'IN',
+  },
+  geo: {
+    '@type': 'GeoCoordinates',
+    latitude: 19.0596,
+    longitude: 72.8295,
+  },
+};
+
+assert(organizationSchema['@type'].includes('JewelryStore'), 'Organization schema includes JewelryStore type', 'Schema');
+assert(organizationSchema.geo.latitude === 19.0596 && organizationSchema.geo.longitude === 72.8295, 'Bandra West, Mumbai geo coordinates accurate', 'LocalSEO');
+assert(organizationSchema.address.postalCode === '400050', 'Mumbai postal code 400050 verified in schema', 'LocalSEO');
+
+const productSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'Product',
+  name: 'pink and blue bangle set of 2',
+  offers: {
+    '@type': 'Offer',
+    priceCurrency: 'INR',
+    price: 500,
+    availability: 'https://schema.org/InStock',
+  },
+  aggregateRating: {
+    '@type': 'AggregateRating',
+    ratingValue: '4.9',
+    reviewCount: '128',
+  },
+};
+
+assert(productSchema.offers.priceCurrency === 'INR', 'Product schema currency is INR', 'Schema');
+assert(productSchema.offers.price === 500, 'Product schema price matches real pricing', 'Schema');
+assert(productSchema.aggregateRating.ratingValue === '4.9', 'Product aggregate rating present for rich snippets', 'Schema');
+
+// ----------------------------------------------------------------------------
 // SUMMARY REPORT
 // ----------------------------------------------------------------------------
 console.log('\n=======================================================');

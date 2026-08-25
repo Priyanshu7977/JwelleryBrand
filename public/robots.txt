@@ -1,0 +1,40 @@
+# ==============================================================================
+# CELESTIA LUXURY ATELIER - ROBOTS.TXT
+# Optimized for Search Engines (Google, Bing) & AI Engines (ChatGPT, Perplexity)
+# ==============================================================================
+
+User-agent: *
+Allow: /
+Disallow: /account/
+Disallow: /checkout
+Disallow: /api/
+Disallow: /order-success/
+
+# AI Search Agents & LLM Crawlers (AEO / GEO Optimization)
+User-agent: GPTBot
+Allow: /
+Disallow: /account/
+Disallow: /checkout
+Disallow: /api/
+
+User-agent: PerplexityBot
+Allow: /
+Disallow: /account/
+Disallow: /checkout
+Disallow: /api/
+
+User-agent: ClaudeBot
+Allow: /
+Disallow: /account/
+Disallow: /checkout
+Disallow: /api/
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: Applebot
+Allow: /
+
+# Sitemap Index Reference
+Sitemap: https://jwellery-brand.vercel.app/sitemap.xml
+Sitemap: https://celestiaamor.in/sitemap.xml

@@ -20,6 +20,9 @@ import {
   HelpCircle,
 } from 'lucide-react';
 import { RevealOnScroll } from '../components/motion/RevealOnScroll';
+import { SEOHead } from '../components/seo/SEOHead';
+import { SEO_PAGES } from '../data/seoData';
+import { getOrganizationSchema, getFAQPageSchema, getBreadcrumbSchema } from '../utils/jsonLdSchemas';
 
 // Official WhatsApp Brand Logo (from whatsapp.com brand assets)
 const OfficialWhatsAppIcon: React.FC<{ className?: string }> = ({ className = "w-11 h-11" }) => (
@@ -172,8 +175,26 @@ export const ContactPage: React.FC = () => {
     }
   ];
 
+  const contactSEO = SEO_PAGES.contact;
+  const contactSchemas = [
+    getOrganizationSchema(),
+    getBreadcrumbSchema([
+      { name: 'Home', url: '/' },
+      { name: 'Contact Atelier', url: '/contact' },
+    ]),
+    ...(contactSEO.faqs ? [getFAQPageSchema(contactSEO.faqs)] : []),
+  ];
+
   return (
     <div className="w-full min-h-screen bg-pearl-100 pt-28 sm:pt-32 pb-20 px-4 sm:px-6 md:px-10 lg:px-14 selection:bg-champagne-300 overflow-x-hidden relative">
+      <SEOHead
+        title={contactSEO.title}
+        description={contactSEO.description}
+        keywords={contactSEO.keywords}
+        canonical={contactSEO.canonical}
+        ogImage={contactSEO.ogImage}
+        schema={contactSchemas}
+      />
       {/* Background Ambience */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
         <div className="absolute top-20 left-1/2 -translate-x-1/2 w-[450px] sm:w-[650px] h-[280px] sm:h-[400px] bg-champagne-200/25 rounded-full blur-3xl" />

@@ -1,8 +1,17 @@
 import React from 'react';
 import { INSTAGRAM_POSTS, CUSTOMER_REVIEWS, BRAND_INFO } from '../data/shopify-data';
 import { Instagram, Star, Heart, MessageCircle, Play, ExternalLink, CheckCircle2, ChevronDown } from 'lucide-react';
+import { SEOHead } from '../components/seo/SEOHead';
+import { SEO_PAGES } from '../data/seoData';
+import { getBreadcrumbSchema } from '../utils/jsonLdSchemas';
 
 export const CommunityPage: React.FC = () => {
+  const commSEO = SEO_PAGES.community;
+  const commBreadcrumb = getBreadcrumbSchema([
+    { name: 'Home', url: '/' },
+    { name: 'Community Circle', url: '/community' },
+  ]);
+
   const highlights = [
     { title: 'Reviews 🧿✨', img: '/assets/products/pink-blue-bangles.jpg' },
     { title: 'Premium Hampers', img: '/assets/products/desi-barbie-hamper.jpg' },
@@ -13,6 +22,14 @@ export const CommunityPage: React.FC = () => {
 
   return (
     <div className="w-full min-h-screen bg-pearl-100 pt-28 sm:pt-32 md:pt-36 pb-24 px-4 sm:px-6 md:px-10 lg:px-14 selection:bg-champagne-300">
+      <SEOHead
+        title={commSEO.title}
+        description={commSEO.description}
+        keywords={commSEO.keywords}
+        canonical={commSEO.canonical}
+        ogImage={commSEO.ogImage}
+        schema={commBreadcrumb}
+      />
       <div className="max-w-7xl mx-auto space-y-12 sm:space-y-16">
         
         {/* ========================================================================= */}

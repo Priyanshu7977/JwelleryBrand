@@ -26,6 +26,7 @@ import {
   Trash2,
   Truck
 } from 'lucide-react';
+import { SEOHead } from '../components/seo/SEOHead';
 
 export const AccountPage: React.FC = () => {
   const { showToast, addToCart, setQuickViewProduct } = useCart();
@@ -103,6 +104,12 @@ export const AccountPage: React.FC = () => {
   if (!isAuthenticated || !user) {
     return (
       <div className="w-full min-h-screen bg-pearl-100 pt-36 sm:pt-40 md:pt-44 pb-32 px-4 sm:px-8 md:px-12 lg:px-20 selection:bg-champagne-300">
+        <SEOHead
+          title="Sign In / Register | CELESTIA Patron Account"
+          description="Access your Celestia account to view orders, track parcels, and manage your wishlist."
+          canonical="https://jwellery-brand.vercel.app/account"
+          noIndex={true}
+        />
         <div className="max-w-2xl mx-auto space-y-10 text-center">
           
           <div className="w-16 h-16 rounded-full bg-champagne-100 flex items-center justify-center mx-auto text-gold-dark shadow-sm">
@@ -161,6 +168,12 @@ export const AccountPage: React.FC = () => {
   // AUTHENTICATED USER PORTAL
   return (
     <div className="w-full min-h-screen bg-pearl-100 pt-36 sm:pt-40 md:pt-44 pb-32 px-4 sm:px-8 md:px-12 lg:px-20 selection:bg-champagne-300">
+      <SEOHead
+        title={`My Account • ${user.name} | CELESTIA Atelier`}
+        description="Manage your fine jewellery dispatches, saved addresses, and orders."
+        canonical="https://jwellery-brand.vercel.app/account"
+        noIndex={true}
+      />
       <div className="max-w-[1500px] mx-auto space-y-12">
         
         {/* Header */}

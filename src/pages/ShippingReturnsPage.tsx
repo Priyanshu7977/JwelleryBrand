@@ -1,10 +1,26 @@
-import React from 'react';
 import { Truck, Video, ShieldAlert, CheckCircle2, Clock, MapPin } from 'lucide-react';
 import { BRAND_INFO } from '../data/shopify-data';
+import { SEOHead } from '../components/seo/SEOHead';
+import { SEO_PAGES } from '../data/seoData';
+import { getBreadcrumbSchema } from '../utils/jsonLdSchemas';
 
 export const ShippingReturnsPage: React.FC = () => {
+  const shippingSEO = SEO_PAGES.shippingReturns;
+  const shippingBreadcrumbs = getBreadcrumbSchema([
+    { name: 'Home', url: '/' },
+    { name: 'Shipping & Returns Policy', url: '/shipping-returns' },
+  ]);
+
   return (
     <div className="w-full min-h-screen bg-pearl-100 pt-36 sm:pt-40 md:pt-44 pb-32 px-4 sm:px-8 md:px-12">
+      <SEOHead
+        title={shippingSEO.title}
+        description={shippingSEO.description}
+        keywords={shippingSEO.keywords}
+        canonical={shippingSEO.canonical}
+        ogImage={shippingSEO.ogImage}
+        schema={shippingBreadcrumbs}
+      />
       <div className="max-w-4xl mx-auto space-y-12">
         
         {/* Header */}

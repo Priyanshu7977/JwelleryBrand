@@ -28,6 +28,7 @@ import { downloadOrderInvoicePDF } from '../services/pdfInvoiceService';
 import { OrderMetadata } from '../types/backend';
 import { BRAND_INFO } from '../data/shopify-data';
 import { formatOrderDateIST, formatOrderTimeIST } from '../utils/dateIST';
+import { SEOHead } from '../components/seo/SEOHead';
 
 // 6-Stage Linear Progress Stages
 const SIX_STAGE_STEPS = [
@@ -173,6 +174,11 @@ export const OrderSuccessPage: React.FC = () => {
 
   return (
     <div className="w-full min-h-screen bg-pearl-100 pt-28 sm:pt-32 pb-28 px-4 sm:px-6 md:px-10 lg:px-14 selection:bg-champagne-300">
+      <SEOHead
+        title={`Order #${order.orderNumber} Confirmed | CELESTIA Luxury Atelier`}
+        description="Your Celestia order has been confirmed and is being prepared in our Mumbai Atelier."
+        noIndex={true}
+      />
       <div className="max-w-4xl mx-auto space-y-6 sm:space-y-8">
         
         {/* ========================================================================= */}

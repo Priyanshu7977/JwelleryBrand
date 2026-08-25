@@ -1,9 +1,24 @@
-import React from 'react';
 import { BRAND_INFO } from '../data/shopify-data';
+import { SEOHead } from '../components/seo/SEOHead';
+import { SEO_PAGES } from '../data/seoData';
+import { getBreadcrumbSchema } from '../utils/jsonLdSchemas';
 
 export const PrivacyPage: React.FC = () => {
+  const privacySEO = SEO_PAGES.privacy;
+  const privacyBreadcrumbs = getBreadcrumbSchema([
+    { name: 'Home', url: '/' },
+    { name: 'Privacy Policy', url: '/privacy' },
+  ]);
+
   return (
     <div className="w-full min-h-screen bg-pearl-100 pt-36 sm:pt-40 md:pt-44 pb-32 px-4 sm:px-8 md:px-12">
+      <SEOHead
+        title={privacySEO.title}
+        description={privacySEO.description}
+        keywords={privacySEO.keywords}
+        canonical={privacySEO.canonical}
+        schema={privacyBreadcrumbs}
+      />
       <div className="max-w-4xl mx-auto space-y-12">
         
         <div className="space-y-4 border-b border-champagne-300/40 pb-8">

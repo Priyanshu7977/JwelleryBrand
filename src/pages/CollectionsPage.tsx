@@ -4,10 +4,27 @@ import { CELESTIA_COLLECTIONS } from '../data/shopify-data';
 import { ArrowRight, Compass, Sparkles } from 'lucide-react';
 import { RevealOnScroll } from '../components/motion/RevealOnScroll';
 import { ProductTiltCard } from '../components/motion/ProductTiltCard';
+import { SEOHead } from '../components/seo/SEOHead';
+import { SEO_PAGES } from '../data/seoData';
+import { getBreadcrumbSchema } from '../utils/jsonLdSchemas';
 
 export const CollectionsPage: React.FC = () => {
+  const colSEO = SEO_PAGES.collections;
+  const colBreadcrumbs = getBreadcrumbSchema([
+    { name: 'Home', url: '/' },
+    { name: 'Collections', url: '/collections' },
+  ]);
+
   return (
     <div className="w-full min-h-screen bg-pearl-100 pt-28 sm:pt-32 md:pt-36 pb-20 px-4 sm:px-6 md:px-10 lg:px-14 selection:bg-champagne-300">
+      <SEOHead
+        title={colSEO.title}
+        description={colSEO.description}
+        keywords={colSEO.keywords}
+        canonical={colSEO.canonical}
+        ogImage={colSEO.ogImage}
+        schema={colBreadcrumbs}
+      />
       <div className="max-w-7xl mx-auto space-y-8 sm:space-y-10">
         
         {/* Compact Editorial Header with Room for Floating Header */}

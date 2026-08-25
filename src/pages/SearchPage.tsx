@@ -5,6 +5,7 @@ import { useCart } from '../context/CartContext';
 import { Search, Sparkles, ShoppingBag, Eye, Heart } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { LuxuryBadge } from '../components/ui/LuxuryBadge';
+import { SEOHead } from '../components/seo/SEOHead';
 
 export const SearchPage: React.FC = () => {
   const [query, setQuery] = useState('');
@@ -32,6 +33,12 @@ export const SearchPage: React.FC = () => {
 
   return (
     <div className="w-full min-h-screen bg-pearl-100 pt-32 sm:pt-36 md:pt-40 pb-24 px-4 sm:px-6 md:px-10 lg:px-14 selection:bg-champagne-300">
+      <SEOHead
+        title={query ? `Search Results for "${query}" | CELESTIA` : 'Search Fine Jewellery & Hampers | CELESTIA'}
+        description="Search Celestia's curated catalogue of anti-tarnish jewellery, bangles, and personalized gift hampers."
+        canonical="https://jwellery-brand.vercel.app/search"
+        noIndex={true}
+      />
       <div className="max-w-7xl mx-auto space-y-8 sm:space-y-10">
         
         {/* Search Bar Banner */}
