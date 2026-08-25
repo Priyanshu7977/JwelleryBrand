@@ -214,7 +214,7 @@ export const ObjectsOfAffection: React.FC = () => {
               <div className="flex flex-col sm:flex-row gap-3 pt-2">
                 <button
                   onClick={() => addToCart(currentProduct, 1)}
-                  className="btn-primary group w-full sm:flex-1 min-h-[48px] h-12 shadow-lg hover:shadow-xl active:scale-[0.98] transition-all flex items-center justify-center gap-2 text-xs uppercase font-bold tracking-widest cursor-pointer"
+                  className="btn-primary group w-full sm:flex-1 min-h-[48px] shadow-lg hover:shadow-xl active:scale-[0.98] transition-all flex items-center justify-center gap-2 text-xs uppercase font-bold tracking-widest cursor-pointer whitespace-nowrap"
                 >
                   <ShoppingBag className="w-4 h-4 shrink-0" />
                   <span>Add To Bag • ₹{currentProduct.price}</span>
@@ -222,7 +222,7 @@ export const ObjectsOfAffection: React.FC = () => {
 
                 <button
                   onClick={() => setQuickViewProduct(currentProduct)}
-                  className="btn-secondary group w-full sm:w-auto px-6 min-h-[48px] h-12 active:scale-[0.98] transition-all flex items-center justify-center gap-2 text-xs uppercase font-bold tracking-widest cursor-pointer"
+                  className="btn-secondary group w-full sm:w-auto px-6 min-h-[48px] active:scale-[0.98] transition-all flex items-center justify-center gap-2 text-xs uppercase font-bold tracking-widest cursor-pointer whitespace-nowrap"
                 >
                   <span>Quick View</span>
                   <ArrowRight className="w-3.5 h-3.5 shrink-0 group-hover:translate-x-1 transition-transform duration-300" />
