@@ -1,0 +1,31 @@
+{% schema %}
+{
+  "name": "Bangle Sizing Selector",
+  "target": "section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "label",
+      "label": "Selector Label",
+      "default": "Select Bangle Size (Calibrated in Inches)"
+    }
+  ]
+}
+{% endschema %}
+
+<div class="my-3 space-y-1.5">
+  <label class="text-[11px] uppercase font-mono tracking-widest text-[#786E65] font-bold block">
+    {{ block.settings.label }}
+  </label>
+  <div class="flex gap-2">
+    <button type="button" class="px-4 py-2 rounded-xl border border-[#A37F3B] bg-[#F6EDE0] text-xs font-mono font-bold text-[#1E1A17] shadow-xs">
+      2.4 (Small)
+    </button>
+    <button type="button" class="px-4 py-2 rounded-xl border border-[#D8C39A]/60 bg-white hover:border-[#A37F3B] text-xs font-mono font-bold text-[#1E1A17] transition-all">
+      2.6 (Standard)
+    </button>
+    <button type="button" class="px-4 py-2 rounded-xl border border-[#D8C39A]/60 bg-white hover:border-[#A37F3B] text-xs font-mono font-bold text-[#1E1A17] transition-all">
+      2.8 (Large)
+    </button>
+  </div>
+</div>
