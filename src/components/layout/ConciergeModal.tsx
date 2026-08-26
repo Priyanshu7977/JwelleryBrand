@@ -58,7 +58,7 @@ export const ConciergeModal: React.FC = () => {
       />
 
       {/* Modal Container */}
-      <div className="relative w-full max-w-lg bg-pearl-50/98 rounded-3xl p-6 sm:p-8 border border-champagne-300/80 shadow-2xl space-y-6 z-10 animate-scale-up">
+      <div className="relative w-full max-w-lg max-h-[90dvh] overflow-y-auto scroll-touch bg-pearl-50/98 rounded-3xl p-6 sm:p-8 border border-champagne-300/80 shadow-2xl space-y-6 z-10 animate-scale-up pb-safe">
         
         {/* Header */}
         <div className="flex items-start justify-between border-b border-champagne-300/40 pb-4">

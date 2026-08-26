@@ -95,7 +95,7 @@ export const CartDrawer: React.FC = () => {
       <div className="relative w-full max-w-full sm:max-w-md bg-pearl-100 h-full h-[100dvh] max-h-[100dvh] shadow-2xl flex flex-col overflow-hidden z-10 border-l border-champagne-300/60 selection:bg-champagne-300">
         
         {/* Drawer Header */}
-        <div className="px-3.5 py-2.5 sm:px-4 sm:py-3 border-b border-champagne-300/40 bg-pearl-50 shrink-0">
+        <div className="px-3.5 py-2.5 sm:px-4 sm:py-3 pt-safe border-b border-champagne-300/40 bg-pearl-50 shrink-0">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               <div className="w-6 h-6 rounded-full bg-champagne-100 flex items-center justify-center text-gold-dark shadow-xs">
@@ -415,7 +415,7 @@ export const CartDrawer: React.FC = () => {
 
         {/* Footer Checkout Summary */}
         {cart.length > 0 && (
-          <div className="p-3 sm:p-3.5 pb-6 sm:pb-3.5 bg-pearl-50 border-t border-champagne-300/50 space-y-2 shrink-0 shadow-lg">
+          <div className="p-3 sm:p-3.5 pb-safe bg-pearl-50 border-t border-champagne-300/50 space-y-2 shrink-0 shadow-lg">
             {/* Price Calculations */}
             <div className="space-y-0.5 text-xs">
               <div className="flex justify-between items-center text-obsidian">

@@ -35,7 +35,7 @@ export const QuickViewModal: React.FC = () => {
       />
 
       {/* Modal Card */}
-      <div className="relative w-full max-w-4xl bg-pearl-50 rounded-3xl shadow-2xl overflow-hidden z-10 border border-champagne-300/50 max-h-[92vh] flex flex-col md:flex-row">
+      <div className="relative w-full max-w-4xl bg-pearl-50 rounded-3xl shadow-2xl overflow-hidden z-10 border border-champagne-300/50 max-h-[90dvh] flex flex-col md:flex-row">
         
         {/* Close Button */}
         <button
@@ -80,7 +80,7 @@ export const QuickViewModal: React.FC = () => {
         </div>
 
         {/* Right Details */}
-        <div className="w-full md:w-1/2 p-6 md:p-10 flex flex-col justify-between overflow-y-auto">
+        <div className="w-full md:w-1/2 p-6 md:p-10 flex flex-col justify-between overflow-y-auto scroll-touch pb-safe">
           <div className="space-y-4">
             <div className="space-y-1">
               <span className="text-[11px] uppercase tracking-ethereal text-gold-dark font-semibold">

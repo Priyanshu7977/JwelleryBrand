@@ -74,7 +74,7 @@ export const LiveShopperActivityToast: React.FC = () => {
   if (!currentEvent || !isVisible || isExcluded) return null;
 
   return (
-    <div className="fixed bottom-5 left-4 sm:left-6 z-[120] max-w-xs sm:max-w-sm bg-white/95 backdrop-blur-md rounded-2xl p-3 sm:p-3.5 shadow-2xl border border-champagne-300/80 animate-slide-in flex items-center gap-3 selection:bg-champagne-300">
+    <div className="fixed bottom-5 left-4 sm:left-6 mb-safe z-[120] max-w-xs sm:max-w-sm bg-white/95 backdrop-blur-md rounded-2xl p-3 sm:p-3.5 shadow-2xl border border-champagne-300/80 animate-slide-in flex items-center gap-3 selection:bg-champagne-300">
       {/* Product Mini Image */}
       <div className="w-11 h-11 rounded-xl overflow-hidden bg-sand shrink-0 border border-champagne-200 relative">
         <img

@@ -11,13 +11,20 @@
     --blush: #EADCD5;
   }
 
+  html {
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+  }
+
   html, body, #root {
     width: 100%;
     max-width: 100vw;
     min-height: 100%;
+    min-height: 100dvh;
     margin: 0;
     padding: 0;
     overflow-x: hidden;
+    -webkit-tap-highlight-color: transparent;
   }
 
   body {
@@ -32,6 +39,19 @@
     text-rendering: optimizeLegibility;
     font-size: 15px;
     line-height: 1.6;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* Universal touch optimization for iOS */
+  button, a, input, select, textarea {
+    touch-action: manipulation;
+  }
+
+  /* Prevent iOS Safari forced auto-zoom on form inputs */
+  @media screen and (max-width: 768px) {
+    input, select, textarea {
+      font-size: 16px !important;
+    }
   }
 
   /* Headings typography */
@@ -44,7 +64,45 @@
     font-family: 'Montserrat', sans-serif;
     letter-spacing: 0.08em;
   }
+}
 
+/* ==========================================================================
+   iOS SAFARI SAFE AREA INSETS & DYNAMIC VIEWPORT UTILITIES
+   ========================================================================== */
+.pb-safe {
+  padding-bottom: max(env(safe-area-inset-bottom, 0px), 1rem) !important;
+}
+
+.pt-safe {
+  padding-top: max(env(safe-area-inset-top, 0px), 0.75rem) !important;
+}
+
+.pl-safe {
+  padding-left: max(env(safe-area-inset-left, 0px), 1rem) !important;
+}
+
+.pr-safe {
+  padding-right: max(env(safe-area-inset-right, 0px), 1rem) !important;
+}
+
+.mb-safe {
+  margin-bottom: max(env(safe-area-inset-bottom, 0px), 1.25rem) !important;
+}
+
+.h-screen-ios {
+  height: 100vh;
+  height: 100dvh;
+}
+
+.min-h-screen-ios {
+  min-height: 100vh;
+  min-height: 100dvh;
+}
+
+/* Momentum scrolling for iOS scrollable containers */
+.scroll-touch, [data-lenis-prevent], .overflow-y-auto, .overflow-x-auto {
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
 }
 
 .font-zapfino {

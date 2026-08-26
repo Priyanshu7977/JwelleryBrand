@@ -29,15 +29,15 @@ export const Footer: React.FC = () => {
   return (
     <footer
       style={{ backgroundColor: '#181411', color: '#FAF7F0' }}
-      className="relative z-30 w-full border-t border-[#D8C39A]/40 pt-16 sm:pt-20 pb-12 px-4 sm:px-6 md:px-10 lg:px-14 overflow-hidden selection:bg-champagne-300 selection:text-obsidian"
+      className="relative z-30 w-full border-t border-[#D8C39A]/40 pt-16 sm:pt-20 pb-12 pb-safe px-4 sm:px-6 md:px-10 lg:px-14 overflow-hidden selection:bg-champagne-300 selection:text-obsidian"
     >
       {/* Ambient background noise & subtle warm gold radiance */}
       <div className="absolute inset-0 bg-noise opacity-20 pointer-events-none" />
       <div className="absolute -top-32 left-1/2 -translate-x-1/2 w-[600px] h-[300px] bg-[#D8C39A]/10 rounded-full blur-3xl pointer-events-none" />
 
-      <div className="max-w-7xl mx-auto space-y-12 sm:space-y-16 relative z-10">
+      <div className="relative max-w-7xl mx-auto space-y-12 sm:space-y-16">
         
-        {/* Grand Dramatic Brand Closing Statement */}
+        {/* Atelier Monogram & Signature Quote */}
         <RevealOnScroll direction="up" delay={0}>
           <div className="text-center space-y-4 pb-10 sm:pb-12 border-b border-[#D8C39A]/25">
             <div className="inline-flex items-center gap-2 px-4 py-1 rounded-full bg-[#28231F] border border-[#D8C39A]/40 text-[11px] sm:text-xs uppercase font-mono tracking-widest text-[#D8C39A] font-bold shadow-inner">
@@ -62,7 +62,7 @@ export const Footer: React.FC = () => {
                   CEL<span className="font-light lowercase text-[#D8C39A]">estia</span>
                 </Link>
                 <p className="text-xs uppercase tracking-[0.32em] text-[#D8C39A] font-mono font-bold">
-                  redefined for all.
+                  redefined for all
                 </p>
               </div>
 

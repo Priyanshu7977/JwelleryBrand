@@ -501,14 +501,14 @@ export const Navigation: React.FC = () => {
       {/* ===================================================================== */}
       {mobileMenuOpen && (
         <div className="fixed inset-0 z-40 bg-obsidian/60 backdrop-blur-sm lg:hidden animate-fade-in">
-          <div className="fixed inset-y-0 left-0 w-4/5 max-w-sm bg-pearl-50 shadow-2xl p-6 flex flex-col justify-between overflow-y-auto border-r border-champagne-300/60 animate-slide-in">
-            <div className="space-y-8 pt-12">
+          <div className="fixed inset-y-0 left-0 w-4/5 max-w-sm bg-pearl-50 shadow-2xl p-6 pt-safe pb-safe flex flex-col justify-between overflow-y-auto border-r border-champagne-300/60 animate-slide-in">
+            <div className="space-y-8 pt-10">
               <div className="flex flex-col border-b border-champagne-300/50 pb-4">
                 <span className="font-serif-luxury text-2xl uppercase font-bold text-obsidian">
                   CEL<span className="font-light lowercase text-gold-dark">estia</span>
                 </span>
                 <span className="text-[9px] tracking-widest text-obsidian-soft uppercase font-sans">
-                  redefined for all.
+                  redefined for all
                 </span>
               </div>
 
@@ -583,13 +583,13 @@ export const Navigation: React.FC = () => {
             </div>
 
             {/* Mobile Footer Area */}
-            <div className="pt-6 border-t border-champagne-300/60 space-y-4">
+            <div className="pt-6 border-t border-champagne-300/60 space-y-4 pb-2">
               <button
                 onClick={() => {
                   setMobileMenuOpen(false);
                   setIsConciergeOpen(true);
                 }}
-                className="w-full py-3 px-4 rounded-full bg-emerald-800 hover:bg-emerald-900 text-pearl-100 text-xs uppercase font-bold tracking-wider flex items-center justify-center gap-2 shadow-sm cursor-pointer"
+                className="w-full min-h-[44px] h-11 px-4 rounded-full bg-emerald-800 hover:bg-emerald-900 text-pearl-100 text-xs uppercase font-bold tracking-wider flex items-center justify-center gap-2 shadow-sm cursor-pointer"
               >
                 <WhatsAppIcon className="w-4 h-4" />
                 <span>Atelier WhatsApp Concierge</span>

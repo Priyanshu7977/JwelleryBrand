@@ -21,7 +21,7 @@ export const SearchModal: React.FC = () => {
   const trendingTags = ['Baroque Pearl', 'Wave Cuff', 'Velvet Hamper', 'Polaroids', 'Bangles Pair'];
 
   return (
-    <div className="fixed inset-0 z-[120] flex items-start justify-center pt-20 px-4 md:px-8">
+    <div className="fixed inset-0 z-[120] flex items-start justify-center pt-20 pt-safe px-4 md:px-8 pb-safe">
       {/* Backdrop */}
       <div
         onClick={() => setIsSearchOpen(false)}
@@ -29,7 +29,7 @@ export const SearchModal: React.FC = () => {
       />
 
       {/* Search Panel */}
-      <div className="relative w-full max-w-2xl bg-pearl-50 rounded-3xl shadow-2xl p-6 md:p-8 z-10 border border-champagne-300/50 space-y-6">
+      <div className="relative w-full max-w-2xl bg-pearl-50 rounded-3xl shadow-2xl p-6 md:p-8 z-10 border border-champagne-300/50 space-y-6 max-h-[85dvh] overflow-y-auto scroll-touch">
         
         {/* Search Input Bar */}
         <div className="flex items-center justify-between border-b border-champagne-300 pb-4">

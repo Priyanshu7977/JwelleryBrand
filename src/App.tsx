@@ -65,7 +65,7 @@ const ToastNotification: React.FC = () => {
   if (!toastMessage) return null;
 
   return (
-    <div className="fixed bottom-6 right-6 z-[150] flex items-center gap-3 px-5 py-3.5 bg-obsidian text-pearl-100 rounded-2xl shadow-2xl border border-champagne-400/40 backdrop-blur-md animate-bounce-short">
+    <div className="fixed bottom-6 right-4 sm:right-6 mb-safe z-[150] flex items-center gap-3 px-5 py-3.5 bg-obsidian text-pearl-100 rounded-2xl shadow-2xl border border-champagne-400/40 backdrop-blur-md animate-bounce-short">
       <CheckCircle2 className="w-4 h-4 text-champagne-300 shrink-0" />
       <span className="text-xs font-sans tracking-wide font-medium">{toastMessage}</span>
     </div>
@@ -74,15 +74,21 @@ const ToastNotification: React.FC = () => {
 
 const AppShell: React.FC = () => {
   useEffect(() => {
-    // Lenis Smooth Scrolling Engine (Optimized for smooth 60fps)
+    // Detect iOS devices for optimal 120Hz ProMotion scrolling
+    const isIOS = typeof navigator !== 'undefined' && (
+      /iPad|iPhone|iPod/.test(navigator.userAgent) || 
+      (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1)
+    );
+
+    // Lenis Smooth Scrolling Engine (Optimized for smooth 60-120fps on iOS & desktop)
     const lenis = new Lenis({
-      duration: 0.8,
+      duration: isIOS ? 0.6 : 0.8,
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
       orientation: 'vertical',
       gestureOrientation: 'vertical',
       smoothWheel: true,
       wheelMultiplier: 1.0,
-      touchMultiplier: 1.5,
+      touchMultiplier: isIOS ? 1.0 : 1.2,
       infinite: false,
     });
 

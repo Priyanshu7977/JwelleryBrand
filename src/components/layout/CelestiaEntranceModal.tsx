@@ -153,7 +153,7 @@ export const CelestiaEntranceModal: React.FC = () => {
       </div>
 
       {/* Main Luxury Modal Card */}
-      <div className="relative z-10 w-full max-w-md max-h-[94vh] overflow-y-auto bg-[#181411] border border-[#D8C39A]/40 rounded-3xl p-6 sm:p-8 shadow-2xl space-y-4 sm:space-y-5 text-center text-[#FAF7F0] overscroll-contain scrollbar-thin">
+      <div className="relative z-10 w-full max-w-md max-h-[90dvh] overflow-y-auto bg-[#181411] border border-[#D8C39A]/40 rounded-3xl p-5 sm:p-8 shadow-2xl space-y-4 sm:space-y-5 text-center text-[#FAF7F0] overscroll-contain scroll-touch scrollbar-thin">
         
         {/* Top Right Close (X) Button */}
         <button
