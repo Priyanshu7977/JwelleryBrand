@@ -1,0 +1,14 @@
+{
+  "sections": {
+    "main": {
+      "type": "main-product",
+      "settings": {
+        "show_whatsapp_btn": true,
+        "show_polaroid_customizer": true
+      }
+    }
+  },
+  "order": [
+    "main"
+  ]
+}

@@ -1,0 +1,99 @@
+{% schema %}
+{
+  "name": "Act 05 — Bespoke Gifting",
+  "settings": [
+    {
+      "type": "text",
+      "id": "act_tag",
+      "label": "Act Tag",
+      "default": "Act 05 — For Someone Special"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "The Bespoke Hamper Atelier"
+    },
+    {
+      "type": "product",
+      "id": "hamper_product",
+      "label": "Base Hamper Product"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Act 05 — Bespoke Gifting"
+    }
+  ]
+}
+{% endschema %}
+
+{% assign product = all_products[section.settings.hamper_product] %}
+
+<section class="py-20 sm:py-28 px-4 sm:px-6 lg:px-8 bg-[#181411] text-[#FAF7F0] border-b border-[#D8C39A]/30">
+  <div class="max-w-7xl mx-auto space-y-12">
+    
+    <div class="text-center space-y-3 max-w-2xl mx-auto">
+      <span class="text-xs uppercase font-mono tracking-widest text-[#D8C39A] font-bold">
+        {{ section.settings.act_tag }}
+      </span>
+      <h2 class="font-serif text-3xl sm:text-5xl font-bold uppercase text-[#FAF7F0]">
+        {{ section.settings.heading }}
+      </h2>
+      <p class="text-xs sm:text-sm text-[#EDE6DA]/80 leading-relaxed font-sans">
+        Customise a luxury velvet-lined hamper with real Fujifilm Polaroids, wax-sealed handwritten notes, and curated anti-tarnish jewellery suites.
+      </p>
+    </div>
+
+    <!-- Hamper Builder Grid -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center bg-[#251F1B] rounded-3xl p-6 sm:p-10 border border-[#D8C39A]/30 shadow-2xl">
+      
+      <!-- Left: Interactive Polaroid & Gifting Features -->
+      <div class="lg:col-span-6 space-y-6">
+        <div class="space-y-2">
+          <span class="text-xs font-mono uppercase tracking-widest text-[#D8C39A] font-bold">Custom Keepsake Hamper</span>
+          <h3 class="font-serif text-2xl sm:text-3xl font-bold text-[#FAF7F0]">The Royal Velvet Gifting Suite</h3>
+          <p class="font-mono text-xl text-[#D8C39A] font-bold">
+            {% if product != blank %}{{ product.price | money }}{% else %}₹150{% endif %}
+          </p>
+        </div>
+
+        <ul class="space-y-2.5 text-xs text-[#EDE6DA]/80 list-none p-0 font-sans">
+          <li class="flex items-center gap-2"><span>✨</span> Handcrafted Emerald or Midnight Velvet Keepsake Box</li>
+          <li class="flex items-center gap-2"><span>📸</span> Fujifilm Instant Polaroid (Printed from your custom upload)</li>
+          <li class="flex items-center gap-2"><span>💌</span> Calligraphy Handwritten Card with Custom Gold Wax Seal</li>
+          <li class="flex items-center gap-2"><span>🌹</span> Scented Botanical Petals & Anti-Tarnish Storage Pouches</li>
+        </ul>
+
+        <!-- Direct WhatsApp Bespoke Gifting CTA -->
+        <a
+          href="https://wa.me/{{ settings.whatsapp_number | default: '917718825792' }}?text=Hi%20Celestia%20Atelier,%20I%20would%20like%20to%20customise%20a%20Bespoke%20Hamper."
+          target="_blank"
+          class="btn-secondary w-full min-h-[48px] h-12 text-xs font-mono uppercase tracking-wider font-bold bg-transparent text-[#FAF7F0] border-[#D8C39A]/50 hover:bg-[#D8C39A]/10 no-underline"
+        >
+          <span>Chat with Gifting Stylist on WhatsApp</span>
+        </a>
+      </div>
+
+      <!-- Right: Polaroid Customizer Form -->
+      <div class="lg:col-span-6">
+        <form method="post" action="/cart/add" enctype="multipart/form-data" class="space-y-4">
+          {% if product != blank %}
+            <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}" />
+          {% endif %}
+
+          {% render 'polaroid-customizer' %}
+
+          <button
+            type="submit"
+            class="btn-primary w-full min-h-[48px] h-12 text-xs font-mono uppercase tracking-widest font-bold bg-[#D8C39A] text-[#181411] hover:bg-[#E5D2AD] cursor-pointer"
+          >
+            <span>Add Custom Hamper to Bag</span>
+          </button>
+        </form>
+      </div>
+
+    </div>
+
+  </div>
+</section>

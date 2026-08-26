@@ -1,0 +1,146 @@
+{% schema %}
+{
+  "name": "Main Product",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "show_whatsapp_btn",
+      "label": "Show WhatsApp Concierge Button",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_polaroid_customizer",
+      "label": "Enable Polaroid & Note Customizer",
+      "default": true
+    }
+  ]
+}
+{% endschema %}
+
+<div class="py-12 sm:py-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+  <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-14 items-start">
+    
+    <!-- Product Media Gallery (Col 1-7) -->
+    <div class="lg:col-span-7 space-y-4">
+      <div class="relative aspect-square w-full rounded-3xl overflow-hidden bg-[#F3ECE1] border border-[#D8C39A]/40 shadow-lg">
+        <img
+          id="MainProductHeroImage"
+          src="{{ product.featured_image | image_url: width: 1200 }}"
+          alt="{{ product.title | escape }}"
+          class="w-full h-full object-cover"
+        />
+        <span class="absolute top-4 left-4 px-3.5 py-1 rounded-full bg-[#1E1A17] text-[#FAF7F0] text-xs font-mono font-bold uppercase">
+          100% Anti-Tarnish
+        </span>
+      </div>
+
+      <!-- Thumbnail Strip -->
+      {% if product.media.size > 1 %}
+        <div class="flex gap-3 overflow-x-auto pb-2 scroll-touch">
+          {% for media in product.media %}
+            <button
+              type="button"
+              onclick="document.getElementById('MainProductHeroImage').src='{{ media | image_url: width: 1200 }}'"
+              class="w-20 h-20 rounded-2xl overflow-hidden border-2 border-[#D8C39A]/40 hover:border-[#1E1A17] shrink-0 transition-all cursor-pointer"
+            >
+              <img src="{{ media | image_url: width: 200 }}" alt="{{ product.title }}" class="w-full h-full object-cover" />
+            </button>
+          {% endfor %}
+        </div>
+      {% endif %}
+    </div>
+
+    <!-- Product Purchase Options & Details (Col 8-12) -->
+    <div class="lg:col-span-5 space-y-6">
+      <div class="space-y-2 border-b border-[#D8C39A]/30 pb-4">
+        <span class="text-xs uppercase font-mono tracking-widest text-[#A37F3B] font-bold block">
+          {{ product.type | default: 'Fine Adornment' }}
+        </span>
+        <h1 class="font-serif text-2xl sm:text-4xl font-bold text-[#1E1A17] leading-snug">
+          {{ product.title }}
+        </h1>
+        
+        <div class="flex items-baseline gap-3 pt-1">
+          <span class="font-mono text-2xl font-bold text-[#1E1A17]">
+            {{ product.price | money }}
+          </span>
+          {% if product.compare_at_price > product.price %}
+            <span class="font-mono text-base text-[#786E65] line-through">
+              {{ product.compare_at_price | money }}
+            </span>
+          {% endif %}
+          <span class="text-[10px] uppercase font-mono tracking-wider bg-emerald-100 text-emerald-900 px-2 py-0.5 rounded-full font-bold">
+            Taxes Included
+          </span>
+        </div>
+      </div>
+
+      <!-- Add to Cart Form -->
+      <form method="post" action="/cart/add" enctype="multipart/form-data" class="space-y-5">
+        <!-- Variant Options -->
+        {% if product.variants.size > 1 %}
+          <div class="space-y-2">
+            <label class="block text-xs font-mono uppercase tracking-wider text-[#1E1A17] font-bold">
+              Select Option / Size (Bangle 2.4, 2.6, 2.8)
+            </label>
+            <select name="id" class="w-full h-11 px-4 rounded-xl border border-[#D8C39A]/60 bg-white text-xs font-mono text-[#1E1A17] focus:outline-none focus:border-[#A37F3B]">
+              {% for variant in product.variants %}
+                <option value="{{ variant.id }}" {% unless variant.available %}disabled{% endunless %}>
+                  {{ variant.title }} &ndash; {{ variant.price | money }} {% unless variant.available %}(Sold Out){% endunless %}
+                </option>
+              {% endfor %}
+            </select>
+          </div>
+        {% else %}
+          <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}" />
+        {% endif %}
+
+        <!-- Optional Polaroid & Note Customizer -->
+        {% if section.settings.show_polaroid_customizer %}
+          {% render 'polaroid-customizer' %}
+        {% endif %}
+
+        <!-- Quantity & CTAs -->
+        <div class="space-y-3 pt-2">
+          <button
+            type="submit"
+            {% unless product.available %}disabled{% endunless %}
+            class="btn-primary w-full min-h-[48px] h-12 text-xs font-mono uppercase tracking-widest font-bold cursor-pointer"
+          >
+            {% if product.available %}
+              <span>Add to Bag • {{ product.price | money }}</span>
+            {% else %}
+              <span>Atelier Piece Reserved</span>
+            {% endif %}
+          </button>
+
+          {% if section.settings.show_whatsapp_btn %}
+            <a
+              href="https://wa.me/{{ settings.whatsapp_number | default: '917718825792' }}?text=Hi%20Celestia%20Atelier,%20I%20would%20like%20to%20order%20the%20*{{ product.title | url_encode }}*."
+              target="_blank"
+              class="w-full min-h-[48px] h-12 rounded-full border border-emerald-600/70 bg-emerald-50 text-emerald-950 hover:bg-emerald-100 text-xs font-mono uppercase tracking-wider font-bold transition-all flex items-center justify-center gap-2 no-underline"
+            >
+              <span>Direct WhatsApp Concierge</span>
+            </a>
+          {% endif %}
+        </div>
+      </form>
+
+      <!-- Trust Badges & Guarantee -->
+      <div class="p-4 rounded-2xl bg-[#FAF8F5] border border-[#D8C39A]/40 space-y-2 text-xs font-mono text-[#1E1A17]">
+        <div class="flex items-center gap-2"><span>🛡️</span> <strong>100% Anti-Tarnish Lifetime Guarantee</strong></div>
+        <div class="flex items-center gap-2"><span>⚡</span> <strong>Same-Day Mumbai Express Dispatch</strong></div>
+        <div class="flex items-center gap-2"><span>📦</span> <strong>Complimentary Pan-India Shipping & Returns</strong></div>
+      </div>
+
+      <!-- Description & Specs -->
+      <div class="space-y-3 text-xs text-[#423C36] leading-relaxed pt-2">
+        <h3 class="font-serif text-base font-bold text-[#1E1A17]">About The Creation</h3>
+        <div>{{ product.description }}</div>
+      </div>
+
+    </div>
+
+  </div>
+</div>

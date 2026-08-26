@@ -1,0 +1,86 @@
+{% schema %}
+{
+  "name": "Main Cart",
+  "settings": []
+}
+{% endschema %}
+
+<div class="py-12 sm:py-16 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto space-y-8">
+  <div class="text-center space-y-2 border-b border-[#D8C39A]/30 pb-6">
+    <span class="text-xs uppercase font-mono tracking-widest text-[#A37F3B] font-bold">Your Selection</span>
+    <h1 class="font-serif text-3xl sm:text-4xl font-bold uppercase text-[#1E1A17]">Your Curated Bag</h1>
+  </div>
+
+  {% if cart.item_count > 0 %}
+    <form action="/cart" method="post" class="space-y-8">
+      <div class="space-y-4">
+        {% for item in cart.items %}
+          <div class="flex flex-col sm:flex-row items-center justify-between gap-4 p-4 sm:p-6 bg-white rounded-3xl border border-[#D8C39A]/40 shadow-sm">
+            <div class="flex items-center gap-4 w-full sm:w-auto">
+              <img src="{{ item.image | image_url: width: 200 }}" alt="{{ item.title }}" class="w-16 h-16 sm:w-20 sm:h-20 object-cover rounded-2xl bg-[#F3ECE1]" />
+              <div>
+                <h3 class="font-serif text-base font-bold text-[#1E1A17]">{{ item.product_title }}</h3>
+                <p class="text-xs font-mono text-[#786E65]">{{ item.variant.title }}</p>
+                {% for p in item.properties %}
+                  <p class="text-[10px] font-mono text-emerald-800 italic">{{ p.first }}: {{ p.second }}</p>
+                {% endfor %}
+              </div>
+            </div>
+
+            <div class="flex items-center justify-between w-full sm:w-auto gap-6">
+              <div class="flex items-center gap-2">
+                <input
+                  type="number"
+                  name="updates[]"
+                  value="{{ item.quantity }}"
+                  min="0"
+                  class="w-16 h-10 px-2 text-center rounded-xl border border-[#D8C39A]/60 font-mono text-xs"
+                />
+              </div>
+              <span class="font-mono text-base font-bold text-[#1E1A17]">{{ item.final_line_price | money }}</span>
+              <a href="/cart/change?line={{ forloop.index }}&quantity=0" class="text-xs text-red-600 hover:underline">Remove</a>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+
+      <!-- Checkout Summary Card -->
+      <div class="p-6 sm:p-8 bg-[#FAF8F5] rounded-3xl border border-[#D8C39A]/50 space-y-6 max-w-md ml-auto">
+        <div class="space-y-2">
+          <div class="flex justify-between text-sm">
+            <span>Subtotal</span>
+            <span class="font-mono font-bold text-[#1E1A17]">{{ cart.total_price | money }}</span>
+          </div>
+          <p class="text-[11px] text-[#786E65]">Taxes included. Complimentary Pan-India express shipping applied.</p>
+        </div>
+
+        <div class="space-y-3">
+          <button
+            type="submit"
+            name="checkout"
+            class="btn-primary w-full min-h-[48px] h-12 text-xs font-mono uppercase tracking-widest font-bold cursor-pointer"
+          >
+            <span>Proceed to Checkout</span>
+            <svg class="w-4 h-4 text-[#D8C39A]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+          </button>
+
+          <a
+            href="https://wa.me/{{ settings.whatsapp_number | default: '917718825792' }}?text=Hi%20Celestia%20Atelier,%20I%20would%20like%20to%20place%20an%20order%20for%20my%20bag."
+            target="_blank"
+            class="w-full min-h-[48px] h-12 rounded-full border border-emerald-600/60 bg-emerald-50 text-emerald-950 hover:bg-emerald-100 text-xs font-mono uppercase tracking-wider font-bold transition-all flex items-center justify-center gap-2 no-underline"
+          >
+            <span>Instant WhatsApp Checkout</span>
+          </a>
+        </div>
+      </div>
+    </form>
+  {% else %}
+    <div class="py-20 text-center space-y-4">
+      <h2 class="font-serif text-2xl text-[#1E1A17]">Your Curated Bag Is Empty</h2>
+      <p class="text-xs text-[#786E65]">Explore our collection of anti-tarnish fine jewellery and bespoke hampers.</p>
+      <a href="/collections/all" class="btn-primary inline-flex text-xs font-mono uppercase tracking-widest no-underline">
+        Explore Catalogue
+      </a>
+    </div>
+  {% endif %}
+</div>

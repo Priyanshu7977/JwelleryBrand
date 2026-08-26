@@ -1,0 +1,82 @@
+{% schema %}
+{
+  "name": "Act 07 — Community Circle",
+  "settings": [
+    {
+      "type": "text",
+      "id": "act_tag",
+      "label": "Act Tag",
+      "default": "Act 07 — The Live Circle"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "The Live Community Lookbook"
+    },
+    {
+      "type": "text",
+      "id": "instagram_handle",
+      "label": "Instagram Handle",
+      "default": "@celestiaamor.in"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Act 07 — Community Circle"
+    }
+  ]
+}
+{% endschema %}
+
+<section class="py-20 sm:py-28 px-4 sm:px-6 lg:px-8 bg-[#FAF8F5] border-b border-[#D8C39A]/30">
+  <div class="max-w-7xl mx-auto space-y-10 text-center">
+    
+    <div class="space-y-2 max-w-2xl mx-auto">
+      <span class="text-xs uppercase font-mono tracking-widest text-[#A37F3B] font-bold">
+        {{ section.settings.act_tag }}
+      </span>
+      <h2 class="font-serif text-3xl sm:text-5xl font-bold uppercase text-[#1E1A17]">
+        {{ section.settings.heading }}
+      </h2>
+      <p class="text-xs font-mono text-[#A37F3B] font-bold">
+        <a href="{{ settings.social_instagram_link | default: 'https://instagram.com/celestiaamor.in' }}" target="_blank" class="hover:underline">
+          Follow {{ section.settings.instagram_handle }} on Instagram →
+        </a>
+      </p>
+    </div>
+
+    <!-- Community Grid -->
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6">
+      <div class="aspect-square rounded-3xl overflow-hidden bg-[#F3ECE1] border border-[#D8C39A]/40 relative group">
+        <div class="w-full h-full flex flex-col items-center justify-center p-6 text-center bg-[#FAF8F5]">
+          <span class="text-2xl mb-2">📸</span>
+          <h4 class="font-serif text-sm font-bold text-[#1E1A17]">Baroque Drop Suite</h4>
+          <p class="text-[10px] font-mono text-[#786E65]">@aanya.stylist • Mumbai</p>
+        </div>
+      </div>
+      <div class="aspect-square rounded-3xl overflow-hidden bg-[#F3ECE1] border border-[#D8C39A]/40 relative group">
+        <div class="w-full h-full flex flex-col items-center justify-center p-6 text-center bg-[#FAF8F5]">
+          <span class="text-2xl mb-2">🎁</span>
+          <h4 class="font-serif text-sm font-bold text-[#1E1A17]">Velvet Hamper Unboxing</h4>
+          <p class="text-[10px] font-mono text-[#786E65]">@rhea.m • Delhi</p>
+        </div>
+      </div>
+      <div class="aspect-square rounded-3xl overflow-hidden bg-[#F3ECE1] border border-[#D8C39A]/40 relative group">
+        <div class="w-full h-full flex flex-col items-center justify-center p-6 text-center bg-[#FAF8F5]">
+          <span class="text-2xl mb-2">💎</span>
+          <h4 class="font-serif text-sm font-bold text-[#1E1A17]">Imperial Wave Bangle</h4>
+          <p class="text-[10px] font-mono text-[#786E65]">@pooja.k • Bengaluru</p>
+        </div>
+      </div>
+      <div class="aspect-square rounded-3xl overflow-hidden bg-[#F3ECE1] border border-[#D8C39A]/40 relative group">
+        <div class="w-full h-full flex flex-col items-center justify-center p-6 text-center bg-[#FAF8F5]">
+          <span class="text-2xl mb-2">✨</span>
+          <h4 class="font-serif text-sm font-bold text-[#1E1A17]">Daily Anti-Tarnish Stack</h4>
+          <p class="text-[10px] font-mono text-[#786E65]">@simran.b • Pune</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>

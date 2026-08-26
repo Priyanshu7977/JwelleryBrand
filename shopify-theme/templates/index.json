@@ -1,0 +1,81 @@
+{
+  "sections": {
+    "hero_arrival": {
+      "type": "hero-arrival",
+      "settings": {
+        "act_title": "Act 01 — The Arrival",
+        "heading": "Sculpted in Gold & Light",
+        "subheading": "18K Gold PVD Anti-Tarnish Fine Jewellery, Sculpted Cuffs & Bespoke Polaroid Gifting Hampers."
+      }
+    },
+    "reveal_suite": {
+      "type": "reveal-suite",
+      "settings": {
+        "act_subtitle": "Act 02 — The Reveal",
+        "heading": "Sculpted in Gold & Light"
+      }
+    },
+    "five_realms": {
+      "type": "five-realms-collections",
+      "settings": {
+        "act_tag": "Act 03 — Curated Collections",
+        "heading": "The Celestia Constellation",
+        "products_to_show": 8
+      }
+    },
+    "objects_affection": {
+      "type": "objects-of-affection",
+      "settings": {
+        "act_tag": "Act 04 — Objects of Affection",
+        "heading": "Little Things That Become Your Moments"
+      }
+    },
+    "bespoke_gifting": {
+      "type": "bespoke-gifting",
+      "settings": {
+        "act_tag": "Act 05 — For Someone Special",
+        "heading": "The Bespoke Hamper Atelier"
+      }
+    },
+    "founder_atelier": {
+      "type": "founder-atelier",
+      "settings": {
+        "act_tag": "Act 06 — The Soul of Celestia",
+        "heading": "From The Mumbai Atelier"
+      }
+    },
+    "instagram_circle": {
+      "type": "instagram-circle",
+      "settings": {
+        "act_tag": "Act 07 — The Live Circle",
+        "heading": "The Live Community Lookbook",
+        "instagram_handle": "@celestiaamor.in"
+      }
+    },
+    "blog_showcase": {
+      "type": "blog-showcase",
+      "settings": {
+        "act_tag": "Act 08 — From the Journal",
+        "heading": "Stories & Lookbooks"
+      }
+    },
+    "brand_manifesto": {
+      "type": "brand-manifesto",
+      "settings": {
+        "heading": "The Collection",
+        "manifesto": "Every piece is an invitation to wear your world with quiet confidence."
+      }
+    }
+  },
+  "order": [
+    "hero_arrival",
+    "reveal_suite",
+    "five_realms",
+    "objects_affection",
+    "bespoke_gifting",
+    "founder_atelier",
+    "instagram_circle",
+    "blog_showcase",
+    "brand_manifesto"
+  ]
+}

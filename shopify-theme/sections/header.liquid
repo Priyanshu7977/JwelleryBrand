@@ -1,0 +1,137 @@
+{% schema %}
+{
+  "name": "Celestia Header",
+  "settings": [
+    {
+      "type": "link_list",
+      "id": "menu",
+      "default": "main-menu",
+      "label": "Main Navigation Menu"
+    }
+  ]
+}
+{% endschema %}
+
+<!-- Announcement Bar -->
+{% if settings.show_announcement %}
+  <div class="bg-[#181411] text-[#FAF7F0] py-2 px-4 text-center text-[10px] sm:text-[11px] uppercase tracking-widest font-mono border-b border-[#D8C39A]/20">
+    <div class="max-w-7xl mx-auto flex items-center justify-center gap-3">
+      <span>✨ {{ settings.announcement_text_1 }}</span>
+      <span class="hidden md:inline">•</span>
+      <span class="hidden md:inline">{{ settings.announcement_text_2 }}</span>
+    </div>
+  </div>
+{% endif %}
+
+<!-- Floating Luxury Navigation Header -->
+<header class="sticky top-0 z-40 bg-[#FAF7F0]/90 backdrop-blur-md border-b border-[#D8C39A]/40 transition-all duration-300">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 sm:h-20 flex items-center justify-between">
+    
+    <!-- Mobile Hamburger Menu Button -->
+    <button
+      id="CelestiaMobileNavOpen"
+      type="button"
+      class="lg:hidden p-2 text-[#1E1A17] hover:text-[#A37F3B] transition-colors cursor-pointer"
+      aria-label="Open Navigation"
+    >
+      <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M4 6h16M4 12h16M4 18h16"/></svg>
+    </button>
+
+    <!-- Brand Identity Logo / Monogram -->
+    <a href="/" class="flex flex-col items-center group no-underline">
+      <span class="font-serif text-2xl sm:text-3xl font-bold uppercase tracking-wider text-[#1E1A17]">
+        CEL<span class="font-light lowercase text-[#A37F3B]">estia</span>
+      </span>
+      <span class="text-[8.5px] uppercase tracking-[0.25em] text-[#786E65] font-sans font-medium -mt-1 group-hover:text-[#A37F3B] transition-colors">
+        {{ settings.brand_tagline | default: 'redefined for all' }}
+      </span>
+    </a>
+
+    <!-- Desktop Navigation Links -->
+    <nav class="hidden lg:flex items-center gap-7">
+      {% for link in linklists[section.settings.menu].links %}
+        <a
+          href="{{ link.url }}"
+          class="text-xs uppercase tracking-widest font-serif text-[#1E1A17] hover:text-[#A37F3B] transition-colors relative py-1 after:content-[''] after:absolute after:bottom-0 after:left-0 after:w-0 after:h-[1.5px] after:bg-[#A37F3B] hover:after:w-full after:transition-all no-underline"
+        >
+          {{ link.title }}
+        </a>
+      {% else %}
+        <a href="/collections/all" class="text-xs uppercase tracking-widest font-serif text-[#1E1A17] hover:text-[#A37F3B] no-underline">Shop Pieces</a>
+        <a href="/collections" class="text-xs uppercase tracking-widest font-serif text-[#1E1A17] hover:text-[#A37F3B] no-underline">Collections</a>
+        <a href="/pages/gifting" class="text-xs uppercase tracking-widest font-serif text-[#1E1A17] hover:text-[#A37F3B] no-underline">Gift Hampers</a>
+        <a href="/pages/the-world" class="text-xs uppercase tracking-widest font-serif text-[#1E1A17] hover:text-[#A37F3B] no-underline">The World</a>
+        <a href="/pages/contact" class="text-xs uppercase tracking-widest font-serif text-[#1E1A17] hover:text-[#A37F3B] no-underline">Atelier Contact</a>
+      {% endfor %}
+    </nav>
+
+    <!-- Header Actions (Search, Concierge, Account, Bag) -->
+    <div class="flex items-center gap-2 sm:gap-4">
+      <a href="/search" class="p-2 text-[#1E1A17] hover:text-[#A37F3B] transition-colors" title="Search Catalogue">
+        <svg class="w-4.5 h-4.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+      </a>
+
+      <a
+        href="https://wa.me/{{ settings.whatsapp_number | default: '917718825792' }}"
+        target="_blank"
+        class="hidden sm:inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-emerald-50 border border-emerald-300 text-emerald-900 text-[11px] font-mono font-bold tracking-wider hover:bg-emerald-100 transition-all no-underline"
+      >
+        <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+        <span>Concierge</span>
+      </a>
+
+      <!-- Curated Bag Trigger Button -->
+      <button
+        data-open-cart
+        class="relative p-2 rounded-full hover:bg-[#D8C39A]/20 transition-colors text-[#1E1A17] cursor-pointer"
+        aria-label="Open Cart Bag"
+      >
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/></svg>
+        <span
+          data-cart-count
+          class="absolute -top-0.5 -right-0.5 w-4 h-4 rounded-full bg-[#1E1A17] text-[#FAF7F0] text-[9.5px] font-mono font-bold flex items-center justify-center shadow-xs {% if cart.item_count == 0 %}hidden{% endif %}"
+        >
+          {{ cart.item_count }}
+        </span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<!-- Mobile Navigation Drawer -->
+<div id="CelestiaMobileNavDrawer" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm lg:hidden hidden">
+  <div class="fixed inset-y-0 left-0 w-4/5 max-w-sm bg-[#FAF8F5] shadow-2xl p-6 pt-safe pb-safe flex flex-col justify-between overflow-y-auto border-r border-[#D8C39A]/60 animate-slide-in-right">
+    <div class="space-y-6 pt-6">
+      <div class="flex items-center justify-between border-b border-[#D8C39A]/40 pb-4">
+        <span class="font-serif text-2xl uppercase font-bold text-[#1E1A17]">
+          CEL<span class="font-light lowercase text-[#A37F3B]">estia</span>
+        </span>
+        <button id="CelestiaMobileNavClose" class="p-2 text-[#786E65] hover:text-[#1E1A17]">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+        </button>
+      </div>
+
+      <div class="space-y-4">
+        <a href="/collections/all" class="block text-base uppercase tracking-widest font-serif text-[#1E1A17] hover:text-[#A37F3B] no-underline">Shop Pieces</a>
+        <a href="/collections" class="block text-base uppercase tracking-widest font-serif text-[#1E1A17] hover:text-[#A37F3B] no-underline">Collections</a>
+        <a href="/pages/gifting" class="block text-base uppercase tracking-widest font-serif text-[#1E1A17] hover:text-[#A37F3B] no-underline">Gift Hampers</a>
+        <a href="/pages/the-world" class="block text-base uppercase tracking-widest font-serif text-[#1E1A17] hover:text-[#A37F3B] no-underline">The World</a>
+        <a href="/blogs/journal" class="block text-base uppercase tracking-widest font-serif text-[#1E1A17] hover:text-[#A37F3B] no-underline">Editorial Journal</a>
+        <a href="/pages/contact" class="block text-base uppercase tracking-widest font-serif text-[#1E1A17] hover:text-[#A37F3B] no-underline">Contact Atelier</a>
+      </div>
+    </div>
+
+    <div class="pt-6 border-t border-[#D8C39A]/60 space-y-3 pb-2">
+      <a
+        href="https://wa.me/{{ settings.whatsapp_number | default: '917718825792' }}"
+        target="_blank"
+        class="w-full min-h-[44px] h-11 px-4 rounded-full bg-emerald-800 text-white text-xs uppercase font-bold tracking-wider flex items-center justify-center gap-2 shadow-sm no-underline"
+      >
+        <span>Atelier WhatsApp Concierge</span>
+      </a>
+      <div class="text-center text-[10px] text-[#786E65] font-mono">
+        {{ settings.studio_address | default: 'Bandra West Atelier • Mumbai 400050' }}
+      </div>
+    </div>
+  </div>
+</div>

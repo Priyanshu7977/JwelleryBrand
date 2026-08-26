@@ -1,0 +1,58 @@
+<!-- CELESTIA ATELIER CONCIERGE MODAL -->
+<div id="CelestiaConciergeModal" class="fixed inset-0 z-[120] flex items-center justify-center p-4 hidden">
+  <div id="CelestiaConciergeBackdrop" class="absolute inset-0 bg-black/60 backdrop-blur-md cursor-pointer"></div>
+
+  <div class="relative w-full max-w-lg max-h-[90dvh] overflow-y-auto scroll-touch bg-[#FAF8F5] rounded-3xl p-6 sm:p-8 border border-[#D8C39A]/80 shadow-2xl space-y-6 z-10 animate-scale-up pb-safe">
+    <div class="flex items-start justify-between border-b border-[#D8C39A]/40 pb-4">
+      <div class="space-y-1">
+        <span class="text-[10px] uppercase font-mono tracking-widest text-[#A37F3B] font-semibold">Mumbai Atelier Desk</span>
+        <h2 class="font-serif text-2xl text-[#1E1A17] font-bold">How can we <span class="text-[#A37F3B]">help?</span></h2>
+        <p class="text-xs text-[#786E65] font-sans">Active daily 10:00 — 20:00 IST</p>
+      </div>
+      <button id="CelestiaConciergeClose" class="p-2 text-[#786E65] hover:text-[#1E1A17] rounded-full transition-colors cursor-pointer">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+      </button>
+    </div>
+
+    <!-- Concierge Options -->
+    <div class="space-y-3">
+      <a
+        href="https://wa.me/{{ settings.whatsapp_number | default: '917718825792' }}?text=Hi%20Celestia%20Atelier,%20I%20would%20like%20assistance%20with%20custom%20jewellery%20and%20styling."
+        target="_blank"
+        class="w-full p-4 rounded-2xl bg-white border border-[#D8C39A]/40 hover:border-[#A37F3B] transition-all flex items-center justify-between group no-underline"
+      >
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-800 font-bold">
+            WA
+          </div>
+          <div class="text-left">
+            <h4 class="text-xs font-serif font-bold text-[#1E1A17]">Instant WhatsApp Stylist</h4>
+            <p class="text-[10px] text-[#786E65]">Chat with our Mumbai studio consultants</p>
+          </div>
+        </div>
+        <svg class="w-4 h-4 text-[#A37F3B] group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+      </a>
+
+      <a
+        href="https://wa.me/{{ settings.whatsapp_number | default: '917718825792' }}?text=Hi%20Celestia%20Atelier,%20I%20would%20like%20to%20order%20a%20Bespoke%20Hamper%20with%20custom%20Polaroids."
+        target="_blank"
+        class="w-full p-4 rounded-2xl bg-white border border-[#D8C39A]/40 hover:border-[#A37F3B] transition-all flex items-center justify-between group no-underline"
+      >
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-full bg-[#D8C39A]/30 flex items-center justify-center text-[#A37F3B] font-bold">
+            🎁
+          </div>
+          <div class="text-left">
+            <h4 class="text-xs font-serif font-bold text-[#1E1A17]">Bespoke Gifting & Polaroids</h4>
+            <p class="text-[10px] text-[#786E65]">Custom velvet hampers & handwritten notes</p>
+          </div>
+        </div>
+        <svg class="w-4 h-4 text-[#A37F3B] group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+      </a>
+    </div>
+
+    <div class="text-center text-[10px] font-mono text-[#786E65]">
+      {{ settings.studio_address | default: 'Bandra West Atelier • Mumbai 400050' }}
+    </div>
+  </div>
+</div>

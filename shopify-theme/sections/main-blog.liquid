@@ -1,0 +1,46 @@
+{% schema %}
+{
+  "name": "Main Blog",
+  "settings": [
+    {
+      "type": "range",
+      "id": "articles_per_page",
+      "min": 6,
+      "max": 18,
+      "step": 3,
+      "default": 9,
+      "label": "Articles Per Page"
+    }
+  ]
+}
+{% endschema %}
+
+{% paginate blog.articles by section.settings.articles_per_page %}
+  <div class="py-12 sm:py-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto space-y-8">
+    <div class="text-center space-y-2 border-b border-[#D8C39A]/30 pb-6">
+      <span class="text-xs uppercase font-mono tracking-widest text-[#A37F3B] font-bold">Editorial Journal</span>
+      <h1 class="font-serif text-3xl sm:text-5xl font-bold uppercase text-[#1E1A17]">{{ blog.title }}</h1>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+      {% for article in blog.articles %}
+        <div class="bg-white rounded-3xl p-5 border border-[#D8C39A]/40 shadow-sm hover:shadow-lg transition-all space-y-3">
+          {% if article.image %}
+            <div class="aspect-[16/10] rounded-2xl overflow-hidden bg-[#F3ECE1]">
+              <img src="{{ article.image | image_url: width: 600 }}" alt="{{ article.title }}" class="w-full h-full object-cover" />
+            </div>
+          {% endif %}
+          <span class="text-[10px] font-mono uppercase tracking-widest text-[#A37F3B] font-bold block">{{ article.published_at | date: "%B %d, %Y" }}</span>
+          <h3 class="font-serif text-lg font-bold text-[#1E1A17] hover:text-[#A37F3B] transition-colors">
+            <a href="{{ article.url }}">{{ article.title }}</a>
+          </h3>
+          <p class="text-xs text-[#786E65] line-clamp-2">{{ article.excerpt_or_content | strip_html | truncatewords: 20 }}</p>
+        </div>
+      {% endfor %}
+    </div>
+
+    {% if paginate.pages > 1 %}
+      <div class="flex justify-center pt-8">{{ paginate | default_pagination }}</div>
+    {% endif %}
+  </div>
+{% endpaginate %}
