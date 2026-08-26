@@ -452,31 +452,31 @@ export const CartDrawer: React.FC = () => {
             </div>
 
             {/* CTAs */}
-            <div className="space-y-1.5 pt-0.5">
+            <div className="space-y-2 pt-1">
               {/* Primary Direct Checkout */}
               <button
                 onClick={() => {
                   setIsCartOpen(false);
                   navigate('/checkout');
                 }}
-                className="w-full h-9.5 sm:h-10 flex items-center justify-between px-4 rounded-full bg-obsidian text-pearl-100 hover:bg-obsidian-200 transition-all font-sans text-xs uppercase tracking-wider font-bold shadow-md cursor-pointer group"
+                className="w-full min-h-[48px] h-12 flex items-center justify-between px-5 sm:px-6 rounded-full bg-obsidian text-pearl-100 hover:bg-obsidian-200 active:scale-[0.98] transition-all font-sans text-xs sm:text-sm uppercase tracking-widest font-bold shadow-lg hover:shadow-xl cursor-pointer group"
               >
                 <div className="flex items-center gap-2">
-                  <Lock className="w-3 h-3 text-gold-dark shrink-0" />
+                  <Lock className="w-4 h-4 text-gold-dark shrink-0" />
                   <span>Proceed to Checkout</span>
                 </div>
-                <div className="flex items-center gap-1 font-mono text-gold-light">
+                <div className="flex items-center gap-1.5 font-mono text-gold-light">
                   <span>₹{grandTotal}</span>
-                  <ArrowRight className="w-3.5 h-3.5 shrink-0 group-hover:translate-x-1 transition-transform" />
+                  <ArrowRight className="w-4 h-4 shrink-0 group-hover:translate-x-1 transition-transform" />
                 </div>
               </button>
 
               {/* Instant WhatsApp Checkout */}
               <button
                 onClick={checkoutViaWhatsApp}
-                className="w-full h-8.5 flex items-center justify-center gap-1.5 px-4 rounded-full bg-emerald-800/90 hover:bg-emerald-900 text-pearl-50 transition-all font-sans text-[11px] uppercase tracking-wider font-bold shadow-xs cursor-pointer"
+                className="w-full min-h-[44px] h-11 flex items-center justify-center gap-2 px-5 rounded-full bg-emerald-800 hover:bg-emerald-900 active:scale-[0.98] text-pearl-50 transition-all font-sans text-xs uppercase tracking-wider font-bold shadow-sm cursor-pointer"
               >
-                <WhatsAppIcon className="w-3.5 h-3.5 shrink-0" />
+                <WhatsAppIcon className="w-4 h-4 shrink-0" />
                 <span>Instant WhatsApp Checkout</span>
               </button>
             </div>
