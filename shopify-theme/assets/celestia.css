@@ -1,20 +1,32 @@
 /* ==========================================================================
-   CELESTIA LUXURY ATELIER — SHOPIFY THEME DESIGN SYSTEM (OS 2.0)
+   CELESTIA LUXURY ATELIER — COMPREHENSIVE SHOPIFY DESIGN SYSTEM (OS 2.0)
+   100% Pixel-Perfect Match with React Production Storefront
    ========================================================================== */
 
 :root {
-  --pearl-white: #FAF8F5;
-  --warm-ivory: #F8F4EC;
-  --champagne: #D8C39A;
-  --champagne-light: #F4E8D0;
-  --champagne-dark: #C2A875;
+  --pearl-50: #FAF8F5;
+  --pearl-100: #F5EFE6;
+  --pearl-200: #EBDDCB;
+  --warm-ivory-100: #FAF7F0;
+  --ivory-100: #FDFBF7;
+  --champagne-100: #F6EDE0;
+  --champagne-200: #EFE0C9;
+  --champagne-300: #D8C39A;
+  --champagne-400: #C2A875;
   --gold-dark: #A37F3B;
+  --gold-light: #F4E8D0;
   --obsidian: #1E1A17;
+  --obsidian-200: #38312B;
   --obsidian-soft: #423C36;
   --obsidian-muted: #786E65;
-  --blush: #EADCD5;
+  --blush-50: #FBF6F3;
+  --blush-100: #F7EDE7;
+  --blush-200: #EADCD5;
   --sand: #F3ECE1;
-  --emerald: #065F46;
+  --espresso-deep: #181411;
+  --espresso-charcoal: #251F1B;
+  --emerald-800: #065F46;
+  --emerald-50: #ECFDF5;
 }
 
 html {
@@ -48,21 +60,23 @@ body {
   -webkit-overflow-scrolling: touch;
 }
 
-/* Universal Touch & Button Optimizations */
+/* Universal Touch Optimization */
 button, a, input, select, textarea {
   touch-action: manipulation;
   font-family: inherit;
 }
 
-/* Prevent iOS Safari forced auto-zoom on form inputs */
+/* Prevent iOS Safari forced auto-zoom on inputs */
 @media screen and (max-width: 768px) {
   input, select, textarea {
     font-size: 16px !important;
   }
 }
 
-/* Typography Classes */
-.font-serif-luxury {
+/* ==========================================================================
+   TYPOGRAPHY SYSTEM
+   ========================================================================== */
+.font-serif-luxury, h1, h2, h3, h4, h5, h6 {
   font-family: 'Montserrat', sans-serif;
   color: #1E1A17;
 }
@@ -89,7 +103,7 @@ button, a, input, select, textarea {
   letter-spacing: -0.01em !important;
 }
 
-/* iOS Safe Area Insets Utilities */
+/* Safe Area Insets */
 .pb-safe {
   padding-bottom: max(env(safe-area-inset-bottom, 0px), 1rem) !important;
 }
@@ -100,7 +114,9 @@ button, a, input, select, textarea {
   margin-bottom: max(env(safe-area-inset-bottom, 0px), 1.25rem) !important;
 }
 
-/* Global Button System */
+/* ==========================================================================
+   BUTTON SYSTEM (PIXEL PERFECT WITH REACT)
+   ========================================================================== */
 .btn-primary {
   min-height: 48px;
   height: 48px;
@@ -171,50 +187,41 @@ button, a, input, select, textarea {
   transform: scale(0.98);
 }
 
-/* Glassmorphism & Overlays */
-.celestia-glass {
-  background: rgba(250, 247, 240, 0.92);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(216, 195, 154, 0.5);
+/* Background Texture Noise */
+.bg-noise {
+  background-image: radial-gradient(rgba(30, 26, 23, 0.08) 1px, transparent 0);
+  background-size: 24px 24px;
 }
 
-.celestia-glass-dark {
-  background: rgba(24, 20, 17, 0.95);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(216, 195, 154, 0.3);
+/* Luxury Sheen & Card Hover */
+.luxury-sheen {
+  position: relative;
+  overflow: hidden;
 }
 
-/* Animations */
-@keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
+.luxury-sheen::after {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(
+    60deg,
+    transparent 30%,
+    rgba(255, 255, 255, 0.15) 50%,
+    transparent 70%
+  );
+  transform: rotate(30deg) translateY(-100%);
+  transition: transform 0.8s ease;
+  pointer-events: none;
 }
 
-@keyframes slideInRight {
-  from { transform: translateX(100%); }
-  to { transform: translateX(0); }
+.luxury-sheen:hover::after {
+  transform: rotate(30deg) translateY(100%);
 }
 
-@keyframes scaleUp {
-  from { transform: scale(0.95); opacity: 0; }
-  to { transform: scale(1); opacity: 1; }
-}
-
-.animate-fade-in {
-  animation: fadeIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-}
-
-.animate-slide-in-right {
-  animation: slideInRight 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-}
-
-.animate-scale-up {
-  animation: scaleUp 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-}
-
-/* Polaroid Card Photo Frame Effect */
+/* Polaroid Card Frame */
 .polaroid-frame {
   background: #FFFFFF;
   padding: 12px 12px 36px 12px;
@@ -226,4 +233,9 @@ button, a, input, select, textarea {
 
 .polaroid-frame:hover {
   transform: rotate(-1.5deg) scale(1.03);
+}
+
+/* Custom Shadows */
+.shadow-luxury-soft {
+  box-shadow: 0 10px 30px -5px rgba(30, 26, 23, 0.08), 0 4px 10px -2px rgba(30, 26, 23, 0.04);
 }

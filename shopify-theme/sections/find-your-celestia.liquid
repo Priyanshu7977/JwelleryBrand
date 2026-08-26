@@ -1,0 +1,136 @@
+{% schema %}
+{
+  "name": "Act 03b — Matchmaker Quiz",
+  "settings": [
+    {
+      "type": "text",
+      "id": "act_tag",
+      "label": "Act Tag",
+      "default": "Interactive Matchmaker"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Find your celestia"
+    },
+    {
+      "type": "product",
+      "id": "match_product_1",
+      "label": "Matched Piece Option 1"
+    },
+    {
+      "type": "product",
+      "id": "match_product_2",
+      "label": "Matched Piece Option 2"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Act 03b — Matchmaker Quiz"
+    }
+  ]
+}
+{% endschema %}
+
+<section class="relative w-full py-16 sm:py-20 md:py-24 px-4 sm:px-6 md:px-10 lg:px-14 bg-[#FAF7F0] overflow-hidden border-t border-[#D8C39A]/40">
+  <div class="max-w-4xl mx-auto space-y-10">
+    
+    <!-- Section Header -->
+    <div class="text-center space-y-3">
+      <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#FAF8F5] border border-[#D8C39A]/80 text-[11px] uppercase font-mono tracking-widest text-[#A37F3B] font-bold shadow-sm">
+        <span>✨ {{ section.settings.act_tag }}</span>
+      </div>
+
+      <h2 class="site-main-title text-[#1E1A17]">
+        Find your <span class="font-zapfino text-[#C2A875] font-normal tracking-normal lowercase inline-block px-1">celestia</span>
+      </h2>
+
+      <p class="text-xs sm:text-sm text-[#423C36] font-sans max-w-lg mx-auto leading-relaxed">
+        Answer three quick intuitive questions to reveal the piece meant for your present mood.
+      </p>
+    </div>
+
+    <!-- Multi-Step Interactive Panel -->
+    <div id="CelestiaQuizContainer" class="bg-[#FAF8F5] p-6 sm:p-10 rounded-3xl border border-[#D8C39A]/60 shadow-xl space-y-6">
+      
+      <!-- Step 1: Feeling -->
+      <div id="QuizStep1" class="space-y-4">
+        <h3 class="font-serif text-xl sm:text-2xl text-[#1E1A17] text-center font-bold">
+          Step 1: What are you feeling today?
+        </h3>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+          <button onclick="window.celestiaNextStep(2)" class="p-4 rounded-2xl text-left border border-[#D8C39A]/50 bg-white hover:border-[#A37F3B] hover:shadow-md transition-all cursor-pointer">
+            <p class="font-serif text-base font-bold text-[#1E1A17]">For Me</p>
+            <p class="text-xs text-[#786E65] mt-0.5">Everyday personal anti-tarnish adornment</p>
+          </button>
+          <button onclick="window.celestiaNextStep(2)" class="p-4 rounded-2xl text-left border border-[#D8C39A]/50 bg-white hover:border-[#A37F3B] hover:shadow-md transition-all cursor-pointer">
+            <p class="font-serif text-base font-bold text-[#1E1A17]">For Someone Special</p>
+            <p class="text-xs text-[#786E65] mt-0.5">Gift for bestie, sister, or love with custom polaroid</p>
+          </button>
+          <button onclick="window.celestiaNextStep(2)" class="p-4 rounded-2xl text-left border border-[#D8C39A]/50 bg-white hover:border-[#A37F3B] hover:shadow-md transition-all cursor-pointer">
+            <p class="font-serif text-base font-bold text-[#1E1A17]">Everyday Glow</p>
+            <p class="text-xs text-[#786E65] mt-0.5">Minimal waterproof gold bangles & cuffs</p>
+          </button>
+          <button onclick="window.celestiaNextStep(2)" class="p-4 rounded-2xl text-left border border-[#D8C39A]/50 bg-white hover:border-[#A37F3B] hover:shadow-md transition-all cursor-pointer">
+            <p class="font-serif text-base font-bold text-[#1E1A17]">Make a Statement</p>
+            <p class="text-xs text-[#786E65] mt-0.5">Festive evenings, gemstones & regal suites</p>
+          </button>
+        </div>
+      </div>
+
+      <!-- Step 2: Vibe (Hidden initially) -->
+      <div id="QuizStep2" class="space-y-4 hidden">
+        <h3 class="font-serif text-xl sm:text-2xl text-[#1E1A17] text-center font-bold">
+          Step 2: What aesthetic feels right?
+        </h3>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+          <button onclick="window.celestiaNextStep(3)" class="p-4 rounded-2xl text-left border border-[#D8C39A]/50 bg-white hover:border-[#A37F3B] hover:shadow-md transition-all cursor-pointer">
+            <div class="w-5 h-5 rounded-full bg-[#F7F3EE] border border-[#D8C39A]/60 mb-2"></div>
+            <p class="font-serif text-base font-bold text-[#1E1A17]">Soft & Airy</p>
+            <p class="text-xs text-[#786E65] mt-0.5">Subtle gold pearls & fine drops</p>
+          </button>
+          <button onclick="window.celestiaNextStep(3)" class="p-4 rounded-2xl text-left border border-[#D8C39A]/50 bg-white hover:border-[#A37F3B] hover:shadow-md transition-all cursor-pointer">
+            <div class="w-5 h-5 rounded-full bg-[#F5EBE6] border border-[#D8C39A]/60 mb-2"></div>
+            <p class="font-serif text-base font-bold text-[#1E1A17]">Bold & Regal</p>
+            <p class="text-xs text-[#786E65] mt-0.5">Imperial wave bangles & emerald suites</p>
+          </button>
+        </div>
+      </div>
+
+      <!-- Step 3: Result (Hidden initially) -->
+      <div id="QuizStep3" class="space-y-6 hidden text-center">
+        <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-100 text-emerald-900 text-xs font-mono font-bold">
+          ✨ Perfect Atelier Match Found
+        </div>
+        <h3 class="font-serif text-2xl sm:text-3xl text-[#1E1A17] font-bold">
+          The Baroque Pearl & Sculpted Gold Suite
+        </h3>
+        <p class="text-xs sm:text-sm text-[#423C36] max-w-md mx-auto">
+          Cast in surgical-grade anti-tarnish core with 18K dual dip gold. Includes complimentary express Mumbai delivery.
+        </p>
+        <div class="flex flex-col sm:flex-row items-center justify-center gap-3 pt-2">
+          <a href="/collections/all" class="btn-primary w-full sm:w-auto min-h-[48px] h-12 text-xs font-mono uppercase tracking-widest no-underline">
+            Explore Matched Piece
+          </a>
+          <button onclick="window.celestiaNextStep(1)" class="btn-secondary w-full sm:w-auto min-h-[48px] h-12 text-xs font-mono uppercase tracking-widest cursor-pointer">
+            Retake Quiz ↺
+          </button>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+</section>
+
+<script>
+  window.celestiaNextStep = function(step) {
+    document.getElementById('QuizStep1').classList.add('hidden');
+    document.getElementById('QuizStep2').classList.add('hidden');
+    document.getElementById('QuizStep3').classList.add('hidden');
+    if (step === 1) document.getElementById('QuizStep1').classList.remove('hidden');
+    if (step === 2) document.getElementById('QuizStep2').classList.remove('hidden');
+    if (step === 3) document.getElementById('QuizStep3').classList.remove('hidden');
+  };
+</script>

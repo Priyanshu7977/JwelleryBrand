@@ -32,7 +32,46 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Alex+Brush&family=Cinzel:wght@400;600;700&family=Great+Vibes&family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Pinyon+Script&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS Engine with Celestia Design Tokens -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              'pearl-50': '#FAF8F5',
+              'pearl-100': '#F5EFE6',
+              'pearl-200': '#EBDDCB',
+              'warm-ivory-100': '#FAF7F0',
+              'ivory-100': '#FDFBF7',
+              'champagne-100': '#F6EDE0',
+              'champagne-200': '#EFE0C9',
+              'champagne-300': '#D8C39A',
+              'champagne-400': '#C2A875',
+              'gold-dark': '#A37F3B',
+              'gold-light': '#F4E8D0',
+              'obsidian': '#1E1A17',
+              'obsidian-200': '#38312B',
+              'obsidian-soft': '#423C36',
+              'obsidian-muted': '#786E65',
+              'blush-50': '#FBF6F3',
+              'blush-100': '#F7EDE7',
+              'blush-200': '#EADCD5',
+              'sand': '#F3ECE1',
+              'espresso-deep': '#181411',
+              'espresso-charcoal': '#251F1B',
+            },
+            fontFamily: {
+              sans: ['Montserrat', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
+              serif: ['Montserrat', 'Georgia', 'serif'],
+              zapfino: ['Alex Brush', 'Great Vibes', 'cursive'],
+              mono: ['ui-monospace', 'SFMono-Regular', 'Menlo', 'monospace'],
+            }
+          }
+        }
+      }
+    </script>
 
     <!-- Celestia Theme Stylesheet -->
     {{ 'celestia.css' | asset_url | stylesheet_tag }}
@@ -40,7 +79,7 @@
     {{ content_for_header }}
   </head>
 
-  <body class="gradient selection:bg-[#D8C39A]/40 selection:text-[#1E1A17]">
+  <body class="gradient selection:bg-[#D8C39A]/40 selection:text-[#1E1A17] bg-[#FAF7F0] text-[#1E1A17]">
     <a class="sr-only focus:not-sr-only focus:p-4 focus:bg-white focus:text-black focus:absolute focus:z-50" href="#MainContent">
       {{ 'general.accessibility.skip_to_content' | t }}
     </a>
@@ -59,18 +98,7 @@
     {% render 'concierge-modal' %}
     {% render 'entrance-modal' %}
 
-    <!-- Live Shopper Activity Social Proof Toast -->
-    <div id="CelestiaLiveToast" class="fixed bottom-5 left-4 sm:left-6 mb-safe z-[120] max-w-xs sm:max-w-sm bg-white/95 backdrop-blur-md rounded-2xl p-3 shadow-2xl border border-[#D8C39A]/80 flex items-center gap-3 transition-opacity duration-500 opacity-0 pointer-events-none">
-      <div class="w-10 h-10 rounded-xl overflow-hidden bg-[#F3ECE1] shrink-0 border border-[#D8C39A]/40 flex items-center justify-center text-xs">
-        ✨
-      </div>
-      <div class="flex-1 min-w-0 text-left">
-        <p id="LiveToastText" class="text-xs text-[#1E1A17] font-serif"></p>
-        <span class="text-[9px] font-mono text-emerald-800 font-bold block">Verified Mumbai Atelier Order</span>
-      </div>
-    </div>
-
-    <!-- Theme Core JavaScript Engine -->
-    <script src="{{ 'celestia.js' | asset_url }}" defer="defer"></script>
+    <!-- Theme Core Scripts -->
+    {{ 'celestia.js' | asset_url | script_tag }}
   </body>
 </html>

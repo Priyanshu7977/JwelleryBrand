@@ -3,52 +3,70 @@
     "hero_arrival": {
       "type": "hero-arrival",
       "settings": {
-        "act_title": "Act 01 — The Arrival",
-        "heading": "Sculpted in Gold & Light",
-        "subheading": "18K Gold PVD Anti-Tarnish Fine Jewellery, Sculpted Cuffs & Bespoke Polaroid Gifting Hampers."
+        "heading_line1": "Handcrafted",
+        "heading_script": "fine jewellery",
+        "heading_line2": "redefined for all",
+        "subheading": "Discover artisanal bangles, 18k gold dipped jewellery suites, and custom celebration gift hampers handcrafted with love in Mumbai.",
+        "btn1_text": "Explore Collection",
+        "btn2_text": "Gift Hampers"
       }
     },
     "reveal_suite": {
       "type": "reveal-suite",
       "settings": {
-        "act_subtitle": "Act 02 — The Reveal",
+        "act_subtitle": "Fine Jewellery & Gemstones",
         "heading": "Sculpted in Gold & Light"
       }
     },
     "five_realms": {
       "type": "five-realms-collections",
       "settings": {
-        "act_tag": "Act 03 — Curated Collections",
-        "heading": "The Celestia Constellation",
+        "act_tag": "Act 03 — Collection Journey",
+        "heading": "Curated for every mood",
         "products_to_show": 8
+      }
+    },
+    "quiz_matchmaker": {
+      "type": "find-your-celestia",
+      "settings": {
+        "act_tag": "Interactive Matchmaker",
+        "heading": "Find your celestia"
       }
     },
     "objects_affection": {
       "type": "objects-of-affection",
       "settings": {
-        "act_tag": "Act 04 — Objects of Affection",
-        "heading": "Little Things That Become Your Moments"
+        "act_tag": "Act 04 — The Celestia Edit",
+        "heading": "Objects of affection"
       }
     },
     "bespoke_gifting": {
       "type": "bespoke-gifting",
       "settings": {
-        "act_tag": "Act 05 — For Someone Special",
-        "heading": "The Bespoke Hamper Atelier"
+        "act_tag": "Act 05 — The Gifting Atelier",
+        "heading": "For someone special"
       }
     },
     "founder_atelier": {
       "type": "founder-atelier",
       "settings": {
-        "act_tag": "Act 06 — The Soul of Celestia",
-        "heading": "From The Mumbai Atelier"
+        "act_tag": "The Human Touch • Mumbai Studio Origins",
+        "heading": "From the atelier",
+        "location": "Bandra West, Mumbai"
+      }
+    },
+    "social_proof": {
+      "type": "social-proof",
+      "settings": {
+        "act_tag": "Act 06 — Authentic Trust",
+        "heading": "Praised by those who wear it"
       }
     },
     "instagram_circle": {
       "type": "instagram-circle",
       "settings": {
-        "act_tag": "Act 07 — The Live Circle",
-        "heading": "The Live Community Lookbook",
+        "act_tag": "Act 07 — Instagram Atelier",
+        "heading": "The live community lookbook",
         "instagram_handle": "@celestiaamor.in"
       }
     },
@@ -62,8 +80,10 @@
     "brand_manifesto": {
       "type": "brand-manifesto",
       "settings": {
-        "heading": "The Collection",
-        "manifesto": "Every piece is an invitation to wear your world with quiet confidence."
+        "act_tag": "Act 08 — The Atelier Finale",
+        "heading": "Redefined for all",
+        "subheading": "Find something that feels like you.",
+        "manifesto": "From subtle everyday chains to grand celebration hampers, every piece is curated to capture your moments in gold."
       }
     }
   },
@@ -71,9 +91,11 @@
     "hero_arrival",
     "reveal_suite",
     "five_realms",
+    "quiz_matchmaker",
     "objects_affection",
     "bespoke_gifting",
     "founder_atelier",
+    "social_proof",
     "instagram_circle",
     "blog_showcase",
     "brand_manifesto"
