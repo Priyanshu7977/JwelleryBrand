@@ -604,7 +604,7 @@ export const CheckoutPage: React.FC = () => {
                           {[
                             { id: 'gpay', name: 'Google Pay', iconUrl: '/assets/icons/payment/gpay.svg', color: 'border-blue-200 hover:border-blue-400 hover:bg-blue-50/50' },
                             { id: 'phonepe', name: 'PhonePe', iconUrl: '/assets/icons/payment/phonepe.svg', color: 'border-purple-200 hover:border-purple-400 hover:bg-purple-50/50' },
-                            { id: 'paytm', name: 'Paytm UPI', iconUrl: '/assets/icons/payment/paytm_official.svg', color: 'border-cyan-200 hover:border-cyan-400 hover:bg-cyan-50/50' },
+                            { id: 'paytm', name: 'Paytm UPI', iconUrl: '/assets/icons/payment/paytm_official.svg?v=3', color: 'border-cyan-200 hover:border-cyan-400 hover:bg-cyan-50/50' },
                             { id: 'bhim', name: 'BHIM UPI', iconUrl: '/assets/icons/payment/bhim.svg', color: 'border-emerald-200 hover:border-emerald-400 hover:bg-emerald-50/50' },
                           ].map((app) => (
                             <button
@@ -671,7 +671,7 @@ export const CheckoutPage: React.FC = () => {
                           >
                             {selectedUpiApp !== 'qr' ? (
                               <img
-                                src={selectedUpiApp === 'paytm' ? '/assets/icons/payment/paytm_official.svg' : `/assets/icons/payment/${selectedUpiApp}.svg`}
+                                src={selectedUpiApp === 'paytm' ? '/assets/icons/payment/paytm_official.svg?v=3' : `/assets/icons/payment/${selectedUpiApp}.svg`}
                                 alt={selectedUpiApp}
                                 className="w-5 h-5 object-contain rounded-xs shrink-0"
                               />
