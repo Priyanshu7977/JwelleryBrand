@@ -63,8 +63,8 @@ export const UPI_APPS: Record<'gpay' | 'phonepe' | 'paytm' | 'bhim', UPIAppDetai
     upiId: 'priyanshubipin2006@okaxis',
     bankInfo: 'India Post Payment Bank 7386',
     iconUrl: '/assets/icons/payment/gpay.svg',
-    qrUrl: '/assets/qr/gpay_qr.png?v=20260827_v3',
-    fullCardUrl: '/assets/qr/gpay_full_card.png?v=20260827_v3',
+    qrUrl: '/assets/qr/gpay_qr.png?v=20260827_v4',
+    fullCardUrl: '/assets/qr/gpay_qr.png?v=20260827_v4',
     btnBg: 'bg-[#1a73e8] hover:bg-[#1557b0]',
     deepLink: (amount) => `upi://pay?pa=priyanshubipin2006@okaxis&pn=Priyanshu%20Singh&am=${amount}&cu=INR&tn=Celestia%20Order`
   },
@@ -76,8 +76,8 @@ export const UPI_APPS: Record<'gpay' | 'phonepe' | 'paytm' | 'bhim', UPIAppDetai
     upiId: '7977641125@ybl',
     bankInfo: 'YES Bank • PhonePe Verified',
     iconUrl: '/assets/icons/payment/phonepe.svg',
-    qrUrl: '/assets/qr/phonepe_qr.png?v=20260827_v3',
-    fullCardUrl: '/assets/qr/phonepe_full_card.png?v=20260827_v3',
+    qrUrl: '/assets/qr/phonepe_qr.png?v=20260827_v4',
+    fullCardUrl: '/assets/qr/phonepe_qr.png?v=20260827_v4',
     btnBg: 'bg-[#5f259f] hover:bg-[#4a1c7d]',
     deepLink: (amount) => `phonepe://pay?pa=7977641125@ybl&pn=Priyanshu%20Singh&am=${amount}&cu=INR&tn=Celestia%20Order`
   },
@@ -89,8 +89,8 @@ export const UPI_APPS: Record<'gpay' | 'phonepe' | 'paytm' | 'bhim', UPIAppDetai
     upiId: '7977641125@ptyes',
     bankInfo: 'Paytm Payments Bank • Verified Merchant',
     iconUrl: '/assets/icons/payment/paytm_badge.svg',
-    qrUrl: '/assets/qr/paytm_qr.png?v=20260827_v3',
-    fullCardUrl: '/assets/qr/paytm_card.png?v=20260827_v3',
+    qrUrl: '/assets/qr/paytm_qr.png?v=20260827_v4',
+    fullCardUrl: '/assets/qr/paytm_qr.png?v=20260827_v4',
     btnBg: 'bg-[#002970] hover:bg-[#001c4e]',
     deepLink: (amount) => `paytmmp://pay?pa=7977641125@ptyes&pn=Priyanshu%20Bipin%20Singh&am=${amount}&cu=INR&tn=Celestia%20Order`
   },
@@ -102,8 +102,8 @@ export const UPI_APPS: Record<'gpay' | 'phonepe' | 'paytm' | 'bhim', UPIAppDetai
     upiId: '7977641125@upi',
     bankInfo: 'NPCI BHIM Unified Payments',
     iconUrl: '/assets/icons/payment/bhim.svg',
-    qrUrl: '/assets/qr/bhim_qr.png?v=20260827_v3',
-    fullCardUrl: '/assets/qr/bhim_full_card.png?v=20260827_v3',
+    qrUrl: '/assets/qr/bhim_qr.png?v=20260827_v4',
+    fullCardUrl: '/assets/qr/bhim_qr.png?v=20260827_v4',
     btnBg: 'bg-[#00796b] hover:bg-[#004d40]',
     deepLink: (amount) => `upi://pay?pa=7977641125@upi&pn=Priyanshu%20Singh&am=${amount}&cu=INR&tn=Celestia%20Order`
   }
@@ -1347,13 +1347,19 @@ export const CheckoutPage: React.FC = () => {
               </button>
             </div>
 
-            {/* High-Resolution Scanner Display */}
-            <div className="bg-pearl-50 p-2.5 rounded-2xl border border-champagne-200 flex items-center justify-center overflow-hidden">
-              <img
-                src={activeUpi.fullCardUrl}
-                alt={`${activeUpi.name} Full Scanner`}
-                className="w-full max-h-[52vh] object-contain rounded-xl shadow-xs select-none"
-              />
+            {/* Pure High-Resolution Scanner Display (ONLY SCANNER) */}
+            <div className="p-3 sm:p-4 bg-pearl-50 rounded-2xl border border-champagne-200 flex flex-col items-center justify-center space-y-2">
+              <div className="w-52 h-52 sm:w-60 sm:h-60 p-2.5 bg-white rounded-2xl border-2 border-champagne-300 shadow-sm flex items-center justify-center overflow-hidden">
+                <img
+                  src={activeUpi.qrUrl}
+                  alt={`${activeUpi.name} Official Scanner`}
+                  className="w-full h-full object-contain rounded-xl select-none"
+                />
+              </div>
+              <span className="text-[11px] font-mono text-obsidian-soft font-bold flex items-center gap-1.5 pt-1">
+                <Scan className="w-3.5 h-3.5 text-gold-dark" />
+                <span>Scan from any UPI app to Pay ₹{grandTotal}</span>
+              </span>
             </div>
 
             {/* Copy UPI ID inside modal */}
