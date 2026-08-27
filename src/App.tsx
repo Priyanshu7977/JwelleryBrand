@@ -1,6 +1,7 @@
 import React, { useEffect, Suspense, lazy } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { CartProvider, useCart } from './context/CartContext';
+import { InventoryProvider } from './context/InventoryContext';
 import { AuthProvider } from './context/AuthContext';
 import { Navigation } from './components/layout/Navigation';
 import { Footer } from './components/layout/Footer';
@@ -197,9 +198,11 @@ const AppShell: React.FC = () => {
 export function App() {
   return (
     <AuthProvider>
-      <CartProvider>
-        <AppShell />
-      </CartProvider>
+      <InventoryProvider>
+        <CartProvider>
+          <AppShell />
+        </CartProvider>
+      </InventoryProvider>
     </AuthProvider>
   );
 }

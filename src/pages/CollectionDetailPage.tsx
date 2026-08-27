@@ -2,6 +2,7 @@ import React from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { CELESTIA_COLLECTIONS, FEATURED_PRODUCTS } from '../data/shopify-data';
 import { useCart } from '../context/CartContext';
+import { useInventory } from '../context/InventoryContext';
 import { LuxuryBadge } from '../components/ui/LuxuryBadge';
 import { ArrowLeft, ShoppingBag, Eye, Compass, Heart } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
@@ -11,6 +12,7 @@ import { getBreadcrumbSchema } from '../utils/jsonLdSchemas';
 export const CollectionDetailPage: React.FC = () => {
   const { handle } = useParams<{ handle: string }>();
   const { addToCart, setQuickViewProduct } = useCart();
+  const { isOutOfStock } = useInventory();
   const { toggleWishlist, isWishlisted } = useAuth();
   const [addedId, setAddedId] = React.useState<string | null>(null);
 
@@ -133,8 +135,14 @@ export const CollectionDetailPage: React.FC = () => {
                     />
                   </button>
 
-                  <div className="absolute top-3 left-3">
-                    {prod.isBestseller && <LuxuryBadge variant="gold">Bestseller</LuxuryBadge>}
+                  <div className="absolute top-3 left-3 flex items-center gap-1.5 pointer-events-none">
+                    {isOutOfStock(prod.id, prod.availableStock ?? 1) ? (
+                      <span className="text-[9px] uppercase font-mono tracking-wider font-bold bg-rose-950/90 text-rose-200 border border-rose-500/50 backdrop-blur-xs px-2.5 py-0.5 rounded-full shadow-xs">
+                        Out of Stock
+                      </span>
+                    ) : prod.isBestseller ? (
+                      <LuxuryBadge variant="gold">Bestseller</LuxuryBadge>
+                    ) : null}
                   </div>
                 </div>
 
@@ -162,16 +170,21 @@ export const CollectionDetailPage: React.FC = () => {
 
                     <div className="flex gap-2">
                       <button
+                        disabled={isOutOfStock(prod.id, prod.availableStock ?? 1)}
                         onClick={() => handleQuickAdd(prod)}
-                        className="flex-1 h-10 bg-obsidian text-pearl-100 text-xs uppercase font-bold tracking-wider rounded-full hover:bg-obsidian-200 transition-colors flex items-center justify-center gap-1.5"
+                        className={`flex-1 h-10 text-xs uppercase font-bold tracking-wider rounded-full transition-colors flex items-center justify-center gap-1.5 ${
+                          isOutOfStock(prod.id, prod.availableStock ?? 1)
+                            ? 'bg-neutral-200 text-neutral-500 cursor-not-allowed border border-neutral-300/60'
+                            : 'bg-obsidian text-pearl-100 hover:bg-obsidian-200 cursor-pointer'
+                        }`}
                       >
                         <ShoppingBag className="w-3.5 h-3.5" />
-                        <span>{addedId === prod.id ? 'Added!' : 'Add to Bag'}</span>
+                        <span>{isOutOfStock(prod.id, prod.availableStock ?? 1) ? 'Out of Stock' : addedId === prod.id ? 'Added!' : 'Add to Bag'}</span>
                       </button>
 
                       <button
                         onClick={() => setQuickViewProduct(prod)}
-                        className="w-10 h-10 border border-champagne-300/80 hover:bg-champagne-100 rounded-full text-obsidian transition-colors flex items-center justify-center shrink-0"
+                        className="w-10 h-10 border border-champagne-300/80 hover:bg-champagne-100 rounded-full text-obsidian transition-colors flex items-center justify-center shrink-0 cursor-pointer"
                         title="Quick View"
                       >
                         <Eye className="w-3.5 h-3.5" />

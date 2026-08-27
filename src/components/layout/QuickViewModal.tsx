@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { X, Sparkles, ShieldCheck, Truck, ShoppingBag, Heart, Check } from 'lucide-react';
 import { useCart } from '../../context/CartContext';
+import { useInventory } from '../../context/InventoryContext';
 import { useAuth } from '../../context/AuthContext';
 import { MagneticButton } from '../ui/MagneticButton';
 import { LuxuryBadge } from '../ui/LuxuryBadge';
@@ -8,10 +9,13 @@ import { LuxuryBadge } from '../ui/LuxuryBadge';
 export const QuickViewModal: React.FC = () => {
   const { quickViewProduct, setQuickViewProduct, addToCart, showToast } = useCart();
   const { toggleWishlist, isWishlisted } = useAuth();
+  const { isOutOfStock } = useInventory();
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [isAdded, setIsAdded] = useState(false);
 
   if (!quickViewProduct) return null;
+
+  const outOfStock = isOutOfStock(quickViewProduct.id, quickViewProduct.availableStock ?? 1);
 
   const currentHero = selectedImage || quickViewProduct.images.hero;
   const availableImages = [
@@ -21,6 +25,7 @@ export const QuickViewModal: React.FC = () => {
   ].filter(Boolean) as string[];
 
   const handleAddToCart = () => {
+    if (outOfStock) return;
     addToCart(quickViewProduct, 1);
     setIsAdded(true);
     setTimeout(() => setIsAdded(false), 2000);
@@ -148,12 +153,15 @@ export const QuickViewModal: React.FC = () => {
           {/* Add to Bag Action */}
           <div className="pt-6 mt-6 border-t border-champagne-300/40 flex items-center gap-3">
             <MagneticButton
-              variant="primary"
+              variant={outOfStock ? "secondary" : "primary"}
               size="lg"
+              disabled={outOfStock}
               onClick={handleAddToCart}
-              className="flex-1"
+              className={`flex-1 ${outOfStock ? 'opacity-60 cursor-not-allowed bg-neutral-200 text-neutral-500' : ''}`}
             >
-              {isAdded ? (
+              {outOfStock ? (
+                <span>Out of Stock (Reserved in Bag)</span>
+              ) : isAdded ? (
                 <>
                   <Check className="w-4 h-4 text-champagne-300" />
                   <span>Added to Bag</span>

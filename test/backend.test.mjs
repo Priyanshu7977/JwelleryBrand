@@ -856,6 +856,122 @@ try {
 }
 
 // ----------------------------------------------------------------------------
+// 13. REAL-TIME CART INVENTORY LOCK & OUT OF STOCK SYSTEM
+// ----------------------------------------------------------------------------
+console.log('\n--- 13. REAL-TIME CART INVENTORY LOCK & OUT OF STOCK SYSTEM ---');
+
+const inventoryServicePath = path.join(rootDir, 'src', 'services', 'inventoryLockService.ts');
+assert(fs.existsSync(inventoryServicePath), 'src/services/inventoryLockService.ts exists on disk', 'InventoryLock');
+
+const inventoryServiceContent = fs.readFileSync(inventoryServicePath, 'utf8');
+assert(inventoryServiceContent.includes('reserveCartItem'), 'inventoryLockService exports reserveCartItem', 'InventoryLock');
+assert(inventoryServiceContent.includes('releaseCartItem'), 'inventoryLockService exports releaseCartItem', 'InventoryLock');
+assert(inventoryServiceContent.includes('fetchReservedByOthers'), 'inventoryLockService exports fetchReservedByOthers', 'InventoryLock');
+assert(inventoryServiceContent.includes('subscribeToInventoryUpdates'), 'inventoryLockService exports subscribeToInventoryUpdates', 'InventoryLock');
+
+const inventoryContextPath = path.join(rootDir, 'src', 'context', 'InventoryContext.tsx');
+assert(fs.existsSync(inventoryContextPath), 'src/context/InventoryContext.tsx exists on disk', 'InventoryLock');
+
+const inventoryContextContent = fs.readFileSync(inventoryContextPath, 'utf8');
+assert(inventoryContextContent.includes('InventoryProvider'), 'InventoryContext exports InventoryProvider', 'InventoryLock');
+assert(inventoryContextContent.includes('isOutOfStock'), 'InventoryContext provides isOutOfStock method', 'InventoryLock');
+assert(inventoryContextContent.includes('getAvailableStock'), 'InventoryContext provides getAvailableStock method', 'InventoryLock');
+
+// Test Live Supabase Cart Reservation & Cross-Patron Out of Stock Cycle
+try {
+  const patronSessionA = 'test_patron_A_' + Date.now();
+  const patronSessionB = 'test_patron_B_' + Date.now();
+  const testProductId = 'pink-blue-bangles';
+
+  // 1. Patron A creates cart
+  const createCartRes = await fetch(`${SUPABASE_PROJECT_URL}/rest/v1/carts`, {
+    method: 'POST',
+    headers: {
+      apikey: SUPABASE_PUB_KEY,
+      Authorization: `Bearer ${SUPABASE_PUB_KEY}`,
+      'Content-Type': 'application/json',
+      Prefer: 'return=representation',
+    },
+    body: JSON.stringify({ session_id: patronSessionA }),
+  });
+  assert(createCartRes.status === 201, 'Patron A creates cart in Supabase (HTTP 201)', 'InventoryLock');
+  const [patronACart] = await createCartRes.json();
+  assert(patronACart?.id, 'Patron A cart record received valid UUID', 'InventoryLock');
+
+  // 2. Patron A adds item to bag -> reserves item in Supabase
+  const reserveItemRes = await fetch(`${SUPABASE_PROJECT_URL}/rest/v1/cart_items`, {
+    method: 'POST',
+    headers: {
+      apikey: SUPABASE_PUB_KEY,
+      Authorization: `Bearer ${SUPABASE_PUB_KEY}`,
+      'Content-Type': 'application/json',
+      Prefer: 'return=representation',
+    },
+    body: JSON.stringify({
+      cart_id: patronACart.id,
+      product_id: testProductId,
+      quantity: 1,
+      unit_price: 500,
+    }),
+  });
+  assert(reserveItemRes.status === 201, 'Patron A reserves item in Supabase cart_items (HTTP 201)', 'InventoryLock');
+
+  // 3. Patron B checks reserved items: testProductId must appear as reserved by someone else
+  const queryOthersRes = await fetch(
+    `${SUPABASE_PROJECT_URL}/rest/v1/cart_items?select=product_id,quantity,carts!inner(session_id)`,
+    {
+      headers: {
+        apikey: SUPABASE_PUB_KEY,
+        Authorization: `Bearer ${SUPABASE_PUB_KEY}`,
+      },
+    }
+  );
+  assert(queryOthersRes.status === 200, 'Patron B queries active cart reservations (HTTP 200)', 'InventoryLock');
+  const allCartItems = await queryOthersRes.json();
+  const reservedForB = allCartItems.filter(
+    (item) => item.carts?.session_id !== patronSessionB && item.product_id === testProductId
+  );
+  assert(reservedForB.length > 0, 'Patron B sees product reserved by Patron A -> triggers Out of Stock state', 'InventoryLock');
+
+  // 4. Patron A removes item from bag -> releases reservation in Supabase
+  const releaseRes = await fetch(
+    `${SUPABASE_PROJECT_URL}/rest/v1/cart_items?cart_id=eq.${patronACart.id}&product_id=eq.${testProductId}`,
+    {
+      method: 'DELETE',
+      headers: {
+        apikey: SUPABASE_PUB_KEY,
+        Authorization: `Bearer ${SUPABASE_PUB_KEY}`,
+      },
+    }
+  );
+  assert(releaseRes.status === 204, 'Patron A releases cart item (HTTP 204)', 'InventoryLock');
+
+  // 5. Patron B checks again: piece is no longer held by Patron A -> returns to In Stock
+  const queryAfterReleaseRes = await fetch(
+    `${SUPABASE_PROJECT_URL}/rest/v1/cart_items?cart_id=eq.${patronACart.id}&product_id=eq.${testProductId}`,
+    {
+      headers: {
+        apikey: SUPABASE_PUB_KEY,
+        Authorization: `Bearer ${SUPABASE_PUB_KEY}`,
+      },
+    }
+  );
+  const remainingInACart = await queryAfterReleaseRes.json();
+  assert(remainingInACart.length === 0, 'Reservation cleared in Supabase -> piece returns to In Stock for Patron B', 'InventoryLock');
+
+  // Cleanup Patron A cart
+  await fetch(`${SUPABASE_PROJECT_URL}/rest/v1/carts?id=eq.${patronACart.id}`, {
+    method: 'DELETE',
+    headers: {
+      apikey: SUPABASE_PUB_KEY,
+      Authorization: `Bearer ${SUPABASE_PUB_KEY}`,
+    },
+  });
+} catch (err) {
+  assert(false, `Real-time cart lock test failed: ${err.message}`, 'InventoryLock');
+}
+
+// ----------------------------------------------------------------------------
 // SUMMARY REPORT
 // ----------------------------------------------------------------------------
 console.log('\n=======================================================');

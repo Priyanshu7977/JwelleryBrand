@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { CELESTIA_COLLECTIONS, FEATURED_PRODUCTS } from '../../data/shopify-data';
 import { useCart } from '../../context/CartContext';
+import { useInventory } from '../../context/InventoryContext';
 import { MagneticButton } from '../ui/MagneticButton';
 import { ArrowRight, Compass, Eye, ShoppingBag } from 'lucide-react';
 import { RevealOnScroll } from '../motion/RevealOnScroll';
@@ -9,6 +10,7 @@ import { ProductTiltCard } from '../motion/ProductTiltCard';
 export const Section03Collections: React.FC = () => {
   const [activeCollectionId, setActiveCollectionId] = useState<string>(CELESTIA_COLLECTIONS[0].id);
   const { setQuickViewProduct, addToCart } = useCart();
+  const { isOutOfStock } = useInventory();
 
   const activeCollection = CELESTIA_COLLECTIONS.find((c) => c.id === activeCollectionId) || CELESTIA_COLLECTIONS[0];
   const matchingProducts = FEATURED_PRODUCTS.filter(
@@ -173,11 +175,16 @@ export const Section03Collections: React.FC = () => {
                         <span className="text-base font-bold text-obsidian">₹{prod.price}</span>
                         <div className="flex gap-2">
                           <button
+                            disabled={isOutOfStock(prod.id, prod.availableStock ?? 1)}
                             onClick={() => addToCart(prod, 1)}
-                            className="px-3.5 h-9 min-h-[36px] bg-obsidian text-pearl-100 text-[11px] uppercase font-bold tracking-wider rounded-full hover:bg-obsidian-200 active:scale-[0.98] transition-all flex items-center gap-1.5 cursor-pointer shadow-xs"
+                            className={`px-3.5 h-9 min-h-[36px] text-[11px] uppercase font-bold tracking-wider rounded-full transition-all flex items-center gap-1.5 shadow-xs ${
+                              isOutOfStock(prod.id, prod.availableStock ?? 1)
+                                ? 'bg-neutral-200 text-neutral-500 cursor-not-allowed border border-neutral-300/60'
+                                : 'bg-obsidian text-pearl-100 hover:bg-obsidian-200 active:scale-[0.98] cursor-pointer'
+                            }`}
                           >
                             <ShoppingBag className="w-3.5 h-3.5" />
-                            <span>Add</span>
+                            <span>{isOutOfStock(prod.id, prod.availableStock ?? 1) ? 'Out of Stock' : 'Add'}</span>
                           </button>
                           <button
                             onClick={() => setQuickViewProduct(prod)}

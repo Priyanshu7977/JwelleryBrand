@@ -17,6 +17,7 @@ import {
   Flame
 } from 'lucide-react';
 import { useCart } from '../../context/CartContext';
+import { useInventory } from '../../context/InventoryContext';
 import { FEATURED_PRODUCTS } from '../../data/shopify-data';
 import { Product, CartItem } from '../../types/shopify';
 
@@ -52,6 +53,7 @@ export const CartDrawer: React.FC = () => {
     discountAmount,
     finalPayable
   } = useCart();
+  const { isOutOfStock } = useInventory();
 
   const navigate = useNavigate();
   const [couponInput, setCouponInput] = useState('');
@@ -381,31 +383,39 @@ export const CartDrawer: React.FC = () => {
                   </div>
 
                   <div className="flex gap-2 overflow-x-auto pb-1 scrollbar-none snap-x overscroll-x-contain">
-                    {upsellItems.map((item: Product) => (
-                      <div
-                        key={item.id}
-                        className="min-w-[165px] max-w-[165px] snap-start flex flex-col justify-between p-2 bg-white rounded-xl border border-champagne-300/60 shadow-xs shrink-0"
-                      >
-                        <div className="flex items-center gap-2">
-                          <img
-                            src={item.images?.hero || (item as any).imageUrl || '/images/placeholder.jpg'}
-                            alt={item.title}
-                            className="w-10 h-10 rounded-lg object-cover bg-sand shrink-0 border border-champagne-200"
-                          />
-                          <div className="min-w-0">
-                            <p className="font-serif-luxury text-[11px] text-obsidian font-bold line-clamp-1">{item.title}</p>
-                            <p className="text-[10px] font-mono text-gold-dark font-bold">₹{item.price}</p>
-                          </div>
-                        </div>
-
-                        <button
-                          onClick={() => addToCart(item, 1)}
-                          className="mt-2 w-full py-1 bg-champagne-100/80 hover:bg-gold-dark hover:text-pearl-50 text-obsidian text-[9px] uppercase font-mono font-bold rounded-lg border border-champagne-300 transition-all cursor-pointer text-center"
+                    {upsellItems.map((item: Product) => {
+                      const outOfStock = isOutOfStock(item.id, item.availableStock ?? 1);
+                      return (
+                        <div
+                          key={item.id}
+                          className="min-w-[165px] max-w-[165px] snap-start flex flex-col justify-between p-2 bg-white rounded-xl border border-champagne-300/60 shadow-xs shrink-0"
                         >
-                          + Add to Bag
-                        </button>
-                      </div>
-                    ))}
+                          <div className="flex items-center gap-2">
+                            <img
+                              src={item.images?.hero || (item as any).imageUrl || '/images/placeholder.jpg'}
+                              alt={item.title}
+                              className="w-10 h-10 rounded-lg object-cover bg-sand shrink-0 border border-champagne-200"
+                            />
+                            <div className="min-w-0">
+                              <p className="font-serif-luxury text-[11px] text-obsidian font-bold line-clamp-1">{item.title}</p>
+                              <p className="text-[10px] font-mono text-gold-dark font-bold">₹{item.price}</p>
+                            </div>
+                          </div>
+
+                          <button
+                            disabled={outOfStock}
+                            onClick={() => addToCart(item, 1)}
+                            className={`mt-2 w-full py-1 text-[9px] uppercase font-mono font-bold rounded-lg border transition-all text-center ${
+                              outOfStock
+                                ? 'bg-neutral-100 text-neutral-400 border-neutral-200 cursor-not-allowed'
+                                : 'bg-champagne-100/80 hover:bg-gold-dark hover:text-pearl-50 text-obsidian border-champagne-300 cursor-pointer'
+                            }`}
+                          >
+                            {outOfStock ? 'Out of Stock' : '+ Add to Bag'}
+                          </button>
+                        </div>
+                      );
+                    })}
                   </div>
                 </div>
               )}

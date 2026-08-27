@@ -2,6 +2,7 @@ import React, { useState, useRef } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { FEATURED_PRODUCTS, BRAND_INFO } from '../data/shopify-data';
 import { useCart } from '../context/CartContext';
+import { useInventory } from '../context/InventoryContext';
 import { useAuth } from '../context/AuthContext';
 import { LuxuryBadge } from '../components/ui/LuxuryBadge';
 import { ProductTiltCard } from '../components/motion/ProductTiltCard';
@@ -35,9 +36,12 @@ export const ProductDetailPage: React.FC = () => {
   const { handle } = useParams<{ handle: string }>();
   const navigate = useNavigate();
   const { addToCart, showToast, setIsCartOpen, setQuickViewProduct } = useCart();
+  const { isOutOfStock, getAvailableStock } = useInventory();
   const { toggleWishlist, isWishlisted } = useAuth();
 
   const product = FEATURED_PRODUCTS.find((p) => p.handle === handle) || FEATURED_PRODUCTS[0];
+  const outOfStock = isOutOfStock(product.id, product.availableStock ?? 1);
+  const remainingStock = getAvailableStock(product.id, product.availableStock ?? 1);
 
   const [quantity, setQuantity] = useState(1);
   const [selectedSize, setSelectedSize] = useState<string>('2.6');
@@ -396,15 +400,27 @@ export const ProductDetailPage: React.FC = () => {
             </div>
 
             {/* Urgency & Stock Bar */}
-            <div className="p-3.5 rounded-2xl bg-amber-50/80 border border-amber-300/70 space-y-1.5">
-              <div className="flex items-center gap-2 text-xs font-bold text-amber-950">
-                <Clock className="w-4 h-4 text-gold-dark shrink-0" />
-                <span>Order within 2h 45m for Same-Day Mumbai Dispatch</span>
+            {outOfStock ? (
+              <div className="p-3.5 rounded-2xl bg-rose-50/90 border border-rose-300/80 space-y-1.5 animate-pulse">
+                <div className="flex items-center gap-2 text-xs font-bold text-rose-950">
+                  <span className="w-2 h-2 rounded-full bg-rose-600" />
+                  <span>Currently Held in Another Patron's Bag</span>
+                </div>
+                <p className="text-[11px] text-rose-900/90 font-medium">
+                  This one-of-a-kind piece is reserved. If the patron removes it from their bag, it will immediately become available again.
+                </p>
               </div>
-              <p className="text-[11px] text-amber-900/80 font-medium">
-                🔥 Rare Mumbai Atelier Stock: Only {product.availableStock || 2} piece(s) available.
-              </p>
-            </div>
+            ) : (
+              <div className="p-3.5 rounded-2xl bg-amber-50/80 border border-amber-300/70 space-y-1.5">
+                <div className="flex items-center gap-2 text-xs font-bold text-amber-950">
+                  <Clock className="w-4 h-4 text-gold-dark shrink-0" />
+                  <span>Order within 2h 45m for Same-Day Mumbai Dispatch</span>
+                </div>
+                <p className="text-[11px] text-amber-900/80 font-medium">
+                  🔥 Rare Mumbai Atelier Stock: Only {remainingStock} piece(s) available.
+                </p>
+              </div>
+            )}
 
             {/* Bangle Sizing Option Selector (if bangles) */}
             {product.category === 'bangles' && (
@@ -449,8 +465,9 @@ export const ProductDetailPage: React.FC = () => {
               <div className="flex items-center gap-3">
                 <div className="flex items-center border border-champagne-300/80 rounded-full bg-white p-1 shrink-0">
                   <button
+                    disabled={outOfStock}
                     onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                    className="w-9 h-9 rounded-full flex items-center justify-center hover:bg-champagne-100 text-obsidian transition-colors"
+                    className="w-9 h-9 rounded-full flex items-center justify-center hover:bg-champagne-100 text-obsidian transition-colors disabled:opacity-40"
                     aria-label="Decrease quantity"
                   >
                     <Minus className="w-3.5 h-3.5" />
@@ -459,8 +476,9 @@ export const ProductDetailPage: React.FC = () => {
                     {quantity}
                   </span>
                   <button
+                    disabled={outOfStock}
                     onClick={() => setQuantity(quantity + 1)}
-                    className="w-9 h-9 rounded-full flex items-center justify-center hover:bg-champagne-100 text-obsidian transition-colors"
+                    className="w-9 h-9 rounded-full flex items-center justify-center hover:bg-champagne-100 text-obsidian transition-colors disabled:opacity-40"
                     aria-label="Increase quantity"
                   >
                     <Plus className="w-3.5 h-3.5" />
@@ -468,11 +486,16 @@ export const ProductDetailPage: React.FC = () => {
                 </div>
 
                 <button
+                  disabled={outOfStock}
                   onClick={handleAdd}
-                  className="btn-primary flex-1 min-h-[48px] h-12 text-xs sm:text-sm uppercase font-bold tracking-widest flex items-center justify-center gap-2 shadow-lg hover:shadow-xl active:scale-[0.98] transition-all cursor-pointer"
+                  className={`flex-1 min-h-[48px] h-12 text-xs sm:text-sm uppercase font-bold tracking-widest flex items-center justify-center gap-2 rounded-full transition-all ${
+                    outOfStock
+                      ? 'bg-neutral-200 text-neutral-500 cursor-not-allowed border border-neutral-300/70'
+                      : 'btn-primary shadow-lg hover:shadow-xl active:scale-[0.98] cursor-pointer'
+                  }`}
                 >
                   <ShoppingBag className="w-4 h-4 shrink-0" />
-                  <span>{isAdded ? 'Added to Bag! ✨' : `Add To Bag • ₹${product.price * quantity}`}</span>
+                  <span>{outOfStock ? 'Out of Stock (Reserved)' : isAdded ? 'Added to Bag! ✨' : `Add To Bag • ₹${product.price * quantity}`}</span>
                 </button>
               </div>
 
@@ -486,10 +509,15 @@ export const ProductDetailPage: React.FC = () => {
               </button>
 
               <button
+                disabled={outOfStock}
                 onClick={handleBuyNow}
-                className="w-full min-h-[48px] h-12 border border-champagne-400/80 bg-white hover:bg-champagne-100 text-obsidian text-xs uppercase font-bold tracking-wider rounded-full transition-all flex items-center justify-center gap-2 shadow-xs cursor-pointer"
+                className={`w-full min-h-[48px] h-12 text-xs uppercase font-bold tracking-wider rounded-full transition-all flex items-center justify-center gap-2 ${
+                  outOfStock
+                    ? 'bg-neutral-100 text-neutral-400 cursor-not-allowed border border-neutral-200'
+                    : 'border border-champagne-400/80 bg-white hover:bg-champagne-100 text-obsidian shadow-xs cursor-pointer'
+                }`}
               >
-                <span>Instant Checkout</span>
+                <span>{outOfStock ? 'Piece Currently Reserved' : 'Instant Checkout'}</span>
                 <ArrowRight className="w-3.5 h-3.5 shrink-0" />
               </button>
             </div>

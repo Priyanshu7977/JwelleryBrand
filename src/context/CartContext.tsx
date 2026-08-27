@@ -3,6 +3,13 @@ import { Product, CartItem, HamperBoxOption } from '../types/shopify';
 import { BRAND_INFO, FEATURED_PRODUCTS, HAMPER_BOX_OPTIONS } from '../data/shopify-data';
 import { atelierSound } from '../utils/audioAtelier';
 import confetti from 'canvas-confetti';
+import {
+  reserveCartItem,
+  releaseCartItem,
+  clearAllPatronReservations,
+  syncEntireCart,
+} from '../services/inventoryLockService';
+import { useInventory } from './InventoryContext';
 
 export interface AppliedCoupon {
   code: string;
@@ -85,6 +92,21 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [selectedHamperBox, setSelectedHamperBox] = useState<HamperBoxOption>(HAMPER_BOX_OPTIONS[0]);
   const [polaroidNote, setPolaroidNote] = useState<string>("To my favourite person, shining always ✨");
 
+  const { reservedByOthers, isOutOfStock } = useInventory();
+
+  // Sync existing cart items on mount to maintain reservations
+  useEffect(() => {
+    if (cart.length > 0) {
+      syncEntireCart(
+        cart.map((item) => ({
+          productId: item.product.id,
+          quantity: item.quantity,
+          unitPrice: item.product.price,
+        }))
+      );
+    }
+  }, []);
+
   // Persist single global cart & coupon to localStorage
   useEffect(() => {
     try {
@@ -110,6 +132,26 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const addToCart = (product: Product, quantity = 1, personalisation?: CartItem['selectedPersonalisation']) => {
+    // Check if item is already held by someone else
+    const inMyCart = cart.find((item) => item.product.id === product.id)?.quantity || 0;
+    const baseStock = product.availableStock ?? 1;
+    const reservedOthers = reservedByOthers[product.id] || 0;
+    const remainingForMe = Math.max(0, baseStock - reservedOthers);
+
+    if (remainingForMe <= 0) {
+      showToast(`⚠️ "${product.title}" is currently held in another customer's bag!`);
+      return;
+    }
+
+    const nextQuantity = inMyCart + quantity;
+    if (nextQuantity > baseStock) {
+      showToast(`⚠️ Only ${baseStock} piece(s) available in the atelier!`);
+      return;
+    }
+
+    // Reserve in Supabase and broadcast
+    reserveCartItem(product.id, nextQuantity, product.price);
+
     setCart((prev) => {
       const existingIndex = prev.findIndex((item) => item.product.id === product.id);
       if (existingIndex > -1) {
@@ -156,14 +198,20 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const removeFromCart = (productId: string) => {
+    // Release reservation so other customers see it back in stock immediately
+    releaseCartItem(productId);
     setCart((prev) => prev.filter((item) => item.product.id !== productId));
-    showToast("Item removed from bag");
+    showToast("Item removed from bag — returned to atelier stock");
   };
 
   const updateQuantity = (productId: string, quantity: number) => {
     if (quantity <= 0) {
       removeFromCart(productId);
       return;
+    }
+    const item = cart.find((i) => i.product.id === productId);
+    if (item) {
+      reserveCartItem(productId, quantity, item.product.price);
     }
     setCart((prev) =>
       prev.map((item) =>
@@ -173,6 +221,7 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const clearCart = () => {
+    clearAllPatronReservations();
     setCart([]);
     setAppliedCoupon(null);
     try {

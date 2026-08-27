@@ -2,6 +2,7 @@ import React, { useState, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { FEATURED_PRODUCTS } from '../data/shopify-data';
 import { useCart } from '../context/CartContext';
+import { useInventory } from '../context/InventoryContext';
 import { useAuth } from '../context/AuthContext';
 import { LuxuryBadge } from '../components/ui/LuxuryBadge';
 import { Search, ShoppingBag, Eye, Heart } from 'lucide-react';
@@ -18,6 +19,7 @@ export const ShopPage: React.FC = () => {
     { name: 'Shop All', url: '/shop' },
   ]);
   const { addToCart, setQuickViewProduct } = useCart();
+  const { isOutOfStock, getAvailableStock } = useInventory();
   const { toggleWishlist, isWishlisted } = useAuth();
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [selectedPriceRange, setSelectedPriceRange] = useState<string>('all');
@@ -144,103 +146,134 @@ export const ShopPage: React.FC = () => {
 
         {/* Product Cards Grid - Proportionate and Optimized */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-5">
-          {filteredProducts.map((prod, idx) => (
-            <RevealOnScroll key={prod.id} direction="up" delay={Math.min(idx * 40, 240)}>
-              <ProductTiltCard
-                className="bg-white rounded-2xl overflow-hidden border border-champagne-300/60 shadow-sm hover:shadow-luxury-soft transition-all duration-400 flex flex-col justify-between group h-full"
-              >
-                <div className="relative aspect-[4/3] h-40 sm:h-44 md:h-48 overflow-hidden bg-sand luxury-sheen">
-                  <Link to={`/product/${prod.handle}`} className="block w-full h-full">
-                    <img
-                      src={prod.images.hero}
-                      alt={prod.title}
-                      className="w-full h-full object-cover group-hover:scale-106 transition-transform duration-700 ease-out"
-                      loading="lazy"
-                    />
-                  </Link>
+          {filteredProducts.map((prod, idx) => {
+            const outOfStock = isOutOfStock(prod.id, prod.availableStock ?? 1);
+            const remainingStock = getAvailableStock(prod.id, prod.availableStock ?? 1);
 
-                  {/* Wishlist Button */}
-                  <button
-                    onClick={() => toggleWishlist(prod.id)}
-                    className="absolute top-2 right-2 p-1.5 bg-white/90 backdrop-blur-xs rounded-full text-obsidian shadow-xs hover:scale-110 active:scale-95 transition-transform z-10 cursor-pointer"
-                    aria-label="Wishlist"
-                  >
-                    <Heart
-                      className={`w-3.5 h-3.5 ${
-                        isWishlisted(prod.id) ? 'fill-rose-600 text-rose-600' : 'text-obsidian'
-                      }`}
-                    />
-                  </button>
-
-                  {/* Clean Badges - No Overlapping */}
-                  <div className="absolute top-2 left-2 flex items-center gap-1.5 z-10 pointer-events-none">
-                    {prod.isBestseller && (
-                      <span className="text-[9px] uppercase font-mono tracking-wider font-bold bg-obsidian/90 text-pearl-100 backdrop-blur-xs px-2 py-0.5 rounded-full shadow-xs">
-                        Bestseller
-                      </span>
-                    )}
-                    {prod.availableStock && prod.availableStock <= 3 && (
-                      <span className="text-[9px] font-mono font-bold bg-pearl-50/95 text-gold-dark backdrop-blur-xs px-2 py-0.5 rounded-full border border-gold-dark/40 shadow-xs">
-                        Only {prod.availableStock} Left
-                      </span>
-                    )}
-                  </div>
-                </div>
-
-                <div className="p-3 space-y-1.5 flex-1 flex flex-col justify-between">
-                  <div>
-                    <div className="flex items-center justify-between gap-1">
-                      <span className="text-[9px] font-mono uppercase tracking-widest text-gold-dark font-bold">
-                        {prod.category}
-                      </span>
-                      {prod.availableStock && prod.availableStock > 3 && (
-                        <span className="text-[9px] font-mono text-emerald-700 font-medium">
-                          ● In Stock
-                        </span>
-                      )}
-                    </div>
-                    <Link to={`/product/${prod.handle}`}>
-                      <h3 className="text-xs sm:text-sm font-bold text-obsidian truncate mt-0.5 hover:text-gold-dark transition-colors">
-                        {prod.title}
-                      </h3>
+            return (
+              <RevealOnScroll key={prod.id} direction="up" delay={Math.min(idx * 40, 240)}>
+                <ProductTiltCard
+                  className={`bg-white rounded-2xl overflow-hidden border border-champagne-300/60 shadow-sm hover:shadow-luxury-soft transition-all duration-400 flex flex-col justify-between group h-full ${
+                    outOfStock ? 'opacity-90' : ''
+                  }`}
+                >
+                  <div className="relative aspect-[4/3] h-40 sm:h-44 md:h-48 overflow-hidden bg-sand luxury-sheen">
+                    <Link to={`/product/${prod.handle}`} className="block w-full h-full">
+                      <img
+                        src={prod.images.hero}
+                        alt={prod.title}
+                        className={`w-full h-full object-cover transition-transform duration-700 ease-out ${
+                          outOfStock ? 'grayscale-[35%]' : 'group-hover:scale-106'
+                        }`}
+                        loading="lazy"
+                      />
                     </Link>
-                    <p className="text-[11px] text-obsidian-soft line-clamp-1 mt-0.5">
-                      {prod.description}
-                    </p>
-                  </div>
 
-                  <div className="pt-1.5 border-t border-champagne-300/40">
-                    <div className="flex items-baseline justify-between mb-2">
-                      <span className="text-base sm:text-lg font-bold text-obsidian">₹{prod.price}</span>
-                      {prod.compareAtPrice && (
-                        <span className="text-xs text-obsidian-muted line-through font-medium">
-                          ₹{prod.compareAtPrice}
+                    {/* Wishlist Button */}
+                    <button
+                      onClick={() => toggleWishlist(prod.id)}
+                      className="absolute top-2 right-2 p-1.5 bg-white/90 backdrop-blur-xs rounded-full text-obsidian shadow-xs hover:scale-110 active:scale-95 transition-transform z-10 cursor-pointer"
+                      aria-label="Wishlist"
+                    >
+                      <Heart
+                        className={`w-3.5 h-3.5 ${
+                          isWishlisted(prod.id) ? 'fill-rose-600 text-rose-600' : 'text-obsidian'
+                        }`}
+                      />
+                    </button>
+
+                    {/* Clean Badges - Dynamic Live Stock & Locking */}
+                    <div className="absolute top-2 left-2 flex items-center gap-1.5 z-10 pointer-events-none">
+                      {outOfStock ? (
+                        <span className="text-[9px] uppercase font-mono tracking-wider font-bold bg-rose-950/90 text-rose-200 border border-rose-500/50 backdrop-blur-xs px-2.5 py-0.5 rounded-full shadow-xs">
+                          Out of Stock
                         </span>
+                      ) : (
+                        <>
+                          {prod.isBestseller && (
+                            <span className="text-[9px] uppercase font-mono tracking-wider font-bold bg-obsidian/90 text-pearl-100 backdrop-blur-xs px-2 py-0.5 rounded-full shadow-xs">
+                              Bestseller
+                            </span>
+                          )}
+                          {remainingStock <= 3 && (
+                            <span className="text-[9px] font-mono font-bold bg-pearl-50/95 text-gold-dark backdrop-blur-xs px-2 py-0.5 rounded-full border border-gold-dark/40 shadow-xs">
+                              Only {remainingStock} Left
+                            </span>
+                          )}
+                        </>
                       )}
                     </div>
+                  </div>
 
-                    <div className="flex gap-1.5">
-                      <button
-                        onClick={() => handleQuickAdd(prod)}
-                        className="flex-1 h-9 bg-obsidian text-pearl-100 text-[11px] uppercase font-bold tracking-wider rounded-full hover:bg-obsidian-200 active:scale-[0.98] transition-all flex items-center justify-center gap-1.5 shadow-xs cursor-pointer"
-                      >
-                        <ShoppingBag className="w-3.5 h-3.5" />
-                        <span>{addedId === prod.id ? 'Added!' : 'Add to Bag'}</span>
-                      </button>
+                  <div className="p-3 space-y-1.5 flex-1 flex flex-col justify-between">
+                    <div>
+                      <div className="flex items-center justify-between gap-1">
+                        <span className="text-[9px] font-mono uppercase tracking-widest text-gold-dark font-bold">
+                          {prod.category}
+                        </span>
+                        {outOfStock ? (
+                          <span className="text-[9px] font-mono text-rose-600 font-bold flex items-center gap-1">
+                            <span className="w-1.5 h-1.5 rounded-full bg-rose-500 animate-pulse" />
+                            In A Patron's Bag
+                          </span>
+                        ) : remainingStock > 3 ? (
+                          <span className="text-[9px] font-mono text-emerald-700 font-medium">
+                            ● In Stock
+                          </span>
+                        ) : (
+                          <span className="text-[9px] font-mono text-amber-700 font-medium">
+                            ● Low Stock ({remainingStock})
+                          </span>
+                        )}
+                      </div>
+                      <Link to={`/product/${prod.handle}`}>
+                        <h3 className="text-xs sm:text-sm font-bold text-obsidian truncate mt-0.5 hover:text-gold-dark transition-colors">
+                          {prod.title}
+                        </h3>
+                      </Link>
+                      <p className="text-[11px] text-obsidian-soft line-clamp-1 mt-0.5">
+                        {prod.description}
+                      </p>
+                    </div>
 
-                      <button
-                        onClick={() => setQuickViewProduct(prod)}
-                        className="w-9 h-9 min-w-[36px] min-h-[36px] border border-champagne-300/80 hover:bg-champagne-100 active:scale-[0.98] rounded-full text-obsidian transition-all flex items-center justify-center shrink-0 cursor-pointer"
-                        title="Quick View"
-                      >
-                        <Eye className="w-3.5 h-3.5" />
-                      </button>
+                    <div className="pt-1.5 border-t border-champagne-300/40">
+                      <div className="flex items-baseline justify-between mb-2">
+                        <span className="text-base sm:text-lg font-bold text-obsidian">₹{prod.price}</span>
+                        {prod.compareAtPrice && (
+                          <span className="text-xs text-obsidian-muted line-through font-medium">
+                            ₹{prod.compareAtPrice}
+                          </span>
+                        )}
+                      </div>
+
+                      <div className="flex gap-1.5">
+                        <button
+                          disabled={outOfStock}
+                          onClick={() => handleQuickAdd(prod)}
+                          className={`flex-1 h-9 text-[11px] uppercase font-bold tracking-wider rounded-full transition-all flex items-center justify-center gap-1.5 shadow-xs ${
+                            outOfStock
+                              ? 'bg-neutral-200 text-neutral-500 cursor-not-allowed border border-neutral-300/60'
+                              : 'bg-obsidian text-pearl-100 hover:bg-obsidian-200 active:scale-[0.98] cursor-pointer'
+                          }`}
+                        >
+                          <ShoppingBag className="w-3.5 h-3.5" />
+                          <span>{outOfStock ? 'Out of Stock' : addedId === prod.id ? 'Added!' : 'Add to Bag'}</span>
+                        </button>
+
+                        <button
+                          onClick={() => setQuickViewProduct(prod)}
+                          className="w-9 h-9 min-w-[36px] min-h-[36px] border border-champagne-300/80 hover:bg-champagne-100 active:scale-[0.98] rounded-full text-obsidian transition-all flex items-center justify-center shrink-0 cursor-pointer"
+                          title="Quick View"
+                        >
+                          <Eye className="w-3.5 h-3.5" />
+                        </button>
+                      </div>
                     </div>
                   </div>
-                </div>
-              </ProductTiltCard>
-            </RevealOnScroll>
-          ))}
+                </ProductTiltCard>
+              </RevealOnScroll>
+            );
+          })}
         </div>
 
       </div>
