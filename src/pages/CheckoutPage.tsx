@@ -617,7 +617,7 @@ export const CheckoutPage: React.FC = () => {
                               <img
                                 src={app.iconUrl}
                                 alt={app.name}
-                                className="w-5 h-5 object-contain shrink-0 rounded-xs"
+                                className="w-6 h-6 object-contain shrink-0 rounded-sm"
                               />
                               <span className="truncate">{app.name}</span>
                             </button>
