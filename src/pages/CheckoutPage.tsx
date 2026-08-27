@@ -599,23 +599,27 @@ export const CheckoutPage: React.FC = () => {
                         </p>
                         <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
                           {[
-                            { id: 'gpay', name: 'Google Pay', icon: '⚡', color: 'border-blue-300 hover:bg-blue-50' },
-                            { id: 'phonepe', name: 'PhonePe', icon: '🟣', color: 'border-purple-300 hover:bg-purple-50' },
-                            { id: 'paytm', name: 'Paytm UPI', icon: '🔵', color: 'border-cyan-300 hover:bg-cyan-50' },
-                            { id: 'cred', name: 'CRED UPI', icon: '💎', color: 'border-amber-300 hover:bg-amber-50' },
+                            { id: 'gpay', name: 'Google Pay', iconUrl: '/assets/icons/payment/gpay.svg', color: 'border-blue-200 hover:border-blue-400 hover:bg-blue-50/50' },
+                            { id: 'phonepe', name: 'PhonePe', iconUrl: '/assets/icons/payment/phonepe.svg', color: 'border-purple-200 hover:border-purple-400 hover:bg-purple-50/50' },
+                            { id: 'paytm', name: 'Paytm UPI', iconUrl: '/assets/icons/payment/paytm.svg', color: 'border-cyan-200 hover:border-cyan-400 hover:bg-cyan-50/50' },
+                            { id: 'cred', name: 'CRED UPI', iconUrl: '/assets/icons/payment/cred.svg', color: 'border-neutral-300 hover:border-neutral-500 hover:bg-neutral-50/50' },
                           ].map((app) => (
                             <button
                               key={app.id}
                               type="button"
                               onClick={() => setSelectedUpiApp(app.id as any)}
-                              className={`py-2.5 px-3 rounded-xl border flex items-center justify-center gap-2 transition-all font-sans font-bold text-xs cursor-pointer ${
+                              className={`py-2.5 px-3 rounded-xl border flex items-center justify-center gap-2.5 transition-all font-sans font-bold text-xs cursor-pointer ${
                                 selectedUpiApp === app.id
-                                  ? 'border-gold-dark bg-champagne-100 text-obsidian shadow-sm'
+                                  ? 'border-gold-dark bg-champagne-100 text-obsidian shadow-sm ring-1 ring-gold-dark/40'
                                   : `bg-pearl-50 text-obsidian/80 ${app.color}`
                               }`}
                             >
-                              <span>{app.icon}</span>
-                              <span>{app.name}</span>
+                              <img
+                                src={app.iconUrl}
+                                alt={app.name}
+                                className="w-5 h-5 object-contain shrink-0 rounded-xs"
+                              />
+                              <span className="truncate">{app.name}</span>
                             </button>
                           ))}
                         </div>
@@ -660,9 +664,17 @@ export const CheckoutPage: React.FC = () => {
                           {/* Mobile Direct Pay Link */}
                           <a
                             href={upiDeepLink}
-                            className="w-full py-2 px-4 rounded-xl bg-emerald-800 hover:bg-emerald-900 text-pearl-100 text-xs font-mono font-bold flex items-center justify-center gap-2 transition-all shadow-xs"
+                            className="w-full py-2.5 px-4 rounded-xl bg-emerald-800 hover:bg-emerald-900 text-pearl-100 text-xs font-mono font-bold flex items-center justify-center gap-2 transition-all shadow-xs"
                           >
-                            <Zap className="w-3.5 h-3.5 text-champagne-300" />
+                            {selectedUpiApp !== 'qr' ? (
+                              <img
+                                src={`/assets/icons/payment/${selectedUpiApp}.svg`}
+                                alt={selectedUpiApp}
+                                className="w-4 h-4 object-contain rounded-xs shrink-0"
+                              />
+                            ) : (
+                              <Zap className="w-3.5 h-3.5 text-champagne-300" />
+                            )}
                             <span>Launch {selectedUpiApp.toUpperCase()} on Mobile (₹{grandTotal})</span>
                           </a>
                         </div>
