@@ -130,7 +130,7 @@ export const Navigation: React.FC = () => {
         onMouseLeave={() => setHoveredMenu(null)}
       >
         {/* Top Mumbai Studio Announcement Bar */}
-        <div className="w-full pointer-events-auto bg-champagne-200 text-obsidian py-1.5 px-3 sm:px-4 text-center text-[10px] sm:text-[11px] tracking-widest uppercase font-mono font-semibold flex items-center justify-center gap-2 sm:gap-3 border-b border-champagne-300 shadow-xs">
+        <div className="w-full pointer-events-auto bg-champagne-200 text-obsidian py-1.5 pt-[max(env(safe-area-inset-top,0px),0.375rem)] px-3 sm:px-4 text-center text-[10px] sm:text-[11px] tracking-widest uppercase font-mono font-semibold flex items-center justify-center gap-2 sm:gap-3 border-b border-champagne-300 shadow-xs">
           <span className="flex items-center gap-1">
             <Sparkles className="w-3 h-3 text-gold-dark shrink-0" />
             <span className="truncate">MUMBAI ATELIER • SAME-DAY HAND DELIVERY AVAILABLE</span>

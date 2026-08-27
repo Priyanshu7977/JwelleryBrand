@@ -368,6 +368,7 @@ export const CheckoutPage: React.FC = () => {
                     <input
                       type="text"
                       required
+                      autoComplete="name"
                       placeholder="e.g. Radhika Sharma"
                       value={name}
                       onInput={(e: React.FormEvent<HTMLInputElement>) => {
@@ -390,6 +391,8 @@ export const CheckoutPage: React.FC = () => {
                     <input
                       type="email"
                       required
+                      autoComplete="email"
+                      inputMode="email"
                       placeholder="name@email.com"
                       value={email}
                       onChange={(e) => setEmail(e.target.value.replace(/[<>'"\s]/g, '').trim())}
@@ -409,6 +412,7 @@ export const CheckoutPage: React.FC = () => {
                       type="tel"
                       inputMode="tel"
                       required
+                      autoComplete="tel"
                       placeholder="9876543210"
                       value={phone}
                       onInput={(e: React.FormEvent<HTMLInputElement>) => {
@@ -431,6 +435,7 @@ export const CheckoutPage: React.FC = () => {
                     <input
                       type="text"
                       required
+                      autoComplete="street-address"
                       placeholder="e.g. 402, Sea Crest Towers, Worli Sea Face"
                       value={street}
                       onInput={(e: React.FormEvent<HTMLInputElement>) => {
@@ -452,6 +457,7 @@ export const CheckoutPage: React.FC = () => {
                     type="text"
                     inputMode="numeric"
                     required
+                    autoComplete="postal-code"
                     placeholder="400001"
                     maxLength={6}
                     value={pincode}
@@ -729,6 +735,7 @@ export const CheckoutPage: React.FC = () => {
                           <input
                             type="text"
                             inputMode="numeric"
+                            autoComplete="cc-number"
                             placeholder="4532 •••• •••• 8890"
                             maxLength={19}
                             value={cardNumber}
@@ -754,6 +761,8 @@ export const CheckoutPage: React.FC = () => {
                           </label>
                           <input
                             type="text"
+                            inputMode="numeric"
+                            autoComplete="cc-exp"
                             placeholder="12/28"
                             maxLength={5}
                             value={cardExpiry}
@@ -773,6 +782,8 @@ export const CheckoutPage: React.FC = () => {
                           </label>
                           <input
                             type="password"
+                            inputMode="numeric"
+                            autoComplete="cc-csc"
                             placeholder="•••"
                             maxLength={4}
                             value={cardCvv}
@@ -788,6 +799,7 @@ export const CheckoutPage: React.FC = () => {
                         </label>
                         <input
                           type="text"
+                          autoComplete="cc-name"
                           placeholder="Name as printed on card"
                           value={cardName}
                           onChange={(e) => setCardName(e.target.value.toUpperCase())}

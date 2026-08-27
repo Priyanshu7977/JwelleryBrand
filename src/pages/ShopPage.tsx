@@ -166,6 +166,7 @@ export const ShopPage: React.FC = () => {
                           outOfStock ? 'grayscale-[35%]' : 'group-hover:scale-106'
                         }`}
                         loading="lazy"
+                        decoding="async"
                       />
                     </Link>
 

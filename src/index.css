@@ -42,9 +42,20 @@
     -webkit-overflow-scrolling: touch;
   }
 
-  /* Universal touch optimization for iOS */
+  /* Universal touch optimization for iOS & Android */
   button, a, input, select, textarea {
     touch-action: manipulation;
+  }
+
+  /* Disable iOS callout menu on long press of images/buttons */
+  img, a, button {
+    -webkit-touch-callout: none;
+  }
+
+  /* Prevent text selection on interactive elements */
+  button, .btn-primary, .btn-secondary, [role="button"] {
+    -webkit-user-select: none;
+    user-select: none;
   }
 
   /* Prevent iOS Safari forced auto-zoom on form inputs */

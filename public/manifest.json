@@ -1,0 +1,31 @@
+{
+  "short_name": "Celestia",
+  "name": "Celestia Luxury Atelier — Fine Jewellery Mumbai",
+  "description": "Handcrafted anti-tarnish jewellery, artisanal bangles, and bespoke personalised hampers in Mumbai.",
+  "icons": [
+    {
+      "src": "/assets/celestia-logo.png",
+      "type": "image/png",
+      "sizes": "192x192",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/assets/celestia-logo.png",
+      "type": "image/png",
+      "sizes": "512x512",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/assets/celestia-mark.svg",
+      "type": "image/svg+xml",
+      "sizes": "any",
+      "purpose": "any"
+    }
+  ],
+  "start_url": "/",
+  "background_color": "#FAF7F0",
+  "theme_color": "#FAF7F0",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "categories": ["shopping", "lifestyle", "luxury"]
+}

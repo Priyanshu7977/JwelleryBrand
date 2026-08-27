@@ -123,7 +123,7 @@ export const ProductDetailPage: React.FC = () => {
     : 0;
 
   return (
-    <div className="w-full min-h-screen bg-pearl-100 pt-28 sm:pt-32 md:pt-36 pb-24 px-4 sm:px-6 md:px-10 lg:px-14 selection:bg-champagne-300">
+    <div className="w-full min-h-screen bg-pearl-100 pt-28 sm:pt-32 md:pt-36 pb-32 lg:pb-24 px-4 sm:px-6 md:px-10 lg:px-14 selection:bg-champagne-300">
       
       {/* ========================================================================= */}
       {/* LIGHTBOX MODAL                                                            */}
@@ -301,7 +301,7 @@ export const ProductDetailPage: React.FC = () => {
 
               {/* Hint badge at bottom */}
               <div className="absolute bottom-3 right-3 text-[10px] font-mono uppercase bg-obsidian/70 backdrop-blur-sm text-pearl-100 px-2.5 py-1 rounded-full pointer-events-none">
-                Hover to Zoom • Click for Full View
+                <span className="hidden sm:inline">Hover to Zoom • </span>Click for Full View
               </div>
             </div>
 
@@ -790,6 +790,50 @@ export const ProductDetailPage: React.FC = () => {
           </div>
         </RevealOnScroll>
 
+      </div>
+
+      {/* Mobile & iOS Sticky Bottom CTA Action Bar */}
+      <div className="lg:hidden fixed bottom-0 left-0 right-0 z-30 bg-pearl-50/98 backdrop-blur-md border-t border-champagne-300/80 px-4 py-2.5 pb-safe shadow-2xl animate-fade-in">
+        <div className="max-w-md mx-auto flex items-center justify-between gap-3">
+          <div className="min-w-0 flex-1">
+            <p className="font-serif-luxury text-xs text-obsidian font-bold truncate">
+              {product.title}
+            </p>
+            <div className="flex items-center gap-1.5 mt-0.5">
+              <span className="font-mono font-bold text-sm text-gold-dark">
+                ₹{product.price}
+              </span>
+              {outOfStock && (
+                <span className="text-[9px] font-mono font-bold text-rose-700 bg-rose-100 px-1.5 py-0.2 rounded-full">
+                  Reserved
+                </span>
+              )}
+            </div>
+          </div>
+
+          <div className="flex items-center gap-2 shrink-0">
+            <button
+              onClick={() => toggleWishlist(product.id)}
+              className="w-10 h-10 rounded-full border border-champagne-300/80 bg-white flex items-center justify-center text-obsidian active:scale-95 transition-transform cursor-pointer"
+              aria-label="Wishlist"
+            >
+              <Heart className={`w-4 h-4 ${isWishlisted(product.id) ? 'fill-rose-600 text-rose-600' : 'text-obsidian'}`} />
+            </button>
+
+            <button
+              disabled={outOfStock}
+              onClick={handleAdd}
+              className={`min-h-[42px] h-10.5 px-4.5 rounded-full text-xs uppercase font-bold tracking-wider flex items-center gap-1.5 shadow-md active:scale-95 transition-all cursor-pointer ${
+                outOfStock
+                  ? 'bg-neutral-200 text-neutral-500 cursor-not-allowed border border-neutral-300'
+                  : 'bg-obsidian text-pearl-100 hover:bg-obsidian-200'
+              }`}
+            >
+              <ShoppingBag className="w-3.5 h-3.5" />
+              <span>{outOfStock ? 'Reserved' : isAdded ? 'Added! ✨' : 'Add to Bag'}</span>
+            </button>
+          </div>
+        </div>
       </div>
     </div>
   );
