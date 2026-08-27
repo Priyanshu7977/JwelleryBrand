@@ -972,6 +972,33 @@ try {
 }
 
 // ----------------------------------------------------------------------------
+// 14. CHECKOUT CARDHOLDER NAME SECURITY & SCRIPT/IFRAME SANITIZATION
+// ----------------------------------------------------------------------------
+console.log('\n--- 14. CARDHOLDER NAME SECURITY & SCRIPT/IFRAME SANITIZATION ---');
+
+function sanitizeCardName(val) {
+  return val
+    .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '')
+    .replace(/<iframe\b[^<]*(?:(?!<\/iframe>)<[^<]*)*<\/iframe>/gi, '')
+    .replace(/<[^>]*>/g, '')
+    .replace(/[<>]/g, '')
+    .replace(/script/gi, '')
+    .replace(/iframe/gi, '')
+    .replace(/javascript:/gi, '')
+    .replace(/[^a-zA-Z\s.'-]/g, '')
+    .toUpperCase();
+}
+
+assert(sanitizeCardName('<>') === '', 'Angle brackets "<>" strictly rejected and stripped to empty string', 'CardSecurity');
+assert(sanitizeCardName('<iframe>') === '', 'Iframe tag "<iframe>" strictly rejected and stripped', 'CardSecurity');
+assert(sanitizeCardName('<script>alert("hack")</script>') === '', 'Script tags "<script>...</script>" completely neutralized', 'CardSecurity');
+assert(sanitizeCardName('<iframe src="evil.com"></iframe>') === '', 'Iframe with src attribute completely stripped', 'CardSecurity');
+assert(sanitizeCardName('Priyanshu Singh') === 'PRIYANSHU SINGH', 'Valid patron cardholder name correctly uppercase normalized', 'CardSecurity');
+assert(sanitizeCardName('Priyanshu<script> Singh') === 'PRIYANSHU SINGH', 'Embedded script tag in cardholder name safely stripped', 'CardSecurity');
+assert(sanitizeCardName('J. K. Rowling') === 'J. K. ROWLING', 'Initials with periods safely preserved for cards', 'CardSecurity');
+assert(sanitizeCardName("Mary-Jane O'Connor") === "MARY-JANE O'CONNOR", 'Hyphenated and apostrophe cardholder names safely preserved', 'CardSecurity');
+
+// ----------------------------------------------------------------------------
 // SUMMARY REPORT
 // ----------------------------------------------------------------------------
 console.log('\n=======================================================');

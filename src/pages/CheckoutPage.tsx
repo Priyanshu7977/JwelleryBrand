@@ -246,6 +246,19 @@ export const CheckoutPage: React.FC = () => {
       .replace(/onload\s*=/gi, '');
   };
 
+  const sanitizeCardName = (val: string): string => {
+    return val
+      .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '')
+      .replace(/<iframe\b[^<]*(?:(?!<\/iframe>)<[^<]*)*<\/iframe>/gi, '')
+      .replace(/<[^>]*>/g, '')
+      .replace(/[<>]/g, '')
+      .replace(/script/gi, '')
+      .replace(/iframe/gi, '')
+      .replace(/javascript:/gi, '')
+      .replace(/[^a-zA-Z\s.'-]/g, '')
+      .toUpperCase();
+  };
+
   const handleApplyCoupon = (code: string) => {
     const clean = sanitizeCouponCode(code);
     setCouponCodeInput(clean);
@@ -286,6 +299,27 @@ export const CheckoutPage: React.FC = () => {
     if (!cleanStreet || cleanStreet.length < 5 || !pincode.trim() || pincode.replace(/\D/g, '').length !== 6) {
       showToast("Please fill in a valid delivery address and 6-digit PIN code.");
       return;
+    }
+
+    if (paymentMethod === 'card') {
+      const cleanCardNum = cardNumber.replace(/\D/g, '');
+      if (cleanCardNum.length < 15) {
+        showToast("Please enter a valid card number.");
+        return;
+      }
+      if (!cardExpiry || !cardExpiry.includes('/')) {
+        showToast("Please enter a valid card expiry date (MM/YY).");
+        return;
+      }
+      if (cardCvv.replace(/\D/g, '').length < 3) {
+        showToast("Please enter a valid CVV code.");
+        return;
+      }
+      const cleanCardHolder = sanitizeCardName(cardName).trim();
+      if (!cleanCardHolder || cleanCardHolder.length < 2 || /<|>|script|iframe/i.test(cardName)) {
+        showToast("Please enter a valid cardholder name (letters only, no scripts or iframes).");
+        return;
+      }
     }
 
     setIsProcessing(true);
@@ -904,15 +938,34 @@ export const CheckoutPage: React.FC = () => {
                       </div>
 
                       <div className="space-y-1">
-                        <label className="text-[10px] uppercase font-mono tracking-wider text-obsidian-soft font-bold block">
-                          Cardholder Name
-                        </label>
+                        <div className="flex items-center justify-between">
+                          <label className="text-[10px] uppercase font-mono tracking-wider text-obsidian-soft font-bold block">
+                            Cardholder Name
+                          </label>
+                          <span className="text-[9.5px] font-mono text-obsidian-soft/70">
+                            Letters only • No scripts or HTML
+                          </span>
+                        </div>
                         <input
                           type="text"
                           autoComplete="cc-name"
                           placeholder="Name as printed on card"
                           value={cardName}
-                          onChange={(e) => setCardName(e.target.value.toUpperCase())}
+                          onChange={(e) => {
+                            const raw = e.target.value;
+                            if (/[<>{}[\]\\]|script|iframe/i.test(raw)) {
+                              showToast("Scripts, iframes and HTML tags are strictly blocked.");
+                            }
+                            setCardName(sanitizeCardName(raw));
+                          }}
+                          onPaste={(e) => {
+                            const pasted = e.clipboardData.getData('text');
+                            if (/[<>{}[\]\\]|script|iframe/i.test(pasted)) {
+                              showToast("Scripts, iframes and HTML tags are strictly blocked.");
+                            }
+                            e.preventDefault();
+                            setCardName(sanitizeCardName(pasted));
+                          }}
                           className="w-full h-11 px-3.5 bg-pearl-50 rounded-xl border border-champagne-300 text-xs font-sans text-obsidian focus:outline-none focus:border-gold-dark"
                         />
                       </div>
