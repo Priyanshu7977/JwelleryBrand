@@ -1,11 +1,12 @@
 import type { IncomingMessage, ServerResponse } from 'http';
+import nodemailer from 'nodemailer';
 
 type ApiRequest = IncomingMessage & { body: any; query: any; headers: Record<string, string | string[]> };
 type ApiResponse = ServerResponse & { status: (code: number) => ApiResponse; json: (data: any) => void };
 
 /**
  * Serverless Transactional Email Endpoint for Celestia Luxury Atelier
- * (100% FormSubmit-free. Integrates with Resend REST API via RESEND_API_KEY with auto-failover)
+ * (Direct SMTP via Google Workspace with multi-tier failover & PDF attachment support)
  */
 export default async function handler(req: ApiRequest, res: ApiResponse) {
   if (req.method !== 'POST') {
@@ -20,24 +21,79 @@ export default async function handler(req: ApiRequest, res: ApiResponse) {
       return res.status(400).json({ error: 'Invalid recipient or order payload' });
     }
 
-    const RESEND_API_KEY = process.env.RESEND_API_KEY || '';
+    const emailSubject = subject || (order ? `CELESTIA • Order #${order.orderNumber} Confirmed` : 'CELESTIA Atelier Notification');
     const ATELIER_SUPPORT_EMAIL = process.env.ATELIER_SUPPORT_EMAIL || 'celestiaaaccessories@gmail.com';
-    const SENDER_EMAIL = process.env.SENDER_EMAIL || 'Celestia Atelier <orders@celestiaamor.in>';
+    const PRIMARY_EMAIL_USER = process.env.SMTP_USER || 'priyanshu.co10720@tpoly.in';
+    const PRIMARY_EMAIL_PASS = process.env.SMTP_PASSWORD || process.env.EMAIL_PASSWORD || 'Priyanshu@2006';
 
-    // 1. Resend REST API
+    // Format attachments for Nodemailer & REST APIs
+    const formattedAttachments = (attachments && Array.isArray(attachments))
+      ? attachments.map((att: any) => ({
+          filename: att.filename || `CELESTIA_Order_${order?.orderNumber || 'Invoice'}.pdf`,
+          content: typeof att.content === 'string' ? Buffer.from(att.content, 'base64') : att.content,
+          contentType: att.contentType || 'application/pdf',
+        }))
+      : [];
+
+    // 1. Primary SMTP Transport (Google Workspace via smtp.gmail.com)
+    try {
+      const transporter = nodemailer.createTransport({
+        host: 'smtp.gmail.com',
+        port: 465,
+        secure: true, // SSL
+        auth: {
+          user: PRIMARY_EMAIL_USER,
+          pass: PRIMARY_EMAIL_PASS,
+        },
+        tls: {
+          rejectUnauthorized: false,
+        },
+      });
+
+      const info = await transporter.sendMail({
+        from: `"Celestia Luxury Atelier" <${PRIMARY_EMAIL_USER}>`,
+        to: targetEmail,
+        bcc: [ATELIER_SUPPORT_EMAIL, PRIMARY_EMAIL_USER],
+        subject: emailSubject,
+        text: text,
+        html: html,
+        attachments: formattedAttachments,
+      });
+
+      return res.status(200).json({
+        success: true,
+        provider: 'smtp_google_workspace',
+        messageId: info.messageId,
+        recipient: targetEmail,
+        attachedPdf: formattedAttachments.length > 0,
+        message: 'Order confirmation email with PDF invoice dispatched successfully via Google Workspace SMTP ✨',
+      });
+    } catch (smtpErr: any) {
+      console.warn('[SendOrderEmail] Primary SMTP dispatch note:', smtpErr?.message || smtpErr);
+      // Fall through to resilient backup providers
+    }
+
+    const RESEND_API_KEY = process.env.RESEND_API_KEY || '';
+    const SENDER_EMAIL = process.env.SENDER_EMAIL || `Celestia Atelier <${PRIMARY_EMAIL_USER}>`;
+
+    // 2. Resend REST API (Backup)
     if (RESEND_API_KEY) {
       try {
         const payload: Record<string, any> = {
           from: SENDER_EMAIL,
           to: [targetEmail],
           bcc: [ATELIER_SUPPORT_EMAIL],
-          subject: subject || (order ? `CELESTIA • Order #${order.orderNumber} Confirmed` : 'CELESTIA Atelier Notification'),
+          subject: emailSubject,
           html: html,
           text: text,
         };
 
-        if (attachments && Array.isArray(attachments) && attachments.length > 0) {
-          payload.attachments = attachments;
+        if (formattedAttachments.length > 0) {
+          payload.attachments = formattedAttachments.map(a => ({
+            filename: a.filename,
+            content: a.content.toString('base64'),
+          }));
+        }
         }
 
         let resendResponse = await fetch('https://api.resend.com/emails', {
@@ -82,23 +138,32 @@ export default async function handler(req: ApiRequest, res: ApiResponse) {
       }
     }
 
-    // 2. Brevo / Sendinblue REST API (BREVO_API_KEY or SIB_API_KEY)
+    // 3. Brevo / Sendinblue REST API (BREVO_API_KEY or SIB_API_KEY)
     const BREVO_API_KEY = process.env.BREVO_API_KEY || process.env.SIB_API_KEY || '';
     if (BREVO_API_KEY) {
       try {
+        const brevoPayload: Record<string, any> = {
+          sender: { name: 'Celestia Atelier', email: PRIMARY_EMAIL_USER },
+          to: [{ email: targetEmail, name: order?.customer?.name || 'Valued Patron' }],
+          subject: emailSubject,
+          htmlContent: html,
+          textContent: text,
+        };
+
+        if (formattedAttachments.length > 0) {
+          brevoPayload.attachment = formattedAttachments.map(a => ({
+            name: a.filename,
+            content: a.content.toString('base64'),
+          }));
+        }
+
         const brevoResponse = await fetch('https://api.brevo.com/v3/smtp/email', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
             'api-key': BREVO_API_KEY,
           },
-          body: JSON.stringify({
-            sender: { name: 'Celestia Atelier', email: 'orders@celestiaamor.in' },
-            to: [{ email: targetEmail, name: order?.customer?.name || 'Valued Patron' }],
-            subject: subject || `CELESTIA • Order #${order?.orderNumber} Confirmed`,
-            htmlContent: html,
-            textContent: text,
-          }),
+          body: JSON.stringify(brevoPayload),
         });
         if (brevoResponse.ok) {
           const brevoData = await brevoResponse.json();
@@ -106,6 +171,7 @@ export default async function handler(req: ApiRequest, res: ApiResponse) {
             success: true,
             provider: 'brevo',
             messageId: brevoData.messageId,
+            attachedPdf: formattedAttachments.length > 0,
             message: 'Transactional email dispatched successfully via Brevo ✨',
           });
         }
@@ -114,30 +180,42 @@ export default async function handler(req: ApiRequest, res: ApiResponse) {
       }
     }
 
-    // 3. SendGrid REST API (SENDGRID_API_KEY)
+    // 4. SendGrid REST API (SENDGRID_API_KEY)
     const SENDGRID_API_KEY = process.env.SENDGRID_API_KEY || '';
     if (SENDGRID_API_KEY) {
       try {
+        const sgPayload: Record<string, any> = {
+          personalizations: [{ to: [{ email: targetEmail }] }],
+          from: { email: PRIMARY_EMAIL_USER, name: 'Celestia Luxury Atelier' },
+          subject: emailSubject,
+          content: [
+            { type: 'text/plain', value: text },
+            { type: 'text/html', value: html },
+          ],
+        };
+
+        if (formattedAttachments.length > 0) {
+          sgPayload.attachments = formattedAttachments.map(a => ({
+            filename: a.filename,
+            content: a.content.toString('base64'),
+            type: 'application/pdf',
+            disposition: 'attachment',
+          }));
+        }
+
         const sgResponse = await fetch('https://api.sendgrid.com/v3/mail/send', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
             Authorization: `Bearer ${SENDGRID_API_KEY}`,
           },
-          body: JSON.stringify({
-            personalizations: [{ to: [{ email: targetEmail }] }],
-            from: { email: 'orders@celestiaamor.in', name: 'Celestia Luxury Atelier' },
-            subject: subject || `CELESTIA • Order #${order?.orderNumber} Confirmed`,
-            content: [
-              { type: 'text/plain', value: text },
-              { type: 'text/html', value: html },
-            ],
-          }),
+          body: JSON.stringify(sgPayload),
         });
         if (sgResponse.ok || sgResponse.status === 202) {
           return res.status(200).json({
             success: true,
             provider: 'sendgrid',
+            attachedPdf: formattedAttachments.length > 0,
             message: 'Transactional email dispatched successfully via SendGrid ✨',
           });
         }

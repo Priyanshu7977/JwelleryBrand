@@ -1,6 +1,7 @@
 import { OrderMetadata } from '../types/backend';
 import { BRAND_INFO } from '../data/shopify-data';
 import { formatOrderDateIST, formatOrderTimeIST } from '../utils/dateIST';
+import { generateOrderInvoiceBase64 } from './pdfInvoiceService';
 
 export interface EmailDispatchResult {
   success: boolean;
@@ -178,6 +179,23 @@ export async function sendOrderConfirmationEmail(order: OrderMetadata): Promise<
   const textContent = buildOrderConfirmationEmailText(order);
   const htmlContent = buildOrderConfirmationEmailHtml(order);
 
+  // Generate luxury A4 PDF Invoice attachment
+  let attachments: Array<{ filename: string; content: string; contentType: string }> | undefined = undefined;
+  try {
+    const pdfBase64 = generateOrderInvoiceBase64(order);
+    if (pdfBase64 && pdfBase64.length > 50) {
+      attachments = [
+        {
+          filename: `CELESTIA_Order_${order.orderNumber}.pdf`,
+          content: pdfBase64,
+          contentType: 'application/pdf',
+        },
+      ];
+    }
+  } catch (pdfErr) {
+    console.warn('[EmailService] Failed to generate PDF invoice attachment:', pdfErr);
+  }
+
   // Dispatch via backend API with direct client public relay fallback
   try {
     const res = await fetch('/api/send-order-email', {
@@ -189,6 +207,7 @@ export async function sendOrderConfirmationEmail(order: OrderMetadata): Promise<
         subject,
         html: htmlContent,
         text: textContent,
+        attachments,
       }),
     });
     if (res.ok) {

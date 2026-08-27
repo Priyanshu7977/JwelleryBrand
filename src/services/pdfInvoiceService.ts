@@ -545,3 +545,18 @@ export function downloadOrderInvoicePDF(order: OrderMetadata): void {
     }
   }
 }
+
+/**
+ * Generates the clean base64 data string of the PDF invoice for automated email attachment
+ */
+export function generateOrderInvoiceBase64(order: OrderMetadata): string {
+  try {
+    const doc = generateOrderInvoicePDF(order);
+    const dataUri = doc.output('datauristring');
+    const base64Index = dataUri.indexOf(',');
+    return base64Index !== -1 ? dataUri.slice(base64Index + 1) : dataUri;
+  } catch (err) {
+    console.error('[PDF Engine] Error generating base64 for invoice:', err);
+    return '';
+  }
+}
