@@ -136,7 +136,10 @@ export const CheckoutPage: React.FC = () => {
   // Extra ₹50 Instant Discount for UPI/Prepaid payments (Like Bonkers Corner / GoKwik)
   const upiInstantDiscount = paymentMethod === 'upi' && finalPayable >= 200 ? 50 : 0;
   
-  const grandTotal = Math.max(0, finalPayable - upiInstantDiscount + shippingCost + sameDayExtra);
+  // ₹50 Convenience Handling Fee on Cash on Delivery
+  const codFee = paymentMethod === 'cod' ? 50 : 0;
+
+  const grandTotal = Math.max(0, finalPayable - upiInstantDiscount + shippingCost + sameDayExtra + codFee);
 
   // Dynamic UPI Deep Link
   const upiDeepLink = `upi://pay?pa=7718825792@okaxis&pn=Celestia%20Luxury%20Atelier&am=${grandTotal}&cu=INR&tn=Celestia%20Order`;
@@ -239,7 +242,7 @@ export const CheckoutPage: React.FC = () => {
         },
         items: orderItems,
         subtotal,
-        shippingCost: shippingCost + sameDayExtra,
+        shippingCost: shippingCost + sameDayExtra + codFee,
         total: grandTotal,
         shippingMethod: shippingMethod === 'same-day' ? 'Mumbai Same-Day Priority Express Courier' : 'Pan-India Free Express Air Cargo',
         paymentMethod: paymentMethod.toUpperCase(),
@@ -843,25 +846,33 @@ export const CheckoutPage: React.FC = () => {
                         className="accent-gold-dark"
                       />
                       <div>
-                        <p className="font-serif-luxury text-sm sm:text-base text-obsidian font-bold">Cash on Delivery (COD)</p>
-                        <p className="text-xs text-obsidian-soft mt-0.5">Pay via Cash or UPI at your doorstep upon unboxing</p>
+                        <div className="flex items-center gap-2">
+                          <p className="font-serif-luxury text-sm sm:text-base text-obsidian font-bold">Cash on Delivery (COD)</p>
+                          <span className="text-[10px] font-mono bg-amber-100 text-amber-900 border border-amber-300 px-2 py-0.5 rounded-full font-bold">
+                            +₹50 COD Fee
+                          </span>
+                        </div>
+                        <p className="text-xs text-obsidian-soft mt-0.5">Pay via Cash or UPI at your doorstep upon unboxing (+₹50 handling charge)</p>
                       </div>
                     </div>
-                    <span className="text-xs font-mono text-obsidian font-bold">₹0 Prepay</span>
+                    <span className="text-xs font-mono text-amber-900 font-bold">+₹50 COD Charge</span>
                   </div>
 
                   {paymentMethod === 'cod' && (
-                    <div className="p-3 bg-amber-50 rounded-xl border border-amber-200 text-xs text-amber-900 flex items-center justify-between gap-3 animate-fade-in">
-                      <span>💡 <strong>Tip:</strong> Pay via UPI now to save an extra ₹50 instantly!</span>
+                    <div className="p-3.5 bg-amber-50/90 rounded-xl border border-amber-200 text-xs text-amber-900 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 animate-fade-in">
+                      <div>
+                        <p className="font-bold">⚠️ Cash on Delivery requires a ₹50 logistics verification charge.</p>
+                        <p className="text-[11px] text-amber-800 mt-0.5">Tip: Pay via Instant UPI to waive the ₹50 fee and get an EXTRA ₹50 discount!</p>
+                      </div>
                       <button
                         type="button"
                         onClick={(e) => {
                           e.stopPropagation();
                           setPaymentMethod('upi');
                         }}
-                        className="px-2.5 py-1 rounded-full bg-gold-dark text-pearl-100 text-[10px] font-mono font-bold uppercase shrink-0"
+                        className="px-3 py-1.5 rounded-full bg-gold-dark text-pearl-100 text-[11px] font-mono font-bold uppercase shrink-0 hover:bg-gold-dark/90 transition-all cursor-pointer shadow-xs"
                       >
-                        Switch to UPI
+                        Switch to UPI (Save ₹100)
                       </button>
                     </div>
                   )}
@@ -1031,6 +1042,13 @@ export const CheckoutPage: React.FC = () => {
                   <div className="flex justify-between text-gold-dark font-medium">
                     <span>Mumbai Same-Day Priority Courier</span>
                     <span className="font-mono">+₹100</span>
+                  </div>
+                )}
+
+                {codFee > 0 && (
+                  <div className="flex justify-between text-amber-900 font-medium bg-amber-50/80 p-1.5 rounded-lg border border-amber-200/80">
+                    <span>Cash on Delivery Handling Fee</span>
+                    <span className="font-mono font-bold">+₹{codFee}</span>
                   </div>
                 )}
 

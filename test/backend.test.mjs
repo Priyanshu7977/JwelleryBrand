@@ -664,6 +664,32 @@ assert(largeCalc.subtotal === 1499, 'Cart subtotal for multiple pieces calculate
 assert(largeCalc.eligibleForFreeShipping === true, 'Free express shipping unlocked above ₹999 threshold', 'Cart');
 assert(largeCalc.shippingCost === 0, 'Shipping cost waived (₹0)', 'Cart');
 
+// 12.4b Cash on Delivery (COD) Fee Logic
+function calculateOrderTotal(subtotal, paymentMethod) {
+  const isPrepaid = paymentMethod.toUpperCase().includes('UPI') || paymentMethod.toUpperCase().includes('CARD');
+  const isCod = paymentMethod.toUpperCase().includes('COD') || paymentMethod.toUpperCase().includes('CASH');
+  const baseShipping = subtotal >= 999 ? 0 : 99;
+  const codFee = isCod ? 50 : 0;
+  const prepaidDiscount = isPrepaid ? 50 : 0;
+  return {
+    subtotal,
+    codFee,
+    shippingCost: baseShipping + codFee,
+    prepaidDiscount,
+    grandTotal: subtotal + baseShipping + codFee - prepaidDiscount,
+  };
+}
+
+const codOrder = calculateOrderTotal(1000, 'COD');
+assert(codOrder.codFee === 50, 'Cash on Delivery incurs ₹50 handling charge', 'COD');
+assert(codOrder.shippingCost === 50, 'Free shipping over ₹999 retains ₹50 COD fee', 'COD');
+assert(codOrder.grandTotal === 1050, 'COD order grand total includes ₹50 fee (₹1050)', 'COD');
+
+const upiOrder = calculateOrderTotal(1000, 'UPI');
+assert(upiOrder.codFee === 0, 'UPI payment has ₹0 COD charge', 'COD');
+assert(upiOrder.prepaidDiscount === 50, 'UPI payment receives ₹50 prepaid incentive discount', 'COD');
+assert(upiOrder.grandTotal === 950, 'UPI payment saves ₹100 compared to COD (₹950 vs ₹1050)', 'COD');
+
 // 12.5 Idempotent Order Creation & Deduplication
 const idempotentOrderStore = new Map();
 

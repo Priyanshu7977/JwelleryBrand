@@ -90,7 +90,7 @@ export class OrderRepository implements IOrderRepository {
       total,
       currency: 'INR',
       paymentMethod: data.paymentMethod,
-      financialStatus: 'paid', // Instant confirmation
+      financialStatus: data.paymentMethod.toUpperCase().includes('COD') ? 'pending' : 'paid',
       fulfillmentStatus: 'confirmed',
       trackingNumber,
       carrier: 'Mumbai Atelier Express',

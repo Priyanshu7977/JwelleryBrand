@@ -51,7 +51,12 @@ export class OrderService {
 
     // Calculate subtotal and shipping
     const subtotal = payload.items.reduce((sum, item) => sum + item.price * item.quantity, 0);
-    const shippingCost = subtotal >= 999 ? 0 : 99;
+    const baseShipping = subtotal >= 999 ? 0 : 99;
+    
+    // Cash on Delivery convenience handling fee (₹50)
+    const isCod = payload.paymentMethod.toUpperCase().includes('COD') || payload.paymentMethod.toUpperCase().includes('CASH');
+    const codFee = isCod ? 50 : 0;
+    const shippingCost = baseShipping + codFee;
     
     // Prepaid ₹50 incentive discount
     const isPrepaid = payload.paymentMethod.toUpperCase().includes('UPI') || payload.paymentMethod.toUpperCase().includes('CARD');
