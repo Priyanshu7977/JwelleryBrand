@@ -67,7 +67,7 @@ export const ShopPage: React.FC = () => {
   };
 
   return (
-    <div className="w-full min-h-screen bg-pearl-100 pt-20 sm:pt-24 pb-28 px-4 sm:px-6 lg:px-10 selection:bg-champagne-300">
+    <div className="w-full min-h-screen bg-pearl-100 pt-32 sm:pt-36 md:pt-40 pb-28 px-4 sm:px-6 lg:px-10 selection:bg-champagne-300">
       <SEOHead
         title={shopSEO.title}
         description={shopSEO.description}
