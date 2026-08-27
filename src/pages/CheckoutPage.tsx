@@ -63,8 +63,8 @@ export const UPI_APPS: Record<'gpay' | 'phonepe' | 'paytm' | 'bhim', UPIAppDetai
     upiId: 'priyanshubipin2006@okaxis',
     bankInfo: 'India Post Payment Bank 7386',
     iconUrl: '/assets/icons/payment/gpay.svg',
-    qrUrl: '/assets/qr/gpay_qr.png',
-    fullCardUrl: '/assets/qr/gpay_full_card.png',
+    qrUrl: '/assets/qr/gpay_qr.png?v=20260827_v3',
+    fullCardUrl: '/assets/qr/gpay_full_card.png?v=20260827_v3',
     btnBg: 'bg-[#1a73e8] hover:bg-[#1557b0]',
     deepLink: (amount) => `upi://pay?pa=priyanshubipin2006@okaxis&pn=Priyanshu%20Singh&am=${amount}&cu=INR&tn=Celestia%20Order`
   },
@@ -76,8 +76,8 @@ export const UPI_APPS: Record<'gpay' | 'phonepe' | 'paytm' | 'bhim', UPIAppDetai
     upiId: '7977641125@ybl',
     bankInfo: 'YES Bank • PhonePe Verified',
     iconUrl: '/assets/icons/payment/phonepe.svg',
-    qrUrl: '/assets/qr/phonepe_qr.png',
-    fullCardUrl: '/assets/qr/phonepe_full_card.png',
+    qrUrl: '/assets/qr/phonepe_qr.png?v=20260827_v3',
+    fullCardUrl: '/assets/qr/phonepe_full_card.png?v=20260827_v3',
     btnBg: 'bg-[#5f259f] hover:bg-[#4a1c7d]',
     deepLink: (amount) => `phonepe://pay?pa=7977641125@ybl&pn=Priyanshu%20Singh&am=${amount}&cu=INR&tn=Celestia%20Order`
   },
@@ -89,8 +89,8 @@ export const UPI_APPS: Record<'gpay' | 'phonepe' | 'paytm' | 'bhim', UPIAppDetai
     upiId: '7977641125@ptyes',
     bankInfo: 'Paytm Payments Bank • Verified Merchant',
     iconUrl: '/assets/icons/payment/paytm_badge.svg',
-    qrUrl: '/assets/qr/paytm_qr.png',
-    fullCardUrl: '/assets/qr/paytm_card.png',
+    qrUrl: '/assets/qr/paytm_qr.png?v=20260827_v3',
+    fullCardUrl: '/assets/qr/paytm_card.png?v=20260827_v3',
     btnBg: 'bg-[#002970] hover:bg-[#001c4e]',
     deepLink: (amount) => `paytmmp://pay?pa=7977641125@ptyes&pn=Priyanshu%20Bipin%20Singh&am=${amount}&cu=INR&tn=Celestia%20Order`
   },
@@ -102,8 +102,8 @@ export const UPI_APPS: Record<'gpay' | 'phonepe' | 'paytm' | 'bhim', UPIAppDetai
     upiId: '7977641125@upi',
     bankInfo: 'NPCI BHIM Unified Payments',
     iconUrl: '/assets/icons/payment/bhim.svg',
-    qrUrl: '/assets/qr/bhim_qr.png',
-    fullCardUrl: '/assets/qr/bhim_full_card.png',
+    qrUrl: '/assets/qr/bhim_qr.png?v=20260827_v3',
+    fullCardUrl: '/assets/qr/bhim_full_card.png?v=20260827_v3',
     btnBg: 'bg-[#00796b] hover:bg-[#004d40]',
     deepLink: (amount) => `upi://pay?pa=7977641125@upi&pn=Priyanshu%20Singh&am=${amount}&cu=INR&tn=Celestia%20Order`
   }
@@ -747,18 +747,18 @@ export const CheckoutPage: React.FC = () => {
                       <div className="p-3.5 sm:p-4.5 bg-pearl-50/95 rounded-2xl border border-champagne-200 flex flex-col sm:flex-row items-center justify-between gap-4 sm:gap-5">
                         
                         {/* Authentic Scannable QR Code Box (Optimized for Android & iOS) */}
-                        <div className="flex flex-col items-center text-center space-y-1.5 shrink-0">
+                        <div className="flex flex-col items-center text-center space-y-2 shrink-0">
                           <div
                             onClick={() => setShowQrModal(true)}
-                            className="relative group p-2 sm:p-2.5 bg-white rounded-2xl border border-champagne-300 shadow-sm hover:shadow-md transition-all cursor-pointer overflow-hidden flex items-center justify-center"
+                            className="relative group w-32 h-32 sm:w-36 sm:h-36 rounded-2xl border-2 border-champagne-300/80 shadow-md hover:shadow-lg transition-all cursor-pointer overflow-hidden p-1.5 bg-white flex items-center justify-center"
                             title="Tap to expand full scanner"
                           >
                             <img
                               src={activeUpi.qrUrl}
                               alt={`${activeUpi.name} Scanner QR`}
-                              className="w-28 h-28 sm:w-32 sm:h-32 object-contain rounded-xl select-none"
+                              className="w-full h-full object-contain rounded-xl select-none"
                             />
-                            <div className="absolute inset-0 bg-obsidian/45 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center rounded-2xl">
+                            <div className="absolute inset-0 bg-obsidian/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center rounded-2xl">
                               <span className="text-[10px] font-mono font-bold text-white bg-obsidian/85 px-2.5 py-1 rounded-full flex items-center gap-1">
                                 <Maximize2 className="w-3 h-3" /> Full View
                               </span>
@@ -768,7 +768,7 @@ export const CheckoutPage: React.FC = () => {
                           <button
                             type="button"
                             onClick={() => setShowQrModal(true)}
-                            className="text-[10px] font-mono text-obsidian-soft hover:text-gold-dark font-bold flex items-center gap-1 cursor-pointer transition-colors"
+                            className="text-[10.5px] font-mono text-obsidian-soft hover:text-gold-dark font-bold flex items-center gap-1 cursor-pointer transition-colors"
                           >
                             <Scan className="w-3 h-3 text-gold-dark" />
                             <span>Scan with {activeUpi.shortName}</span>
