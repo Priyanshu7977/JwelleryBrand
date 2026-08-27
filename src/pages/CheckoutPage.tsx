@@ -65,7 +65,7 @@ export const CheckoutPage: React.FC = () => {
   
   const [shippingMethod, setShippingMethod] = useState<'standard' | 'same-day'>('standard');
   const [paymentMethod, setPaymentMethod] = useState<'upi' | 'card' | 'simpl' | 'cod' | 'whatsapp'>('upi');
-  const [selectedUpiApp, setSelectedUpiApp] = useState<'gpay' | 'phonepe' | 'paytm' | 'cred' | 'qr'>('gpay');
+  const [selectedUpiApp, setSelectedUpiApp] = useState<'gpay' | 'phonepe' | 'paytm' | 'bhim' | 'qr'>('gpay');
   const [upiCopied, setUpiCopied] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
   const [couponCodeInput, setCouponCodeInput] = useState('');
@@ -583,7 +583,7 @@ export const CheckoutPage: React.FC = () => {
                             Extra ₹50 Off
                           </span>
                         </div>
-                        <p className="text-xs text-obsidian-soft mt-0.5">Google Pay, PhonePe, Paytm, CRED, BHIM & QR Code</p>
+                        <p className="text-xs text-obsidian-soft mt-0.5">Google Pay, PhonePe, Paytm, BHIM & QR Code</p>
                       </div>
                     </div>
                     <Smartphone className="w-5 h-5 text-gold-dark shrink-0" />
@@ -602,7 +602,7 @@ export const CheckoutPage: React.FC = () => {
                             { id: 'gpay', name: 'Google Pay', iconUrl: '/assets/icons/payment/gpay.svg', color: 'border-blue-200 hover:border-blue-400 hover:bg-blue-50/50' },
                             { id: 'phonepe', name: 'PhonePe', iconUrl: '/assets/icons/payment/phonepe.svg', color: 'border-purple-200 hover:border-purple-400 hover:bg-purple-50/50' },
                             { id: 'paytm', name: 'Paytm UPI', iconUrl: '/assets/icons/payment/paytm.svg', color: 'border-cyan-200 hover:border-cyan-400 hover:bg-cyan-50/50' },
-                            { id: 'cred', name: 'CRED UPI', iconUrl: '/assets/icons/payment/cred.svg', color: 'border-neutral-300 hover:border-neutral-500 hover:bg-neutral-50/50' },
+                            { id: 'bhim', name: 'BHIM UPI', iconUrl: '/assets/icons/payment/bhim.svg', color: 'border-emerald-200 hover:border-emerald-400 hover:bg-emerald-50/50' },
                           ].map((app) => (
                             <button
                               key={app.id}
