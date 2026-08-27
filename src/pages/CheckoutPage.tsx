@@ -31,11 +31,83 @@ import {
   Building2,
   ChevronRight,
   AlertCircle,
-  HelpCircle
+  HelpCircle,
+  X,
+  Maximize2,
+  Scan
 } from 'lucide-react';
 import { SEOHead } from '../components/seo/SEOHead';
 import { WhatsAppIcon } from '../components/ui/WhatsAppIcon';
 import { sanitizeCouponCode } from '../utils/sanitize';
+
+export interface UPIAppDetail {
+  id: 'gpay' | 'phonepe' | 'paytm' | 'bhim';
+  name: string;
+  shortName: string;
+  payeeName: string;
+  upiId: string;
+  bankInfo: string;
+  iconUrl: string;
+  qrUrl: string;
+  fullCardUrl: string;
+  btnBg: string;
+  deepLink: (amount: number) => string;
+}
+
+export const UPI_APPS: Record<'gpay' | 'phonepe' | 'paytm' | 'bhim', UPIAppDetail> = {
+  gpay: {
+    id: 'gpay',
+    name: 'Google Pay',
+    shortName: 'GPay',
+    payeeName: 'Priyanshu Singh',
+    upiId: 'priyanshubipin2006@okaxis',
+    bankInfo: 'India Post Payment Bank 7386',
+    iconUrl: '/assets/icons/payment/gpay.svg',
+    qrUrl: '/assets/qr/gpay_qr.png',
+    fullCardUrl: '/assets/qr/gpay_full_card.png',
+    btnBg: 'bg-[#1a73e8] hover:bg-[#1557b0]',
+    deepLink: (amount) => `upi://pay?pa=priyanshubipin2006@okaxis&pn=Priyanshu%20Singh&am=${amount}&cu=INR&tn=Celestia%20Order`
+  },
+  phonepe: {
+    id: 'phonepe',
+    name: 'PhonePe',
+    shortName: 'PhonePe',
+    payeeName: 'Priyanshu Singh',
+    upiId: '7977641125@ybl',
+    bankInfo: 'YES Bank • PhonePe Verified',
+    iconUrl: '/assets/icons/payment/phonepe.svg',
+    qrUrl: '/assets/qr/phonepe_qr.png',
+    fullCardUrl: '/assets/qr/phonepe_full_card.png',
+    btnBg: 'bg-[#5f259f] hover:bg-[#4a1c7d]',
+    deepLink: (amount) => `phonepe://pay?pa=7977641125@ybl&pn=Priyanshu%20Singh&am=${amount}&cu=INR&tn=Celestia%20Order`
+  },
+  paytm: {
+    id: 'paytm',
+    name: 'Paytm UPI',
+    shortName: 'Paytm',
+    payeeName: 'Priyanshu Bipin Singh',
+    upiId: '7977641125@ptyes',
+    bankInfo: 'Paytm Payments Bank • Verified Merchant',
+    iconUrl: '/assets/icons/payment/paytm_badge.svg',
+    qrUrl: '/assets/qr/paytm_qr.png',
+    fullCardUrl: '/assets/qr/paytm_card.png',
+    btnBg: 'bg-[#002970] hover:bg-[#001c4e]',
+    deepLink: (amount) => `paytmmp://pay?pa=7977641125@ptyes&pn=Priyanshu%20Bipin%20Singh&am=${amount}&cu=INR&tn=Celestia%20Order`
+  },
+  bhim: {
+    id: 'bhim',
+    name: 'BHIM UPI',
+    shortName: 'BHIM',
+    payeeName: 'Priyanshu Singh',
+    upiId: '7977641125@upi',
+    bankInfo: 'NPCI BHIM Unified Payments',
+    iconUrl: '/assets/icons/payment/bhim.svg',
+    qrUrl: '/assets/qr/bhim_qr.png',
+    fullCardUrl: '/assets/qr/bhim_full_card.png',
+    btnBg: 'bg-[#00796b] hover:bg-[#004d40]',
+    deepLink: (amount) => `upi://pay?pa=7977641125@upi&pn=Priyanshu%20Singh&am=${amount}&cu=INR&tn=Celestia%20Order`
+  }
+};
 
 export const CheckoutPage: React.FC = () => {
   const {
@@ -141,9 +213,10 @@ export const CheckoutPage: React.FC = () => {
 
   const grandTotal = Math.max(0, finalPayable - upiInstantDiscount + shippingCost + sameDayExtra + codFee);
 
-  // Dynamic UPI Deep Link
-  const upiDeepLink = `upi://pay?pa=7718825792@okaxis&pn=Celestia%20Luxury%20Atelier&am=${grandTotal}&cu=INR&tn=Celestia%20Order`;
-  const dynamicQrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${encodeURIComponent(upiDeepLink)}&margin=8`;
+  // Active Selected UPI App Details & Dynamic Deep Link
+  const activeUpiKey = (selectedUpiApp === 'qr' ? 'gpay' : selectedUpiApp) as 'gpay' | 'phonepe' | 'paytm' | 'bhim';
+  const activeUpi = UPI_APPS[activeUpiKey] || UPI_APPS.gpay;
+  const upiDeepLink = activeUpi.deepLink(grandTotal);
 
   // Detect Card Brand
   const getCardBrand = (num: string) => {
@@ -156,9 +229,9 @@ export const CheckoutPage: React.FC = () => {
   };
 
   const handleCopyUPI = () => {
-    navigator.clipboard.writeText('7718825792@okaxis');
+    navigator.clipboard.writeText(activeUpi.upiId);
     setUpiCopied(true);
-    showToast("UPI ID copied to clipboard ✨");
+    showToast(`Copied ${activeUpi.name} UPI ID: ${activeUpi.upiId} ✨`);
     setTimeout(() => setUpiCopied(false), 2500);
   };
 
@@ -636,35 +709,75 @@ export const CheckoutPage: React.FC = () => {
                         </div>
                       </div>
 
-                      {/* Direct UPI App Trigger / Dynamic QR Code Section */}
-                      <div className="p-3.5 sm:p-4 bg-pearl-50 rounded-xl border border-champagne-200 flex flex-col sm:flex-row items-center justify-between gap-4">
+                      {/* Direct UPI App Trigger & Real Authentic Scanner Section */}
+                      <div className="p-3.5 sm:p-4.5 bg-pearl-50/95 rounded-2xl border border-champagne-200 flex flex-col sm:flex-row items-center justify-between gap-4 sm:gap-5">
                         
-                        {/* Dynamic Scannable QR Code */}
+                        {/* Authentic Scannable QR Code Box (Optimized for Android & iOS) */}
                         <div className="flex flex-col items-center text-center space-y-1.5 shrink-0">
-                          <div className="p-2 bg-white rounded-xl border border-champagne-300 shadow-sm">
+                          <div
+                            onClick={() => setShowQrModal(true)}
+                            className="relative group p-2 sm:p-2.5 bg-white rounded-2xl border border-champagne-300 shadow-sm hover:shadow-md transition-all cursor-pointer overflow-hidden flex items-center justify-center"
+                            title="Tap to expand full scanner"
+                          >
                             <img
-                              src={dynamicQrUrl}
-                              alt="Scan & Pay via Any UPI App"
-                              className="w-24 h-24 sm:w-28 sm:h-28 object-contain"
+                              src={activeUpi.qrUrl}
+                              alt={`${activeUpi.name} Scanner QR`}
+                              className="w-28 h-28 sm:w-32 sm:h-32 object-contain rounded-xl select-none"
                             />
+                            <div className="absolute inset-0 bg-obsidian/45 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center rounded-2xl">
+                              <span className="text-[10px] font-mono font-bold text-white bg-obsidian/85 px-2.5 py-1 rounded-full flex items-center gap-1">
+                                <Maximize2 className="w-3 h-3" /> Full View
+                              </span>
+                            </div>
                           </div>
-                          <span className="text-[10px] font-mono text-obsidian-soft font-bold">
-                            Scan with Any UPI App
-                          </span>
+                          
+                          <button
+                            type="button"
+                            onClick={() => setShowQrModal(true)}
+                            className="text-[10px] font-mono text-obsidian-soft hover:text-gold-dark font-bold flex items-center gap-1 cursor-pointer transition-colors"
+                          >
+                            <Scan className="w-3 h-3 text-gold-dark" />
+                            <span>Scan with {activeUpi.shortName}</span>
+                          </button>
                         </div>
 
                         {/* UPI Details & 1-Click Pay */}
-                        <div className="flex-1 space-y-2.5 text-left w-full">
-                          <div>
-                            <span className="text-[10px] uppercase font-mono text-gold-dark font-bold block">
-                              Celestia Verified Merchant ID:
+                        <div className="flex-1 space-y-2.5 text-left w-full min-w-0">
+                          
+                          {/* Verified Payee Header */}
+                          <div className="flex items-center justify-between gap-2 p-2 sm:p-2.5 bg-white/90 rounded-xl border border-champagne-200 shadow-2xs">
+                            <div className="min-w-0">
+                              <span className="text-[9.5px] uppercase font-mono text-gold-dark font-bold block">
+                                Verified Payee ({activeUpi.shortName}):
+                              </span>
+                              <div className="flex items-center gap-1.5 mt-0.5">
+                                <p className="font-serif-luxury text-xs sm:text-sm font-bold text-obsidian truncate">
+                                  {activeUpi.payeeName}
+                                </p>
+                                <ShieldCheck className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
+                              </div>
+                              <p className="text-[9.5px] text-obsidian-soft font-mono truncate">
+                                {activeUpi.bankInfo}
+                              </p>
+                            </div>
+                            <span className="text-[9.5px] font-mono font-bold text-emerald-800 bg-emerald-100 border border-emerald-300 px-2 py-0.5 rounded-full shrink-0">
+                              ✓ Verified
                             </span>
-                            <div className="flex items-center justify-between gap-2 mt-1 p-2 bg-white rounded-lg border border-champagne-200">
-                              <span className="font-mono text-xs text-obsidian font-bold">7718825792@okaxis</span>
+                          </div>
+
+                          {/* Copy UPI ID Box */}
+                          <div>
+                            <span className="text-[10px] uppercase font-mono text-obsidian-soft font-bold block">
+                              Active UPI ID ({activeUpi.shortName}):
+                            </span>
+                            <div className="flex items-center justify-between gap-2 mt-1 p-2 bg-white rounded-xl border border-champagne-300 focus-within:border-gold-dark">
+                              <span className="font-mono text-xs sm:text-[13px] text-obsidian font-bold truncate">
+                                {activeUpi.upiId}
+                              </span>
                               <button
                                 type="button"
                                 onClick={handleCopyUPI}
-                                className="px-2.5 py-1 bg-obsidian text-pearl-100 text-[11px] font-mono font-bold rounded-md hover:bg-obsidian-200 transition-colors flex items-center gap-1 cursor-pointer shrink-0"
+                                className="px-2.5 py-1 bg-obsidian text-pearl-100 text-[11px] font-mono font-bold rounded-lg hover:bg-obsidian-200 active:scale-95 transition-all flex items-center gap-1 cursor-pointer shrink-0"
                               >
                                 {upiCopied ? <Check className="w-3 h-3 text-emerald-400" /> : <Copy className="w-3 h-3" />}
                                 <span>{upiCopied ? 'Copied' : 'Copy'}</span>
@@ -675,18 +788,14 @@ export const CheckoutPage: React.FC = () => {
                           {/* Mobile Direct Pay Link */}
                           <a
                             href={upiDeepLink}
-                            className="w-full py-2.5 px-4 rounded-xl bg-emerald-800 hover:bg-emerald-900 text-pearl-100 text-xs font-mono font-bold flex items-center justify-center gap-2 transition-all shadow-xs"
+                            className={`w-full py-2.5 px-4 rounded-xl ${activeUpi.btnBg} text-pearl-100 text-xs font-mono font-bold flex items-center justify-center gap-2 transition-all shadow-xs active:scale-[0.98] cursor-pointer`}
                           >
-                            {selectedUpiApp !== 'qr' ? (
-                              <img
-                                src={selectedUpiApp === 'paytm' ? '/assets/icons/payment/paytm_badge.svg' : `/assets/icons/payment/${selectedUpiApp}.svg`}
-                                alt={selectedUpiApp}
-                                className="w-4 h-4 sm:w-5 sm:h-5 object-contain rounded-xs shrink-0"
-                              />
-                            ) : (
-                              <Zap className="w-3.5 h-3.5 text-champagne-300" />
-                            )}
-                            <span>Launch {selectedUpiApp.toUpperCase()} on Mobile (₹{grandTotal})</span>
+                            <img
+                              src={activeUpi.iconUrl}
+                              alt={activeUpi.name}
+                              className="w-4.5 h-4.5 object-contain rounded-xs shrink-0"
+                            />
+                            <span>Launch {activeUpi.name} on Mobile (₹{grandTotal})</span>
                           </a>
                         </div>
                       </div>
@@ -1128,7 +1237,7 @@ export const CheckoutPage: React.FC = () => {
       </div>
 
       {/* Mobile Fixed 1-Tap Checkout Footer Bar (Bonkers Corner Style) */}
-      <div className="lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-t border-champagne-300/80 p-3 sm:p-4 shadow-2xl flex items-center justify-between gap-4">
+      <div className="lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-t border-champagne-300/80 p-3 sm:p-4 pb-safe shadow-2xl flex items-center justify-between gap-4">
         <div>
           <span className="text-[10px] uppercase font-mono text-obsidian-soft block">Grand Total</span>
           <span className="font-mono text-lg sm:text-xl font-bold text-gold-dark leading-none">
@@ -1152,6 +1261,59 @@ export const CheckoutPage: React.FC = () => {
         </button>
       </div>
 
+      {/* Authentic Full Scanner QR Modal */}
+      {showQrModal && (
+        <div 
+          className="fixed inset-0 z-50 bg-obsidian/80 backdrop-blur-sm flex items-center justify-center p-4 animate-fade-in"
+          onClick={() => setShowQrModal(false)}
+        >
+          <div 
+            className="relative max-w-sm w-full bg-white rounded-3xl p-5 sm:p-6 shadow-2xl border border-champagne-300 space-y-4 animate-fade-in"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-center justify-between border-b border-champagne-200 pb-3">
+              <div className="flex items-center gap-2">
+                <img src={activeUpi.iconUrl} alt={activeUpi.name} className="w-6 h-6 object-contain rounded-sm" />
+                <div>
+                  <h3 className="font-serif-luxury text-sm font-bold text-obsidian">{activeUpi.name} Official Scanner</h3>
+                  <p className="text-[10px] text-obsidian-soft font-mono">Payee: {activeUpi.payeeName}</p>
+                </div>
+              </div>
+              <button
+                onClick={() => setShowQrModal(false)}
+                className="p-1.5 rounded-full hover:bg-champagne-100 text-obsidian transition-colors cursor-pointer"
+                aria-label="Close Scanner Modal"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            {/* High-Resolution Scanner Display */}
+            <div className="bg-pearl-50 p-2.5 rounded-2xl border border-champagne-200 flex items-center justify-center overflow-hidden">
+              <img
+                src={activeUpi.fullCardUrl}
+                alt={`${activeUpi.name} Full Scanner`}
+                className="w-full max-h-[52vh] object-contain rounded-xl shadow-xs select-none"
+              />
+            </div>
+
+            {/* Copy UPI ID inside modal */}
+            <div className="p-2.5 bg-pearl-50 rounded-xl border border-champagne-200 flex items-center justify-between gap-2">
+              <div className="min-w-0">
+                <span className="text-[9px] uppercase font-mono text-obsidian-soft font-bold block">UPI ID:</span>
+                <span className="font-mono text-xs font-bold text-obsidian truncate block">{activeUpi.upiId}</span>
+              </div>
+              <button
+                type="button"
+                onClick={handleCopyUPI}
+                className="px-3 py-1.5 bg-obsidian text-pearl-100 text-[10.5px] font-mono font-bold rounded-lg hover:bg-obsidian-200 active:scale-95 transition-all shrink-0 cursor-pointer"
+              >
+                {upiCopied ? 'Copied' : 'Copy'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
