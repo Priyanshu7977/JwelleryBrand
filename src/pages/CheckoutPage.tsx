@@ -742,7 +742,7 @@ export const CheckoutPage: React.FC = () => {
                         </div>
 
                         {/* UPI Details & 1-Click Pay */}
-                        <div className="flex-1 space-y-2.5 text-left w-full min-w-0">
+                        <div className="flex-1 space-y-2.5 text-left w-full min-w-0 overflow-hidden">
                           
                           {/* Verified Payee Header */}
                           <div className="flex items-center justify-between gap-2 p-2 sm:p-2.5 bg-white/90 rounded-xl border border-champagne-200 shadow-2xs">
@@ -788,14 +788,15 @@ export const CheckoutPage: React.FC = () => {
                           {/* Mobile Direct Pay Link */}
                           <a
                             href={upiDeepLink}
-                            className={`w-full py-2.5 px-4 rounded-xl ${activeUpi.btnBg} text-pearl-100 text-xs font-mono font-bold flex items-center justify-center gap-2 transition-all shadow-xs active:scale-[0.98] cursor-pointer`}
+                            className={`w-full min-h-[44px] py-2.5 px-4 rounded-xl ${activeUpi.btnBg} text-pearl-100 text-xs font-mono font-bold flex items-center justify-center gap-2 transition-all shadow-xs active:scale-[0.98] cursor-pointer overflow-hidden`}
                           >
                             <img
                               src={activeUpi.iconUrl}
                               alt={activeUpi.name}
-                              className="w-4.5 h-4.5 object-contain rounded-xs shrink-0"
+                              className="w-5 h-5 max-w-[20px] max-h-[20px] object-contain rounded-xs shrink-0 inline-block"
+                              style={{ width: '20px', height: '20px', minWidth: '20px', minHeight: '20px', maxWidth: '20px', maxHeight: '20px' }}
                             />
-                            <span>Launch {activeUpi.name} on Mobile (₹{grandTotal})</span>
+                            <span className="truncate">Launch {activeUpi.name} on Mobile (₹{grandTotal})</span>
                           </a>
                         </div>
                       </div>
@@ -1273,7 +1274,12 @@ export const CheckoutPage: React.FC = () => {
           >
             <div className="flex items-center justify-between border-b border-champagne-200 pb-3">
               <div className="flex items-center gap-2">
-                <img src={activeUpi.iconUrl} alt={activeUpi.name} className="w-6 h-6 object-contain rounded-sm" />
+                <img
+                  src={activeUpi.iconUrl}
+                  alt={activeUpi.name}
+                  className="w-6 h-6 max-w-[24px] max-h-[24px] object-contain rounded-sm shrink-0 inline-block"
+                  style={{ width: '24px', height: '24px', minWidth: '24px', minHeight: '24px' }}
+                />
                 <div>
                   <h3 className="font-serif-luxury text-sm font-bold text-obsidian">{activeUpi.name} Official Scanner</h3>
                   <p className="text-[10px] text-obsidian-soft font-mono">Payee: {activeUpi.payeeName}</p>
