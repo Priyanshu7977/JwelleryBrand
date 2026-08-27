@@ -9,87 +9,8 @@ import { sendOrderConfirmationEmail } from './emailService';
 
 const ORDERS_STORAGE_KEY = 'celestia_user_orders';
 
-// Initial demo seeded orders for pristine experience
-const INITIAL_DEMO_ORDERS: OrderMetadata[] = [
-  {
-    id: 'ord-seed-01',
-    orderNumber: 'ORD-2026-8941',
-    customer: {
-      name: 'Aanya Sharma',
-      email: 'aanya@celestia.com',
-      phone: '+91 98200 12345',
-      address: '14 Coastal Villa, Bandra West, Mumbai - 400050',
-    },
-    items: [
-      {
-        productId: 'pink-blue-bangles',
-        title: 'pink and blue bangle set of 2',
-        handle: 'pink-and-blue-bangle-set-of-2',
-        imageUrl: '/assets/products/pink-blue-bangles.jpg',
-        price: 500,
-        quantity: 1,
-        boxType: 'Signature Velvet Box',
-      },
-      {
-        productId: 'polaroids-20',
-        title: 'polaroids 20(your pics)',
-        handle: 'polaroids-20-your-pics',
-        imageUrl: '/assets/products/polaroids-20.jpg',
-        price: 999,
-        quantity: 1,
-        customNotes: 'Custom bridal keepsake photos with archival gold wax seal',
-      },
-    ],
-    subtotal: 1499,
-    shippingCost: 0,
-    tax: 0,
-    total: 1499,
-    shippingMethod: 'Mumbai Same-Day Express Courier',
-    paymentMethod: 'UPI (7718825792@okaxis)',
-    financialStatus: 'paid',
-    fulfillmentStatus: 'delivered',
-    trackingNumber: 'MUM-EXPRESS-9921',
-    carrier: 'Mumbai Atelier Express',
-    estimatedDelivery: calculateDeliveryEstimate('Mumbai Same-Day Express Courier', new Date('2026-08-21')),
-    createdAt: '2026-08-21T11:15:00.000Z',
-    updatedAt: '2026-08-21T16:45:00.000Z',
-  },
-  {
-    id: 'ord-seed-02',
-    orderNumber: 'ORD-2026-7720',
-    customer: {
-      name: 'Tanvi R.',
-      email: 'tanvi@celestia.com',
-      phone: '+91 98765 43210',
-      address: '42 Indiranagar, Bengaluru, Karnataka - 560038',
-    },
-    items: [
-      {
-        productId: 'desi-barbie-hamper',
-        title: 'Desi Barbie Hamper',
-        handle: 'desi-barbie-hamper',
-        imageUrl: '/assets/products/desi-barbie-hamper.jpg',
-        price: 999,
-        quantity: 1,
-        boxType: 'Velvet Keepsake Box',
-        customNotes: 'Happy Birthday to my bestie!',
-      },
-    ],
-    subtotal: 999,
-    shippingCost: 0,
-    tax: 0,
-    total: 999,
-    shippingMethod: 'Pan-India Free Express Air Delivery',
-    paymentMethod: 'CARD',
-    financialStatus: 'paid',
-    fulfillmentStatus: 'delivered',
-    trackingNumber: 'MUM-EXPRESS-8814',
-    carrier: 'Delhivery Air Cargo',
-    estimatedDelivery: calculateDeliveryEstimate('Pan-India Free Express Air Delivery', new Date('2026-08-14')),
-    createdAt: '2026-08-14T10:00:00.000Z',
-    updatedAt: '2026-08-16T14:30:00.000Z',
-  },
-];
+// Empty default list - orders are fetched directly from production backend database
+const INITIAL_DEMO_ORDERS: OrderMetadata[] = [];
 
 /**
  * Creates a brand new order and persists it to Supabase + Local Storage
@@ -205,12 +126,51 @@ export async function createOrder(payload: {
     }
   }
 
-  // Save to Local Storage Registry
-  try {
-    const raw = localStorage.getItem(ORDERS_STORAGE_KEY);
-    const existing: OrderMetadata[] = raw ? JSON.parse(raw) : INITIAL_DEMO_ORDERS;
-    localStorage.setItem(ORDERS_STORAGE_KEY, JSON.stringify([newOrder, ...existing]));
-  } catch {}
+    // Synchronize to Production Backend API
+    try {
+      const token = (typeof window !== 'undefined') ? (sessionStorage.getItem('celestia_auth_token') || localStorage.getItem('celestia_auth_token')) : null;
+      const apiRes = await fetch('/api/orders', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Idempotency-Key': `idemp_${orderNumber}`,
+          ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        },
+        body: JSON.stringify({
+          customerName: payload.customer.name,
+          customerEmail: payload.customer.email,
+          customerPhone: payload.customer.phone,
+          shippingAddress: {
+            name: payload.customer.name,
+            street: payload.customer.address,
+            city,
+            state: 'Maharashtra',
+            pincode: '400050',
+            country: 'India',
+          },
+          items: payload.items,
+          shippingMethod: payload.shippingMethod,
+          paymentMethod: payload.paymentMethod,
+          userId: payload.userId,
+        }),
+      });
+
+      if (apiRes.ok) {
+        const apiData = await apiRes.json();
+        if (apiData.data?.orderNumber) {
+          newOrder.orderNumber = apiData.data.orderNumber;
+          newOrder.id = apiData.data.id;
+          newOrder.trackingNumber = apiData.data.trackingNumber;
+        }
+      }
+    } catch {}
+
+    // Save to Local Storage Registry for offline resilience
+    try {
+      const raw = localStorage.getItem(ORDERS_STORAGE_KEY);
+      const existing: OrderMetadata[] = raw ? JSON.parse(raw) : INITIAL_DEMO_ORDERS;
+      localStorage.setItem(ORDERS_STORAGE_KEY, JSON.stringify([newOrder, ...existing]));
+    } catch {}
 
   // Automatically dispatch confirmation email in background
   sendOrderConfirmationEmail(newOrder).catch((e) => console.warn('Email dispatch failed:', e));
@@ -280,6 +240,43 @@ export async function getOrderById(orderIdOrNumber: string): Promise<OrderMetada
     }
   }
 
+  // Fetch from Production Backend API
+  try {
+    const token = (typeof window !== 'undefined') ? (sessionStorage.getItem('celestia_auth_token') || localStorage.getItem('celestia_auth_token')) : null;
+    const apiRes = await fetch(`/api/orders/${encodeURIComponent(cleanId)}`, {
+      headers: token ? { Authorization: `Bearer ${token}` } : {},
+    });
+    if (apiRes.ok) {
+      const { data } = await apiRes.json();
+      if (data) {
+        return {
+          id: data.id,
+          orderNumber: data.orderNumber,
+          customer: {
+            name: data.customerName,
+            email: data.customerEmail,
+            phone: data.customerPhone || '',
+            address: `${data.shippingAddress?.street || ''}, ${data.shippingAddress?.city || ''}`,
+          },
+          items: data.items,
+          subtotal: Number(data.subtotal),
+          shippingCost: Number(data.shippingCost),
+          tax: Number(data.tax),
+          total: Number(data.total),
+          shippingMethod: data.carrier || 'Mumbai Atelier Express',
+          paymentMethod: data.paymentMethod,
+          financialStatus: data.financialStatus,
+          fulfillmentStatus: data.fulfillmentStatus as DeliveryStage,
+          trackingNumber: data.trackingNumber,
+          carrier: data.carrier,
+          estimatedDelivery: calculateDeliveryEstimate(data.carrier, new Date(data.createdAt)),
+          createdAt: data.createdAt,
+          updatedAt: data.updatedAt,
+        };
+      }
+    }
+  } catch {}
+
   // Fallback to local orders
   try {
     const raw = localStorage.getItem(ORDERS_STORAGE_KEY);
@@ -302,6 +299,45 @@ export async function getOrderById(orderIdOrNumber: string): Promise<OrderMetada
  */
 export async function getUserOrders(userEmail?: string): Promise<OrderMetadata[]> {
   const cleanEmail = userEmail?.trim().toLowerCase();
+
+  // Query Production Backend API for authenticated user orders
+  try {
+    const token = (typeof window !== 'undefined') ? (sessionStorage.getItem('celestia_auth_token') || localStorage.getItem('celestia_auth_token')) : null;
+    if (token) {
+      const apiRes = await fetch('/api/orders/user/me', {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      if (apiRes.ok) {
+        const { data } = await apiRes.json();
+        if (Array.isArray(data) && data.length > 0) {
+          return data.map((d: any) => ({
+            id: d.id,
+            orderNumber: d.orderNumber,
+            customer: {
+              name: d.customerName,
+              email: d.customerEmail,
+              phone: d.customerPhone || '',
+              address: `${d.shippingAddress?.street || ''}, ${d.shippingAddress?.city || ''}`,
+            },
+            items: d.items,
+            subtotal: Number(d.subtotal),
+            shippingCost: Number(d.shippingCost),
+            tax: Number(d.tax),
+            total: Number(d.total),
+            shippingMethod: d.carrier || 'Mumbai Atelier Express',
+            paymentMethod: d.paymentMethod,
+            financialStatus: d.financialStatus,
+            fulfillmentStatus: d.fulfillmentStatus as DeliveryStage,
+            trackingNumber: d.trackingNumber,
+            carrier: d.carrier,
+            estimatedDelivery: calculateDeliveryEstimate(d.carrier, new Date(d.createdAt)),
+            createdAt: d.createdAt,
+            updatedAt: d.updatedAt,
+          }));
+        }
+      }
+    }
+  } catch {}
 
   // If Supabase configured, query for user
   if (isSupabaseConfigured() && supabase && cleanEmail) {

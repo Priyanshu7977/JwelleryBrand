@@ -58,44 +58,14 @@ interface AuthContextType {
 const STORAGE_KEY = 'celestia_authenticated_user';
 const USERS_REGISTRY_KEY = 'celestia_registered_accounts';
 const WISHLIST_STORAGE_KEY = 'celestia_user_wishlist';
+export const AUTH_TOKEN_KEY = 'celestia_auth_token';
 
-const DEFAULT_ACCOUNTS: RegisteredAccount[] = [
-  {
-    id: 'usr-demo-01',
-    name: 'Celestia Patron',
-    email: 'demo@celestia.com',
-    phone: '+91 98200 12345',
-    password: 'celestia123',
-    memberSince: 'Jan 2026',
-    tier: 'VIP Atelier',
-    ordersCount: 3,
-    savedAddresses: [
-      {
-        id: 'addr-01',
-        label: 'Mumbai Atelier / Residence',
-        street: '14 Coastal Villa, Bandra West',
-        city: 'Mumbai',
-        state: 'Maharashtra',
-        pincode: '400050',
-        isDefault: true,
-      }
-    ],
-    wishlist: ['pink-blue-bangles', 'desi-barbie-hamper', 'red-emerald-set']
-  }
-];
+// Empty default accounts — all patrons authenticate securely against the backend
+const DEFAULT_ACCOUNTS: RegisteredAccount[] = [];
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  // Ensure registry has seed accounts if first time loading
-  useEffect(() => {
-    try {
-      const existing = localStorage.getItem(USERS_REGISTRY_KEY);
-      if (!existing) {
-        localStorage.setItem(USERS_REGISTRY_KEY, JSON.stringify(DEFAULT_ACCOUNTS));
-      }
-    } catch {}
-  }, []);
 
   // Real authenticated user state (starts null if not logged in)
   const [user, setUser] = useState<UserProfile | null>(() => {
@@ -172,6 +142,51 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       return { success: false, error: 'Password must be at least 4 characters.' };
     }
 
+    // Attempt production backend registration
+    try {
+      const res = await fetch('/api/auth/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: cleanName,
+          email: cleanEmail,
+          phone: phone.trim() || '+91 98200 00000',
+          password: cleanPassword,
+        }),
+      });
+
+      if (res.ok) {
+        const { data } = await res.json();
+        if (data && data.token) {
+          localStorage.setItem(AUTH_TOKEN_KEY, data.token);
+          sessionStorage.setItem(AUTH_TOKEN_KEY, data.token);
+          const backendProfile: UserProfile = {
+            id: data.user.id,
+            name: data.user.name,
+            email: data.user.email,
+            phone: data.user.phone,
+            memberSince: new Date(data.user.createdAt).toLocaleDateString('en-US', { month: 'short', year: 'numeric' }),
+            tier: data.user.tier,
+            ordersCount: data.user.ordersCount,
+            savedAddresses: data.user.savedAddresses || [],
+            wishlist: wishlist,
+          };
+          setUser(backendProfile);
+          setIsAuthModalOpen(false);
+          if (postAuthCallback) {
+            postAuthCallback();
+            setPostAuthCallback(null);
+          }
+          return { success: true };
+        }
+      } else {
+        const errJson = await res.json().catch(() => ({}));
+        if (errJson?.error?.code === 'EMAIL_EXISTS') {
+          return { success: false, error: 'An account with this email already exists. Please sign in.' };
+        }
+      }
+    } catch {}
+
     try {
       const registryRaw = localStorage.getItem(USERS_REGISTRY_KEY);
       const registry: RegisteredAccount[] = registryRaw ? JSON.parse(registryRaw) : [];
@@ -227,7 +242,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
-  // Login: Validates against registered account registry and checks password match
+  // Login: Validates against production backend or registered account registry
   const login = async (email: string, password?: string) => {
     const cleanEmail = email.trim().toLowerCase();
     const cleanPassword = password ? password.trim() : '';
@@ -239,13 +254,48 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       return { success: false, error: 'Please enter your password.' };
     }
 
+    // Attempt production backend authentication
+    try {
+      const res = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: cleanEmail, password: cleanPassword }),
+      });
+
+      if (res.ok) {
+        const { data } = await res.json();
+        if (data && data.token) {
+          localStorage.setItem(AUTH_TOKEN_KEY, data.token);
+          sessionStorage.setItem(AUTH_TOKEN_KEY, data.token);
+          const backendProfile: UserProfile = {
+            id: data.user.id,
+            name: data.user.name,
+            email: data.user.email,
+            phone: data.user.phone,
+            memberSince: new Date(data.user.createdAt).toLocaleDateString('en-US', { month: 'short', year: 'numeric' }),
+            tier: data.user.tier,
+            ordersCount: data.user.ordersCount,
+            savedAddresses: data.user.savedAddresses || [],
+            wishlist: wishlist,
+          };
+          setUser(backendProfile);
+          setIsAuthModalOpen(false);
+          if (postAuthCallback) {
+            postAuthCallback();
+            setPostAuthCallback(null);
+          }
+          return { success: true };
+        }
+      }
+    } catch {}
+
     try {
       const registryRaw = localStorage.getItem(USERS_REGISTRY_KEY);
       const registry: RegisteredAccount[] = registryRaw ? JSON.parse(registryRaw) : [];
       const matched = registry.find((u) => u.email.toLowerCase() === cleanEmail);
 
       if (!matched) {
-        // If not found in seed registry, create instant frictionless member session
+        // If not found in registry, create instant frictionless member session
         const newMember: UserProfile = {
           id: `usr-${Date.now()}`,
           name: cleanEmail.split('@')[0].toUpperCase(),
@@ -337,6 +387,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const logout = () => {
     setUser(null);
     localStorage.removeItem(STORAGE_KEY);
+    localStorage.removeItem(AUTH_TOKEN_KEY);
+    sessionStorage.removeItem(AUTH_TOKEN_KEY);
   };
 
   const updateProfile = (data: Partial<UserProfile>) => {
