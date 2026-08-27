@@ -559,45 +559,47 @@ export const CheckoutPage: React.FC = () => {
               </div>
 
               {/* Payment Methods Grid */}
-              <div className="space-y-3.5">
+              <div className="space-y-3 sm:space-y-3.5">
                 
                 {/* 1. UPI Fast Pay (Bonkers Corner Top Option) */}
                 <div
                   onClick={() => setPaymentMethod('upi')}
-                  className={`p-4 sm:p-5 rounded-2xl border transition-all cursor-pointer space-y-4 ${
+                  className={`p-3.5 sm:p-5 rounded-2xl border transition-all cursor-pointer space-y-3.5 ${
                     paymentMethod === 'upi'
                       ? 'border-gold-dark bg-gradient-to-b from-champagne-100/70 to-pearl-50 shadow-md ring-1 ring-gold-dark/40'
                       : 'border-champagne-300/80 hover:bg-pearl-50'
                   }`}
                 >
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-3">
+                  <div className="flex items-start justify-between gap-2.5 sm:gap-3">
+                    <div className="flex items-start gap-2.5 sm:gap-3 min-w-0">
                       <input
                         type="radio"
                         name="paymentMethod"
                         checked={paymentMethod === 'upi'}
                         onChange={() => setPaymentMethod('upi')}
-                        className="accent-gold-dark"
+                        className="accent-gold-dark mt-1 shrink-0 cursor-pointer"
                       />
-                      <div>
-                        <div className="flex items-center gap-2">
+                      <div className="min-w-0 space-y-0.5">
+                        <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
                           <p className="font-serif-luxury text-sm sm:text-base text-obsidian font-bold">UPI Instant Pay</p>
-                          <span className="text-[10px] uppercase font-mono tracking-wider bg-emerald-600 text-white px-2 py-0.5 rounded-full font-bold">
+                          <span className="text-[10px] uppercase font-mono tracking-wider bg-emerald-600 text-white px-2 py-0.5 rounded-full font-bold shadow-xs">
                             Extra ₹50 Off
                           </span>
                         </div>
-                        <p className="text-xs text-obsidian-soft mt-0.5">Google Pay, PhonePe, Paytm, BHIM & QR Code</p>
+                        <p className="text-[11px] sm:text-xs text-obsidian-soft leading-snug">Google Pay, PhonePe, Paytm, BHIM & QR Code</p>
                       </div>
                     </div>
-                    <Smartphone className="w-5 h-5 text-gold-dark shrink-0" />
+                    <div className="shrink-0 pt-0.5">
+                      <Smartphone className="w-5 h-5 text-gold-dark" />
+                    </div>
                   </div>
 
                   {paymentMethod === 'upi' && (
-                    <div className="p-4 bg-white rounded-2xl border border-champagne-300 shadow-inner space-y-4 animate-fade-in text-xs">
+                    <div className="p-3.5 sm:p-4 bg-white rounded-2xl border border-champagne-300 shadow-inner space-y-3.5 sm:space-y-4 animate-fade-in text-xs">
                       
                       {/* Popular UPI Apps Intent Buttons (Bonkers Corner Style) */}
                       <div className="space-y-2">
-                        <p className="text-[11px] font-mono text-obsidian-soft uppercase font-bold tracking-wider">
+                        <p className="text-[10.5px] sm:text-[11px] font-mono text-obsidian-soft uppercase font-bold tracking-wider">
                           Select Instant UPI App:
                         </p>
                         <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
@@ -611,7 +613,7 @@ export const CheckoutPage: React.FC = () => {
                               key={app.id}
                               type="button"
                               onClick={() => setSelectedUpiApp(app.id as any)}
-                              className={`py-2.5 px-3 rounded-xl border flex items-center justify-center gap-2.5 transition-all font-sans font-bold text-xs cursor-pointer ${
+                              className={`py-2 px-2.5 sm:py-2.5 sm:px-3 rounded-xl border flex items-center justify-center gap-2 transition-all font-sans font-bold text-xs cursor-pointer ${
                                 selectedUpiApp === app.id
                                   ? 'border-gold-dark bg-champagne-100 text-obsidian shadow-sm ring-1 ring-gold-dark/40'
                                   : `bg-pearl-50 text-obsidian/80 ${app.color}`
@@ -620,16 +622,16 @@ export const CheckoutPage: React.FC = () => {
                               <img
                                 src={app.iconUrl}
                                 alt={app.name}
-                                className="w-6 h-6 object-contain shrink-0 rounded-sm"
+                                className="w-5 h-5 sm:w-6 sm:h-6 object-contain shrink-0 rounded-sm"
                               />
-                              <span className="truncate">{app.name}</span>
+                              <span className="truncate text-[11px] sm:text-xs">{app.name}</span>
                             </button>
                           ))}
                         </div>
                       </div>
 
                       {/* Direct UPI App Trigger / Dynamic QR Code Section */}
-                      <div className="p-4 bg-pearl-50 rounded-xl border border-champagne-200 flex flex-col sm:flex-row items-center justify-between gap-4">
+                      <div className="p-3.5 sm:p-4 bg-pearl-50 rounded-xl border border-champagne-200 flex flex-col sm:flex-row items-center justify-between gap-4">
                         
                         {/* Dynamic Scannable QR Code */}
                         <div className="flex flex-col items-center text-center space-y-1.5 shrink-0">
@@ -637,7 +639,7 @@ export const CheckoutPage: React.FC = () => {
                             <img
                               src={dynamicQrUrl}
                               alt="Scan & Pay via Any UPI App"
-                              className="w-28 h-28 object-contain"
+                              className="w-24 h-24 sm:w-28 sm:h-28 object-contain"
                             />
                           </div>
                           <span className="text-[10px] font-mono text-obsidian-soft font-bold">
@@ -673,7 +675,7 @@ export const CheckoutPage: React.FC = () => {
                               <img
                                 src={selectedUpiApp === 'paytm' ? '/assets/icons/payment/paytm_badge.svg' : `/assets/icons/payment/${selectedUpiApp}.svg`}
                                 alt={selectedUpiApp}
-                                className="w-5 h-5 object-contain rounded-xs shrink-0"
+                                className="w-4 h-4 sm:w-5 sm:h-5 object-contain rounded-xs shrink-0"
                               />
                             ) : (
                               <Zap className="w-3.5 h-3.5 text-champagne-300" />
@@ -690,31 +692,33 @@ export const CheckoutPage: React.FC = () => {
                 {/* 2. Credit & Debit Cards (Razorpay / Cashfree Style) */}
                 <div
                   onClick={() => setPaymentMethod('card')}
-                  className={`p-4 sm:p-5 rounded-2xl border transition-all cursor-pointer space-y-4 ${
+                  className={`p-3.5 sm:p-5 rounded-2xl border transition-all cursor-pointer space-y-3.5 ${
                     paymentMethod === 'card'
                       ? 'border-gold-dark bg-gradient-to-b from-champagne-100/70 to-pearl-50 shadow-md ring-1 ring-gold-dark/40'
                       : 'border-champagne-300/80 hover:bg-pearl-50'
                   }`}
                 >
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-3">
+                  <div className="flex items-start justify-between gap-2.5 sm:gap-3">
+                    <div className="flex items-start gap-2.5 sm:gap-3 min-w-0">
                       <input
                         type="radio"
                         name="paymentMethod"
                         checked={paymentMethod === 'card'}
                         onChange={() => setPaymentMethod('card')}
-                        className="accent-gold-dark"
+                        className="accent-gold-dark mt-1 shrink-0 cursor-pointer"
                       />
-                      <div>
+                      <div className="min-w-0 space-y-0.5">
                         <p className="font-serif-luxury text-sm sm:text-base text-obsidian font-bold">Credit / Debit Card & NetBanking</p>
-                        <p className="text-xs text-obsidian-soft mt-0.5">Visa, Mastercard, RuPay, Amex & 50+ Banks</p>
+                        <p className="text-[11px] sm:text-xs text-obsidian-soft leading-snug">Visa, Mastercard, RuPay, Amex & 50+ Banks</p>
                       </div>
                     </div>
-                    <CreditCard className="w-5 h-5 text-obsidian/70 shrink-0" />
+                    <div className="shrink-0 pt-0.5">
+                      <CreditCard className="w-5 h-5 text-obsidian/70" />
+                    </div>
                   </div>
 
                   {paymentMethod === 'card' && (
-                    <div className="p-4 bg-white rounded-2xl border border-champagne-300 shadow-inner space-y-3.5 animate-fade-in text-xs">
+                    <div className="p-3.5 sm:p-4 bg-white rounded-2xl border border-champagne-300 shadow-inner space-y-3 animate-fade-in text-xs">
                       
                       <div className="space-y-1">
                         <label className="text-[10px] uppercase font-mono tracking-wider text-obsidian-soft font-bold block">
@@ -736,7 +740,7 @@ export const CheckoutPage: React.FC = () => {
                             className="w-full bg-transparent text-xs sm:text-sm font-mono text-obsidian focus:outline-none placeholder:text-obsidian/40"
                           />
                           {getCardBrand(cardNumber) && (
-                            <span className="px-2 py-0.5 bg-champagne-200 text-obsidian font-mono text-[10px] font-bold rounded">
+                            <span className="px-2 py-0.5 bg-champagne-200 text-obsidian font-mono text-[10px] font-bold rounded shrink-0">
                               {getCardBrand(cardNumber)}
                             </span>
                           )}
@@ -798,71 +802,79 @@ export const CheckoutPage: React.FC = () => {
                 {/* 3. Pay Later / Simpl Style (Bonkers Corner Feature) */}
                 <div
                   onClick={() => setPaymentMethod('simpl')}
-                  className={`p-4 sm:p-5 rounded-2xl border transition-all cursor-pointer space-y-3 ${
+                  className={`p-3.5 sm:p-5 rounded-2xl border transition-all cursor-pointer space-y-3 ${
                     paymentMethod === 'simpl'
                       ? 'border-gold-dark bg-gradient-to-b from-champagne-100/70 to-pearl-50 shadow-md ring-1 ring-gold-dark/40'
                       : 'border-champagne-300/80 hover:bg-pearl-50'
                   }`}
                 >
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-3">
+                  <div className="flex items-start justify-between gap-2.5 sm:gap-3">
+                    <div className="flex items-start gap-2.5 sm:gap-3 min-w-0">
                       <input
                         type="radio"
                         name="paymentMethod"
                         checked={paymentMethod === 'simpl'}
                         onChange={() => setPaymentMethod('simpl')}
-                        className="accent-gold-dark"
+                        className="accent-gold-dark mt-1 shrink-0 cursor-pointer"
                       />
-                      <div>
-                        <div className="flex items-center gap-2">
+                      <div className="min-w-0 space-y-0.5">
+                        <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
                           <p className="font-serif-luxury text-sm sm:text-base text-obsidian font-bold">Simpl 1-Click Pay Later</p>
-                          <span className="text-[10px] font-mono text-emerald-800 bg-emerald-100 px-2 py-0.5 rounded-full font-bold">
+                          <span className="text-[10px] font-mono text-emerald-800 bg-emerald-100 border border-emerald-300/70 px-2 py-0.5 rounded-full font-bold shadow-xs whitespace-nowrap">
                             3 Interest-Free Splits
                           </span>
                         </div>
-                        <p className="text-xs text-obsidian-soft mt-0.5">Pay in 3 payments of ₹{Math.round(grandTotal / 3)}/month with 0% interest</p>
+                        <p className="text-[11px] sm:text-xs text-obsidian-soft leading-snug">Pay in 3 payments of ₹{Math.round(grandTotal / 3)}/month with 0% interest</p>
                       </div>
                     </div>
-                    <span className="text-xs font-mono font-bold text-gold-dark">SIMPL</span>
+                    <div className="shrink-0 pt-0.5">
+                      <span className="text-[10.5px] font-mono font-bold tracking-wider text-gold-dark bg-champagne-100 border border-champagne-300/80 px-2 py-0.5 rounded-md">
+                        SIMPL
+                      </span>
+                    </div>
                   </div>
                 </div>
 
                 {/* 4. Cash on Delivery (COD) */}
                 <div
                   onClick={() => setPaymentMethod('cod')}
-                  className={`p-4 sm:p-5 rounded-2xl border transition-all cursor-pointer space-y-3 ${
+                  className={`p-3.5 sm:p-5 rounded-2xl border transition-all cursor-pointer space-y-3 ${
                     paymentMethod === 'cod'
                       ? 'border-gold-dark bg-gradient-to-b from-champagne-100/70 to-pearl-50 shadow-md ring-1 ring-gold-dark/40'
                       : 'border-champagne-300/80 hover:bg-pearl-50'
                   }`}
                 >
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-3">
+                  <div className="flex items-start justify-between gap-2.5 sm:gap-3">
+                    <div className="flex items-start gap-2.5 sm:gap-3 min-w-0">
                       <input
                         type="radio"
                         name="paymentMethod"
                         checked={paymentMethod === 'cod'}
                         onChange={() => setPaymentMethod('cod')}
-                        className="accent-gold-dark"
+                        className="accent-gold-dark mt-1 shrink-0 cursor-pointer"
                       />
-                      <div>
-                        <div className="flex items-center gap-2">
+                      <div className="min-w-0 space-y-0.5">
+                        <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
                           <p className="font-serif-luxury text-sm sm:text-base text-obsidian font-bold">Cash on Delivery (COD)</p>
-                          <span className="text-[10px] font-mono bg-amber-100 text-amber-900 border border-amber-300 px-2 py-0.5 rounded-full font-bold">
-                            +₹50 COD Fee
+                          <span className="text-[10px] font-mono bg-amber-100 text-amber-900 border border-amber-300/80 px-2 py-0.5 rounded-full font-bold shadow-xs whitespace-nowrap">
+                            +₹50 Handling Fee
                           </span>
                         </div>
-                        <p className="text-xs text-obsidian-soft mt-0.5">Pay via Cash or UPI at your doorstep upon unboxing (+₹50 handling charge)</p>
+                        <p className="text-[11px] sm:text-xs text-obsidian-soft leading-snug">Pay via Cash or UPI at your doorstep upon unboxing</p>
                       </div>
                     </div>
-                    <span className="text-xs font-mono text-amber-900 font-bold">+₹50 COD Charge</span>
+                    <div className="shrink-0 pt-0.5">
+                      <span className="text-[10.5px] font-mono font-bold tracking-tight text-amber-900 bg-amber-100/80 border border-amber-300/80 px-2 py-0.5 rounded-md">
+                        +₹50
+                      </span>
+                    </div>
                   </div>
 
                   {paymentMethod === 'cod' && (
                     <div className="p-3.5 bg-amber-50/90 rounded-xl border border-amber-200 text-xs text-amber-900 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 animate-fade-in">
                       <div>
                         <p className="font-bold">⚠️ Cash on Delivery requires a ₹50 logistics verification charge.</p>
-                        <p className="text-[11px] text-amber-800 mt-0.5">Tip: Pay via Instant UPI to waive the ₹50 fee and get an EXTRA ₹50 discount!</p>
+                        <p className="text-[11px] text-amber-800 mt-0.5">Tip: Pay via Instant UPI to waive the ₹50 fee and get an EXTRA ₹50 discount (Save ₹100 total)!</p>
                       </div>
                       <button
                         type="button"
@@ -870,7 +882,7 @@ export const CheckoutPage: React.FC = () => {
                           e.stopPropagation();
                           setPaymentMethod('upi');
                         }}
-                        className="px-3 py-1.5 rounded-full bg-gold-dark text-pearl-100 text-[11px] font-mono font-bold uppercase shrink-0 hover:bg-gold-dark/90 transition-all cursor-pointer shadow-xs"
+                        className="w-full sm:w-auto px-3.5 py-1.5 rounded-full bg-gold-dark text-pearl-100 text-[11px] font-mono font-bold uppercase shrink-0 hover:bg-gold-dark/90 active:scale-95 transition-all cursor-pointer shadow-xs text-center"
                       >
                         Switch to UPI (Save ₹100)
                       </button>
